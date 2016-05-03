@@ -1,3 +1,5 @@
+[![ProjectACTUS](http://155.246.104.54/projectactus/wp-content/uploads/2014/10/logo.png "ProjectACTUS")](http://www.projectactus.org)
+
 actus-core
 =======
 
@@ -9,8 +11,6 @@ This repository contains the source code of the actus-core library, project ACTU
 
 The actus libraries are released as Open Source Software under the
 [Apache v2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html). 
-
-[![ProjectACTUS](http://155.246.104.54/projectactus/wp-content/uploads/2014/10/logo.png "ProjectACTUS")](http://www.projectactus.org)
 
 Documentation
 -------------
@@ -79,9 +79,10 @@ certain protocol. You may find more information on our
 Contributions to the actus library can generally be made through pull 
 requests on GitHub. Therefore, the first thing you should do is to get
 a GitHub account if you don't have it already. Then, clone the repository
-to which you want to contribute, check out your clone to your machine,
-start coding, push your changes to your clone and submit a pull request to
-our repository.
+to which you want to contribute using the "Fork" button in the upper 
+right corner of our GitHub repository page. Finally, check out your clone 
+to your machine, start coding, push your changes to your clone and submit 
+a pull request to our repository.
 
 Once you submitted a pull request the ACTUS core-team will have a look at
 your code and will decide whether we can accept right away, require 
