@@ -29,5 +29,5 @@ public interface AttributeProvider {
    * @return a String-representation of the attribute's value
    * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">ACTUS Data Dictionary</a>
    */
-  public String valueOf(String longName);
+  public String get(String longName);
 }

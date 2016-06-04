@@ -1,8 +1,6 @@
 package org.actus.attributes;
 
-import org.actus.AttributeConversionException;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.conventions.endofmonth.EndOfMonthAdjuster;
 import org.actus.conventions.daycount.DayCountCalculator;
 
 import java.time.LocalDateTime;
@@ -10,7 +8,7 @@ import java.time.LocalDateTime;
 public class ContractModel {
         public String calendar;
     public BusinessDayAdjuster businessDayConvention;
-    public EndOfMonthAdjuster endOfMonthConvention;
+    public String endOfMonthConvention;
     // public String contractType;
     public LocalDateTime statusDate;
     public String contractRole;
@@ -90,7 +88,7 @@ public class ContractModel {
     public double scalingIndexAtStatusDate;
     public LocalDateTime cycleAnchorDateOfScalingIndex;
     public String cycleOfScalingIndex;
-    public int scalingEffect;
+    public String scalingEffect;
     // public double marketValueObserved;
     public double conversionFactor;
     public String optionExecutionType;
@@ -120,17 +118,4 @@ public class ContractModel {
     public LocalDateTime settlementDate;
     public String deliverySettlement;
     public double futuresPrice;
-
-    /**
-     * Constructor
-     */
-    public ContractModel() {
-    }
-    
-    /**
-     * Initialize the model of a {@link AttributeProvider}
-     */
-    public void of(AttributeProvider attributes) throws AttributeConversionException {
-        // TODO: implement for each CT separately through using if-statements       
-    }
 }
