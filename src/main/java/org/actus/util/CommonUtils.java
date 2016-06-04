@@ -5,14 +5,12 @@
  */
 package org.actus.util;
 
-import org.actus.util.StringUtils;
-
 /**
  * Contains general-purpose utilities used throughout the library
  */
 public final class CommonUtils {
     
     public static boolean isNull(Object o) {
-        return (o == null || String.valueOf(o).equals(StringUtils.NullString))? true : false;
+        return (o == null)? true : false;
     }
 }

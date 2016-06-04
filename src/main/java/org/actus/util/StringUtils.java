@@ -10,8 +10,8 @@ package org.actus.util;
  */
 public final class StringUtils {
     
-    // general
-    public final static String NullString = "NULL";
+    // contract types 
+    public final static String ContractType_PAM = "PAM";
     
     // cycle stubs
     public final static char LongStub = '-';
