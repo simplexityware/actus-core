@@ -8,6 +8,7 @@ package org.actus.conventions.businessday;
 import org.actus.AttributeConversionException;
 import org.actus.time.calendar.BusinessDayCalendarProvider;
 import org.actus.util.StringUtils;
+import org.actus.util.CommonUtils;
 
 import java.time.LocalDateTime;
 
@@ -42,7 +43,8 @@ public final class BusinessDayAdjuster {
         String prefix;
 
         // convert contract attributes (if possible)
-        if (convention.equals(StringUtils.BusinessDayConvention_S)) {
+        if (CommonUtils.isNull(convention) || 
+            convention.equals(StringUtils.BusinessDayConvention_S)) {
             
             this.bdConvention = new Same();
             this.scConvention = new ShiftCalc();
