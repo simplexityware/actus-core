@@ -6,8 +6,6 @@
 package org.actus.contracttypes;
 
 import org.actus.AttributeConversionException;
-import org.actus.attributes.AttributeProvider;
-import org.actus.attributes.AttributeParser;
 import org.actus.attributes.ContractModel;
 import org.actus.riskfactors.RiskFactorProvider;
 import org.actus.events.ContractEvent;
@@ -37,8 +35,8 @@ public class PrincipalAtMaturity implements ContractType {
     private StateSpace               states;
 
     @Override
-    public void init(Set<LocalDateTime> analysisTimes, AttributeProvider attributes) throws AttributeConversionException {
-        model = AttributeParser.parse(attributes);
+    public void init(Set<LocalDateTime> analysisTimes, ContractModel model) throws AttributeConversionException {
+        this.model = model;
         events = new HashSet<ContractEvent>();
 
         // create contract event schedules
