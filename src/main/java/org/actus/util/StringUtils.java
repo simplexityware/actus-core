@@ -53,4 +53,8 @@ public final class StringUtils {
     public final static String EventType_TD = "TD";
     public final static String EventType_CD = "CD";
     public final static String EventType_PR = "PR";
+    
+    // contract roles
+    public final static String ContractRole_RPA = "RPA";
+    public final static String ContractRole_RPL = "RPL";
 }
