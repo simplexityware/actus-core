@@ -57,6 +57,7 @@ public final class AttributeParser {
         ContractModel model = new ContractModel();
         
         // parse all attributes known to the respective contrac type
+        try {
         switch(attributes.get("ContractType")) {
             case StringUtils.ContractType_PAM:
                 model.calendar = attributes.get("Calendar");
@@ -104,6 +105,9 @@ public final class AttributeParser {
                 break;
             default:
                 throw new AttributeConversionException();
+        }
+        } catch(Exception e) {
+            throw new AttributeConversionException();    
         }
         
         // return the model
