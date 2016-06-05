@@ -1,8 +1,11 @@
 package org.actus;
 
+import org.actus.attributes.AttributeProvider;
+
 public class MainClass {
     
-    public void main(String[] args) {
+    public static void main(String[] args) {
+        
         
     }
     
