@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2016 - present by ACTUS Foundation for Financial Research
+ *
+ * Please see distribution for license.
+ */
 package org.actus.attributes;
 
 import org.actus.AttributeConversionException;
@@ -9,8 +14,44 @@ import org.actus.util.CommonUtils;
 
 import java.time.LocalDateTime;
 
+/**
+ * Component that parses an external representation of attributes into an internal representation
+ * <p>
+ * Contract attributes refer to the terms of a contract, or, in other words, the pay-off function's
+ * parameters. {@link AttributeProvider} provides the external representation of the set of 
+ * attributes under which the pay-off is to be evaluated. Thereby, external representation refers
+ * to the fact that an {@link AttributeProvider}-object carries the attributes in raw (String)-data
+ * form, such that has been extracted e.g. from a data file. However, the raw data consists of 
+ * various elements some referring to numerical, others to date, and again others to text variables. 
+ * Thus, before the external representation can be evaluated in the pay-off function it has to be
+ * "parsed" to the internal, {@link ContractModel} representation.
+ * <p>
+ * This class is a pure utility-class with only static methods and no public constructor.
+ * 
+ */
 public final class AttributeParser {
     
+    // private constructor as a pure utility-class
+    private AttributeParser() {
+    }
+    
+    /**
+     * Parse the attributes from external String-representation to internal, attribute-specific data types
+     * <p>
+     * For the {@link ContratType} indicated in attribute "ContractType" the method goes through the list
+     * of supported attributes and tries to parse these to their respective data type as indicated in the 
+     * ACTUS data dictionary ({@linktourl http://www.projectactus.org/projectactus/?page_id=356}). 
+     * <p>
+     * For all attributes mandatory to a certain "ContractType" the method expects a not-{@code null} return value
+     * of method {@code get} of the provided {@link AttributeProvider}. For non-mandatory attributes, a
+     * {@code null} return value is treated as that the attribute is not specified. Some attributes may
+     * be mandatory conditional to the value of other attributes. Be referred to the ACTUS data dictionary
+     * for details.
+     * 
+     * @param attributes an external, raw (String) data representation of the set of attributes
+     * @return a {@link ContractModel}-representation of the set of attributes
+     * @throws AttributeConversionException if an attribute cannot be parsed to its data type
+     */
     public static ContractModel parse(AttributeProvider attributes) {
         // init a new plain model
         ContractModel model = new ContractModel();

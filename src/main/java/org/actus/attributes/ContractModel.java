@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2016 - present by ACTUS Foundation for Financial Research
+ *
+ * Please see distribution for license.
+ */
 package org.actus.attributes;
 
 import org.actus.conventions.businessday.BusinessDayAdjuster;
@@ -5,6 +10,20 @@ import org.actus.conventions.daycount.DayCountCalculator;
 
 import java.time.LocalDateTime;
 
+/**
+ * A data structure representing the set of ACTUS contract attributes
+ * <p>
+ * This is an internal representation of the various contract attributes used when 
+ * evaluating the contract pay-off function. Hence, as opposed to the external, 
+ * {@link AttributeProvider}, representation, this component carries the values of
+ * attributes in their respective Java-data type which is required when evaluating the 
+ * pay-off function.
+ * <p>
+ * The internal representation is the result of applying the {@link AttributeParser} to
+ * an {@link AttributeProvider}-object, or the external representation, respectively.
+ * 
+ * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">ACTUS Data Dictionary</a>
+ */
 public class ContractModel {
         public String calendar;
     public BusinessDayAdjuster businessDayConvention;
