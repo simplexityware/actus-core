@@ -51,16 +51,19 @@ public final class ScheduleFactory {
 	 * @return an unordered set of schedule times
 	 * 
 	 */
-	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, EndOfMonthAdjuster endOfMonthConvention) throws AttributeConversionException {    
+	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention) throws AttributeConversionException {    
+		EndOfMonthAdjuster adjuster;
 		Set<LocalDateTime> timesSet = new HashSet<LocalDateTime>();
         int multiplier;
         char unit;
         Period period;
         char stub;
         
-		// if no cycle then only start and end dates
+		// if no cycle then only start (if specified) and end dates
 		if (CommonUtils.isNull(cycle)) {
-		    timesSet.add(startTime);
+		    if (!CommonUtils.isNull(startTime)) {
+		      timesSet.add(startTime);
+		    }
 		    timesSet.add(endTime);
 			return timesSet;
 		}
@@ -85,6 +88,8 @@ public final class ScheduleFactory {
 		  throw(new AttributeConversionException());
         }
 
+        // parse end of month convention
+        adjuster = new EndOfMonthAdjuster(endOfMonthConvention, startTime, unit);
         
 		// init helpers for schedule creation
 		int counter = 1;
@@ -94,7 +99,7 @@ public final class ScheduleFactory {
 		  while (newTime.isBefore(endTime)) {
 		     timesSet.add(newTime);
 			 period = period.multipliedBy(counter * multiplier);
-			 newTime = endOfMonthConvention.shift(startTime.plus(period));
+			 newTime = adjuster.shift(startTime.plus(period));
 			 counter++;
 		  }		    
 		timesSet.add(endTime);
@@ -126,7 +131,7 @@ public final class ScheduleFactory {
 	 * @return an unordered set of schedule times
 	 */
 	public static Set<LocalDateTime> createArraySchedule(LocalDateTime[] startTimes,
-			LocalDateTime endTime, String[] cycles, EndOfMonthAdjuster endOfMonthConvention) {
+			LocalDateTime endTime, String[] cycles, String endOfMonthConvention) {
         Set<LocalDateTime> timesSet = new HashSet<LocalDateTime>();
         
         // add schedules 1 to N-1
