@@ -42,9 +42,8 @@ public final class BusinessDayAdjuster {
         String suffix;
         String prefix;
 
-        // convert contract attributes (if possible)
-        if (CommonUtils.isNull(convention) || 
-            convention.equals(StringUtils.BusinessDayConvention_S)) {
+        // convert contract attributes
+        if (CommonUtils.isNull(convention) || convention.equals(StringUtils.BusinessDayConvention_S)) {
             
             this.bdConvention = new Same();
             this.scConvention = new ShiftCalc();
@@ -54,7 +53,7 @@ public final class BusinessDayAdjuster {
             try {
                 Class clazz = Class.forName(calendar);
                 _calendar = (BusinessDayCalendarProvider)clazz.newInstance();
-                prefix = convention.substring(0, 1);
+                prefix = convention.substring(0, 2);
                 suffix = convention.substring(2);
             } catch (Exception e) {
                 throw new AttributeConversionException();
