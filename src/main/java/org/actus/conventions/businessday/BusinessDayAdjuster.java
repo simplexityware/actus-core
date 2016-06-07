@@ -51,6 +51,11 @@ public final class BusinessDayAdjuster {
         } else {
 
             try {
+                // TODO: currently calendar needs to be a qualified class name and not just name of the 
+                // classe's source code file (e.g. org.actus.time.calendar.NoHolidaysCalendar instead of 
+                // NoHolidaysCalendar only). 
+                // This is not practicable as calendar is the value of ACTUS attribute "Calendar" which
+                // needs to be clean of references to any technology or implementation
                 Class clazz = Class.forName(calendar);
                 _calendar = (BusinessDayCalendarProvider)clazz.newInstance();
                 prefix = convention.substring(0, 2);
