@@ -42,6 +42,8 @@ public final class EndOfMonthAdjuster {
     public EndOfMonthAdjuster(String convention, LocalDateTime refDate, char periodUnit) throws AttributeConversionException {
         switch (convention) {
             case StringUtils.EndOfMonthConvention_EndOfMonth:
+                // note, internally, units which are a multiple of "1M" are converted to "XM" why here we only have to check
+                // for period-unit M when deciding whether or not to shift a date
                 if (refDate.equals(refDate.with(lastDayOfMonth())) && periodUnit == 'M') {
                     this.convention = new EndOfMonth();
                 } else {
