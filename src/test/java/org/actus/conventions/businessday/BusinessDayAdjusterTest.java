@@ -8,25 +8,762 @@ package org.actus.conventions.businessday;
 import org.actus.AttributeConversionException;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
+import static org.junit.Assert.assertEquals;
 
 public class BusinessDayAdjusterTest {
-    
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    
-    @Test
-    public void test_Constructor_SAME_NO() {
-        thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SAME", "NO");
-    }
-    
+
     @Test
     public void test_AttributeConversionException() {
         thrown.expect(AttributeConversionException.class);
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster("INEXISTENT", "NO");
     }
+
+    @Test
+    public void test_SAME_NoHolidaysCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SAME", "org.actus.time.calendar.NoHolidaysCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_SAME_MondayToFridayCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SAME", "org.actus.time.calendar.MondayToFridayCalendar");
+        
+               // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_SCF_NoHolidaysCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCF", "org.actus.time.calendar.NoHolidaysCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_SCF_MondayToFridayCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCF", "org.actus.time.calendar.MondayToFridayCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
     
+        @Test
+    public void test_CSF_NoHolidaysCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSF", "org.actus.time.calendar.NoHolidaysCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_CSF_MondayToFridayCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSF", "org.actus.time.calendar.MondayToFridayCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+    
+        @Test
+    public void test_SCMF_NoHolidaysCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMF", "org.actus.time.calendar.NoHolidaysCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_SCMF_MondayToFridayCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMF", "org.actus.time.calendar.MondayToFridayCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+    
+            @Test
+    public void test_CSMF_NoHolidaysCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMF", "org.actus.time.calendar.NoHolidaysCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_CSMF_MondayToFridayCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMF", "org.actus.time.calendar.MondayToFridayCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+    
+                @Test
+    public void test_SCP_NoHolidaysCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCP", "org.actus.time.calendar.NoHolidaysCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_SCP_MondayToFridayCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCP", "org.actus.time.calendar.MondayToFridayCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+    
+                @Test
+    public void test_CSP_NoHolidaysCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSP", "org.actus.time.calendar.NoHolidaysCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_CSP_MondayToFridayCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSP", "org.actus.time.calendar.MondayToFridayCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+    
+                @Test
+    public void test_SCMP_NoHolidaysCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMP", "org.actus.time.calendar.NoHolidaysCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_SCMP_MondayToFridayCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMP", "org.actus.time.calendar.MondayToFridayCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+    
+                @Test
+    public void test_CSMP_NoHolidaysCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMP", "org.actus.time.calendar.NoHolidaysCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
+    @Test
+    public void test_CSMP_MondayToFridayCalendar() {
+        thrown = ExpectedException.none();
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMP", "org.actus.time.calendar.MondayToFridayCalendar");
+        
+        // list of unadjusted times
+        List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        unadjustedTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected event times shifted according to the business day convention
+        // here in fact unshifted
+        List<LocalDateTime> expectedEventTimes = new ArrayList<LocalDateTime>();
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0)); 
+        expectedEventTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // list of expected calc times shifted according to the business day convention
+        // here in fact unshifted        
+        List<LocalDateTime> expectedCalcTimes = new ArrayList<LocalDateTime>();
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 29, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 4, 30, 0, 0));
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 1, 0, 0)); 
+        expectedCalcTimes.add(LocalDateTime.of(2016, 5, 2, 0, 0));
+        
+        // now shift times to event times according to the business day convention, ...
+        List<LocalDateTime> shiftedEventTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedEventTimes.add(adjuster.shiftEventTime(t)));
+        
+        // ... and shift times to calc times according to the business day convention
+        List<LocalDateTime> shiftedCalcTimes = new ArrayList<LocalDateTime>();
+        unadjustedTimes.forEach(t -> shiftedCalcTimes.add(adjuster.shiftCalcTime(t)));
+        
+        // finally compare unshifted and shifted times
+        assertEquals(expectedEventTimes, shiftedEventTimes);
+        assertEquals(expectedCalcTimes, shiftedCalcTimes);
+    }
+
 }
