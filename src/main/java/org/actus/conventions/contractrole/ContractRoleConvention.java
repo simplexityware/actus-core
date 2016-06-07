@@ -14,6 +14,10 @@ import org.actus.util.StringUtils;
  */
 public final class ContractRoleConvention {
     
+    // this is a utility class
+    private ContractRoleConvention() {
+    }
+    
     /**
      * Returns an integer indicating the direction of cash flows in the contract's pay-off
      * <p>
