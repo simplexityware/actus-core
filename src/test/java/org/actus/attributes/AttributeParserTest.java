@@ -24,9 +24,7 @@ public class AttributeParserTest {
         thrown.expect(AttributeConversionException.class);
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
-        MapAttributeProvider provider = new MapAttributeProvider();
-        provider.put(map);
-        ContractModel model = AttributeParser.parse(provider);
+        ContractModel model = AttributeParser.parse(map);
     }
 
     @Test
@@ -43,9 +41,7 @@ public class AttributeParserTest {
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("MaturityDate", "2017-01-01T00:00:00");
         map.put("NotionalPrincipal", "1000.0");
-        MapAttributeProvider provider = new MapAttributeProvider();
-        provider.put(map);
-        ContractModel model = AttributeParser.parse(provider);
+        ContractModel model = AttributeParser.parse(map);
     }
 
     @Test
@@ -94,9 +90,7 @@ public class AttributeParserTest {
         map.put("NextResetRate", "0.08");
         map.put("RateMultiplier", "1.1");
         map.put("RateTerm", "4M");
-        MapAttributeProvider provider = new MapAttributeProvider();
-        provider.put(map);
-        ContractModel model = AttributeParser.parse(provider);
+        ContractModel model = AttributeParser.parse(map);
     }
 
 }

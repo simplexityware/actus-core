@@ -7,7 +7,6 @@ package org.actus.contracttypes;
 
 import org.actus.AttributeConversionException;
 import org.actus.riskfactors.RiskFactorProvider;
-import org.actus.attributes.AttributeProvider;
 import org.actus.attributes.AttributeParser;
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
@@ -15,6 +14,7 @@ import org.actus.events.ContractEvent;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * A representation of an ACTUS Contract Type algorithm
@@ -46,7 +46,7 @@ public interface ContractType {
    * 
    */
   public default ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
-                        		 AttributeProvider attributes, 
+                        		 Map<String,String> attributes, 
                         		 RiskFactorProvider riskFactors) throws AttributeConversionException {
         init(analysisTimes, AttributeParser.parse(attributes));
         return eval(riskFactors);
@@ -71,7 +71,7 @@ public interface ContractType {
    * 
    */
    public default void init(Set<LocalDateTime> analysisTimes, 
-                        AttributeProvider attributes) throws AttributeConversionException {
+                        Map<String,String> attributes) throws AttributeConversionException {
         init(analysisTimes, AttributeParser.parse(attributes));                         
     }
     

@@ -12,6 +12,7 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.util.StringUtils;
 import org.actus.util.CommonUtils;
 
+import java.util.Map;
 import java.time.LocalDateTime;
 
 /**
@@ -52,7 +53,7 @@ public final class AttributeParser {
      * @return a {@link ContractModel}-representation of the set of attributes
      * @throws AttributeConversionException if an attribute cannot be parsed to its data type
      */
-    public static ContractModel parse(AttributeProvider attributes) {
+    public static ContractModel parse(Map<String,String> attributes) {
         // init a new plain model
         ContractModel model = new ContractModel();
         
