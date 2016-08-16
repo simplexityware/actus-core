@@ -57,6 +57,7 @@ public final class ScheduleFactory {
         int multiplier;
         char unit;
         Period period;
+        Period increment;
         char stub;
         
 		// if no cycle then only start (if specified) and end dates
@@ -71,7 +72,7 @@ public final class ScheduleFactory {
         // parse cycle
         try {
             multiplier = Integer.parseInt(cycle.substring(0,cycle.length() - 2));
-		    unit = cycle.charAt(cycle.length() - 3);
+		    unit = cycle.charAt(cycle.length() - 2);
 		    if(unit == 'Q') {
 		      multiplier = 3;
 		      unit = 'M';
@@ -82,12 +83,15 @@ public final class ScheduleFactory {
 		      multiplier = 12;
 		      unit = 'M';
 		    }
-            stub = cycle.charAt(cycle.length() - 2);
+            stub = cycle.charAt(cycle.length() - 1);
 		    period = Period.parse("P" + 1 + unit);
 		} catch (Exception e) {
 		  throw(new AttributeConversionException());
         }
-
+        
+        // debug
+        //System.out.println(multiplier + " " + unit + " " + stub);
+        
         // parse end of month convention
         adjuster = new EndOfMonthAdjuster(endOfMonthConvention, startTime, unit);
         
@@ -98,8 +102,8 @@ public final class ScheduleFactory {
 		// create schedule based on end-of-month-convention
 		  while (newTime.isBefore(endTime)) {
 		     timesSet.add(newTime);
-			 period = period.multipliedBy(counter * multiplier);
-			 newTime = adjuster.shift(startTime.plus(period));
+			 increment = period.multipliedBy(counter * multiplier);
+			 newTime = adjuster.shift(startTime.plus(increment));
 			 counter++;
 		  }		    
 		timesSet.add(endTime);
