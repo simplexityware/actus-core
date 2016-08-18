@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
  * <ul>
  * <li> {@code d' = d} always</li>
  * </ul>
+ * <p>
+ * C.f. documentation for {@link EndOfMonthConvention} for more information.
  */
 public class SameDay implements EndOfMonthConvention {
     

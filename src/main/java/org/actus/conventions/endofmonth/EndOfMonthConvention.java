@@ -16,6 +16,12 @@ import java.time.LocalDateTime;
  * schedule of dates of the 30st of each month or do we mean to use the last day in each
  * month.
  * <p>
+ * Note that the end of month convention only applies to date schedules created using a 
+ * {@code 1M}-cycle or a multiple thereof. In particular, any cycle with period unit 
+ * {@code D} or {@code W} is not considered a multiple of {@code 1M} (even if it is 
+ * {@code 4W}) while any cycle with period unit {@code M}, {@code Q}, {@code H}, and
+ * {@code Y} is considered a multiple.
+ * <p>
  * Make sure, new conventions implement this interface when adding to the library.
  */
 public interface EndOfMonthConvention {

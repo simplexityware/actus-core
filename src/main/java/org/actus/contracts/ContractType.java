@@ -3,7 +3,7 @@
  *
  * Please see distribution for license.
  */
-package org.actus.contracttypes;
+package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
 import org.actus.riskfactors.RiskFactorProvider;

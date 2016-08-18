@@ -74,13 +74,13 @@ public final class ScheduleFactory {
             multiplier = Integer.parseInt(cycle.substring(0,cycle.length() - 2));
 		    unit = cycle.charAt(cycle.length() - 2);
 		    if(unit == 'Q') {
-		      multiplier = 3;
+		      multiplier *= 3;
 		      unit = 'M';
 		    } else if(unit == 'H') {
-		      multiplier = 6;
+		      multiplier *= 6;
 		      unit = 'M';
 		    } else if(unit == 'Y') {
-		      multiplier = 12;
+		      multiplier *= 12;
 		      unit = 'M';
 		    }
             stub = cycle.charAt(cycle.length() - 1);
@@ -88,9 +88,6 @@ public final class ScheduleFactory {
 		} catch (Exception e) {
 		  throw(new AttributeConversionException());
         }
-        
-        // debug
-        //System.out.println(multiplier + " " + unit + " " + stub);
         
         // parse end of month convention
         adjuster = new EndOfMonthAdjuster(endOfMonthConvention, startTime, unit);
@@ -110,7 +107,8 @@ public final class ScheduleFactory {
 		
         // now adjust for the last stub
 		if (stub == StringUtils.LongStub && timesSet.size() > 2 && !endTime.equals(newTime)) {
-			timesSet.remove(newTime.minus(period));
+		    //System.out.println("In method with par " + period + " " + multiplier + " " + newTime.minus(period.multipliedBy(multiplier)));
+			timesSet.remove(adjuster.shift(startTime.plus(period.multipliedBy((counter-2) * multiplier))));
 		}
 		
 		// return schedule

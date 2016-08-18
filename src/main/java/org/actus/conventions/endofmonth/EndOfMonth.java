@@ -20,6 +20,8 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
  * <li> {@code d' = d} if {@code d} is the last day in the respective month</li>
  * <li> {@code d' > d} if {@code d} otherwise</li>
  * </ul>
+ * <p>
+ * C.f. documentation for {@link EndOfMonthConvention} for more information.
  */
 public class EndOfMonth implements EndOfMonthConvention {
     

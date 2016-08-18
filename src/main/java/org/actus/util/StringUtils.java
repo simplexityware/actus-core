@@ -14,8 +14,8 @@ public final class StringUtils {
     public final static String ContractType_PAM = "PAM";
     
     // cycle stubs
-    public final static char LongStub = '-';
-    public final static char ShortStub = '+';
+    public final static char LongStub = '+';
+    public final static char ShortStub = '-';
     
     // end of month conventions
     public final static String EndOfMonthConvention_SameDay = "SD";

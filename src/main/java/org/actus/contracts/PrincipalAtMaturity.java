@@ -3,7 +3,7 @@
  *
  * Please see distribution for license.
  */
-package org.actus.contracttypes;
+package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModel;
@@ -78,15 +78,25 @@ public class PrincipalAtMaturity implements ContractType {
                 interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
-            // rate reset
+            // rate reset (if specified)
+            if (!CommonUtils.isNull(model.cycleOfRateReset)) {            
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfRateReset, model.maturityDate,
                                                                                 model.cycleOfRateReset, model.endOfMonthConvention),
-                                                 StringUtils.EventType_IED, model.currency, new POF_AD_PAM(), new STF_AD_PAM(), model.businessDayConvention));
+                                                 StringUtils.EventType_RR, model.currency, new POF_AD_PAM(), new STF_AD_PAM(), model.businessDayConvention));
+            }
         }
-        // scaling
+        // scaling (if specified)
+        if (!CommonUtils.isNull(model.cycleOfScalingIndex)) { 
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfScalingIndex, model.maturityDate,
                                                                             model.cycleOfScalingIndex, model.endOfMonthConvention),
                                              StringUtils.EventType_SC, model.currency, new POF_AD_PAM(), new STF_AD_PAM(), model.businessDayConvention));
+        }
+        // optionality i.e. prepayment right (if specified)
+        if (!CommonUtils.isNull(model.cycleOfOptionality)) { 
+        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfOptionality, model.maturityDate,
+                                                                            model.cycleOfOptionality, model.endOfMonthConvention),
+                                             StringUtils.EventType_SC, model.currency, new POF_AD_PAM(), new STF_AD_PAM(), model.businessDayConvention));
+        }
         // termination
         if (!CommonUtils.isNull(model.terminationDate)) {
             ContractEvent termination =
