@@ -44,7 +44,7 @@ public final class StringUtils {
     public final static String EventType_SD = "SD";
     public final static String EventType_AD = "AD";
     public final static String EventType_IED = "IED";
-    public final static String EventType_MD = "MD";
+    public final static String EventType_PR = "PR";
     public final static String EventType_IP = "IP";
     public final static String EventType_IPCI = "IPCI";
     public final static String EventType_RR = "RR";
@@ -52,7 +52,6 @@ public final class StringUtils {
     public final static String EventType_PRD = "PRD";
     public final static String EventType_TD = "TD";
     public final static String EventType_CD = "CD";
-    public final static String EventType_PR = "PR";
     
     // contract roles
     public final static String ContractRole_RPA = "RPA";

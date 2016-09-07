@@ -62,7 +62,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         this.currency = currency;
         this.fPayOff = payOff;
         this.fStateTrans = stateTrans;
-        this.states = new double[12];
+        this.states = new double[7];
     }
     
     /**
@@ -134,59 +134,25 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     }
     
     /**
-     * Returns the post-event interest calculation base state-variable
-     */
-    public double interestCalculationBase() {
-        return states[4];    
-    }
-    
-    /**
-     * Returns the post-event scaling multiplier state-variable
-     */
-    public double scalingMultiplier() {
-        return states[5];    
-    }
-    
-    /**
-     * Returns the post-event next principal redemption payment state-variable
-     */
-    public double nextPrincipalRedemptionPayment() {
-        return states[6];    
-    }
-    
-    /**
      * Returns the post-event secondary nominal value state-variable
      */
     public double secondaryNominalValue() {
-        return states[7];    
+        return states[4];    
     }
 
-    /**
-     * Returns the post-event last interest payment state-variable
-     */
-    public double lastInterestPayment() {
-        return states[8];    
-    }
-
-    /**
-     * Returns the post-event payoff at settlement state-variable
-     */
-    public double payoffAtSettlement() {
-        return states[9];    
-    }
     
     /**
      * Returns the post-event variation margin state-variable
      */
     public double variationMargin() {
-        return states[10];    
+        return states[5];    
     }
     
     /**
      * Returns the post-event probability of default state-variable
      */
     public double probabilityOfDefault() {
-        return states[11];    
+        return states[6];    
     }
 
     /**
@@ -272,8 +238,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
             Double.toString(states[0]),
             Double.toString(states[1]),
             Double.toString(states[2]),
-            Double.toString(states[3]),
-            Double.toString(states[4])
+            Double.toString(states[3])
             };
     }
     

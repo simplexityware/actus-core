@@ -438,6 +438,7 @@ public class PrincipalAtMaturityTest {
         RiskFactorModel riskFactors = new RiskFactorModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = contract.eval(riskFactors);
+        //System.out.println(events);
     }
 
 

@@ -18,16 +18,15 @@ import java.time.LocalDateTime;
  */
 public final class StateSpace {
     public LocalDateTime lastEventTime;
-    public double timeFromLastEvent;
-    public double nominalValue;
-    public double nominalAccrued;
-    public double nominalRate;
+    public double timeFromLastEvent; // analytical result
+    public double nominalValue; // analytical result
+    public double nominalAccrued; // analytical result
+    public double nominalRate; // analytical result
     public double interestCalculationBase;
     public double scalingMultiplier;
     public double nextPrincipalRedemptionPayment;
-    public double secondaryNominalValue;
+    public double secondaryNominalValue; // analytical result
     public double lastInterestPayment;
     public double payoffAtSettlement;
-    public double variationMargin;
-    public double probabilityOfDefault;
+    public double variationMargin; // analytical result
 }
