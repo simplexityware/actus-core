@@ -19,7 +19,7 @@ public class STF_AD_PAM implements StateTransitionFunction {
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
     ContractModel model, RiskFactorProvider riskFactors, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[12];
+        double[] postEventStates = new double[7];
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
@@ -31,10 +31,7 @@ public class STF_AD_PAM implements StateTransitionFunction {
         postEventStates[1] = states.nominalValue;
         postEventStates[2] = states.nominalAccrued;
         postEventStates[3] = states.nominalRate;
-        postEventStates[4] = states.nominalValue;
-        postEventStates[5] = states.scalingMultiplier;
-        postEventStates[8] = states.lastInterestPayment;
-        postEventStates[11] = states.probabilityOfDefault;
+        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;
