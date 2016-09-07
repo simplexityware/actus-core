@@ -16,6 +16,10 @@ import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
+import org.actus.functions.pam.POF_IED_PAM;
+import org.actus.functions.pam.STF_IED_PAM;
+import org.actus.functions.pam.POF_PR_PAM;
+import org.actus.functions.pam.STF_PR_PAM;
 
 
 import java.time.LocalDateTime;
@@ -43,9 +47,9 @@ public class PrincipalAtMaturity implements ContractType {
         // analysis events
         events.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.currency, new POF_AD_PAM(), new STF_AD_PAM()));
         // initial exchange
-        events.add(EventFactory.createEvent(model.initialExchangeDate, StringUtils.EventType_IED, model.currency, new POF_AD_PAM(), new STF_AD_PAM()));
+        events.add(EventFactory.createEvent(model.initialExchangeDate, StringUtils.EventType_IED, model.currency, new POF_IED_PAM(), new STF_IED_PAM()));
         // maturity
-        events.add(EventFactory.createEvent(model.maturityDate, StringUtils.EventType_MD, model.currency, new POF_AD_PAM(), new STF_AD_PAM()));
+        events.add(EventFactory.createEvent(model.maturityDate, StringUtils.EventType_PR, model.currency, new POF_PR_PAM(), new STF_PR_PAM()));
         // purchase
         if (!CommonUtils.isNull(model.purchaseDate)) {
             events.add(EventFactory.createEvent(model.purchaseDate, StringUtils.EventType_PRD, model.currency, new POF_AD_PAM(), new STF_AD_PAM()));
