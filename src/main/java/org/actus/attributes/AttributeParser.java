@@ -101,7 +101,7 @@ public final class AttributeParser {
                 model.cycleAnchorDateOfRateReset = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfRateReset")))? ( (CommonUtils.isNull(attributes.get("CycleOfRateReset")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfRateReset"));
                 model.cycleOfRateReset = attributes.get("CycleOfRateReset");
                 model.rateSpread = (CommonUtils.isNull(attributes.get("RateSpread")))? 0.0 : Double.parseDouble(attributes.get("RateSpread"));
-                model.marketObjectCodeRateReset = attributes.get("MarketObjectCodeRateReset");
+                model.marketObjectCodeOfRateReset = attributes.get("MarketObjectCodeOfRateReset");
                 model.cyclePointOfRateReset = attributes.get("CyclePointOfRateReset");
                 model.fixingDays = attributes.get("FixingDays");
                 model.nextResetRate = (CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate"));
