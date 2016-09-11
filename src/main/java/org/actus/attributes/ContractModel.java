@@ -127,7 +127,7 @@ public class ContractModel {
     public double rateSpread;
     public double[] arrayRate;
     public String[] arrayFixedVariable;
-    public String marketObjectCodeRateReset;
+    public String marketObjectCodeOfRateReset;
     public String cyclePointOfRateReset;
     public String fixingDays;
     public double nextResetRate;
