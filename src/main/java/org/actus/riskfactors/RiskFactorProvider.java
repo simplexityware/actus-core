@@ -42,8 +42,7 @@ public interface RiskFactorProvider {
    * 
    * @param id identifier of the risk factor
    * @param time future time for which to return the risk factor's state
-   * @param term the term of the risk factor if representing a term structure
    * @return double the state of the risk factor
    */
-  public double stateAt(String id, LocalDateTime time, String term);
+  public double stateAt(String id, LocalDateTime time);
 }

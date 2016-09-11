@@ -106,7 +106,7 @@ public final class AttributeParser {
                 model.fixingDays = attributes.get("FixingDays");
                 model.nextResetRate = (CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate"));
                 model.rateMultiplier = (CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier"));
-                model.rateTerm = attributes.get("RateTerm");
+                // model.rateTerm = attributes.get("RateTerm"); // has been removed from the DD, check and remove here
                 break;
             default:
                 throw new AttributeConversionException();

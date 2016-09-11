@@ -132,7 +132,7 @@ public class ContractModel {
     public String fixingDays;
     public double nextResetRate;
     public double rateMultiplier;
-    public String rateTerm;
+    // public String rateTerm; // TODO: review
     // public double yieldCurveCorrection; // TODO: review
     public LocalDateTime settlementDate;
     public String deliverySettlement;

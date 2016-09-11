@@ -34,7 +34,7 @@ public class PrincipalAtMaturityTest {
             return times;
         }
         
-        public double stateAt(String id, LocalDateTime time, String term) {
+        public double stateAt(String id, LocalDateTime time) {
             return 0.0;    
         }
     }
