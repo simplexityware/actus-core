@@ -14,7 +14,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public class STF_AD_PAM implements StateTransitionFunction {
+public class STF_CD_PAM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
@@ -24,6 +24,7 @@ public class STF_AD_PAM implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
+        states.probabilityOfDefault = riskFactors.stateAt(model.legalEntityIDCounterparty, time);
         states.lastEventTime = time;
         
         // copy post-event-states

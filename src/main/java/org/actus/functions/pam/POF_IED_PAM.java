@@ -20,7 +20,7 @@ public class POF_IED_PAM implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModel model, RiskFactorProvider riskFactors, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return (1 - riskFactors.stateAt(model.legalEntityIDCounterparty, time, null)) * 
+        return (1 - states.probabilityOfDefault) * 
         ContractRoleConvention.roleSign(model.contractRole) * (-1) * 
         (model.notionalPrincipal + model.premiumDiscountAtIED);
         }

@@ -15,14 +15,11 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 
 import java.time.LocalDateTime;
 
-public class POF_PR_PAM implements PayOffFunction {
+public class POF_IPCI_PAM implements PayOffFunction {
     
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModel model, RiskFactorProvider riskFactors, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return (1 - states.probabilityOfDefault) * 
-        ContractRoleConvention.roleSign(model.contractRole) * states.scalingMultiplier * 
-        (states.nominalValue + states.nominalAccrued + 
-        dayCounter.dayCountFraction(states.lastEventTime, time) * states.nominalRate * states.nominalValue);
+        return 0.0;
         }
 }
