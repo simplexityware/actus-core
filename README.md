@@ -1,4 +1,4 @@
-[![ProjectACTUS](http://155.246.104.54/projectactus/wp-content/uploads/2014/10/logo.png "ProjectACTUS")](http://www.projectactus.org)
+[![ProjectACTUS](http://www.projectactus.org/projectactus/wp-content/uploads/2014/10/logo.png "ProjectACTUS")](http://www.projectactus.org)
 
 actus-core
 =======
