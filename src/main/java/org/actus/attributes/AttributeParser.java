@@ -64,6 +64,7 @@ public final class AttributeParser {
                 model.calendar = attributes.get("Calendar");
                 model.businessDayConvention = new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), model.calendar);
                 model.endOfMonthConvention = (CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention");
+                model.contractType = attributes.get("ContractType");
                 model.statusDate = LocalDateTime.parse(attributes.get("StatusDate"));
                 model.contractRole = attributes.get("ContractRole");
                 model.contractRoleSign = ContractRoleConvention.roleSign(model.contractRole);
@@ -102,6 +103,10 @@ public final class AttributeParser {
                 model.cycleOfRateReset = attributes.get("CycleOfRateReset");
                 model.rateSpread = (CommonUtils.isNull(attributes.get("RateSpread")))? 0.0 : Double.parseDouble(attributes.get("RateSpread"));
                 model.marketObjectCodeOfRateReset = attributes.get("MarketObjectCodeOfRateReset");
+                model.lifeCap = (CommonUtils.isNull(attributes.get("LifeCap")))? null : Double.parseDouble(attributes.get("LifeCap"));
+                model.lifeCap = (CommonUtils.isNull(attributes.get("LifeFloor")))? null : Double.parseDouble(attributes.get("LifeFloor"));
+                model.lifeCap = (CommonUtils.isNull(attributes.get("PeriodCap")))? null : Double.parseDouble(attributes.get("PeriodCap"));
+                model.lifeCap = (CommonUtils.isNull(attributes.get("PeriodFloor")))? null : Double.parseDouble(attributes.get("PeriodFloor"));
                 model.cyclePointOfRateReset = attributes.get("CyclePointOfRateReset");
                 model.fixingDays = attributes.get("FixingDays");
                 model.nextResetRate = (CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate"));
