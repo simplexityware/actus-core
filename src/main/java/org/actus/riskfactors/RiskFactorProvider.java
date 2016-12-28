@@ -12,11 +12,16 @@ import java.util.Set;
  * A representation of an exogenous Risk Factor Model
  * <p>
  * Generally, the payoff of financial instruments is dependent on the evolution of some stochastic
- * risk drivers. Thus, method {@code map} of an {@link ContractType} produces a series of risk factor
- * state contingent {@link ContractEvent}s. The future states of such risk factors is captured in a
+ * risk drivers. Thus, method {@code eval} of a {@link ContractType} produces a series of risk factor
+ * state contingent {@link ContractEvent}s. The future states of such risk factors are captured in a
  * model of their dynamics. The {@code RiskFactorProvider} provides these dynamics and allows to
  * retrieve the state of a set of risk factors identified through a unique {@code id} at any future
- * time. 
+ * time.
+ * <p>
+ * Note, all sorts of exogenous variables on which the payoff of a {@link ContractType} is conditioned
+ * are covered through a single {@code RiskFactorProvider}. In particular, any source of market risk,
+ * credit risk, or behavioral risk needs to be represented in the {@code RiskFactorProvider} and 
+ * identifiable through a unique ID.
  * <p>
  * @see <a href="http://www.projectactus.org">ACTUS</a>
  */

@@ -5,11 +5,13 @@
  */
 package org.actus.contracts;
 
+import org.actus.ContractTypeUnknownException;
 import org.actus.AttributeConversionException;
 import org.actus.riskfactors.RiskFactorProvider;
 import org.actus.attributes.AttributeParser;
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
+import org.actus.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -26,17 +28,18 @@ import java.util.Map;
  * <p>
  * @see <a href="http://www.projectactus.org">ACTUS</a>
  */
-public interface ContractType {
+public final class ContractType {
     
    /**
    * Evaluates the payoff of the instrument
    * <p>
    * For a series of analysis times, set of attributes, and model of risk factor dynamics
-   * this method computes the contingent contract events, i.e. instrument payoff. In fact,
-   * this method performs {@code init} and {@code eval} in one step.
+   * this method computes the contingent contract events, i.e. instrument payoff.
    * <p>
-   * This method is not thread-save. The caller is responsible for imposing thread-safety if 
-   * necessary.
+   * This method parses the input attributes from a String-representation to their target data
+   * types. If an attribute cannot be parsed the method throws a {@link AttributeConversionException},
+   * otherwise it invokes the {@code eval(Set<LocalDateTime> analysisTimes,ContractModel model,RiskFactorProvider riskFactors)}
+   * method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
    * 
    * @param analysisTimes  a series of analysis times
    * @param attributes the contract attributes in un-parsed form
@@ -45,46 +48,23 @@ public interface ContractType {
    * @throws AttributeConversionException if and attribute in {@link AttributesProvider} cannot be converted to its target data type
    * 
    */
-  public default ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
+  public static ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
                         		 Map<String,String> attributes, 
-                        		 RiskFactorProvider riskFactors) throws AttributeConversionException {
-        init(analysisTimes, AttributeParser.parse(attributes));
-        return eval(riskFactors);
+                        		 RiskFactorProvider riskFactors) throws ContractTypeUnknownException,AttributeConversionException {
+        return eval(analysisTimes,AttributeParser.parse(attributes),riskFactors);
     }
   
-  /**
-   * Initializes the payoff algorithm
-   * <p>
-   * Upon initialization of a {@code ContractType} all non-Risk Factor-dependent sub-routines
-   * are executed. Hence, in some sense this step performs parameterization of the algorithm
-   * such that in a next step only the remaining sub-routines have to be executed for a 
-   * {@link RiskFactorProvider} (i.e. different assumptions on the future evolution of 
-   * risk factors). 
-   * <p>
-   * This method is not thread-save. The caller is responsible for imposing thread-safety if 
-   * necessary.
-   * 
-   * @param analysisTimes  a series of analysis times
-   * @param attributes the contract attributes in un-parsed form
-   * @return
-   * @throws AttributeConversionException if and attribute in {@link AttributesProvider} cannot be converted to its target data type
-   * 
-   */
-   public default void init(Set<LocalDateTime> analysisTimes, 
-                        Map<String,String> attributes) throws AttributeConversionException {
-        init(analysisTimes, AttributeParser.parse(attributes));                         
-    }
-    
     
    /**
    * Evaluates the payoff of the instrument
    * <p>
    * For a series of analysis times, set of attributes, and model of risk factor dynamics
-   * this method computes the contingent contract events, i.e. instrument payoff. In fact,
-   * this method performs {@code init} and {@code eval} in one step.
+   * this method computes the contingent contract events, i.e. instrument payoff.
    * <p>
-   * This method is not thread-save. The caller is responsible for imposing thread-safety if 
-   * necessary.
+   * This method invokes the {@code eval(Set<LocalDateTime> analysisTimes,ContractModel model,RiskFactorProvider riskFactors)}
+   * method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
+   * If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
+   * throws a {@link ContractTypeUnknownException}.
    * 
    * @param analysisTimes  a series of analysis times
    * @param model the model carrying the contract attributes
@@ -93,56 +73,14 @@ public interface ContractType {
    * @throws AttributeConversionException if and attribute in {@link AttributesProvider} cannot be converted to its target data type
    * 
    */
-  public default ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
+  public static ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
                         		 ContractModel model, 
-                        		 RiskFactorProvider riskFactors) throws AttributeConversionException {
-        init(analysisTimes, model);
-        return eval(riskFactors);
-    }
-  
-  /**
-   * Initializes the payoff algorithm
-   * <p>
-   * Upon initialization of a {@code ContractType} all non-Risk Factor-dependent sub-routines
-   * are executed. Hence, in some sense this step performs parameterization of the algorithm
-   * such that in a next step only the remaining sub-routines have to be executed for a 
-   * {@link RiskFactorProvider} (i.e. different assumptions on the future evolution of 
-   * risk factors). 
-   * <p>
-   * This method is not thread-save. The caller is responsible for imposing thread-safety if 
-   * necessary.
-   * 
-   * @param analysisTimes  a series of analysis times
-   * @param model the model carrying the contract attributes
-   * @return
-   * @throws AttributeConversionException if and attribute in {@link AttributesProvider} cannot be converted to its target data type
-   * 
-   */
-   public void init(Set<LocalDateTime> analysisTimes, 
-                      ContractModel model) throws AttributeConversionException;
-   
-    /**
-   * Maps an initialized Contract Type onto contingent contract events
-   * <p>
-   * Takes an initialized {@code ContractType} and a {@link RiskFactorProvider} and maps them
-   * onto a set of contingent {@link ContractEvent}s, i.e. cash flows. Hence, prior to calling
-   * this method, method {@code init} has to be called for initialization of the 
-   * {@code ContractType}. 
-   * <p>
-   * If the {@code ContractType} is to be evaluated under multiple assumptions (e.g. What-If or 
-   * Monte-Carlo scenarios) on the future evolution of risk factors, only this method has to
-   * be re-evaluated but not method {@code init}. This can considerably improve performance of
-   * larger simulations. 
-   * <p>
-   * This method is not thread-save. The caller is responsible for imposing thread-safety if 
-   * necessary.
-   * 
-   * @param analysisTimes  a series of analysis times
-   * @param attributes a set of contract attributes
-   * @return the instrument's contingent payoff
-   * @throws AttributeConversionException if and attribute in {@link AttributesProvider} cannot be converted to its target data type
-   * 
-   */
-   public ArrayList<ContractEvent> eval(RiskFactorProvider riskFactors) throws AttributeConversionException;
-  
+                        		 RiskFactorProvider riskFactors) throws ContractTypeUnknownException,AttributeConversionException {
+            switch(model.contractType) {
+                case StringUtils.ContractType_PAM: 
+                    return PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+                default:
+                    throw new ContractTypeUnknownException();
+            }
+  }
 }

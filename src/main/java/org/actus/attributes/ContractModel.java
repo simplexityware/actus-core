@@ -28,7 +28,7 @@ public class ContractModel {
         public String calendar;
     public BusinessDayAdjuster businessDayConvention;
     public String endOfMonthConvention;
-    // public String contractType;
+    public String contractType;
     public LocalDateTime statusDate;
     public String contractRole;
     public int contractRoleSign;
@@ -128,6 +128,10 @@ public class ContractModel {
     public double[] arrayRate;
     public String[] arrayFixedVariable;
     public String marketObjectCodeOfRateReset;
+    public Double lifeCap; // values can be null so use Double instead of double
+    public Double lifeFloor; // values can be null so use Double instead of double
+    public Double periodCap; // values can be null so use Double instead of double
+    public Double periodFloor; // values can be null so use Double instead of double
     public String cyclePointOfRateReset;
     public String fixingDays;
     public double nextResetRate;
