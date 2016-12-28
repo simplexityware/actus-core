@@ -157,6 +157,11 @@ public final class ContractEvent implements Comparable<ContractEvent> {
 
     /**
      * Returns the post-event state-variables
+     * <p>
+     * Note that the length of the returned array may change going forward as new states
+     * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
+     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
+     * individually.
      */
     public double[] states() {
         return states;    
@@ -226,6 +231,11 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     
     /**
      * Returns an array of Strings representing all analytical elements
+     * <p>
+     * Note that the length of the returned array may change going forward as new states
+     * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
+     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
+     * individually and parse to a String manually.
      * 
      * @return an array of Strings with analytical elements
      */
@@ -242,6 +252,16 @@ public final class ContractEvent implements Comparable<ContractEvent> {
             };
     }
     
+    /**
+     * Returns a String-representation of all analytical elements
+     * <p>
+     * Note that the number of analytical elements may change going forward as e.g. new states
+     * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
+     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
+     * individually and parse to a String manually.
+     * 
+     * @return a single String containing all analytical elements
+     */
     @Override
     public String toString() {
         return Arrays.toString(toArray());    
