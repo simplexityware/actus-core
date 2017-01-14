@@ -8,7 +8,7 @@ package org.actus.events;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.functions.PayOffFunction;
 import org.actus.attributes.ContractModel;
-import org.actus.riskfactors.RiskFactorProvider;
+import org.actus.externals.MarketModelProvider;
 import org.actus.states.StateSpace;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
@@ -62,7 +62,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         this.currency = currency;
         this.fPayOff = payOff;
         this.fStateTrans = stateTrans;
-        this.states = new double[7];
+        this.states = new double[8];
     }
     
     /**
@@ -154,6 +154,13 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     public double probabilityOfDefault() {
         return states[6];    
     }
+    
+    /**
+     * Returns the post-event fee accrued state-variable
+     */
+    public double feeAccrued() {
+        return states[7];    
+    }
 
     /**
      * Returns the post-event state-variables
@@ -219,14 +226,14 @@ public final class ContractEvent implements Comparable<ContractEvent> {
    * 
    * @param states the current state of contract states
    * @param model the model containing parsed contract attributes
-   * @param riskFactors the risk factor model
+   * @param marketModel an external market model
    * @param dayCounter the day counter to be used for calculating day count fractions
    * @param timeAdjuster the business day convention to be used for adjusting times in day count fraction calculations
    * @return
    */
-    public void eval(StateSpace states, ContractModel model, RiskFactorProvider riskFactors, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        this.payoff = fPayOff.eval(scheduleTime, states, model, riskFactors, dayCounter, timeAdjuster);
-        this.states = fStateTrans.eval(scheduleTime, states, model, riskFactors, dayCounter, timeAdjuster);
+    public void eval(StateSpace states, ContractModel model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+        this.payoff = fPayOff.eval(scheduleTime, states, model, marketModel, dayCounter, timeAdjuster);
+        this.states = fStateTrans.eval(scheduleTime, states, model, marketModel, dayCounter, timeAdjuster);
     }
     
     /**

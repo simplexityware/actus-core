@@ -8,23 +8,24 @@ package org.actus.functions.pam;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModel;
-import org.actus.riskfactors.RiskFactorProvider;
+import org.actus.externals.MarketModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public class STF_CD_PAM implements StateTransitionFunction {
+public final class STF_CD_PAM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
-    ContractModel model, RiskFactorProvider riskFactors, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[7];
+    ContractModel model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+        double[] postEventStates = new double[8];
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
-        states.probabilityOfDefault = riskFactors.stateAt(model.legalEntityIDCounterparty, time);
+        states.feeAccrued += model.feeRate * states.nominalValue * states.timeFromLastEvent;
+        states.probabilityOfDefault = marketModel.stateAt(model.legalEntityIDCounterparty, time);
         states.lastEventTime = time;
         
         // copy post-event-states
@@ -33,6 +34,7 @@ public class STF_CD_PAM implements StateTransitionFunction {
         postEventStates[2] = states.nominalAccrued;
         postEventStates[3] = states.nominalRate;
         postEventStates[6] = states.probabilityOfDefault;
+        postEventStates[7] = states.feeAccrued;
         
         // return post-event-states
         return postEventStates;

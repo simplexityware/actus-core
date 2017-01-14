@@ -7,7 +7,7 @@ package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModel;
-import org.actus.riskfactors.RiskFactorProvider;
+import org.actus.externals.MarketModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
@@ -32,6 +32,10 @@ import org.actus.functions.pam.POF_SC_PAM;
 import org.actus.functions.pam.STF_SC_PAM;
 import org.actus.functions.pam.POF_PP_PAM;
 import org.actus.functions.pam.STF_PP_PAM;
+import org.actus.functions.pam.POF_PY_PAM;
+import org.actus.functions.pam.STF_PY_PAM;
+import org.actus.functions.pam.POF_FP_PAM;
+import org.actus.functions.pam.STF_FP_PAM;
 import org.actus.functions.pam.POF_TD_PAM;
 import org.actus.functions.pam.STF_TD_PAM;
 import org.actus.functions.pam.POF_CD_PAM;
@@ -53,10 +57,10 @@ public final class PrincipalAtMaturity {
 
     public static ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
                         		         ContractModel model, 
-                        		         RiskFactorProvider riskFactors) throws AttributeConversionException {
+                        		         MarketModelProvider marketModel) throws AttributeConversionException {
         
         // compute events
-        ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,marketModel);
         
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
@@ -65,7 +69,7 @@ public final class PrincipalAtMaturity {
         Collections.sort(payoff);
 
         // evaluate events
-        payoff.forEach(e -> e.eval(states, model, riskFactors, model.dayCountConvention, model.businessDayConvention));
+        payoff.forEach(e -> e.eval(states, model, marketModel, model.dayCountConvention, model.businessDayConvention));
         
         // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
         if(!CommonUtils.isNull(model.purchaseDate)) {
@@ -76,7 +80,7 @@ public final class PrincipalAtMaturity {
         return payoff;
     }
     
-    private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModel model, RiskFactorProvider riskFactors) throws AttributeConversionException {
+    private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModel model, MarketModelProvider marketModel) throws AttributeConversionException {
         HashSet<ContractEvent> events = new HashSet<ContractEvent>();
 
         // create contract event schedules
@@ -126,22 +130,30 @@ public final class PrincipalAtMaturity {
                                                  StringUtils.EventType_RR, model.currency, new POF_RR_PAM(), new STF_RR_PAM(), model.businessDayConvention));
             }
         }
+        // fees (if specified)
+        if (!CommonUtils.isNull(model.cycleOfFee)) { 
+        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfFee, model.maturityDate,
+                                                                            model.cycleOfFee, model.endOfMonthConvention),
+                                             StringUtils.EventType_FP, model.currency, new POF_FP_PAM(), new STF_FP_PAM(), model.businessDayConvention));
+        }
         // scaling (if specified)
-        if (!CommonUtils.isNull(model.cycleOfScalingIndex)) { 
+        if (!CommonUtils.isNull(model.scalingEffect) && (model.scalingEffect.contains("I") || model.scalingEffect.contains("N"))) { 
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfScalingIndex, model.maturityDate,
                                                                             model.cycleOfScalingIndex, model.endOfMonthConvention),
                                              StringUtils.EventType_SC, model.currency, new POF_SC_PAM(), new STF_SC_PAM(), model.businessDayConvention));
         }
         // optionality i.e. prepayment right (if specified)
-        if (!CommonUtils.isNull(model.objectCodeOfPrepaymentModel)) {
+        if (!(CommonUtils.isNull(model.cycleOfOptionality) && CommonUtils.isNull(model.cycleAnchorDateOfOptionality))) {
+            Set<LocalDateTime> times;
             if(!CommonUtils.isNull(model.cycleOfOptionality)) {
-                events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfOptionality, model.maturityDate,
-                                                                                model.cycleOfOptionality, model.endOfMonthConvention),
-                                                 StringUtils.EventType_PR, model.currency, new POF_PP_PAM(), new STF_PP_PAM(), model.businessDayConvention));
+                times = ScheduleFactory.createSchedule(model.cycleAnchorDateOfOptionality, model.maturityDate,model.cycleOfOptionality, model.endOfMonthConvention);
             } else {
-                events.addAll(EventFactory.createEvents(riskFactors.times(model.objectCodeOfPrepaymentModel),
-                                                        StringUtils.EventType_PR, model.currency, new POF_PP_PAM(), new STF_PP_PAM()));  
-    
+                times = marketModel.times(model.objectCodeOfPrepaymentModel);
+                times.removeIf(e -> e.compareTo(model.cycleAnchorDateOfOptionality)==-1);
+            }
+            events.addAll(EventFactory.createEvents(times,StringUtils.EventType_PP, model.currency, new POF_PP_PAM(), new STF_PP_PAM(), model.businessDayConvention));
+            if(model.penaltyType!='O') {
+                events.addAll(EventFactory.createEvents(times,StringUtils.EventType_PY, model.currency, new POF_PY_PAM(), new STF_PY_PAM(), model.businessDayConvention));         
             }
         }
         // termination
@@ -152,8 +164,8 @@ public final class PrincipalAtMaturity {
             events.add(termination);
         }
         // add counterparty default risk-factor contingent events
-        if(riskFactors.keys().contains(model.legalEntityIDCounterparty)) {
-            events.addAll(EventFactory.createEvents(riskFactors.times(model.legalEntityIDCounterparty),
+        if(marketModel.keys().contains(model.legalEntityIDCounterparty)) {
+            events.addAll(EventFactory.createEvents(marketModel.times(model.legalEntityIDCounterparty),
                                              StringUtils.EventType_CD, model.currency, new POF_CD_PAM(), new STF_CD_PAM()));
         }
         
@@ -174,7 +186,9 @@ public final class PrincipalAtMaturity {
             states.nominalValue = model.notionalPrincipal;
             states.nominalRate = model.nominalInterestRate;
             states.nominalAccrued = model.accruedInterest;
-            states.scalingMultiplier = 1;
+            states.feeAccrued = model.feeAccrued;
+            states.nominalScalingMultiplier = 1;
+            states.interestScalingMultiplier = 1;
         }
         
         // return the initialized state space

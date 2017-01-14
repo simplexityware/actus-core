@@ -7,8 +7,8 @@ package org.actus.contracts;
 
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
-import org.actus.attributes.AttributeParser;
-import org.actus.riskfactors.RiskFactorProvider;
+import org.actus.externals.AttributeParser;
+import org.actus.externals.MarketModelProvider;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -23,7 +23,7 @@ import org.junit.rules.ExpectedException;
 
 public class PrincipalAtMaturityTest {
     
-    class RiskFactorModel implements RiskFactorProvider {
+    class MarketModel implements MarketModelProvider {
         public Set<String> keys() {
             Set<String> keys = new HashSet<String>();
             return keys;
@@ -63,7 +63,7 @@ public class PrincipalAtMaturityTest {
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
     }
@@ -89,7 +89,7 @@ public class PrincipalAtMaturityTest {
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
     }
@@ -116,7 +116,7 @@ public class PrincipalAtMaturityTest {
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
     }
@@ -144,7 +144,7 @@ public class PrincipalAtMaturityTest {
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
     }
@@ -173,13 +173,13 @@ public class PrincipalAtMaturityTest {
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
     }
     
     @Test
-    public void test_PAM_withIP_withRR_withSCCL() {
+    public void test_PAM_withIP_withRR_withSCwhere000() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -195,6 +195,94 @@ public class PrincipalAtMaturityTest {
         map.put("NominalInterestRate","0.01");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","000");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_PAM_withIP_withRR_withSCwhereI00() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","I00");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_PAM_withIP_withRR_withSCwhereIN0() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_PAM_withIP_withRR_withSCwhereIN0_withSCCL() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
         map.put("CycleOfScalingIndex","1Q-");
         // parse attributes
         ContractModel model = AttributeParser.parse(map);
@@ -202,13 +290,13 @@ public class PrincipalAtMaturityTest {
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
     }
     
     @Test
-    public void test_PAM_withIP_withRR_withSCCLandSCANX() {
+    public void test_PAM_withIP_withRR_withSCwhereIN0_withSCCLandSCANX() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -224,6 +312,7 @@ public class PrincipalAtMaturityTest {
         map.put("NominalInterestRate","0.01");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfScalingIndex","2016-06-01T00:00:00");
         // parse attributes
@@ -232,13 +321,13 @@ public class PrincipalAtMaturityTest {
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
     }
     
     @Test
-    public void test_PAM_withIP_withRR_withSC_withOPCL() {
+    public void test_PAM_withIP_withRR_withSC_withFPwhereA() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -254,20 +343,24 @@ public class PrincipalAtMaturityTest {
         map.put("NominalInterestRate","0.01");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfOptionality","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleOfFee","1Q-");
+        map.put("FeeBasis","A");
+        map.put("FeeRate","100");
         // parse attributes
         ContractModel model = AttributeParser.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
     }
     
     @Test
-    public void test_PAM_withIP_withRR_withSC_withOPCLandOPANX() {
+    public void test_PAM_withIP_withRR_withSC_withFPwhereN() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -283,20 +376,273 @@ public class PrincipalAtMaturityTest {
         map.put("NominalInterestRate","0.01");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleOfFee","1Q-");
+        map.put("FeeBasis","N");
+        map.put("FeeRate","0.01");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_PAM_withIP_withRR_withSC_withFP_withOPCL() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleOfFee","1Q-");
+        map.put("FeeBasis","N");
+        map.put("FeeRate","0.01");
+        map.put("CycleOfOptionality","1Q-");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+        
+    @Test
+    public void test_PAM_withIP_withRR_withSC_withFP_withOPANX() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("FeeBasis","N");
+        map.put("FeeRate","0.01");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
         // parse attributes
         ContractModel model = AttributeParser.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_PAM_withIP_withRR_withSC_withFP_withOPCLandOPANX() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("FeeBasis","N");
+        map.put("FeeRate","0.01");
+        map.put("CycleOfOptionality","1Q-");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+
+    @Test
+    public void test_PAM_withIP_withRR_withSC_withFP_withOP_withPYwhereO() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("FeeBasis","N");
+        map.put("FeeRate","0.01");
+        map.put("CycleOfOptionality","1Q-");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("PenaltyType","O");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+
+    @Test
+    public void test_PAM_withIP_withRR_withSC_withFP_withOP_withPYwhereA() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("FeeBasis","N");
+        map.put("FeeRate","0.01");
+        map.put("CycleOfOptionality","1Q-");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("PenaltyType","A");
+        map.put("PenaltyRate","100");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_PAM_withIP_withRR_withSC_withFP_withOP_withPYwhereN() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("FeeBasis","N");
+        map.put("FeeRate","0.01");
+        map.put("CycleOfOptionality","1Q-");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("PenaltyType","N");
+        map.put("PenaltyRate","0.1");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
     }
     
         @Test
+    public void test_PAM_withIP_withRR_withSC_withFP_withOP_withPYwhereI() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1Q-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("FeeBasis","N");
+        map.put("FeeRate","0.01");
+        map.put("CycleOfOptionality","1Q-");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("PenaltyType","I");
+        // parse attributes
+        ContractModel model = AttributeParser.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
     public void test_PAM_withIP_withRR_withSC_withOP_withMultipleAnalysisTimes() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
@@ -313,8 +659,10 @@ public class PrincipalAtMaturityTest {
         map.put("NominalInterestRate","0.01");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
         // parse attributes
         ContractModel model = AttributeParser.parse(map);
         // define analysis times
@@ -324,7 +672,7 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        MarketModel riskFactors = new MarketModel();
         // eval PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
         //System.out.println(events);

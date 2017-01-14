@@ -3,9 +3,10 @@
  *
  * Please see distribution for license.
  */
-package org.actus.attributes;
+package org.actus.externals;
 
 import org.actus.AttributeConversionException;
+import org.actus.attributes.ContractModel;
 
 import java.util.Map;
 import java.util.HashMap;

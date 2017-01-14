@@ -3,8 +3,9 @@
  *
  * Please see distribution for license.
  */
-package org.actus.attributes;
+package org.actus.externals;
 
+import org.actus.attributes.ContractModel;
 import org.actus.AttributeConversionException;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.daycount.DayCountCalculator;
@@ -69,9 +70,9 @@ public final class AttributeParser {
                 model.contractRole = attributes.get("ContractRole");
                 model.contractRoleSign = ContractRoleConvention.roleSign(model.contractRole);
                 model.legalEntityIDCounterparty = attributes.get("LegalEntityIDCounterparty");
-                model.cycleAnchorDateOfFee = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee")))? null : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee"));
+                model.cycleAnchorDateOfFee = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee")))? ( (CommonUtils.isNull(attributes.get("CycleOfFee")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee"));
                 model.cycleOfFee = attributes.get("CycleOfFee");
-                model.feeBasis = (CommonUtils.isNull(attributes.get("FeeBasis")))? 0.0 : Double.parseDouble(attributes.get("FeeBasis"));
+                model.feeBasis = (CommonUtils.isNull(attributes.get("FeeBasis")))? '0' : attributes.get("FeeBasis").charAt(0);
                 model.feeRate = (CommonUtils.isNull(attributes.get("FeeRate")))? 0.0 : Double.parseDouble(attributes.get("FeeRate"));
                 model.feeAccrued = (CommonUtils.isNull(attributes.get("FeeAccrued")))? 0.0 : Double.parseDouble(attributes.get("FeeAccrued"));
                 model.cycleAnchorDateOfInterestPayment = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment")))? ( (CommonUtils.isNull(attributes.get("CycleOfInterestPayment")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment"));
@@ -98,6 +99,9 @@ public final class AttributeParser {
                 // TODO: review prepayment mechanism and attributes
                 model.cycleAnchorDateOfOptionality = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality")))? ( (CommonUtils.isNull(attributes.get("CycleOfOptionality")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality"));
                 model.cycleOfOptionality = attributes.get("CycleOfOptionality");
+                model.penaltyType = (CommonUtils.isNull(attributes.get("PenaltyType")))? 'N' : attributes.get("PenaltyType").charAt(0);
+                model.penaltyRate = (CommonUtils.isNull(attributes.get("PenaltyRate")))? 0.0 : Double.parseDouble(attributes.get("PenaltyRate"));
+                model.objectCodeOfPrepaymentModel = attributes.get("ObjectCodeOfPrepaymentModel");
                 
                 model.cycleAnchorDateOfRateReset = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfRateReset")))? ( (CommonUtils.isNull(attributes.get("CycleOfRateReset")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfRateReset"));
                 model.cycleOfRateReset = attributes.get("CycleOfRateReset");

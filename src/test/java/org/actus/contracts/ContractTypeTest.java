@@ -8,8 +8,8 @@ package org.actus.contracts;
 import org.actus.ContractTypeUnknownException;
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
-import org.actus.attributes.AttributeParser;
-import org.actus.riskfactors.RiskFactorProvider;
+import org.actus.externals.AttributeParser;
+import org.actus.externals.MarketModelProvider;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ import org.junit.rules.ExpectedException;
 
 public class ContractTypeTest {
     
-    class RiskFactorModel implements RiskFactorProvider {
+    class MarketModel implements MarketModelProvider {
         public Set<String> keys() {
             Set<String> keys = new HashSet<String>();
             return keys;
@@ -52,10 +52,10 @@ public class ContractTypeTest {
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        // define market model
+        MarketModel marketModel = new MarketModel();
         // eval PAM contract
-        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,marketModel);
     }
     
     @Test
@@ -78,10 +78,10 @@ public class ContractTypeTest {
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        // define market model
+        MarketModel marketModel = new MarketModel();
         // eval PAM contract
-        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,marketModel);
     }
     
     @Test
@@ -101,6 +101,7 @@ public class ContractTypeTest {
         map.put("NominalInterestRate","0.01");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         // parse attributes
@@ -111,10 +112,10 @@ public class ContractTypeTest {
         analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
         analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // define risk factor model
-        RiskFactorModel riskFactors = new RiskFactorModel();
+        // define market model
+        MarketModel marketModel = new MarketModel();
         // eval PAM contract
-        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,marketModel);
         //System.out.println(events);
     }
 

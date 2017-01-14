@@ -21,9 +21,11 @@ public final class StateSpace {
     public double timeFromLastEvent; // analytical result
     public double nominalValue; // analytical result
     public double nominalAccrued; // analytical result
+    public double feeAccrued; // analytical result
     public double nominalRate; // analytical result
     public double interestCalculationBase;
-    public double scalingMultiplier;
+    public double interestScalingMultiplier;
+    public double nominalScalingMultiplier;
     public double nextPrincipalRedemptionPayment;
     public double secondaryNominalValue; // analytical result
     public double lastInterestPayment;

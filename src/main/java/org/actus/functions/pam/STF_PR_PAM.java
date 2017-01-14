@@ -8,24 +8,25 @@ package org.actus.functions.pam;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModel;
-import org.actus.riskfactors.RiskFactorProvider;
+import org.actus.externals.MarketModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public class STF_PR_PAM implements StateTransitionFunction {
+public final class STF_PR_PAM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
-    ContractModel model, RiskFactorProvider riskFactors, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[7];
+    ContractModel model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+        double[] postEventStates = new double[8];
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalValue = 0.0;
         states.nominalRate = 0.0;
         states.nominalAccrued = 0.0;
+        states.feeAccrued = 0.0;
         states.lastEventTime = time;
         
         // copy post-event-states

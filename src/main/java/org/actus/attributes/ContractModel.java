@@ -49,7 +49,7 @@ public class ContractModel {
     public String marketObjectCodeOfDividendRate;
     public LocalDateTime cycleAnchorDateOfFee;
     public String cycleOfFee;
-    public double feeBasis;
+    public char feeBasis;
     public double feeRate;
     public double feeAccrued;
     public LocalDateTime cycleAnchorDateOfInterestPayment;
@@ -119,6 +119,8 @@ public class ContractModel {
     public LocalDateTime cycleAnchorDateOfOptionality; // TODO: review with prepayment concept
     public String cycleOfOptionality; // TODO: review with prepayment concept
     public int cycleTriggerOfOptionality; // TODO: review with prepayment concept
+    public char penaltyType; // TODO: review with prepayment concept
+    public double penaltyRate; // TODO: review with prepayment concept
     public double maximumPenaltyFreeDisbursement;
     public LocalDateTime cycleAnchorDateOfRateReset;
     public LocalDateTime[] arrayCycleAnchorDateOfRateReset;

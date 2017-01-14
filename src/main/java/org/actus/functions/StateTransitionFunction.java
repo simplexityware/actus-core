@@ -6,7 +6,7 @@
 package org.actus.functions;
 
 import org.actus.attributes.ContractModel;
-import org.actus.riskfactors.RiskFactorProvider;
+import org.actus.externals.MarketModelProvider;
 import org.actus.states.StateSpace;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
  * value of this component's {@code eval} function gives the post-event contract states for 
  * the respective {@link ContractEvent}.
  */
-public interface StateTransitionFunction {
+public abstract interface StateTransitionFunction {
     
     /**
      * Evaluate the function
@@ -30,11 +30,11 @@ public interface StateTransitionFunction {
      * @param time the schedule time of this particular event
      * @param states the current state of conract states
      * @param model the model containing parsed contract attributes
-     * @param riskFactors the risk factor model
+     * @param marketModel an external market model
      * @param dayCounter the day count convention used to calculate day count fractions
      * @param timeAdjuster the business day convention used to shift the schedule time
      * @return an array of post-event states of numerical contract states
      */
     public double[] eval(LocalDateTime time, StateSpace states, 
-    ContractModel model, RiskFactorProvider riskFactors, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster);
+    ContractModel model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster);
 }

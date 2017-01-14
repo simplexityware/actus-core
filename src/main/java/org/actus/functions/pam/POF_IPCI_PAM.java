@@ -8,18 +8,17 @@ package org.actus.functions.pam;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModel;
-import org.actus.riskfactors.RiskFactorProvider;
+import org.actus.externals.MarketModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.conventions.contractrole.ContractRoleConvention;
 
 import java.time.LocalDateTime;
 
-public class POF_IPCI_PAM implements PayOffFunction {
+public final class POF_IPCI_PAM implements PayOffFunction {
     
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
-    ContractModel model, RiskFactorProvider riskFactors, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+    ContractModel model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return 0.0;
         }
 }

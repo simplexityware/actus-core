@@ -45,6 +45,9 @@ public final class StringUtils {
     public final static String EventType_AD = "AD";
     public final static String EventType_IED = "IED";
     public final static String EventType_PR = "PR";
+    public final static String EventType_PP = "PP";
+    public final static String EventType_PY = "PY";
+    public final static String EventType_FP = "FP";
     public final static String EventType_IP = "IP";
     public final static String EventType_IPCI = "IPCI";
     public final static String EventType_RR = "RR";
