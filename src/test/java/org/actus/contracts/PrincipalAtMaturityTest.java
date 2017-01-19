@@ -7,7 +7,6 @@ package org.actus.contracts;
 
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
-import org.actus.externals.AttributeParser;
 import org.actus.externals.MarketModelProvider;
 
 import java.util.Set;
@@ -58,7 +57,7 @@ public class PrincipalAtMaturityTest {
         map.put("MaturityDate", "2017-01-01T00:00:00");
         map.put("NotionalPrincipal", "1000.0");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -84,7 +83,7 @@ public class PrincipalAtMaturityTest {
         map.put("NotionalPrincipal", "1000.0");
         map.put("NominalInterestRate","0.01");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -111,7 +110,7 @@ public class PrincipalAtMaturityTest {
         map.put("NominalInterestRate","0.01");
         map.put("CycleOfInterestPayment","1Q-");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -139,7 +138,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleAnchorDateOfInterestPayment","2016-06-01T00:00:00");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -168,7 +167,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleOfRateReset","1Q-");
         map.put("CycleAnchorDateOfRateReset","2016-06-01T00:00:00");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -197,7 +196,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","000");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -226,7 +225,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","I00");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -255,7 +254,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -285,7 +284,7 @@ public class PrincipalAtMaturityTest {
         map.put("ScalingEffect","IN0");
         map.put("CycleOfScalingIndex","1Q-");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -316,7 +315,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfScalingIndex","2016-06-01T00:00:00");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -349,7 +348,7 @@ public class PrincipalAtMaturityTest {
         map.put("FeeBasis","A");
         map.put("FeeRate","100");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -382,7 +381,7 @@ public class PrincipalAtMaturityTest {
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -417,7 +416,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleOfOptionality","1Q-");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -451,7 +450,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -486,7 +485,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -522,7 +521,7 @@ public class PrincipalAtMaturityTest {
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","O");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -559,7 +558,7 @@ public class PrincipalAtMaturityTest {
         map.put("PenaltyType","A");
         map.put("PenaltyRate","100");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -596,7 +595,7 @@ public class PrincipalAtMaturityTest {
         map.put("PenaltyType","N");
         map.put("PenaltyRate","0.1");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -632,7 +631,7 @@ public class PrincipalAtMaturityTest {
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -664,7 +663,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));

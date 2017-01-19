@@ -3,10 +3,9 @@
  *
  * Please see distribution for license.
  */
-package org.actus.externals;
+package org.actus.attributes;
 
 import org.actus.AttributeConversionException;
-import org.actus.attributes.ContractModel;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
-public class AttributeParserTest {
+public class ContractModelTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -25,7 +24,7 @@ public class AttributeParserTest {
         thrown.expect(AttributeConversionException.class);
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
     }
 
     @Test
@@ -42,7 +41,7 @@ public class AttributeParserTest {
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("MaturityDate", "2017-01-01T00:00:00");
         map.put("NotionalPrincipal", "1000.0");
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
     }
 
     @Test
@@ -91,7 +90,7 @@ public class AttributeParserTest {
         map.put("NextResetRate", "0.08");
         map.put("RateMultiplier", "1.1");
         map.put("RateTerm", "4M");
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
     }
 
 }

@@ -5,10 +5,9 @@
  */
 package org.actus.contracts;
 
-import org.actus.ContractTypeUnknownException;
+import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
-import org.actus.externals.AttributeParser;
 import org.actus.externals.MarketModelProvider;
 
 import java.util.Set;
@@ -45,10 +44,20 @@ public class ContractTypeTest {
     
     @Test
     public void test_UnknownCT_exception() {
-        thrown.expect(ContractTypeUnknownException.class);
+        thrown.expect(AttributeConversionException.class);
         // define attributes
-        ContractModel model = new ContractModel();
-        model.contractType="IDoNotExist";
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "IDoNotExist");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -74,7 +83,7 @@ public class ContractTypeTest {
         map.put("MaturityDate", "2017-01-01T00:00:00");
         map.put("NotionalPrincipal", "1000.0");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
@@ -105,7 +114,7 @@ public class ContractTypeTest {
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         // parse attributes
-        ContractModel model = AttributeParser.parse(map);
+        ContractModel model = ContractModel.parse(map);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
