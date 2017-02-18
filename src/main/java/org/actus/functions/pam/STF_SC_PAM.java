@@ -8,7 +8,7 @@ package org.actus.functions.pam;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 import org.actus.externals.ContractModelProvider;
-import org.actus.externals.MarketModelProvider;
+import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 
@@ -18,7 +18,7 @@ public final class STF_SC_PAM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
-    ContractModelProvider model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+    ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         double[] postEventStates = new double[8];
         
         // update state space
@@ -26,10 +26,10 @@ public final class STF_SC_PAM implements StateTransitionFunction {
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
         states.feeAccrued += model.feeRate() * states.nominalValue * states.timeFromLastEvent;
         if(model.scalingEffect().contains("I")) {
-            states.interestScalingMultiplier = marketModel.stateAt(model.marketObjectCodeOfScalingIndex(),time,states,model);
+            states.interestScalingMultiplier = riskFactorModel.stateAt(model.marketObjectCodeOfScalingIndex(),time,states,model);
         }
         if(model.scalingEffect().contains("N")) {
-            states.nominalScalingMultiplier = marketModel.stateAt(model.marketObjectCodeOfScalingIndex(),time,states,model);
+            states.nominalScalingMultiplier = riskFactorModel.stateAt(model.marketObjectCodeOfScalingIndex(),time,states,model);
         }
         states.lastEventTime = time;
         

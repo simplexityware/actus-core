@@ -7,7 +7,7 @@ package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
 import org.actus.externals.ContractModelProvider;
-import org.actus.externals.MarketModelProvider;
+import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
@@ -57,10 +57,10 @@ public final class PrincipalAtMaturity {
 
     public static ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
                         		         ContractModelProvider model, 
-                        		         MarketModelProvider marketModel) throws AttributeConversionException {
+                        		         RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         
         // compute events
-        ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,marketModel);
+        ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,riskFactorModel);
         
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
@@ -69,7 +69,7 @@ public final class PrincipalAtMaturity {
         Collections.sort(payoff);
 
         // evaluate events
-        payoff.forEach(e -> e.eval(states, model, marketModel, model.dayCountConvention(), model.businessDayConvention()));
+        payoff.forEach(e -> e.eval(states, model, riskFactorModel, model.dayCountConvention(), model.businessDayConvention()));
         
         // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
         if(!CommonUtils.isNull(model.purchaseDate())) {
@@ -80,7 +80,7 @@ public final class PrincipalAtMaturity {
         return payoff;
     }
     
-    private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, MarketModelProvider marketModel) throws AttributeConversionException {
+    private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         HashSet<ContractEvent> events = new HashSet<ContractEvent>();
 
         // create contract event schedules
@@ -148,7 +148,7 @@ public final class PrincipalAtMaturity {
             if(!CommonUtils.isNull(model.cycleOfOptionality())) {
                 times = ScheduleFactory.createSchedule(model.cycleAnchorDateOfOptionality(), model.maturityDate(),model.cycleOfOptionality(), model.endOfMonthConvention());
             } else {
-                times = marketModel.times(model.objectCodeOfPrepaymentModel());
+                times = riskFactorModel.times(model.objectCodeOfPrepaymentModel());
                 times.removeIf(e -> e.compareTo(model.cycleAnchorDateOfOptionality())==-1);
             }
             events.addAll(EventFactory.createEvents(times,StringUtils.EventType_PP, model.currency(), new POF_PP_PAM(), new STF_PP_PAM(), model.businessDayConvention()));
@@ -164,8 +164,8 @@ public final class PrincipalAtMaturity {
             events.add(termination);
         }
         // add counterparty default risk-factor contingent events
-        if(marketModel.keys().contains(model.legalEntityIDCounterparty())) {
-            events.addAll(EventFactory.createEvents(marketModel.times(model.legalEntityIDCounterparty()),
+        if(riskFactorModel.keys().contains(model.legalEntityIDCounterparty())) {
+            events.addAll(EventFactory.createEvents(riskFactorModel.times(model.legalEntityIDCounterparty()),
                                              StringUtils.EventType_CD, model.currency(), new POF_CD_PAM(), new STF_CD_PAM()));
         }
         

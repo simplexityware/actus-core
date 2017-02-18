@@ -8,7 +8,7 @@ package org.actus.events;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.functions.PayOffFunction;
 import org.actus.externals.ContractModelProvider;
-import org.actus.externals.MarketModelProvider;
+import org.actus.externals.RiskFactorModelProvider;
 import org.actus.states.StateSpace;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
@@ -226,14 +226,14 @@ public final class ContractEvent implements Comparable<ContractEvent> {
    * 
    * @param states the current state of contract states
    * @param model the model containing parsed contract attributes
-   * @param marketModel an external market model
+   * @param riskFactorModel an external market model
    * @param dayCounter the day counter to be used for calculating day count fractions
    * @param timeAdjuster the business day convention to be used for adjusting times in day count fraction calculations
    * @return
    */
-    public void eval(StateSpace states, ContractModelProvider model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        this.payoff = fPayOff.eval(scheduleTime, states, model, marketModel, dayCounter, timeAdjuster);
-        this.states = fStateTrans.eval(scheduleTime, states, model, marketModel, dayCounter, timeAdjuster);
+    public void eval(StateSpace states, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+        this.payoff = fPayOff.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
+        this.states = fStateTrans.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
     }
     
     /**

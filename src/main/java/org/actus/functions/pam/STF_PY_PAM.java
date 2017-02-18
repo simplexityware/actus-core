@@ -8,7 +8,7 @@ package org.actus.functions.pam;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 import org.actus.externals.ContractModelProvider;
-import org.actus.externals.MarketModelProvider;
+import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 
@@ -18,7 +18,7 @@ public final class STF_PY_PAM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
-    ContractModelProvider model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+    ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         double[] postEventStates = new double[8];
         
         // update state space

@@ -10,7 +10,7 @@ import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import org.actus.externals.ContractModelProvider;
-import org.actus.externals.MarketModelProvider;
+import org.actus.externals.RiskFactorModelProvider;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ import org.junit.rules.ExpectedException;
 
 public class ContractTypeTest {
     
-    class MarketModel implements MarketModelProvider {
+    class MarketModel implements RiskFactorModelProvider {
         public Set<String> keys() {
             Set<String> keys = new HashSet<String>();
             return keys;
