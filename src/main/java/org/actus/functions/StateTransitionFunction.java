@@ -5,7 +5,7 @@
  */
 package org.actus.functions;
 
-import org.actus.attributes.ContractModel;
+import org.actus.externals.ContractModelProvider;
 import org.actus.externals.MarketModelProvider;
 import org.actus.states.StateSpace;
 import org.actus.conventions.daycount.DayCountCalculator;
@@ -36,5 +36,5 @@ public abstract interface StateTransitionFunction {
      * @return an array of post-event states of numerical contract states
      */
     public double[] eval(LocalDateTime time, StateSpace states, 
-    ContractModel model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster);
+    ContractModelProvider model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster);
 }

@@ -7,7 +7,7 @@ package org.actus.functions.pam;
 
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
-import org.actus.attributes.ContractModel;
+import org.actus.externals.ContractModelProvider;
 import org.actus.externals.MarketModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
@@ -18,13 +18,13 @@ public final class STF_PRD_PAM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
-    ContractModel model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+    ContractModelProvider model, MarketModelProvider marketModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         double[] postEventStates = new double[8];
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
-        states.feeAccrued += model.feeRate * states.nominalValue * states.timeFromLastEvent;
+        states.feeAccrued += model.feeRate() * states.nominalValue * states.timeFromLastEvent;
         states.lastEventTime = time;
         
         // copy post-event-states

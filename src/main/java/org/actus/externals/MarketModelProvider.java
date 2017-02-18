@@ -5,6 +5,7 @@
  */
 package org.actus.externals;
 
+import org.actus.states.StateSpace;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -48,5 +49,5 @@ public abstract interface MarketModelProvider {
    * @param time future time for which to return the risk factor's state
    * @return double the state of the risk factor
    */
-  public double stateAt(String id, LocalDateTime time);
+  public double stateAt(String id, LocalDateTime time, StateSpace contractStates, ContractModelProvider contractAttributes);
 }

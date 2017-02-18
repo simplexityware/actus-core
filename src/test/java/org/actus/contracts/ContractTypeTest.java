@@ -8,6 +8,8 @@ package org.actus.contracts;
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
+import org.actus.states.StateSpace;
+import org.actus.externals.ContractModelProvider;
 import org.actus.externals.MarketModelProvider;
 
 import java.util.Set;
@@ -34,7 +36,7 @@ public class ContractTypeTest {
             return times;
         }
         
-        public double stateAt(String id, LocalDateTime time) {
+        public double stateAt(String id, LocalDateTime time,StateSpace states,ContractModelProvider contractAttributes) {
             return 0.0;    
         }
     }
