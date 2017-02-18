@@ -47,6 +47,8 @@ public abstract interface MarketModelProvider {
    * 
    * @param id identifier of the risk factor
    * @param time future time for which to return the risk factor's state
+   * @param contractStates the inner states of the contract as per @code{time} argument of the method
+   * @param contractAttributes the attributes of the contract calling the method
    * @return double the state of the risk factor
    */
   public double stateAt(String id, LocalDateTime time, StateSpace contractStates, ContractModelProvider contractAttributes);
