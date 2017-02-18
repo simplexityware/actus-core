@@ -5,7 +5,7 @@
  */
 package org.actus.conventions.businessday;
 
-import org.actus.time.calendar.BusinessDayCalendarProvider;
+import org.actus.externals.BusinessDayCalendarProvider;
 
 import java.time.LocalDateTime;
 

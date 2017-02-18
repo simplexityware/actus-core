@@ -4,7 +4,7 @@ package org.actus.conventions.businessday;
  *
  * Please see distribution for license.
  */
-import org.actus.time.calendar.BusinessDayCalendarProvider;
+import org.actus.externals.BusinessDayCalendarProvider;
 
 import java.time.LocalDateTime;
 

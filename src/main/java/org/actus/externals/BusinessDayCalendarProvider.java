@@ -3,7 +3,7 @@
  *
  * Please see distribution for license.
  */
-package org.actus.time.calendar;
+package org.actus.externals;
 
 import java.time.LocalDateTime;
 
@@ -14,8 +14,15 @@ import java.time.LocalDateTime;
  * calendar used in the respective business center. This component
  * implements a specific calendar which defines for each date
  * whether it is a business day or not.
+ * <p>
+ * The {@code actus-core} library in fact only provides few very basic
+ * implementations of this component (see package {@code org.actus.time.calendar}). 
+ * This set of business day calendars can easily be extended externally by 
+ * implementing this component (or interface respectively) and passing the 
+ * external calendar class to the {@code ContractModel} when parsing the
+ * attributes.
  */
-public interface BusinessDayCalendarProvider {
+public abstract interface BusinessDayCalendarProvider {
     
     /**
      * Returns whether a date is a business day or not

@@ -6,7 +6,7 @@
 package org.actus.conventions.businessday;
 
 import org.actus.AttributeConversionException;
-import org.actus.time.calendar.BusinessDayCalendarProvider;
+import org.actus.externals.BusinessDayCalendarProvider;
 import org.actus.util.StringUtils;
 import org.actus.util.CommonUtils;
 
@@ -37,8 +37,7 @@ public final class BusinessDayAdjuster {
      * @throws AttributeConversionException if {@code convention} or {@code calendar} does not conform with the ACTUS Data Dictionary
      * @return 
      */
-    public BusinessDayAdjuster(String convention, String calendar) throws AttributeConversionException {
-        BusinessDayCalendarProvider _calendar;
+    public BusinessDayAdjuster(String convention, BusinessDayCalendarProvider calendar) {
         String suffix;
         String prefix;
 
@@ -51,13 +50,6 @@ public final class BusinessDayAdjuster {
         } else {
 
             try {
-                // TODO: currently calendar needs to be a qualified class name and not just name of the 
-                // classe's source code file (e.g. org.actus.time.calendar.NoHolidaysCalendar instead of 
-                // NoHolidaysCalendar only). 
-                // This is not practicable as calendar is the value of ACTUS attribute "Calendar" which
-                // needs to be clean of references to any technology or implementation
-                Class clazz = Class.forName(calendar);
-                _calendar = (BusinessDayCalendarProvider)clazz.newInstance();
                 prefix = convention.substring(0, 2);
                 suffix = convention.substring(2);
             } catch (Exception e) {
@@ -77,16 +69,16 @@ public final class BusinessDayAdjuster {
 
             switch (suffix) {
                 case StringUtils.BusinessDayConvention_F:
-                    bdConvention = new Following(_calendar);
+                    bdConvention = new Following(calendar);
                     break;
                 case StringUtils.BusinessDayConvention_MF:
-                    bdConvention = new ModifiedFollowing(_calendar);
+                    bdConvention = new ModifiedFollowing(calendar);
                     break;
                 case StringUtils.BusinessDayConvention_P:
-                    bdConvention = new Preceeding(_calendar);
+                    bdConvention = new Preceeding(calendar);
                     break;
                 case StringUtils.BusinessDayConvention_MP:
-                    bdConvention = new ModifiedPreceeding(_calendar);
+                    bdConvention = new ModifiedPreceeding(calendar);
                     break;
                 default:
                     throw new AttributeConversionException();

@@ -6,6 +6,9 @@
 package org.actus.attributes;
 
 import org.actus.externals.ContractModelProvider;
+import org.actus.externals.BusinessDayCalendarProvider;
+import org.actus.time.calendar.NoHolidaysCalendar;
+import org.actus.time.calendar.MondayToFridayCalendar;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.attributes.ContractModel;
@@ -33,7 +36,7 @@ import java.time.LocalDateTime;
  * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">ACTUS Data Dictionary</a>
  */
 public class ContractModel implements ContractModelProvider {
-    private String calendar;
+    private BusinessDayCalendarProvider calendar;
     private BusinessDayAdjuster businessDayConvention;
     private String endOfMonthConvention;
     private String contractType;
@@ -152,7 +155,7 @@ public class ContractModel implements ContractModelProvider {
     private String deliverySettlement;
     private double futuresPrice;
     
-    public String calendar() {
+    public BusinessDayCalendarProvider calendar() {
         return calendar;
     }
     
@@ -607,7 +610,7 @@ public class ContractModel implements ContractModelProvider {
         try{
         switch(attributes.get("ContractType")) {
             case StringUtils.ContractType_PAM:
-                model.calendar = attributes.get("Calendar");
+                model.calendar = (attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidayCalendar();
                 model.businessDayConvention = new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), model.calendar);
                 model.endOfMonthConvention = (CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention");
                 model.contractType = attributes.get("ContractType");
