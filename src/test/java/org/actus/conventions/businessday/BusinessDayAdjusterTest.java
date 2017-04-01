@@ -7,6 +7,8 @@ package org.actus.conventions.businessday;
 
 import org.actus.AttributeConversionException;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.time.calendar.NoHolidaysCalendar;
+import org.actus.time.calendar.MondayToFridayCalendar;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,13 +27,13 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_AttributeConversionException() {
         thrown.expect(AttributeConversionException.class);
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("INEXISTENT", "NO");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("INEXISTENT", null);
     }
 
     @Test
     public void test_SAME_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SAME", "org.actus.time.calendar.NoHolidaysCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SAME", new NoHolidaysCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -72,7 +74,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_SAME_MondayToFridayCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SAME", "org.actus.time.calendar.MondayToFridayCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SAME", new MondayToFridayCalendar());
         
                // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -113,7 +115,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_SCF_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCF", "org.actus.time.calendar.NoHolidaysCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCF", new NoHolidaysCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -154,7 +156,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_SCF_MondayToFridayCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCF", "org.actus.time.calendar.MondayToFridayCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCF", new MondayToFridayCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -195,7 +197,7 @@ public class BusinessDayAdjusterTest {
         @Test
     public void test_CSF_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSF", "org.actus.time.calendar.NoHolidaysCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSF", new NoHolidaysCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -236,7 +238,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_CSF_MondayToFridayCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSF", "org.actus.time.calendar.MondayToFridayCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSF", new MondayToFridayCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -277,7 +279,7 @@ public class BusinessDayAdjusterTest {
         @Test
     public void test_SCMF_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMF", "org.actus.time.calendar.NoHolidaysCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMF", new NoHolidaysCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -318,7 +320,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_SCMF_MondayToFridayCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMF", "org.actus.time.calendar.MondayToFridayCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMF", new MondayToFridayCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -359,7 +361,7 @@ public class BusinessDayAdjusterTest {
             @Test
     public void test_CSMF_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMF", "org.actus.time.calendar.NoHolidaysCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMF", new NoHolidaysCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -400,7 +402,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_CSMF_MondayToFridayCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMF", "org.actus.time.calendar.MondayToFridayCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMF", new MondayToFridayCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -441,7 +443,7 @@ public class BusinessDayAdjusterTest {
                 @Test
     public void test_SCP_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCP", "org.actus.time.calendar.NoHolidaysCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCP", new NoHolidaysCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -482,7 +484,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_SCP_MondayToFridayCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCP", "org.actus.time.calendar.MondayToFridayCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCP", new MondayToFridayCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -523,7 +525,7 @@ public class BusinessDayAdjusterTest {
                 @Test
     public void test_CSP_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSP", "org.actus.time.calendar.NoHolidaysCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSP", new NoHolidaysCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -564,7 +566,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_CSP_MondayToFridayCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSP", "org.actus.time.calendar.MondayToFridayCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSP", new MondayToFridayCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -605,7 +607,7 @@ public class BusinessDayAdjusterTest {
                 @Test
     public void test_SCMP_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMP", "org.actus.time.calendar.NoHolidaysCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMP", new NoHolidaysCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -646,7 +648,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_SCMP_MondayToFridayCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMP", "org.actus.time.calendar.MondayToFridayCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("SCMP", new MondayToFridayCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -687,7 +689,7 @@ public class BusinessDayAdjusterTest {
                 @Test
     public void test_CSMP_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMP", "org.actus.time.calendar.NoHolidaysCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMP", new NoHolidaysCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -728,7 +730,7 @@ public class BusinessDayAdjusterTest {
     @Test
     public void test_CSMP_MondayToFridayCalendar() {
         thrown = ExpectedException.none();
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMP", "org.actus.time.calendar.MondayToFridayCalendar");
+        BusinessDayAdjuster adjuster = new BusinessDayAdjuster("CSMP", new MondayToFridayCalendar());
         
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
