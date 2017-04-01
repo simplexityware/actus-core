@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
  * external calendar class to the {@code ContractModel} when parsing the
  * attributes.
  */
-public abstract interface BusinessDayCalendarProvider {
+public interface BusinessDayCalendarProvider {
     
     /**
      * Returns whether a date is a business day or not

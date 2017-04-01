@@ -12,6 +12,7 @@ public final class StringUtils {
     
     // contract types 
     public final static String ContractType_PAM = "PAM";
+    public final static String ContractType_LAM = "LAM";
     
     // cycle stubs
     public final static char LongStub = '+';

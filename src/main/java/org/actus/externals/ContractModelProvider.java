@@ -5,6 +5,7 @@
  */
 package org.actus.externals;
 
+import org.actus.externals.BusinessDayCalendarProvider;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.daycount.DayCountCalculator;
 
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
  * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">ACTUS Data Dictionary</a>
  */
 public abstract interface ContractModelProvider {
-    public String calendar();
+    public BusinessDayCalendarProvider calendar();
     public BusinessDayAdjuster businessDayConvention();
     public String endOfMonthConvention();
     public String contractType();

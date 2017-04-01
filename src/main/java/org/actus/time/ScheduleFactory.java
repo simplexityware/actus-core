@@ -8,6 +8,7 @@ package org.actus.time;
 import org.actus.AttributeConversionException;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
+import org.actus.util.CycleUtils;
 import org.actus.conventions.endofmonth.EndOfMonthAdjuster;
 
 import java.time.LocalDateTime;
@@ -54,8 +55,6 @@ public final class ScheduleFactory {
 	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention) throws AttributeConversionException {    
 		EndOfMonthAdjuster adjuster;
 		Set<LocalDateTime> timesSet = new HashSet<LocalDateTime>();
-        int multiplier;
-        char unit;
         Period period;
         Period increment;
         char stub;
@@ -70,27 +69,13 @@ public final class ScheduleFactory {
 		}
         
         // parse cycle
-        try {
-            multiplier = Integer.parseInt(cycle.substring(0,cycle.length() - 2));
-		    unit = cycle.charAt(cycle.length() - 2);
-		    if(unit == 'Q') {
-		      multiplier *= 3;
-		      unit = 'M';
-		    } else if(unit == 'H') {
-		      multiplier *= 6;
-		      unit = 'M';
-		    } else if(unit == 'Y') {
-		      multiplier *= 12;
-		      unit = 'M';
-		    }
-            stub = cycle.charAt(cycle.length() - 1);
-		    period = Period.parse("P" + 1 + unit);
-		} catch (Exception e) {
-		  throw(new AttributeConversionException());
-        }
+        period = CycleUtils.parsePeriod(cycle);
+
+        // parse stub
+        stub = CycleUtils.parseStub(cycle);
         
         // parse end of month convention
-        adjuster = new EndOfMonthAdjuster(endOfMonthConvention, startTime, unit);
+        adjuster = new EndOfMonthAdjuster(endOfMonthConvention, startTime, period);
         
 		// init helpers for schedule creation
 		int counter = 1;
@@ -99,7 +84,7 @@ public final class ScheduleFactory {
 		// create schedule based on end-of-month-convention
 		  while (newTime.isBefore(endTime)) {
 		     timesSet.add(newTime);
-			 increment = period.multipliedBy(counter * multiplier);
+			 increment = period.multipliedBy(counter);
 			 newTime = adjuster.shift(startTime.plus(increment));
 			 counter++;
 		  }		    
@@ -108,7 +93,7 @@ public final class ScheduleFactory {
         // now adjust for the last stub
 		if (stub == StringUtils.LongStub && timesSet.size() > 2 && !endTime.equals(newTime)) {
 		    //System.out.println("In method with par " + period + " " + multiplier + " " + newTime.minus(period.multipliedBy(multiplier)));
-			timesSet.remove(adjuster.shift(startTime.plus(period.multipliedBy((counter-2) * multiplier))));
+			timesSet.remove(adjuster.shift(startTime.plus(period.multipliedBy((counter-2)))));
 		}
 		
 		// return schedule

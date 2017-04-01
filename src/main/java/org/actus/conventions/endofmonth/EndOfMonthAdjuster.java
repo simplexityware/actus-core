@@ -12,6 +12,7 @@ import org.actus.conventions.endofmonth.SameDay;
 import org.actus.conventions.endofmonth.EndOfMonth;
 
 import java.time.LocalDateTime;
+import java.time.Period;
 
 import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
@@ -30,21 +31,21 @@ public final class EndOfMonthAdjuster {
      * <ul>
      *      <li> The convention: "SD" = same day and means not adjusting, "EM" = end of month and means adjusting</li>
      *      <li> The start date of the schedule: dates are only shifted if the schedule start date is an end-of-month date</li>
-     *      <li> the cycle of the schedule: dates are only shifted if the schedule cycle is based on a "M" period unit or multiple thereof</li>
+     *      <li> the period of the schedule cycle: dates are only shifted if the schedule cycle is based on an "M" period unit or multiple thereof</li>
      * </ul>
      * 
      * @param convention indicates the {@link EndOfMonthConvention} to be applied
      * @param refDate the schedule start date
-     * @param periodUnit the period unit of the cycle used in the schedule
-     * @throws AttributeConversionException if {@code convention} or {@code periodUnit} does not conform with the ACTUS Data Dictionary
+     * @param period the period of the cycle used in the schedule
+     * @throws AttributeConversionException if {@code convention} does not conform with the ACTUS Data Dictionary
      * @return 
      */
-    public EndOfMonthAdjuster(String convention, LocalDateTime refDate, char periodUnit) throws AttributeConversionException {
+    public EndOfMonthAdjuster(String convention, LocalDateTime refDate, Period period) throws AttributeConversionException {
         switch (convention) {
             case StringUtils.EndOfMonthConvention_EndOfMonth:
                 // note, internally, units which are a multiple of "1M" are converted to "XM" why here we only have to check
                 // for period-unit M when deciding whether or not to shift a date
-                if (refDate.equals(refDate.with(lastDayOfMonth())) && periodUnit == 'M') {
+                if (refDate.equals(refDate.with(lastDayOfMonth())) && period.getMonths() > 0) {
                     this.convention = new EndOfMonth();
                 } else {
                     this.convention = new SameDay();

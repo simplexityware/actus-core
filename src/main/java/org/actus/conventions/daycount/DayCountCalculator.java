@@ -5,6 +5,7 @@
  */
 package org.actus.conventions.daycount;
 
+import org.actus.externals.BusinessDayCalendarProvider;
 import org.actus.conventions.daycount.DayCountConvention;
 import org.actus.util.StringUtils;
 
@@ -24,7 +25,7 @@ public class DayCountCalculator {
      * @param calendar the {@link BusinessDayCalendar} to be used in case of {@code convention="B/252"}
      * @return
      */
-    public DayCountCalculator(String convention, String calendar) {
+    public DayCountCalculator(String convention, BusinessDayCalendarProvider calendar) {
         switch (convention) {
             case StringUtils.DayCountConvention_30E360:
                 this.convention = new ThirtyEThreeSixty();
