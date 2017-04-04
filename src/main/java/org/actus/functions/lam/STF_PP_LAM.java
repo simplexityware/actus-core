@@ -6,6 +6,7 @@
 package org.actus.functions.lam;
 
 import org.actus.functions.StateTransitionFunction;
+import org.actus.util.CommonUtils;
 import org.actus.states.StateSpace;
 import org.actus.externals.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
@@ -26,6 +27,9 @@ public final class STF_PP_LAM implements StateTransitionFunction {
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
         states.feeAccrued += model.feeRate() * states.nominalValue * states.timeFromLastEvent;
         states.nominalValue -= riskFactorModel.stateAt(model.objectCodeOfPrepaymentModel(),time,states,model) * states.nominalValue;
+        if (!CommonUtils.isNull(model.interestCalculationBase()) && model.interestCalculationBase().equals("NTL")) {
+            states.interestCalculationBase = states.nominalValue;    
+        }
         states.lastEventTime = time;
         
         // copy post-event-states

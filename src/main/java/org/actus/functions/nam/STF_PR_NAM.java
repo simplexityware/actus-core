@@ -3,7 +3,7 @@
  *
  * Please see distribution for license.
  */
-package org.actus.functions.lam;
+package org.actus.functions.nam;
 
 import org.actus.functions.StateTransitionFunction;
 import org.actus.util.CommonUtils;
@@ -15,7 +15,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_PR_LAM implements StateTransitionFunction {
+public final class STF_PR_NAM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
@@ -26,7 +26,7 @@ public final class STF_PR_LAM implements StateTransitionFunction {
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
         states.feeAccrued += model.feeRate() * states.nominalValue * states.timeFromLastEvent;
-        states.nominalValue -= states.nextPrincipalRedemptionPayment;
+        states.nominalValue -= states.nextPrincipalRedemptionPayment - states.nominalAccrued;
         if (!CommonUtils.isNull(model.interestCalculationBase()) && model.interestCalculationBase().equals("NTL")) {
             states.interestCalculationBase = states.nominalValue;    
         }
