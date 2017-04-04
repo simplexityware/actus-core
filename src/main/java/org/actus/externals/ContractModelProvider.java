@@ -29,7 +29,6 @@ public abstract interface ContractModelProvider {
     public String contractType();
     public LocalDateTime statusDate();
     public String contractRole();
-    public int contractRoleSign();
     // public String legalEntityIDRecordCreator;
     // public String contractID;
     public String legalEntityIDCounterparty();
@@ -89,8 +88,8 @@ public abstract interface ContractModelProvider {
     public LocalDateTime[] arrayCycleAnchorDateOfPrincipalRedemption();
     public String cycleOfPrincipalRedemption();
     public String[] arrayCycleOfPrincipalRedemption();
-    public double nextPrincipalRedemptionPayment();
-    public double[] arrayNextPrincipalRedemptionPayment();
+    public Double nextPrincipalRedemptionPayment();
+    public Double[] arrayNextPrincipalRedemptionPayment();
     public String[] arrayIncreaseDecrease();
     public LocalDateTime purchaseDate();
     public double priceAtPurchaseDate();

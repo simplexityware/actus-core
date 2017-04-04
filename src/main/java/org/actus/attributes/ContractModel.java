@@ -14,7 +14,6 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.attributes.ContractModel;
 import org.actus.AttributeConversionException;
 import org.actus.ContractTypeUnknownException;
-import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.util.StringUtils;
 import org.actus.util.CommonUtils;
 
@@ -42,7 +41,6 @@ public class ContractModel implements ContractModelProvider {
     private String contractType;
     private LocalDateTime statusDate;
     private String contractRole;
-    private int contractRoleSign;
     // private String legalEntityIDRecordCreator;
     // private String contractID;
     private String legalEntityIDCounterparty;
@@ -102,8 +100,8 @@ public class ContractModel implements ContractModelProvider {
     private LocalDateTime[] arrayCycleAnchorDateOfPrincipalRedemption;
     private String cycleOfPrincipalRedemption;
     private String[] arrayCycleOfPrincipalRedemption;
-    private double nextPrincipalRedemptionPayment;
-    private double[] arrayNextPrincipalRedemptionPayment;
+    private Double nextPrincipalRedemptionPayment;
+    private Double[] arrayNextPrincipalRedemptionPayment;
     private String[] arrayIncreaseDecrease;
     private LocalDateTime purchaseDate;
     private double priceAtPurchaseDate;
@@ -177,10 +175,6 @@ public class ContractModel implements ContractModelProvider {
     
     public String contractRole() {
         return contractRole;   
-    }
-    
-    public int contractRoleSign() {
-        return contractRoleSign;   
     }
     
     // public String legalEntityIDRecordCreator;
@@ -392,11 +386,11 @@ public class ContractModel implements ContractModelProvider {
         return arrayCycleOfPrincipalRedemption;   
     }
     
-    public double nextPrincipalRedemptionPayment() {
+    public Double nextPrincipalRedemptionPayment() {
         return nextPrincipalRedemptionPayment;   
     }
     
-    public double[] arrayNextPrincipalRedemptionPayment() {
+    public Double[] arrayNextPrincipalRedemptionPayment() {
         return arrayNextPrincipalRedemptionPayment;   
     }
     
@@ -606,7 +600,7 @@ public class ContractModel implements ContractModelProvider {
     public static ContractModel parse(Map<String,String> attributes) {
         ContractModel model = new ContractModel();
         
-        // parse all attributes known to the respective contrac type
+        // parse all attributes known to the respective contract type
         try{
         switch(attributes.get("ContractType")) {
             case StringUtils.ContractType_PAM:
@@ -616,7 +610,6 @@ public class ContractModel implements ContractModelProvider {
                 model.contractType = attributes.get("ContractType");
                 model.statusDate = LocalDateTime.parse(attributes.get("StatusDate"));
                 model.contractRole = attributes.get("ContractRole");
-                model.contractRoleSign = ContractRoleConvention.roleSign(model.contractRole);
                 model.legalEntityIDCounterparty = attributes.get("LegalEntityIDCounterparty");
                 model.cycleAnchorDateOfFee = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee")))? ( (CommonUtils.isNull(attributes.get("CycleOfFee")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee"));
                 model.cycleOfFee = attributes.get("CycleOfFee");
@@ -672,7 +665,6 @@ public class ContractModel implements ContractModelProvider {
                 model.contractType = attributes.get("ContractType");
                 model.statusDate = LocalDateTime.parse(attributes.get("StatusDate"));
                 model.contractRole = attributes.get("ContractRole");
-                model.contractRoleSign = ContractRoleConvention.roleSign(model.contractRole);
                 model.legalEntityIDCounterparty = attributes.get("LegalEntityIDCounterparty");
                 model.cycleAnchorDateOfFee = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee")))? ( (CommonUtils.isNull(attributes.get("CycleOfFee")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee"));
                 model.cycleOfFee = attributes.get("CycleOfFee");
@@ -689,7 +681,7 @@ public class ContractModel implements ContractModelProvider {
                 model.cycleAnchorDateOfInterestCalculationBase = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestCalculationBase")))? ( (CommonUtils.isNull(attributes.get("CycleOfInterestCalculationBase")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestCalculationBase"));
                 model.cycleOfInterestCalculationBase = attributes.get("CycleOfInterestCalculationBase");
                 model.interestCalculationBase = attributes.get("InterestCalculationBase");
-                model.interestCalculationBaseAmount = Double.parseDouble(attributes.get("InterestCalculationBaseAmount"));
+                model.interestCalculationBaseAmount = (CommonUtils.isNull(attributes.get("InterestCalculationBaseAmount")))? 0.0 : Double.parseDouble(attributes.get("InterestCalculationBaseAmount"));
                 
                 model.cyclePointOfInterestPayment = attributes.get("CyclePointOfInterestPayment");
                 model.currency = attributes.get("Currency");
@@ -699,7 +691,7 @@ public class ContractModel implements ContractModelProvider {
                 model.notionalPrincipal = Double.parseDouble(attributes.get("NotionalPrincipal")); 
                 
                 model.cycleAnchorDateOfPrincipalRedemption = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfPrincipalRedemption")))? LocalDateTime.parse(attributes.get("InitialExchangeDate")) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfPrincipalRedemption"));
-                model.cycleOfPrincipalRedemption = attributes.get("cycleOfPrincipalRedemption");
+                model.cycleOfPrincipalRedemption = attributes.get("CycleOfPrincipalRedemption");
                 model.nextPrincipalRedemptionPayment = (CommonUtils.isNull(attributes.get("NextPrincipalRedemptionPayment")))? null : Double.parseDouble(attributes.get("NextPrincipalRedemptionPayment"));
                 
                 model.purchaseDate = (CommonUtils.isNull(attributes.get("PurchaseDate")))? null : LocalDateTime.parse(attributes.get("PurchaseDate"));

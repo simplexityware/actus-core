@@ -12,37 +12,39 @@ import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.util.CycleUtils;
 import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.pam.POF_IED_PAM;
-import org.actus.functions.pam.STF_IED_PAM;
-import org.actus.functions.pam.POF_PR_PAM;
-import org.actus.functions.pam.STF_PR_PAM;
-import org.actus.functions.pam.POF_PRD_PAM;
-import org.actus.functions.pam.STF_PRD_PAM;
-import org.actus.functions.pam.POF_IP_PAM;
+import org.actus.functions.lam.STF_IED_LAM;
+import org.actus.functions.lam.POF_PR_LAM;
+import org.actus.functions.lam.STF_PR_LAM;
+import org.actus.functions.lam.POF_PRD_LAM;
+import org.actus.functions.lam.STF_PRD_LAM;
+import org.actus.functions.lam.POF_IP_LAM;
 import org.actus.functions.pam.STF_IP_PAM;
 import org.actus.functions.pam.POF_IPCI_PAM;
-import org.actus.functions.pam.STF_IPCI_PAM;
+import org.actus.functions.lam.STF_IPCI_LAM;
 import org.actus.functions.pam.POF_RR_PAM;
-import org.actus.functions.pam.STF_RR_PAM;
+import org.actus.functions.lam.STF_RR_LAM;
 import org.actus.functions.pam.POF_SC_PAM;
-import org.actus.functions.pam.STF_SC_PAM;
+import org.actus.functions.lam.STF_SC_LAM;
 import org.actus.functions.pam.POF_PP_PAM;
-import org.actus.functions.pam.STF_PP_PAM;
+import org.actus.functions.lam.STF_PP_LAM;
 import org.actus.functions.pam.POF_PY_PAM;
-import org.actus.functions.pam.STF_PY_PAM;
+import org.actus.functions.lam.STF_PY_LAM;
 import org.actus.functions.pam.POF_FP_PAM;
-import org.actus.functions.pam.STF_FP_PAM;
-import org.actus.functions.pam.POF_TD_PAM;
+import org.actus.functions.lam.STF_FP_LAM;
+import org.actus.functions.lam.POF_TD_LAM;
 import org.actus.functions.pam.STF_TD_PAM;
 import org.actus.functions.pam.POF_CD_PAM;
-import org.actus.functions.pam.STF_CD_PAM;
+import org.actus.functions.lam.STF_CD_LAM;
+import org.actus.functions.lam.POF_IPCB_LAM;
+import org.actus.functions.lam.STF_IPCB_LAM;
 
-import java.sql.NClob;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Set;
@@ -61,11 +63,28 @@ public final class LinearAmortizer {
                         		         ContractModelProvider model, 
                         		         RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         
+        // determine maturity of the contract
+        LocalDateTime maturity = model.maturityDate();
+        if (CommonUtils.isNull(maturity)) {
+            LocalDateTime lastEvent;
+            if(model.cycleAnchorDateOfPrincipalRedemption().isBefore(model.statusDate())) {
+                Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(),model.statusDate(),
+                                            model.cycleOfPrincipalRedemption(), model.endOfMonthConvention());
+                previousEvents.removeIf( d -> d.isBefore(model.statusDate().minus(CycleUtils.parsePeriod(model.cycleOfInterestPayment()))));
+                previousEvents.remove(model.statusDate());
+                lastEvent = previousEvents.toArray(new LocalDateTime[1])[0];
+            } else {
+                lastEvent = model.cycleAnchorDateOfPrincipalRedemption();   
+            }
+            Period cyclePeriod = CycleUtils.parsePeriod(model.cycleOfPrincipalRedemption());
+            maturity = lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.notionalPrincipal()/model.nextPrincipalRedemptionPayment())));
+        }
+        
         // compute events
-        ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,riskFactorModel);
+        ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,riskFactorModel,maturity);
         
         // initialize state space per status date
-        StateSpace states = initStateSpace(model);
+        StateSpace states = initStateSpace(model,maturity);
         
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(payoff);
@@ -82,40 +101,21 @@ public final class LinearAmortizer {
         return payoff;
     }
     
-    private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+    private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, LocalDateTime maturity) throws AttributeConversionException {
         HashSet<ContractEvent> events = new HashSet<ContractEvent>();
-
+        
         // create contract event schedules
         // analysis events
         events.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.currency(), new POF_AD_PAM(), new STF_AD_PAM()));
         // initial exchange
-        events.add(EventFactory.createEvent(model.initialExchangeDate(), StringUtils.EventType_IED, model.currency(), new POF_IED_PAM(), new STF_IED_PAM()));
+        events.add(EventFactory.createEvent(model.initialExchangeDate(), StringUtils.EventType_IED, model.currency(), new POF_IED_PAM(), new STF_IED_LAM()));
         // principal redemption
-        if (CommonUtils.isNull(model.maturityDate())) {
-            LocalDateTime lastEvent;
-            if(model.cycleAnchorDateOfPrincipalRedemption().isBefore(model.statusDate())) {
-                Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(),model.statusDate(),
-                                            model.cycleOfPrincipalRedemption(), model.endOfMonthConvention());
-                previousEvents.removeIf( d -> d.isBefore(model.statusDate().minus(CycleUtils.parsePeriod(model.cycleOfInterestPayment()))));
-                previousEvents.remove(model.statusDate());
-                lastEvent = previousEvents.toArray(new LocalDateTime[1])[0];
-            } else {
-                lastEvent = model.cycleAnchorDateOfPrincipalRedemption();   
-            }
-            Period cyclePeriod = CycleUtils.parsePeriod(model.cycleOfPrincipalRedemption());
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(), 
-                lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.notionalPrincipal()/model.nextPrincipalRedemptionPayment()))),
-                                            model.cycleOfPrincipalRedemption(), model.endOfMonthConvention()),
-                                            StringUtils.EventType_PR, model.currency(), new POF_PR_PAM(), new STF_PR_PAM(), model.businessDayConvention()));
-            
-        } else {
-           events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(), model.maturityDate(),
+        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(), maturity,
                                                                             model.cycleOfPrincipalRedemption(), model.endOfMonthConvention()),
-                                            StringUtils.EventType_PR, model.currency(), new POF_PR_PAM(), new STF_PR_PAM(), model.businessDayConvention()));     
-        }
+                                            StringUtils.EventType_PR, model.currency(), new POF_PR_LAM(), new STF_PR_LAM(), model.businessDayConvention()));     
         // purchase
         if (!CommonUtils.isNull(model.purchaseDate())) {
-            events.add(EventFactory.createEvent(model.purchaseDate(), StringUtils.EventType_PRD, model.currency(), new POF_PRD_PAM(), new STF_PRD_PAM()));
+            events.add(EventFactory.createEvent(model.purchaseDate(), StringUtils.EventType_PRD, model.currency(), new POF_PRD_LAM(), new STF_PRD_LAM()));
         }
         // interest payment related
         if (!CommonUtils.isNull(model.cycleOfInterestPayment())) {
@@ -125,7 +125,7 @@ public final class LinearAmortizer {
                                                                                                                  model.cycleAnchorDateOfPrincipalRedemption(),
                                                                                                                  model.cycleOfInterestPayment(),
                                                                                                                  model.endOfMonthConvention()),
-                                                                                  StringUtils.EventType_IP, model.currency(), new POF_IP_PAM(), new STF_IP_PAM(), model.businessDayConvention());
+                                                                                  StringUtils.EventType_IP, model.currency(), new POF_IP_LAM(), new STF_IP_PAM(), model.businessDayConvention());
             // remove last event that falls exactly on cycle anchor date of principal redemption
             interestEvents.remove(EventFactory.createEvent(model.cycleAnchorDateOfPrincipalRedemption(), StringUtils.EventType_IP,
                                                            model.currency(), new POF_AD_PAM(), new STF_AD_PAM(), model.businessDayConvention()));
@@ -134,12 +134,12 @@ public final class LinearAmortizer {
                 // for all events with time <= IPCED && type == "IP" do
                 // change type to IPCI and payoff/state-trans functions
                 ContractEvent capitalizationEnd = EventFactory.createEvent(model.capitalizationEndDate(), StringUtils.EventType_IPCI,
-                                                                            model.currency(), new POF_IPCI_PAM(), new STF_IPCI_PAM(), model.businessDayConvention());
+                                                                            model.currency(), new POF_IPCI_PAM(), new STF_IPCI_LAM(), model.businessDayConvention());
                 interestEvents.forEach(e -> {
                     if (e.type().equals(StringUtils.EventType_IP) && e.compareTo(capitalizationEnd) == -1) {
                         e.type(StringUtils.EventType_IPCI);
                         e.fPayOff(new POF_IPCI_PAM());
-                        e.fStateTrans(new STF_IPCI_PAM());
+                        e.fStateTrans(new STF_IPCI_LAM());
                     }
                 });
                 // also, remove any IP event exactly at IPCED and replace with an IPCI event
@@ -151,47 +151,53 @@ public final class LinearAmortizer {
         }
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.cycleOfRateReset())) {            
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfRateReset(), model.maturityDate(),
+            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfRateReset(), maturity,
                                                                             model.cycleOfRateReset(), model.endOfMonthConvention()),
-                                            StringUtils.EventType_RR, model.currency(), new POF_RR_PAM(), new STF_RR_PAM(), model.businessDayConvention()));
+                                            StringUtils.EventType_RR, model.currency(), new POF_RR_PAM(), new STF_RR_LAM(), model.businessDayConvention()));
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.cycleOfFee())) { 
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfFee(), model.maturityDate(),
+            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfFee(), maturity,
                                                                             model.cycleOfFee(), model.endOfMonthConvention()),
-                                             StringUtils.EventType_FP, model.currency(), new POF_FP_PAM(), new STF_FP_PAM(), model.businessDayConvention()));
+                                             StringUtils.EventType_FP, model.currency(), new POF_FP_PAM(), new STF_FP_LAM(), model.businessDayConvention()));
         }
         // scaling (if specified)
         if (!CommonUtils.isNull(model.scalingEffect()) && (model.scalingEffect().contains("I") || model.scalingEffect().contains("N"))) { 
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfScalingIndex(), model.maturityDate(),
+            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfScalingIndex(), maturity,
                                                                             model.cycleOfScalingIndex(), model.endOfMonthConvention()),
-                                             StringUtils.EventType_SC, model.currency(), new POF_SC_PAM(), new STF_SC_PAM(), model.businessDayConvention()));
+                                             StringUtils.EventType_SC, model.currency(), new POF_SC_PAM(), new STF_SC_LAM(), model.businessDayConvention()));
+        }
+        // interest calculation base (if specified)
+        if (!CommonUtils.isNull(model.interestCalculationBase()) && model.interestCalculationBase().equals("NTL")) { 
+            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfInterestCalculationBase(), maturity,
+                                                                            model.cycleOfScalingIndex(), model.endOfMonthConvention()),
+                                             StringUtils.EventType_IPCB, model.currency(), new POF_IPCB_LAM(), new STF_IPCB_LAM(), model.businessDayConvention()));
         }
         // optionality i.e. prepayment right (if specified)
         if (!(CommonUtils.isNull(model.cycleOfOptionality()) && CommonUtils.isNull(model.cycleAnchorDateOfOptionality()))) {
             Set<LocalDateTime> times;
             if(!CommonUtils.isNull(model.cycleOfOptionality())) {
-                times = ScheduleFactory.createSchedule(model.cycleAnchorDateOfOptionality(), model.maturityDate(),model.cycleOfOptionality(), model.endOfMonthConvention());
+                times = ScheduleFactory.createSchedule(model.cycleAnchorDateOfOptionality(), maturity,model.cycleOfOptionality(), model.endOfMonthConvention());
             } else {
                 times = riskFactorModel.times(model.objectCodeOfPrepaymentModel());
                 times.removeIf(e -> e.compareTo(model.cycleAnchorDateOfOptionality())==-1);
             }
-            events.addAll(EventFactory.createEvents(times,StringUtils.EventType_PP, model.currency(), new POF_PP_PAM(), new STF_PP_PAM(), model.businessDayConvention()));
+            events.addAll(EventFactory.createEvents(times,StringUtils.EventType_PP, model.currency(), new POF_PP_PAM(), new STF_PP_LAM(), model.businessDayConvention()));
             if(model.penaltyType()!='O') {
-                events.addAll(EventFactory.createEvents(times,StringUtils.EventType_PY, model.currency(), new POF_PY_PAM(), new STF_PY_PAM(), model.businessDayConvention()));         
+                events.addAll(EventFactory.createEvents(times,StringUtils.EventType_PY, model.currency(), new POF_PY_PAM(), new STF_PY_LAM(), model.businessDayConvention()));         
             }
         }
         // termination
         if (!CommonUtils.isNull(model.terminationDate())) {
             ContractEvent termination =
-                                        EventFactory.createEvent(model.terminationDate(), StringUtils.EventType_TD, model.currency(), new POF_TD_PAM(), new STF_TD_PAM());
+                                        EventFactory.createEvent(model.terminationDate(), StringUtils.EventType_TD, model.currency(), new POF_TD_LAM(), new STF_TD_PAM());
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
         // add counterparty default risk-factor contingent events
         if(riskFactorModel.keys().contains(model.legalEntityIDCounterparty())) {
             events.addAll(EventFactory.createEvents(riskFactorModel.times(model.legalEntityIDCounterparty()),
-                                             StringUtils.EventType_CD, model.currency(), new POF_CD_PAM(), new STF_CD_PAM()));
+                                             StringUtils.EventType_CD, model.currency(), new POF_CD_PAM(), new STF_CD_LAM()));
         }
         
         // remove all pre-status date events
@@ -202,11 +208,27 @@ public final class LinearAmortizer {
         return new ArrayList<ContractEvent>(events);
     }
 
-    private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
+    private static StateSpace initStateSpace(ContractModelProvider model, LocalDateTime maturity) throws AttributeConversionException {
         StateSpace states = new StateSpace();
 
         // TODO: some attributes can be null
+        states.contractRoleSign = ContractRoleConvention.roleSign(model.contractRole());
         states.lastEventTime = model.statusDate();
+        
+        // init next principal redemption payment amount (can be null!)
+        if (CommonUtils.isNull(model.nextPrincipalRedemptionPayment())) {
+            // count number of remaining events
+            Set<LocalDateTime> remainingEvents = ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(),maturity,
+                                            model.cycleOfPrincipalRedemption(), model.endOfMonthConvention());
+            remainingEvents.removeIf( d -> d.isBefore(model.statusDate()) );
+            remainingEvents.remove(model.statusDate());
+            int n = remainingEvents.size();
+            // compute periodic payment in order to redeem entire nominal value
+            states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.notionalPrincipal()/n;
+        } else {
+            states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.nextPrincipalRedemptionPayment();
+        }
+        
         if (!model.initialExchangeDate().isAfter(model.statusDate())) {
             states.nominalValue = model.notionalPrincipal();
             states.nominalRate = model.nominalInterestRate();
@@ -214,6 +236,7 @@ public final class LinearAmortizer {
             states.feeAccrued = model.feeAccrued();
             states.nominalScalingMultiplier = 1;
             states.interestScalingMultiplier = 1;
+            states.interestCalculationBase = states.contractRoleSign * ( (model.interestCalculationBase().equals("NT"))? model.notionalPrincipal() : model.interestCalculationBaseAmount() );
         }
         
         // return the initialized state space

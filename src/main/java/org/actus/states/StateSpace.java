@@ -32,4 +32,5 @@ public final class StateSpace {
     public double payoffAtSettlement;
     public double variationMargin; // analytical result
     public double probabilityOfDefault; // analytical result
+    public int contractRoleSign;
 }

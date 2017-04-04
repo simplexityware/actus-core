@@ -12,6 +12,7 @@ import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.functions.pam.POF_AD_PAM;
@@ -181,6 +182,7 @@ public final class PrincipalAtMaturity {
         StateSpace states = new StateSpace();
 
         // TODO: some attributes can be null
+        states.contractRoleSign = ContractRoleConvention.roleSign(model.contractRole());
         states.lastEventTime = model.statusDate();
         if (!model.initialExchangeDate().isAfter(model.statusDate())) {
             states.nominalValue = model.notionalPrincipal();
