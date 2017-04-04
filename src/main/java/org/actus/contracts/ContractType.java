@@ -52,6 +52,10 @@ public final class ContractType {
             switch(model.contractType()) {
                 case StringUtils.ContractType_PAM: 
                     return PrincipalAtMaturity.eval(analysisTimes,model,riskFactorModel);
+                case StringUtils.ContractType_LAM: 
+                    return LinearAmortizer.eval(analysisTimes,model,riskFactorModel);
+                case StringUtils.ContractType_NAM: 
+                    return NegativeAmortizer.eval(analysisTimes,model,riskFactorModel);
                 default:
                     throw new ContractTypeUnknownException();
             }
