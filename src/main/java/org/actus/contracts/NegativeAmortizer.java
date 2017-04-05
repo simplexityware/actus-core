@@ -13,6 +13,7 @@ import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
+import org.actus.util.Constants;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.util.CycleUtils;
@@ -63,8 +64,30 @@ public final class NegativeAmortizer {
                         		         ContractModelProvider model, 
                         		         RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         
+        // determine maturity of the contract
+        LocalDateTime maturity = model.maturityDate();
+        if (CommonUtils.isNull(maturity)) {
+                if(CommonUtils.isNull(model.cycleOfRateReset()) || CommonUtils.isNull(model.interestCalculationBase()) || model.interestCalculationBase().equals("NT")) {
+                LocalDateTime lastEvent;
+                if(model.cycleAnchorDateOfPrincipalRedemption().isBefore(model.statusDate())) {
+                    Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(),model.statusDate(),
+                                                model.cycleOfPrincipalRedemption(), model.endOfMonthConvention());
+                    previousEvents.removeIf( d -> d.isBefore(model.statusDate().minus(CycleUtils.parsePeriod(model.cycleOfInterestPayment()))));
+                    previousEvents.remove(model.statusDate());
+                    lastEvent = previousEvents.toArray(new LocalDateTime[1])[0];
+                } else {
+                    lastEvent = model.cycleAnchorDateOfPrincipalRedemption();   
+                }
+                Period cyclePeriod = CycleUtils.parsePeriod(model.cycleOfPrincipalRedemption());
+                double coupon = model.notionalPrincipal()*model.nominalInterestRate()*model.dayCountConvention().dayCountFraction(model.cycleAnchorDateOfPrincipalRedemption(), model.cycleAnchorDateOfPrincipalRedemption().plus(cyclePeriod));
+                maturity = lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.notionalPrincipal()/(model.nextPrincipalRedemptionPayment()-coupon))));
+            } else {
+                maturity = model.initialExchangeDate().plus(Constants.MAX_LIFETIME);
+            }
+        }     
+        
         // compute events
-        ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,riskFactorModel);
+        ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,riskFactorModel,maturity);
         
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
@@ -84,25 +107,8 @@ public final class NegativeAmortizer {
         return payoff;
     }
     
-    private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        HashSet<ContractEvent> events = new HashSet<ContractEvent>();
-        
-        // determine maturity of the contract
-        LocalDateTime maturity = model.maturityDate();
-        if (CommonUtils.isNull(maturity)) {
-            LocalDateTime lastEvent;
-            if(model.cycleAnchorDateOfPrincipalRedemption().isBefore(model.statusDate())) {
-                Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(),model.statusDate(),
-                                            model.cycleOfPrincipalRedemption(), model.endOfMonthConvention());
-                previousEvents.removeIf( d -> d.isBefore(model.statusDate().minus(CycleUtils.parsePeriod(model.cycleOfInterestPayment()))));
-                previousEvents.remove(model.statusDate());
-                lastEvent = previousEvents.toArray(new LocalDateTime[1])[0];
-            } else {
-                lastEvent = model.cycleAnchorDateOfPrincipalRedemption();   
-            }
-            Period cyclePeriod = CycleUtils.parsePeriod(model.cycleOfPrincipalRedemption());
-            maturity = lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.notionalPrincipal()/model.nextPrincipalRedemptionPayment())));
-        }        
+    private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, LocalDateTime maturity) throws AttributeConversionException {
+        HashSet<ContractEvent> events = new HashSet<ContractEvent>();   
         
         // create contract event schedules
         // analysis events
