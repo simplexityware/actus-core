@@ -21,8 +21,8 @@ import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.pam.POF_IED_PAM;
 import org.actus.functions.lam.STF_IED_LAM;
-import org.actus.functions.lam.POF_PR_LAM;
-import org.actus.functions.lam.STF_PR_LAM;
+import org.actus.functions.nam.POF_PR_NAM;
+import org.actus.functions.nam.STF_PR_NAM;
 import org.actus.functions.lam.POF_PRD_LAM;
 import org.actus.functions.lam.STF_PRD_LAM;
 import org.actus.functions.lam.POF_IP_LAM;
@@ -118,7 +118,7 @@ public final class NegativeAmortizer {
         // principal redemption
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(), maturity,
                                                                             model.cycleOfPrincipalRedemption(), model.endOfMonthConvention()),
-                                            StringUtils.EventType_PR, model.currency(), new POF_PR_LAM(), new STF_PR_LAM(), model.businessDayConvention()));     
+                                            StringUtils.EventType_PR, model.currency(), new POF_PR_NAM(), new STF_PR_NAM(), model.businessDayConvention()));     
         // purchase
         if (!CommonUtils.isNull(model.purchaseDate())) {
             events.add(EventFactory.createEvent(model.purchaseDate(), StringUtils.EventType_PRD, model.currency(), new POF_PRD_LAM(), new STF_PRD_LAM()));
