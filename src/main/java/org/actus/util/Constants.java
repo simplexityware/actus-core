@@ -5,8 +5,13 @@
  */
 package org.actus.util;
 
+import java.time.Period;
+
 /**
  * Contains constants used throughout the library
  */
 public class Constants {
+    
+    public static final Period MAX_LIFETIME = Period.ofYears(50);
+    
 }

@@ -56,6 +56,8 @@ public final class ContractType {
                     return LinearAmortizer.eval(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_NAM: 
                     return NegativeAmortizer.eval(analysisTimes,model,riskFactorModel);
+                case StringUtils.ContractType_ANN: 
+                    return Annuity.eval(analysisTimes,model,riskFactorModel);
                 default:
                     throw new ContractTypeUnknownException();
             }
