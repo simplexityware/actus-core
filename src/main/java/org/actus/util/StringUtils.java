@@ -15,6 +15,7 @@ public final class StringUtils {
     public final static String ContractType_LAM = "LAM";
     public final static String ContractType_NAM = "NAM";
     public final static String ContractType_ANN = "ANN";
+    public final static String ContractType_STK = "STK";
     
     // cycle stubs
     public final static char LongStub = '+';
@@ -59,6 +60,7 @@ public final class StringUtils {
     public final static String EventType_TD = "TD";
     public final static String EventType_CD = "CD";
     public final static String EventType_IPCB = "IPCB";
+    public final static String EventType_DV = "DV";
     
     // contract roles
     public final static String ContractRole_RPA = "RPA";

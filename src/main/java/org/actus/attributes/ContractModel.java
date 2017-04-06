@@ -53,8 +53,8 @@ public class ContractModel implements ContractModelProvider {
     // private String coveredContracts;
     // private String coveringContracts;
     private String coveredLegalEntity;
-    private LocalDateTime cycleAnchorDateOfDividend;
-    private String cycleOfDividend;
+    private LocalDateTime cycleAnchorDateOfDividendPayment;
+    private String cycleOfDividendPayment;
     private String marketObjectCodeOfDividendRate;
     private LocalDateTime cycleAnchorDateOfFee;
     private String cycleOfFee;
@@ -117,7 +117,7 @@ public class ContractModel implements ContractModelProvider {
     private LocalDateTime cycleAnchorDateOfScalingIndex;
     private String cycleOfScalingIndex;
     private String scalingEffect;
-    // private double marketValueObserved;
+    private Double marketValueObserved;
     // private double conversionFactor;
     private String optionExecutionType;
     private LocalDateTime optionExerciseEndDate; // TODO: review with prepayment concept
@@ -207,12 +207,12 @@ public class ContractModel implements ContractModelProvider {
         return coveredLegalEntity;   
     }
     
-    public LocalDateTime cycleAnchorDateOfDividend() {
-        return cycleAnchorDateOfDividend;   
+    public LocalDateTime cycleAnchorDateOfDividendPayment() {
+        return cycleAnchorDateOfDividendPayment;   
     }
     
-    public String cycleOfDividend() {
-        return cycleOfDividend;   
+    public String cycleOfDividendPayment() {
+        return cycleOfDividendPayment;   
     }
     
     public String marketObjectCodeOfDividendRate() {
@@ -452,7 +452,9 @@ public class ContractModel implements ContractModelProvider {
         return scalingEffect;   
     }
     
-    // public double marketValueObserved;
+    public Double marketValueObserved() {
+        return marketValueObserved;
+    }
     
     // public double conversionFactor();
     
@@ -853,7 +855,26 @@ public class ContractModel implements ContractModelProvider {
                 model.nextResetRate = (CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate"));
                 model.rateMultiplier = (CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier"));
                 break;
-                                
+            case StringUtils.ContractType_STK:
+                model.calendar = (attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar();
+                model.businessDayConvention = new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), model.calendar);
+                model.endOfMonthConvention = (CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention");
+                model.contractType = attributes.get("ContractType");
+                model.statusDate = LocalDateTime.parse(attributes.get("StatusDate"));
+                model.contractRole = attributes.get("ContractRole");
+                model.legalEntityIDCounterparty = attributes.get("LegalEntityIDCounterparty");      
+                model.cycleAnchorDateOfDividendPayment = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfDividendPayment")))? ( (CommonUtils.isNull(attributes.get("CycleOfDividendPayment")))? null : LocalDateTime.parse(attributes.get("PurchaseDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfDividendPayment"));
+                model.cycleOfDividendPayment = attributes.get("CycleOfDividendPayment");
+                model.marketObjectCodeOfDividendRate = attributes.get("MarketObjectCodeOfDividendRate");
+                model.currency = attributes.get("Currency");
+                model.quantity = (CommonUtils.isNull(attributes.get("Quantity")))? 1 : Integer.parseInt(attributes.get("Quantity"));
+                model.marketValueObserved = (CommonUtils.isNull(attributes.get("MarketValueObserved")))? null : Double.parseDouble(attributes.get("MarketValueObserved"));
+                model.purchaseDate = (CommonUtils.isNull(attributes.get("PurchaseDate")))? null : LocalDateTime.parse(attributes.get("PurchaseDate"));
+                model.priceAtPurchaseDate = (CommonUtils.isNull(attributes.get("PriceAtPurchaseDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtPurchaseDate")); 
+                model.terminationDate = (CommonUtils.isNull(attributes.get("TerminationDate")))? null : LocalDateTime.parse(attributes.get("TerminationDate"));
+                model.priceAtTerminationDate = (CommonUtils.isNull(attributes.get("PriceAtTerminationDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")); 
+                model.dayCountConvention = new DayCountCalculator("A/AISDA", model.calendar);
+               break;
             default:
                 throw new ContractTypeUnknownException();
         }

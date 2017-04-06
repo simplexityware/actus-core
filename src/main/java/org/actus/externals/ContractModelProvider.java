@@ -41,8 +41,8 @@ public abstract interface ContractModelProvider {
     // public String coveredContracts;
     // public String coveringContracts;
     public String coveredLegalEntity();
-    public LocalDateTime cycleAnchorDateOfDividend();
-    public String cycleOfDividend();
+    public LocalDateTime cycleAnchorDateOfDividendPayment();
+    public String cycleOfDividendPayment();
     public String marketObjectCodeOfDividendRate();
     public LocalDateTime cycleAnchorDateOfFee();
     public String cycleOfFee();
@@ -105,7 +105,7 @@ public abstract interface ContractModelProvider {
     public LocalDateTime cycleAnchorDateOfScalingIndex();
     public String cycleOfScalingIndex();
     public String scalingEffect();
-    // public double marketValueObserved;
+    public Double marketValueObserved();
     // public double conversionFactor();
     public String optionExecutionType();
     public LocalDateTime optionExerciseEndDate(); // TODO: review with prepayment concept
