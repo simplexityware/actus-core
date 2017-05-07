@@ -855,7 +855,51 @@ public class ContractModel implements ContractModelProvider {
                 model.nextResetRate = (CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate"));
                 model.rateMultiplier = (CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier"));
                 break;
+                
+            case StringUtils.ContractType_CLM:
+            
+                model.calendar = (CommonUtils.isNull(attributes.get("Calendar")))? new NoHolidaysCalendar() : (attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar();
+                model.businessDayConvention = new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), model.calendar);
+                model.endOfMonthConvention = (CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention");
+                model.contractType = attributes.get("ContractType");
+                model.statusDate = LocalDateTime.parse(attributes.get("StatusDate"));
+                model.contractRole = attributes.get("ContractRole");
+                model.legalEntityIDCounterparty = attributes.get("LegalEntityIDCounterparty");      
+                model.cycleAnchorDateOfFee = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee")))? ( (CommonUtils.isNull(attributes.get("CycleOfFee")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee"));
+                model.cycleOfFee = attributes.get("CycleOfFee");
+                model.feeBasis = (CommonUtils.isNull(attributes.get("FeeBasis")))? '0' : attributes.get("FeeBasis").charAt(0);
+                model.feeRate = (CommonUtils.isNull(attributes.get("FeeRate")))? 0.0 : Double.parseDouble(attributes.get("FeeRate"));
+                model.feeAccrued = (CommonUtils.isNull(attributes.get("FeeAccrued")))? 0.0 : Double.parseDouble(attributes.get("FeeAccrued"));
+                model.cycleAnchorDateOfInterestPayment = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment")))? ( (CommonUtils.isNull(attributes.get("CycleOfInterestPayment")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment"));
+                model.cycleOfInterestPayment = attributes.get("CycleOfInterestPayment");
+                model.nominalInterestRate = Double.parseDouble(attributes.get("NominalInterestRate"));                
+                model.dayCountConvention = new DayCountCalculator(attributes.get("DayCountConvention"), model.calendar);
+                model.accruedInterest = (CommonUtils.isNull(attributes.get("AccruedInterest")))? 0.0 : Double.parseDouble(attributes.get("AccruedInterest"));  
+                model.currency = attributes.get("Currency");
+                model.initialExchangeDate = LocalDateTime.parse(attributes.get("InitialExchangeDate"));
+                model.maturityDate = (CommonUtils.isNull(attributes.get("MaturityDate")))? null : LocalDateTime.parse(attributes.get("MaturityDate"));
+                model.notionalPrincipal = Double.parseDouble(attributes.get("NotionalPrincipal")); 
+                model.xDayNotice = attributes.get("XDayNotice");
+                model.cycleAnchorDateOfRateReset = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfRateReset")))? ( (CommonUtils.isNull(attributes.get("CycleOfRateReset")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfRateReset"));
+                model.cycleOfRateReset = attributes.get("CycleOfRateReset");
+                model.rateSpread = (CommonUtils.isNull(attributes.get("RateSpread")))? 0.0 : Double.parseDouble(attributes.get("RateSpread"));
+                model.marketObjectCodeOfRateReset = attributes.get("MarketObjectCodeOfRateReset");
+                model.fixingDays = attributes.get("FixingDays");
+                model.nextResetRate = (CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate"));
+                model.rateMultiplier = (CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier"));
+                break;
+                
+            case StringUtils.ContractType_CSH:
+            
+                model.contractType = attributes.get("ContractType");
+                model.statusDate = LocalDateTime.parse(attributes.get("StatusDate"));
+                model.contractRole = attributes.get("ContractRole");    
+                model.currency = attributes.get("Currency");
+                model.notionalPrincipal = Double.parseDouble(attributes.get("NotionalPrincipal"));
+                break;
+                
             case StringUtils.ContractType_STK:
+            
                 model.calendar = (attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar();
                 model.businessDayConvention = new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), model.calendar);
                 model.endOfMonthConvention = (CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention");
@@ -875,6 +919,7 @@ public class ContractModel implements ContractModelProvider {
                 model.priceAtTerminationDate = (CommonUtils.isNull(attributes.get("PriceAtTerminationDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")); 
                 model.dayCountConvention = new DayCountCalculator("A/AISDA", model.calendar);
                break;
+               
             default:
                 throw new ContractTypeUnknownException();
         }

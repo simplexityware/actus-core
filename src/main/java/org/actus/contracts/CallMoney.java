@@ -127,7 +127,7 @@ public final class CallMoney {
         states.contractRoleSign = ContractRoleConvention.roleSign(model.contractRole());
         states.lastEventTime = model.statusDate();
         if (!model.initialExchangeDate().isAfter(model.statusDate())) {
-            states.nominalValue = model.notionalPrincipal();
+            states.nominalValue = states.contractRoleSign * model.notionalPrincipal();
             states.nominalRate = model.nominalInterestRate();
             states.nominalAccrued = model.accruedInterest();
             states.feeAccrued = model.feeAccrued();

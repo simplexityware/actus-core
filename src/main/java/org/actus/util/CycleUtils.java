@@ -19,6 +19,23 @@ public final class CycleUtils {
     /**
      * 
      */
+    public static Period parsePeriod(String cycle, boolean stub) {
+        Period period;  
+        char unit;
+        int multiplier;
+        // parse period from cycle
+        if(stub) {
+            period = parsePeriod(cycle);
+        } else {
+            period = parsePeriod(cycle + '-');       
+        }
+        // return period
+        return period;
+    }
+    
+    /**
+     * 
+     */
     public static Period parsePeriod(String cycle) {
         Period period;  
         char unit;
