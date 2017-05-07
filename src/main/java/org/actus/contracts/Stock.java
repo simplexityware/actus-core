@@ -13,6 +13,7 @@ import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
+import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.util.Constants;
@@ -44,6 +45,9 @@ public final class Stock {
                         		         ContractModelProvider model, 
                         		         RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         
+        // init day count calculator
+        DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", model.calendar());
+            
         // compute events
         ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,riskFactorModel);
         
@@ -54,7 +58,7 @@ public final class Stock {
         Collections.sort(payoff);
 
         // evaluate events
-        payoff.forEach(e -> e.eval(states, model, riskFactorModel, model.dayCountConvention(), model.businessDayConvention()));
+        payoff.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.businessDayConvention()));
         
         // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
         if(!CommonUtils.isNull(model.purchaseDate())) {

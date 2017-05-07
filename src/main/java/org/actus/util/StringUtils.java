@@ -18,6 +18,7 @@ public final class StringUtils {
     public final static String ContractType_CLM = "CLM";
     public final static String ContractType_CSH = "CSH";
     public final static String ContractType_STK = "STK";
+    public final static String ContractType_COM = "COM";
     
     // cycle stubs
     public final static char LongStub = '+';
