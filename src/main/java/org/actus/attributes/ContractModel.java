@@ -935,6 +935,28 @@ public class ContractModel implements ContractModelProvider {
                 
                 break;
                
+            case StringUtils.ContractType_FXOUT:
+            
+                model.calendar = (CommonUtils.isNull(attributes.get("Calendar")))? new NoHolidaysCalendar() : (attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar();
+                model.businessDayConvention = new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), model.calendar);
+                model.endOfMonthConvention = (CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention");
+                model.contractType = attributes.get("ContractType");
+                model.statusDate = LocalDateTime.parse(attributes.get("StatusDate"));
+                model.contractRole = attributes.get("ContractRole");
+                model.legalEntityIDCounterparty = attributes.get("LegalEntityIDCounterparty");      
+                model.currency = attributes.get("Currency");
+                model.currency2 = attributes.get("Currency2");
+                model.maturityDate = LocalDateTime.parse(attributes.get("MaturityDate"));
+                model.notionalPrincipal = Double.parseDouble(attributes.get("NotionalPrincipal"));  
+                model.notionalPrincipal2 = Double.parseDouble(attributes.get("NotionalPrincipal2")); 
+                model.purchaseDate = (CommonUtils.isNull(attributes.get("PurchaseDate")))? null : LocalDateTime.parse(attributes.get("PurchaseDate"));
+                model.priceAtPurchaseDate = (CommonUtils.isNull(attributes.get("PriceAtPurchaseDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtPurchaseDate")); 
+                model.terminationDate = (CommonUtils.isNull(attributes.get("TerminationDate")))? null : LocalDateTime.parse(attributes.get("TerminationDate"));
+                model.priceAtTerminationDate = (CommonUtils.isNull(attributes.get("PriceAtTerminationDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")); 
+                model.settlementDate = (CommonUtils.isNull(attributes.get("SettlementDate")))? null : LocalDateTime.parse(attributes.get("SettlementDate"));
+                
+                break;
+               
             default:
                 throw new ContractTypeUnknownException();
         }

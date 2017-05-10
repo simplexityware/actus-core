@@ -87,6 +87,7 @@ switch (eventType) {
         break;
     case "SD":
         offset = 900;
+        break;
     case "AD":
         offset = 950;
         break;

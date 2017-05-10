@@ -3,7 +3,7 @@
  *
  * Please see distribution for license.
  */
-package org.actus.functions.stk;
+package org.actus.functions.fxout;
 
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
@@ -14,11 +14,11 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class POF_TD_STK implements PayOffFunction {
+public final class POF_TD_FXOUT implements PayOffFunction {
     
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return (1 - states.probabilityOfDefault) * states.contractRoleSign * model.quantity() * model.priceAtTerminationDate();
+        return (1 - states.probabilityOfDefault) * states.contractRoleSign * model.priceAtTerminationDate();
     }
 }
