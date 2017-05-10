@@ -129,6 +129,205 @@ public class ContractTypeTest {
         ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,marketModel);
         //System.out.println(events);
     }
+    
+    @Test
+    public void test_LAM_MandatoryAttributes_withMaturity() {
+        thrown = ExpectedException.none();
+        // define attributes
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval LAM contract
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_NAM_MandatoryAttributes() {
+        thrown = ExpectedException.none();
+        // define attributes
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "NAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval LAM contract
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+    }
+    
+    
+    @Test
+    public void test_ANN_MandatoryAttributes_withMaturity() {
+        thrown = ExpectedException.none();
+        // define attributes
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "ANN");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval LAM contract
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+    }
 
+    @Test
+    public void test_CLM_MandatoryAttributes() {
+        thrown = ExpectedException.none();
+        // define attributes
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CLM");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("NominalInterestRate", "0.01");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("XDayNotice", "1M");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+    }
+
+    @Test
+    public void test_CSH_MandatoryAttributes() {
+        thrown = ExpectedException.none();
+        // define attributes
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_STK_MandatoryAttributes() {
+        thrown = ExpectedException.none();
+        // define attributes
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "STK");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("Currency", "USD");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_COM_MandatoryAttributes() {
+        thrown = ExpectedException.none();
+        // define attributes
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "COM");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+    }
+    
+    @Test
+    public void test_FXOUT_MandatoryAttributes() {
+        thrown = ExpectedException.none();
+        // define attributes
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "FXOUT");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("Currency2", "EUR");
+        map.put("MaturityDate", "2016-06-01T00:00:00");
+        map.put("NotionalPrincipal", "1000");
+        map.put("NotionalPrincipal2", "900");
+        map.put("DeliverySettlement", "D");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // eval PAM contract
+        ArrayList<ContractEvent> events = ContractType.eval(analysisTimes,model,riskFactors);
+    }
 
 }

@@ -58,8 +58,16 @@ public final class ContractType {
                     return NegativeAmortizer.eval(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_ANN: 
                     return Annuity.eval(analysisTimes,model,riskFactorModel);
+                case StringUtils.ContractType_CLM: 
+                    return CallMoney.eval(analysisTimes,model,riskFactorModel);
+                case StringUtils.ContractType_CSH: 
+                    return Cash.eval(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_STK: 
                     return Stock.eval(analysisTimes,model,riskFactorModel);
+                case StringUtils.ContractType_COM: 
+                    return Commodity.eval(analysisTimes,model,riskFactorModel);
+                case StringUtils.ContractType_FXOUT: 
+                    return ForeignExchangeOutright.eval(analysisTimes,model,riskFactorModel);
                 default:
                     throw new ContractTypeUnknownException();
             }
