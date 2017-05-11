@@ -20,6 +20,7 @@ public final class StringUtils {
     public final static String ContractType_STK = "STK";
     public final static String ContractType_COM = "COM";
     public final static String ContractType_FXOUT = "FXOUT";
+    public final static String ContractType_SWPPV = "SWPPV";
     
     // cycle stubs
     public final static char LongStub = '+';

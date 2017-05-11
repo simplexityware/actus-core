@@ -33,4 +33,6 @@ public final class StateSpace {
     public double variationMargin; // analytical result
     public double probabilityOfDefault; // analytical result
     public int contractRoleSign;
+    public double nominalAccruedFix;
+    public double nominalAccruedFloat;
 }
