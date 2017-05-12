@@ -958,7 +958,7 @@ public class ContractModel implements ContractModelProvider {
                 break;
                
             case StringUtils.ContractType_SWPPV:
-                model.calendar = (attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar();
+                model.calendar = (CommonUtils.isNull(attributes.get("Calendar")) || attributes.get("Calendar").equals("NoHolidays"))? new NoHolidaysCalendar() : new MondayToFridayCalendar();
                 model.businessDayConvention = new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), model.calendar);
                 model.endOfMonthConvention = (CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention");
                 model.contractType = attributes.get("ContractType");
@@ -967,8 +967,8 @@ public class ContractModel implements ContractModelProvider {
                 model.legalEntityIDCounterparty = attributes.get("LegalEntityIDCounterparty");
                 model.cycleAnchorDateOfInterestPayment = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment")))? ( (CommonUtils.isNull(attributes.get("CycleOfInterestPayment")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment"));
                 model.cycleOfInterestPayment = attributes.get("CycleOfInterestPayment");
-                model.nominalInterestRate = (CommonUtils.isNull(attributes.get("NominalInterestRate")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate"));                
-                model.nominalInterestRate2 = (CommonUtils.isNull(attributes.get("NominalInterestRate2")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate"));                
+                model.nominalInterestRate = Double.parseDouble(attributes.get("NominalInterestRate"));                
+                model.nominalInterestRate2 = Double.parseDouble(attributes.get("NominalInterestRate"));                
                 model.dayCountConvention = new DayCountCalculator(attributes.get("DayCountConvention"), model.calendar);
                 model.accruedInterest = (CommonUtils.isNull(attributes.get("AccruedInterest")))? 0.0 : Double.parseDouble(attributes.get("AccruedInterest"));  
                 model.cyclePointOfInterestPayment = attributes.get("CyclePointOfInterestPayment");
