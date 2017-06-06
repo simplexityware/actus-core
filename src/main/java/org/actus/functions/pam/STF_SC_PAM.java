@@ -24,12 +24,12 @@ public final class STF_SC_PAM implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
-        states.feeAccrued += model.feeRate() * states.nominalValue * states.timeFromLastEvent;
-        if(model.scalingEffect().contains("I")) {
-            states.interestScalingMultiplier = riskFactorModel.stateAt(model.marketObjectCodeOfScalingIndex(),time,states,model);
+        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
+        if(model.<String>getAs("ScalingEffect").contains("I")) {
+            states.interestScalingMultiplier = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfScalingIndex"),time,states,model);
         }
-        if(model.scalingEffect().contains("N")) {
-            states.nominalScalingMultiplier = riskFactorModel.stateAt(model.marketObjectCodeOfScalingIndex(),time,states,model);
+        if(model.<String>getAs("ScalingEffect").contains("N")) {
+            states.nominalScalingMultiplier = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfScalingIndex"),time,states,model);
         }
         states.lastEventTime = time;
         

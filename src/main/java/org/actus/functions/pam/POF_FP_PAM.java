@@ -20,12 +20,12 @@ public final class POF_FP_PAM implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        if(model.feeBasis()=='A') {
-            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.contractRole()) * model.feeRate();
+        if(model.<String>getAs("FeeBasis").equals("A")) {
+            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("FeeRate");
         } else { 
             return (1 - states.probabilityOfDefault) * 
                 (states.feeAccrued + 
-                    dayCounter.dayCountFraction(states.lastEventTime, time) * model.feeRate() * states.nominalValue);
+                    dayCounter.dayCountFraction(states.lastEventTime, time) * model.<Double>getAs("FeeRate") * states.nominalValue);
         }
     }
 }

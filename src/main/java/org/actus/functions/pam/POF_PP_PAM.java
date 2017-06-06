@@ -21,7 +21,7 @@ public final class POF_PP_PAM implements PayOffFunction {
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return (1 - states.probabilityOfDefault) * 
-        ContractRoleConvention.roleSign(model.contractRole()) * 
-        riskFactorModel.stateAt(model.objectCodeOfPrepaymentModel(),time,states,model) * states.nominalValue;
+        ContractRoleConvention.roleSign(model.getAs("ContractRole")) * 
+        riskFactorModel.stateAt(model.getAs("ObjectCodeOfPrepaymentModel"),time,states,model) * states.nominalValue;
         }
 }

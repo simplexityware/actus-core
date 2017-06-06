@@ -18,6 +18,7 @@ import org.actus.util.StringUtils;
 import org.actus.util.CommonUtils;
 
 import java.util.Map;
+import java.util.HashMap;
 import java.time.LocalDateTime;
 
 /**
@@ -35,6 +36,13 @@ import java.time.LocalDateTime;
  * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">ACTUS Data Dictionary</a>
  */
 public class ContractModel implements ContractModelProvider {
+    private Map<String,Object> attributes;
+    
+    public ContractModel() {
+        attributes=new HashMap<>();
+    }
+    
+    // TODO: remove all local variables as replaced by map above
     private BusinessDayCalendarProvider calendar;
     private BusinessDayAdjuster businessDayConvention;
     private String endOfMonthConvention;
@@ -153,6 +161,12 @@ public class ContractModel implements ContractModelProvider {
     private String deliverySettlement;
     private double futuresPrice;
     
+    
+    public <T> T getAs(String name) {
+        return (T) attributes.get(name);
+    }
+    
+    // TODO: remove all following methods
     public BusinessDayCalendarProvider calendar() {
         return calendar;
     }
@@ -584,6 +598,20 @@ public class ContractModel implements ContractModelProvider {
     }
     
     /**
+     * Create a new contract model from a java map
+     * <p>
+     * The map provided as the method argument is expected to contain <key,value> pairs
+     * of attributes using ACTUS attribute names (in long form) and data types of values
+     * as per official ACTUS data dictionary.
+     * 
+     * @param attribute a java map of attributes as per ACTUS data dictionary
+     */
+    public void of(Map<String,Object> attributes) {
+        this.attributes = attributes;
+    }
+
+    
+    /**
      * Parse the attributes from external String-representation to internal, attribute-specific data types
      * <p>
      * For the {@link ContratType} indicated in attribute "ContractType" the method goes through the list
@@ -601,63 +629,66 @@ public class ContractModel implements ContractModelProvider {
      */
     public static ContractModel parse(Map<String,String> attributes) {
         ContractModel model = new ContractModel();
+        HashMap<String,Object> map = new HashMap<>();
         
         // parse all attributes known to the respective contract type
         try{
         switch(attributes.get("ContractType")) {
             case StringUtils.ContractType_PAM:
-                model.calendar = (attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar();
-                model.businessDayConvention = new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), model.calendar);
-                model.endOfMonthConvention = (CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention");
-                model.contractType = attributes.get("ContractType");
-                model.statusDate = LocalDateTime.parse(attributes.get("StatusDate"));
-                model.contractRole = attributes.get("ContractRole");
-                model.legalEntityIDCounterparty = attributes.get("LegalEntityIDCounterparty");
-                model.cycleAnchorDateOfFee = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee")))? ( (CommonUtils.isNull(attributes.get("CycleOfFee")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee"));
-                model.cycleOfFee = attributes.get("CycleOfFee");
-                model.feeBasis = (CommonUtils.isNull(attributes.get("FeeBasis")))? '0' : attributes.get("FeeBasis").charAt(0);
-                model.feeRate = (CommonUtils.isNull(attributes.get("FeeRate")))? 0.0 : Double.parseDouble(attributes.get("FeeRate"));
-                model.feeAccrued = (CommonUtils.isNull(attributes.get("FeeAccrued")))? 0.0 : Double.parseDouble(attributes.get("FeeAccrued"));
-                model.cycleAnchorDateOfInterestPayment = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment")))? ( (CommonUtils.isNull(attributes.get("CycleOfInterestPayment")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment"));
-                model.cycleOfInterestPayment = attributes.get("CycleOfInterestPayment");
-                model.nominalInterestRate = (CommonUtils.isNull(attributes.get("NominalInterestRate")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate"));                
-                model.dayCountConvention = new DayCountCalculator(attributes.get("DayCountConvention"), model.calendar);
-                model.accruedInterest = (CommonUtils.isNull(attributes.get("AccruedInterest")))? 0.0 : Double.parseDouble(attributes.get("AccruedInterest"));  
-                model.capitalizationEndDate = (CommonUtils.isNull(attributes.get("CapitalizationEndDate")))? null : LocalDateTime.parse(attributes.get("CapitalizationEndDate"));
-                model.cyclePointOfInterestPayment = attributes.get("CyclePointOfInterestPayment");
-                model.currency = attributes.get("Currency");
-                model.initialExchangeDate = LocalDateTime.parse(attributes.get("InitialExchangeDate"));
-                model.premiumDiscountAtIED = (CommonUtils.isNull(attributes.get("PremiumDiscountAtIED")))? 0.0 : Double.parseDouble(attributes.get("PremiumDiscountAtIED")); 
-                model.maturityDate = LocalDateTime.parse(attributes.get("MaturityDate"));
-                model.notionalPrincipal = Double.parseDouble(attributes.get("NotionalPrincipal")); 
-                model.purchaseDate = (CommonUtils.isNull(attributes.get("PurchaseDate")))? null : LocalDateTime.parse(attributes.get("PurchaseDate"));
-                model.priceAtPurchaseDate = (CommonUtils.isNull(attributes.get("PriceAtPurchaseDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtPurchaseDate")); 
-                model.terminationDate = (CommonUtils.isNull(attributes.get("TerminationDate")))? null : LocalDateTime.parse(attributes.get("TerminationDate"));
-                model.priceAtTerminationDate = (CommonUtils.isNull(attributes.get("PriceAtTerminationDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")); 
-                model.marketObjectCodeOfScalingIndex = attributes.get("MarketObjectCodeOfScalingIndex");
-                model.scalingIndexAtStatusDate = (CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate")))? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate"));
-                model.cycleAnchorDateOfScalingIndex = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex")))? ( (CommonUtils.isNull(attributes.get("CycleOfScalingIndex")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex"));
-                model.cycleOfScalingIndex = attributes.get("CycleOfScalingIndex");
-                model.scalingEffect = attributes.get("ScalingEffect");
+                map.put("Calendar",(attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar());
+                map.put("BusinessDayConvention",new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), model.calendar));
+                map.put("EndOfMonthConvention",(CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention"));
+                map.put("ContractType",attributes.get("ContractType"));
+                map.put("StatusDate",LocalDateTime.parse(attributes.get("StatusDate")));
+                map.put("ContractRole",attributes.get("ContractRole"));
+                map.put("LegalEntityIDCounterparty",attributes.get("LegalEntityIDCounterparty"));
+                map.put("CycleAnchorDateOfFee",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee")))? ( (CommonUtils.isNull(attributes.get("CycleOfFee")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
+                map.put("CycleOfFee",attributes.get("CycleOfFee"));
+                map.put("FeeBasis",(CommonUtils.isNull(attributes.get("FeeBasis")))? "0" : attributes.get("FeeBasis"));
+                map.put("FeeRate",(CommonUtils.isNull(attributes.get("FeeRate")))? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
+                map.put("FeeAccrued",(CommonUtils.isNull(attributes.get("FeeAccrued")))? 0.0 : Double.parseDouble(attributes.get("FeeAccrued")));
+                map.put("CycleAnchorDateOfInterestPayment",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment")))? ( (CommonUtils.isNull(attributes.get("CycleOfInterestPayment")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment")));
+                map.put("CycleOfInterestPayment",attributes.get("CycleOfInterestPayment"));
+                map.put("NominalInterestRate",(CommonUtils.isNull(attributes.get("NominalInterestRate")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate")));                
+                map.put("DayCountConvention",new DayCountCalculator(attributes.get("DayCountConvention"), model.calendar));
+                map.put("AccruedInterest",(CommonUtils.isNull(attributes.get("AccruedInterest")))? 0.0 : Double.parseDouble(attributes.get("AccruedInterest")));  
+                map.put("CapitalizationEndDate",(CommonUtils.isNull(attributes.get("CapitalizationEndDate")))? null : LocalDateTime.parse(attributes.get("CapitalizationEndDate")));
+                map.put("CyclePointOfInterestPayment",attributes.get("CyclePointOfInterestPayment"));
+                map.put("Currency",attributes.get("Currency"));
+                map.put("InitialExchangeDate",LocalDateTime.parse(attributes.get("InitialExchangeDate")));
+                map.put("PremiumDiscountAtIED",(CommonUtils.isNull(attributes.get("PremiumDiscountAtIED")))? 0.0 : Double.parseDouble(attributes.get("PremiumDiscountAtIED"))); 
+                map.put("MaturityDate",LocalDateTime.parse(attributes.get("MaturityDate")));
+                map.put("NotionalPrincipal",Double.parseDouble(attributes.get("NotionalPrincipal"))); 
+                map.put("PurchaseDate",(CommonUtils.isNull(attributes.get("PurchaseDate")))? null : LocalDateTime.parse(attributes.get("PurchaseDate")));
+                map.put("PriceAtPurchaseDate",(CommonUtils.isNull(attributes.get("PriceAtPurchaseDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtPurchaseDate"))); 
+                map.put("TerminationDate",(CommonUtils.isNull(attributes.get("TerminationDate")))? null : LocalDateTime.parse(attributes.get("TerminationDate")));
+                map.put("PriceAtTerminationDate",(CommonUtils.isNull(attributes.get("PriceAtTerminationDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate"))); 
+                map.put("MarketObjectCodeOfScalingIndex",attributes.get("MarketObjectCodeOfScalingIndex"));
+                map.put("ScalingIndexAtStatusDate",(CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate")))? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate")));
+                map.put("CycleAnchorDateOfScalingIndex",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex")))? ( (CommonUtils.isNull(attributes.get("CycleOfScalingIndex")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex")));
+                map.put("CycleOfScalingIndex",attributes.get("CycleOfScalingIndex"));
+                map.put("ScalingEffect",attributes.get("ScalingEffect"));
                 // TODO: review prepayment mechanism and attributes
-                model.cycleAnchorDateOfOptionality = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality")))? ( (CommonUtils.isNull(attributes.get("CycleOfOptionality")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality"));
-                model.cycleOfOptionality = attributes.get("CycleOfOptionality");
-                model.penaltyType = (CommonUtils.isNull(attributes.get("PenaltyType")))? 'N' : attributes.get("PenaltyType").charAt(0);
-                model.penaltyRate = (CommonUtils.isNull(attributes.get("PenaltyRate")))? 0.0 : Double.parseDouble(attributes.get("PenaltyRate"));
-                model.objectCodeOfPrepaymentModel = attributes.get("ObjectCodeOfPrepaymentModel");
+                map.put("CycleAnchorDateOfOptionality",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality")))? ( (CommonUtils.isNull(attributes.get("CycleOfOptionality")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality")));
+                map.put("CycleOfOptionality",attributes.get("CycleOfOptionality"));
+                map.put("PenaltyType",(CommonUtils.isNull(attributes.get("PenaltyType")))? 'N' : attributes.get("PenaltyType").charAt(0));
+                map.put("PenaltyRate",(CommonUtils.isNull(attributes.get("PenaltyRate")))? 0.0 : Double.parseDouble(attributes.get("PenaltyRate")));
+                map.put("ObjectCodeOfPrepaymentModel",attributes.get("ObjectCodeOfPrepaymentModel"));
                 
-                model.cycleAnchorDateOfRateReset = (CommonUtils.isNull(attributes.get("CycleAnchorDateOfRateReset")))? ( (CommonUtils.isNull(attributes.get("CycleOfRateReset")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfRateReset"));
-                model.cycleOfRateReset = attributes.get("CycleOfRateReset");
-                model.rateSpread = (CommonUtils.isNull(attributes.get("RateSpread")))? 0.0 : Double.parseDouble(attributes.get("RateSpread"));
-                model.marketObjectCodeOfRateReset = attributes.get("MarketObjectCodeOfRateReset");
-                model.lifeCap = (CommonUtils.isNull(attributes.get("LifeCap")))? null : Double.parseDouble(attributes.get("LifeCap"));
-                model.lifeCap = (CommonUtils.isNull(attributes.get("LifeFloor")))? null : Double.parseDouble(attributes.get("LifeFloor"));
-                model.lifeCap = (CommonUtils.isNull(attributes.get("PeriodCap")))? null : Double.parseDouble(attributes.get("PeriodCap"));
-                model.lifeCap = (CommonUtils.isNull(attributes.get("PeriodFloor")))? null : Double.parseDouble(attributes.get("PeriodFloor"));
-                model.cyclePointOfRateReset = attributes.get("CyclePointOfRateReset");
-                model.fixingDays = attributes.get("FixingDays");
-                model.nextResetRate = (CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate"));
-                model.rateMultiplier = (CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier"));
+                map.put("CycleAnchorDateOfRateReset",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfRateReset")))? ( (CommonUtils.isNull(attributes.get("CycleOfRateReset")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfRateReset")));
+                map.put("CycleOfRateReset",attributes.get("CycleOfRateReset"));
+                map.put("RateSpread",(CommonUtils.isNull(attributes.get("RateSpread")))? 0.0 : Double.parseDouble(attributes.get("RateSpread")));
+                map.put("MarketObjectCodeOfRateReset",attributes.get("MarketObjectCodeOfRateReset"));
+                map.put("LifeCap",(CommonUtils.isNull(attributes.get("LifeCap")))? null : Double.parseDouble(attributes.get("LifeCap")));
+                map.put("LifeFloor",(CommonUtils.isNull(attributes.get("LifeFloor")))? null : Double.parseDouble(attributes.get("LifeFloor")));
+                map.put("PeriodCap",(CommonUtils.isNull(attributes.get("PeriodCap")))? null : Double.parseDouble(attributes.get("PeriodCap")));
+                map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? null : Double.parseDouble(attributes.get("PeriodFloor")));
+                map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
+                map.put("FixingDays",attributes.get("FixingDays"));
+                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
+                map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
+                
+                model.of(map);
                 break;
             case StringUtils.ContractType_LAM:
                 model.calendar = (attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar();

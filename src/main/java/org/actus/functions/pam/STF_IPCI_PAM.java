@@ -24,7 +24,7 @@ public final class STF_IPCI_PAM implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
-        states.feeAccrued += model.feeRate() * states.nominalValue * states.timeFromLastEvent;
+        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.lastEventTime = time;
         
         // copy post-event-states

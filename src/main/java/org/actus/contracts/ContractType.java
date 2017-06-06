@@ -49,7 +49,7 @@ public final class ContractType {
   public static ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
                         		 ContractModelProvider model, 
                         		 RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
-            switch(model.contractType()) {
+            switch((String) model.getAs("ContractType")) {
                 case StringUtils.ContractType_PAM: 
                     return PrincipalAtMaturity.eval(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_LAM: 

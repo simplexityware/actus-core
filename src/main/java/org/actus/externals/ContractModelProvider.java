@@ -23,6 +23,10 @@ import java.time.LocalDateTime;
  * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">ACTUS Data Dictionary</a>
  */
 public abstract interface ContractModelProvider {
+    
+    public <T> T getAs(String name);
+    
+    // TODO: above generic method replaces all the following methods -> remove
     public BusinessDayCalendarProvider calendar();
     public BusinessDayAdjuster businessDayConvention();
     public String endOfMonthConvention();

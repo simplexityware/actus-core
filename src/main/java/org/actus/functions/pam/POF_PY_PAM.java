@@ -20,15 +20,15 @@ public final class POF_PY_PAM implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        if(model.penaltyType()=='A') {
-            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.contractRole()) * model.penaltyRate();
-        } else if(model.penaltyType()=='N') {
+        if(model.getAs("PenaltyType").equals("A")) {
+            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("PenaltyRate");
+        } else if(model.getAs("PenaltyType").equals("N")) {
             return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.contractRole()) *
-                dayCounter.dayCountFraction(states.lastEventTime, time) * model.penaltyRate() * states.nominalValue;
+                dayCounter.dayCountFraction(states.lastEventTime, time) * model.<Double>getAs("PenaltyRate") * states.nominalValue;
         } else {
-            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.contractRole()) *
+            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) *
                 dayCounter.dayCountFraction(states.lastEventTime, time) * states.nominalValue * 
-                Math.max(0, states.nominalRate - riskFactorModel.stateAt(model.marketObjectCodeOfRateReset(), time,states,model));    
+                Math.max(0, states.nominalRate - riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time,states,model));    
         }
     }
 }
