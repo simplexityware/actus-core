@@ -18,6 +18,23 @@ package org.actus.externals;
  */
 public abstract interface ContractModelProvider {
     
+    /**
+     * Access a Contract Attribute in its data type
+     * <p>
+     * The various attributes collected in a {@code ContractModelProvider} are used as parameters 
+     * when evaluating an ACTUS {@link ContractType}. This method allows accessing the various 
+     * attribute values. In order to make sure that attributes are returned in the correct target
+     * data type (according to the ACTUS data dictionary) the respective class name should be
+     * provided when calling the method, e.g. {@code model.<String>getAs("ContractRole")}, 
+     * {@code model.<Double>getAs("NotionalPrincipal")}. If not provided explicitly, the target data
+     * type is inferred from the context (if possible).
+     * 
+     * @param name the name of the attribute to retrieve
+     * 
+     * @return a type-casted object-reference to the attribute requested.
+     * 
+     * @throws ClassCastException
+     */ 
     public <T> T getAs(String name);
     
 }

@@ -492,18 +492,7 @@ public class ContractModel implements ContractModelProvider {
         return new ContractModel(map);
     }
     
-    /**
-     * Access a Contract Attribute in a certain data type
-     * <p>
-     * A {@}
-     * 
-     * 
-     * @param attributes an external, raw (String) data representation of the set of attributes
-     * 
-     * @return an instance of ContractModel containing the attributes provided with the method argument
-     * 
-     * @throws AttributeConversionException if an attribute cannot be parsed to its data type
-     */  
+    @Override 
     public <T> T getAs(String name) {
         return (T) attributes.get(name);
     }
