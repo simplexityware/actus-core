@@ -21,6 +21,6 @@ public final class POF_IPFix_SWPPV implements PayOffFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return (1 - states.probabilityOfDefault) *
         (states.nominalAccruedFix + 
-        dayCounter.dayCountFraction(states.lastEventTime, time) * model.nominalInterestRate() * states.nominalValue);
+        dayCounter.dayCountFraction(states.lastEventTime, time) * model.<Double>getAs("NominalInterestRate") * states.nominalValue);
         }
 }

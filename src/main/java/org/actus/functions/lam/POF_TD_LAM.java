@@ -21,7 +21,7 @@ public final class POF_TD_LAM implements PayOffFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return (1 - states.probabilityOfDefault) * 
         states.contractRoleSign *  
-        (model.priceAtTerminationDate() + states.nominalAccrued + 
+        (model.<Double>getAs("PriceAtTerminationDate") + states.nominalAccrued + 
         dayCounter.dayCountFraction(states.lastEventTime, time) * states.nominalRate * states.interestCalculationBase);
         }
 }

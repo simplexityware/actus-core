@@ -44,28 +44,28 @@ public final class Commodity {
         // compute events
         ArrayList<ContractEvent> payoff = new ArrayList<ContractEvent>();
         // analysis events
-        payoff.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.currency(), new POF_AD_PAM(), new STF_AD_PAM()));
+        payoff.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
         // purchase
-        if (!CommonUtils.isNull(model.purchaseDate())) {
-            payoff.add(EventFactory.createEvent(model.purchaseDate(), StringUtils.EventType_PRD, model.currency(), new POF_PRD_STK(), new STF_PRD_STK()));
+        if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            payoff.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_STK()));
         }
         // termination
-        if (!CommonUtils.isNull(model.terminationDate())) {
-            payoff.add(EventFactory.createEvent(model.terminationDate(), StringUtils.EventType_TD, model.currency(), new POF_TD_STK(), new STF_TD_STK()));
+        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
+            payoff.add(EventFactory.createEvent(model.getAs("TerminationDate"), StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_STK(), new STF_TD_STK()));
         }
         // remove all pre-status date events
-        payoff.removeIf(e -> e.compareTo(EventFactory.createEvent(model.statusDate(), StringUtils.EventType_SD, model.currency(), null,
+        payoff.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
                                                                   null)) == -1);
         // initialize state space per status date
         StateSpace states = new StateSpace();
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.contractRole());
-        states.lastEventTime = model.statusDate();
+        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
+        states.lastEventTime = model.getAs("StatusDate");
         
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(payoff);
 
         // evaluate events
-        payoff.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.businessDayConvention()));
+        payoff.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
         
         // return all evaluated post-StatusDate events as the payoff
         return payoff;

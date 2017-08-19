@@ -23,8 +23,8 @@ public final class STF_AD_SWPPV implements StateTransitionFunction {
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
-        states.nominalAccrued += (model.nominalInterestRate() - states.nominalRate) * states.nominalValue * states.timeFromLastEvent;
-        states.nominalAccruedFix += model.nominalInterestRate() * states.nominalValue * states.timeFromLastEvent;
+        states.nominalAccrued += (model.<Double>getAs("NominalInterestRate") - states.nominalRate) * states.nominalValue * states.timeFromLastEvent;
+        states.nominalAccruedFix += model.<Double>getAs("NominalInterestRate") * states.nominalValue * states.timeFromLastEvent;
         states.nominalAccruedFloat += (-1) * states.nominalRate * states.nominalValue * states.timeFromLastEvent;
         states.lastEventTime = time;
         

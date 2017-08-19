@@ -25,8 +25,8 @@ public final class STF_RRY_ANN implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
-        states.feeAccrued += model.feeRate() * states.nominalValue * states.timeFromLastEvent;
-        states.nominalRate = model.nextResetRate();
+        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
+        states.nominalRate = model.<Double>getAs("NextResetRate");
         states.lastEventTime = time;
         states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(states.nominalValue, states.nominalAccrued, states.nominalRate, dayCounter, model);
         

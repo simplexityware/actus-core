@@ -20,6 +20,6 @@ public final class POF_STD_FXOUT implements PayOffFunction {
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return (1 - states.probabilityOfDefault) * states.contractRoleSign * 
-                (model.notionalPrincipal() - 1 / riskFactorModel.stateAt(model.currency2()+"/"+model.currency(), model.maturityDate(), states, model) * model.notionalPrincipal2());
+                (model.<Double>getAs("NotionalPrincipal") - 1 / riskFactorModel.stateAt(model.getAs("Currency2")+"/"+model.getAs("Currency"), model.getAs("MaturityDate"), states, model) * model.<Double>getAs("NotionalPrincipal2"));
     }
 }

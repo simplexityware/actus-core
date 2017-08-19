@@ -128,7 +128,7 @@ public final class PrincipalAtMaturity {
             if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {            
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
                                                                                 model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
-                                                 StringUtils.EventType_RR, model.currency(), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention")));
+                                                 StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention")));
             }
         }
         // fees (if specified)

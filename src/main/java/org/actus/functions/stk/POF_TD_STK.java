@@ -19,6 +19,6 @@ public final class POF_TD_STK implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return (1 - states.probabilityOfDefault) * states.contractRoleSign * model.quantity() * model.priceAtTerminationDate();
+        return (1 - states.probabilityOfDefault) * states.contractRoleSign * model.<Integer>getAs("Quantity") * model.<Double>getAs("PriceAtTerminationDate");
     }
 }

@@ -25,9 +25,9 @@ public final class STF_PP_LAM implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
-        states.feeAccrued += model.feeRate() * states.nominalValue * states.timeFromLastEvent;
-        states.nominalValue -= riskFactorModel.stateAt(model.objectCodeOfPrepaymentModel(),time,states,model) * states.nominalValue;
-        if (!CommonUtils.isNull(model.interestCalculationBase()) && model.interestCalculationBase().equals("NTL")) {
+        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
+        states.nominalValue -= riskFactorModel.stateAt(model.getAs("ObjectCodeOfPrepaymentModel"),time,states,model) * states.nominalValue;
+        if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL")) {
             states.interestCalculationBase = states.nominalValue;    
         }
         states.lastEventTime = time;

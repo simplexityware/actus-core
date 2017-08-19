@@ -41,9 +41,9 @@ public class AnnuityUtils {
 	public static double annuityPayment(double outstandingNotional,
 			double accruedInterest, double interestRate,
 			DayCountCalculator dayCounter, ContractModelProvider model) {
-		Set<LocalDateTime> eventTimes = ScheduleFactory.createSchedule(model.cycleAnchorDateOfPrincipalRedemption(),model.maturityDate(),model.cycleOfPrincipalRedemption(), model.endOfMonthConvention());
-        eventTimes.removeIf( d -> d.isBefore(model.statusDate()) );
-        eventTimes.remove(model.statusDate());
+		Set<LocalDateTime> eventTimes = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"),model.getAs("MaturityDate"),model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"));
+        eventTimes.removeIf( d -> d.isBefore(model.getAs("StatusDate")) );
+        eventTimes.remove(model.getAs("StatusDate"));
         LocalDateTime[] eventTimesSorted = eventTimes.toArray(new LocalDateTime[eventTimes.size()]);
         Arrays.sort(eventTimesSorted);
 		int lb = 1;

@@ -77,7 +77,7 @@ public class StockTest {
         map.put("Currency", "USD");
         map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
         map.put("CycleOfDividendPayment","1Q-");
-        map.put("MarketObjectCodeOfDividendPayment","DIVYIELD");
+        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
         map.put("MarketValueObserved","1000.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
@@ -102,7 +102,7 @@ public class StockTest {
         map.put("Currency", "USD");
         map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
         map.put("CycleOfDividendPayment","1Q-");
-        map.put("MarketObjectCodeOfDividendPayment","DIVYIELD");
+        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
         map.put("MarketValueObserved","1000.0");
         map.put("PurchaseDate","2016-01-02T00:00:00");
         map.put("PriceAtPurchaseDate","1000.0");
@@ -129,7 +129,7 @@ public class StockTest {
         map.put("Currency", "USD");
         map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
         map.put("CycleOfDividendPayment","1Q-");
-        map.put("MarketObjectCodeOfDividendPayment","DIVYIELD");
+        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
         map.put("MarketValueObserved","1000.0");
         map.put("PurchaseDate","2016-01-02T00:00:00");
         map.put("PriceAtPurchaseDate","1000.0");
@@ -158,7 +158,7 @@ public class StockTest {
         map.put("Currency", "USD");
         map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
         map.put("CycleOfDividendPayment","1Q-");
-        map.put("MarketObjectCodeOfDividendPayment","DIVYIELD");
+        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
         map.put("MarketValueObserved","1000.0");
         map.put("PurchaseDate","2016-01-02T00:00:00");
         map.put("PriceAtPurchaseDate","1000.0");

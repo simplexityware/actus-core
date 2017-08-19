@@ -25,9 +25,9 @@ public final class STF_PR_LAM implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
-        states.feeAccrued += model.feeRate() * states.nominalValue * states.timeFromLastEvent;
+        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.nominalValue -= states.nextPrincipalRedemptionPayment;
-        if (!CommonUtils.isNull(model.interestCalculationBase()) && model.interestCalculationBase().equals("NTL")) {
+        if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL")) {
             states.interestCalculationBase = states.nominalValue;    
         }
         states.lastEventTime = time;

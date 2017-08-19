@@ -19,6 +19,6 @@ public final class POF_STD1_FXOUT implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return (1 - states.probabilityOfDefault) * states.contractRoleSign * model.notionalPrincipal();
+        return (1 - states.probabilityOfDefault) * states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
     }
 }

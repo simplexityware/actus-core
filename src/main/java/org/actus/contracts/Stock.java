@@ -46,7 +46,7 @@ public final class Stock {
                         		         RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         
         // init day count calculator
-        DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", model.calendar());
+        DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", model.getAs("Calendar"));
             
         // compute events
         ArrayList<ContractEvent> payoff = initEvents(analysisTimes,model,riskFactorModel);
@@ -58,11 +58,11 @@ public final class Stock {
         Collections.sort(payoff);
 
         // evaluate events
-        payoff.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.businessDayConvention()));
+        payoff.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
         
         // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
-        if(!CommonUtils.isNull(model.purchaseDate())) {
-            payoff.removeIf(e -> !e.type().equals(StringUtils.EventType_AD) && e.compareTo(EventFactory.createEvent(model.purchaseDate(), StringUtils.EventType_PRD, model.currency(), null, null)) == -1);    
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            payoff.removeIf(e -> !e.type().equals(StringUtils.EventType_AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), null, null)) == -1);    
         }
         
         // return all evaluated post-StatusDate events as the payoff
@@ -74,42 +74,42 @@ public final class Stock {
 
         // create contract event schedules
         // analysis events
-        events.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.currency(), new POF_AD_PAM(), new STF_AD_PAM()));
+        events.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
         // purchase
-        if (!CommonUtils.isNull(model.purchaseDate())) {
-            events.add(EventFactory.createEvent(model.purchaseDate(), StringUtils.EventType_PRD, model.currency(), new POF_PRD_STK(), new STF_PRD_STK()));
+        if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_STK()));
         }
         // dividend payment related
-        if (!CommonUtils.isNull(model.cycleOfDividendPayment())) {
-            if(CommonUtils.isNull(model.terminationDate())) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfDividendPayment(),
-                                                                                model.cycleAnchorDateOfDividendPayment().plus(Constants.MAX_LIFETIME),
-                                                                                model.cycleOfDividendPayment(),
-                                                                                model.endOfMonthConvention()),
-                                                  StringUtils.EventType_DV, model.currency(), new POF_DV_STK(), new STF_DV_STK(), model.businessDayConvention()));
+        if (!CommonUtils.isNull(model.getAs("CycleOfDividendPayment"))) {
+            if(CommonUtils.isNull(model.getAs("TerminationDate"))) {
+            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfDividendPayment"),
+                                                                                model.<LocalDateTime>getAs("CycleAnchorDateOfDividendPayment").plus(Constants.MAX_LIFETIME),
+                                                                                model.getAs("CycleOfDividendPayment"),
+                                                                                model.getAs("EndOfMonthConvention")),
+                                                  StringUtils.EventType_DV, model.getAs("Currency"), new POF_DV_STK(), new STF_DV_STK(), model.getAs("BusinessDayConvention")));
             } else {
-                events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.cycleAnchorDateOfDividendPayment(),
-                                                                                model.terminationDate(),
-                                                                                model.cycleOfDividendPayment(),
-                                                                                model.endOfMonthConvention()),
-                                                  StringUtils.EventType_DV, model.currency(), new POF_DV_STK(), new STF_DV_STK(), model.businessDayConvention()));
+                events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfDividendPayment"),
+                                                                                model.getAs("TerminationDate"),
+                                                                                model.getAs("CycleOfDividendPayment"),
+                                                                                model.getAs("EndOfMonthConvention")),
+                                                  StringUtils.EventType_DV, model.getAs("Currency"), new POF_DV_STK(), new STF_DV_STK(), model.getAs("BusinessDayConvention")));
 
             }
         }
         // termination
-        if (!CommonUtils.isNull(model.terminationDate())) {
+        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
             ContractEvent termination =
-                                        EventFactory.createEvent(model.terminationDate(), StringUtils.EventType_TD, model.currency(), new POF_TD_STK(), new STF_TD_STK());
+                                        EventFactory.createEvent(model.getAs("TerminationDate"), StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_STK(), new STF_TD_STK());
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
         // add counterparty default risk-factor contingent events
-        if(riskFactorModel.keys().contains(model.legalEntityIDCounterparty())) {
-            events.addAll(EventFactory.createEvents(riskFactorModel.times(model.legalEntityIDCounterparty()),
-                                             StringUtils.EventType_CD, model.currency(), new POF_CD_PAM(), new STF_CD_STK()));
+        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
+            events.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
+                                             StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_PAM(), new STF_CD_STK()));
         }
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.statusDate(), StringUtils.EventType_SD, model.currency(), null,
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
                                                                   null)) == -1);
         
         // return events
@@ -120,8 +120,8 @@ public final class Stock {
         StateSpace states = new StateSpace();
 
         // TODO: some attributes can be null
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.contractRole());
-        states.lastEventTime = model.statusDate();
+        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
+        states.lastEventTime = model.getAs("StatusDate");
         
         // return the initialized state space
         return states;

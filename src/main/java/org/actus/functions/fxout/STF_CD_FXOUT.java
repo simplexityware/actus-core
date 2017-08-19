@@ -23,7 +23,7 @@ public final class STF_CD_FXOUT implements StateTransitionFunction {
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
-        states.probabilityOfDefault = riskFactorModel.stateAt(model.legalEntityIDCounterparty(),time,states,model);
+        states.probabilityOfDefault = riskFactorModel.stateAt(model.getAs("LegalEntityIDCounterparty"),time,states,model);
         states.lastEventTime = time;
         
         // copy post-event-states

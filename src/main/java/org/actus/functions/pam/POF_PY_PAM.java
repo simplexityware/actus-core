@@ -23,7 +23,7 @@ public final class POF_PY_PAM implements PayOffFunction {
         if(model.getAs("PenaltyType").equals("A")) {
             return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("PenaltyRate");
         } else if(model.getAs("PenaltyType").equals("N")) {
-            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.contractRole()) *
+            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) *
                 dayCounter.dayCountFraction(states.lastEventTime, time) * model.<Double>getAs("PenaltyRate") * states.nominalValue;
         } else {
             return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) *

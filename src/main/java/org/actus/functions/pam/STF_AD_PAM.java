@@ -11,6 +11,7 @@ import org.actus.externals.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.util.CommonUtils;
 
 import java.time.LocalDateTime;
 
@@ -24,7 +25,7 @@ public final class STF_AD_PAM implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
-        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
+        states.feeAccrued += CommonUtils.isNull(model.<Double>getAs("FeeRate"))?  0.0 : model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.lastEventTime = time;
         
         // copy post-event-states

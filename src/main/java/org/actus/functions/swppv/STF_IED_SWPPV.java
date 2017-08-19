@@ -24,8 +24,8 @@ public final class STF_IED_SWPPV implements StateTransitionFunction {
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
-        states.nominalValue = ContractRoleConvention.roleSign(model.contractRole()) * model.notionalPrincipal();
-        states.nominalRate = model.nominalInterestRate2();
+        states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
+        states.nominalRate = model.<Double>getAs("NominalInterestRate2");
         states.lastEventTime = time;
         
         // copy post-event-states
