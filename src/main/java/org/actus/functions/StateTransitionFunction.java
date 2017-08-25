@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
  * <p>
  * This component implements the state-transiton function for a specific {@link ContractEvent} 
  * (and {@link ContractType}). Upon evaluation of a {@link ContractEvent} this component
- * and {@link PayOffFunction} are evaluated through method {@code eval}. Return
- * value of this component's {@code eval} function gives the post-event contract states for 
+ * and {@link PayOffFunction} are evaluated through method {@code evalAll}. Return
+ * value of this component's {@code evalAll} function gives the post-event contract states for
  * the respective {@link ContractEvent}.
  */
 public abstract interface StateTransitionFunction {

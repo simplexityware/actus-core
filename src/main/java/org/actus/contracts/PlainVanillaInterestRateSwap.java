@@ -48,9 +48,9 @@ import java.util.Collections;
  */
 public final class PlainVanillaInterestRateSwap {
 
-    public static ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
-                        		         ContractModelProvider model, 
-                        		         RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+    public static ArrayList<ContractEvent> evalAll(Set<LocalDateTime> analysisTimes,
+                                                   ContractModelProvider model,
+                                                   RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         
         // compute events
         ArrayList<ContractEvent> payoff = new ArrayList<ContractEvent>();

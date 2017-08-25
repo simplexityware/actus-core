@@ -65,8 +65,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -91,8 +91,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -118,8 +118,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -146,8 +146,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -175,8 +175,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -204,8 +204,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -233,8 +233,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -262,8 +262,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -292,8 +292,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -323,8 +323,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -356,8 +356,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -389,8 +389,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -424,8 +424,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
         
     @Test
@@ -458,8 +458,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -493,8 +493,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
 
     @Test
@@ -529,8 +529,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
 
     @Test
@@ -566,8 +566,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -603,8 +603,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
         @Test
@@ -639,8 +639,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -674,8 +674,8 @@ public class PrincipalAtMaturityTest {
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactors);
         //System.out.println(events);
     }
 

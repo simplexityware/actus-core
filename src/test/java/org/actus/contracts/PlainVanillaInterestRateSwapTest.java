@@ -68,8 +68,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
     }
     
     
@@ -98,8 +98,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -128,8 +128,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -158,8 +158,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -187,8 +187,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -216,8 +216,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -247,8 +247,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -280,8 +280,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -313,8 +313,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -347,8 +347,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
         //System.out.println(events);
     }
 
@@ -382,8 +382,8 @@ public class PlainVanillaInterestRateSwapTest {
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.eval(analysisTimes,model,riskFactors);
+        // evalAll PAM contract
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.evalAll(analysisTimes,model,riskFactors);
         //System.out.println(events);
     }
 

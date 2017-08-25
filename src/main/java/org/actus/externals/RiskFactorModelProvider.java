@@ -14,7 +14,7 @@ import java.util.Set;
  * <p>
  * Generally, the payoff of financial instruments is evaluated in the context of an environment that
  * embodies the dynamics (and therewith future states) of all relevant stochastic risk factors - or what
- * we call the Comprehensive Risk Factor Model. Thus, method {@code eval} of a {@link ContractType} produces 
+ * we call the Comprehensive Risk Factor Model. Thus, method {@code evalAll} of a {@link ContractType} produces
  * a series of Risk Factor state contingent {@link ContractEvent}s. An external {@code RiskFactorModelProvider} 
  * implements these dynamics and allows to retrieve the state of all defined risk factors identified
  * through a unique {@code id} at any future time.

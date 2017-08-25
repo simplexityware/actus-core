@@ -47,9 +47,9 @@ import java.util.Collections;
  */
 public final class CallMoney {
 
-    public static ArrayList<ContractEvent> eval(Set<LocalDateTime> analysisTimes, 
-                        		         ContractModelProvider model, 
-                        		         RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+    public static ArrayList<ContractEvent> evalAll(Set<LocalDateTime> analysisTimes,
+                                                   ContractModelProvider model,
+                                                   RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         
         // determine maturity of the contract
         LocalDateTime maturity = model.getAs("MaturityDate");

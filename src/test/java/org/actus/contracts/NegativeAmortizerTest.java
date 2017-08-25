@@ -67,8 +67,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -96,8 +96,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -125,8 +125,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -154,8 +154,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -184,8 +184,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -216,8 +216,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -247,8 +247,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -278,8 +278,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -309,8 +309,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -341,8 +341,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -374,8 +374,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -409,8 +409,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -444,8 +444,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -481,8 +481,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
         
     @Test
@@ -517,8 +517,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -554,8 +554,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
 
     @Test
@@ -592,8 +592,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
 
     @Test
@@ -631,8 +631,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -670,8 +670,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -708,8 +708,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -747,8 +747,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -787,8 +787,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -828,8 +828,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -870,8 +870,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -910,8 +910,8 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // eval LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.eval(analysisTimes,model,riskFactors);
+        // evalAll LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.evalAll(analysisTimes,model,riskFactors);
         //System.out.println(events);
     }
 
