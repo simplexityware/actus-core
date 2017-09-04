@@ -20,9 +20,9 @@ import java.util.ArrayList;
  * A representation of an ACTUS Contract Type algorithm
  * <p>
  * ACTUS Contract Types represent classes of financial instrument payoff functions. This component 
- * is a representation of the algorithm mapping a set of attributes (cf. {@link riskFactorModel}),
+ * is a representation of the algorithm mapping a set of attributes (cf. {@link ContractModelProvider}),
  * an external market model (cf. {@link RiskFactorModelProvider}) and analysis times 
- * (cf. {@link AnalysisEvent}) onto a vector of contingent contract events (cf. {@link ContractEvent}).
+ * (cf. {@code analysisTimes}) onto a vector of contingent contract events (cf. {@link ContractEvent}).
  * <p>
  * @see <a href="http://www.projectactus.org">ACTUS</a>
  */
@@ -43,7 +43,8 @@ public final class ContractType {
    * @param model the model carrying the contract attributes
    * @param riskFactorModel an external model of the risk factor dynamics
    * @return the instrument's contingent payoff
-   * @throws AttributeConversionException if and attribute in {@link AttributesProvider} cannot be converted to its target data type
+   * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
+   * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
    * 
    */
   public static ArrayList<ContractEvent> evalAll(Set<LocalDateTime> analysisTimes,
