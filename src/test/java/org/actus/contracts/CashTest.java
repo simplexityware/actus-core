@@ -60,8 +60,8 @@ public class CashTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll PAM contract
-        ArrayList<ContractEvent> events = Cash.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -83,8 +83,8 @@ public class CashTest {
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll PAM contract
-        ArrayList<ContractEvent> events = Cash.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.lifecycle(analysisTimes,model,riskFactors);
         //System.out.println(events);
     }
 }

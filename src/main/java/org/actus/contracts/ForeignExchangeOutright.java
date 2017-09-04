@@ -42,9 +42,9 @@ import java.util.Collections;
  */
 public final class ForeignExchangeOutright {
 
-    public static ArrayList<ContractEvent> evalAll(Set<LocalDateTime> analysisTimes,
-                                                   ContractModelProvider model,
-                                                   RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+    public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
+                                                     ContractModelProvider model,
+                                                     RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         
         // determine settlement date (maturity) of the contract
         LocalDateTime settlement = model.getAs("SettlementDate");

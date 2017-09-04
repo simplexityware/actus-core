@@ -67,8 +67,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -95,8 +95,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -124,8 +124,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -153,8 +153,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -182,8 +182,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -212,8 +212,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -244,8 +244,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -275,8 +275,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -306,8 +306,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -337,8 +337,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -369,8 +369,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -402,8 +402,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -437,8 +437,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -472,8 +472,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -509,8 +509,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
         
     @Test
@@ -545,8 +545,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -582,8 +582,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
 
     @Test
@@ -620,8 +620,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
 
     @Test
@@ -659,8 +659,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -698,8 +698,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -736,8 +736,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -775,8 +775,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -815,8 +815,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -856,8 +856,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -898,8 +898,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -938,8 +938,8 @@ public class AnnuityTest {
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll LAM contract
-        ArrayList<ContractEvent> events = Annuity.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
         //System.out.println(events);
     }
 

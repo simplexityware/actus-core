@@ -61,9 +61,9 @@ import java.util.Collections;
  */
 public final class NegativeAmortizer {
 
-    public static ArrayList<ContractEvent> evalAll(Set<LocalDateTime> analysisTimes,
-                                                   ContractModelProvider model,
-                                                   RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+    public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
+                                                     ContractModelProvider model,
+                                                     RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         
         // determine maturity of the contract
         LocalDateTime maturity = model.getAs("MaturityDate");

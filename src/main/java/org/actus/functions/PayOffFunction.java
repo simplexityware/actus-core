@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
  * <p>
  * This component implements the payoff function for a specific {@link ContractEvent} 
  * (and {@link ContractType}). Upon evaluation of a {@link ContractEvent} this component
- * and {@link StateTransitionFunction} are evaluated through method {@code evalAll}. Return
- * value of this component's {@code evalAll} function gives the payoff for the respective
+ * and {@link StateTransitionFunction} are evaluated through method {@code lifecycle}. Return
+ * value of this component's {@code lifecycle} function gives the payoff for the respective
  * {@link ContractEvent}.
  */
 public abstract interface PayOffFunction {

@@ -35,9 +35,9 @@ import java.util.Collections;
  */
 public final class Commodity {
 
-    public static ArrayList<ContractEvent> evalAll(Set<LocalDateTime> analysisTimes,
-                                                   ContractModelProvider model,
-                                                   RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+    public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
+                                                     ContractModelProvider model,
+                                                     RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         // init day count calculator 
         DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", null);
         

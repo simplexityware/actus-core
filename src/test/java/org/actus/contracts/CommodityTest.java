@@ -59,8 +59,8 @@ public class CommodityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll PAM contract
-        ArrayList<ContractEvent> events = Stock.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Stock.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -81,8 +81,8 @@ public class CommodityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll PAM contract
-        ArrayList<ContractEvent> events = Stock.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Stock.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -105,8 +105,8 @@ public class CommodityTest {
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll PAM contract
-        ArrayList<ContractEvent> events = Stock.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Stock.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -130,8 +130,8 @@ public class CommodityTest {
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
-        // evalAll PAM contract
-        ArrayList<ContractEvent> events = Stock.evalAll(analysisTimes,model,riskFactors);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Stock.lifecycle(analysisTimes,model,riskFactors);
         //System.out.println(events);
     }
 

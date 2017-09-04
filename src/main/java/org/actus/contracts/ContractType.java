@@ -34,7 +34,7 @@ public final class ContractType {
    * For a series of analysis times, set of attributes, and model of market dynamics
    * this method computes the contingent contract events, i.e. instrument payoff.
    * <p>
-   * This method invokes the {@code evalAll(Set<LocalDateTime> analysisTimes,ContractModel model,RiskFactorModelProvider riskFactorModel)}
+   * This method invokes the {@code lifecycle(Set<LocalDateTime> analysisTimes,ContractModel model,RiskFactorModelProvider riskFactorModel)}
    * method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
    * If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
    * throws a {@link ContractTypeUnknownException}.
@@ -47,28 +47,28 @@ public final class ContractType {
    * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
    * 
    */
-  public static ArrayList<ContractEvent> evalAll(Set<LocalDateTime> analysisTimes,
-                                                 ContractModelProvider model,
-                                                 RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
+  public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
+                                                   ContractModelProvider model,
+                                                   RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
             switch((String) model.getAs("ContractType")) {
                 case StringUtils.ContractType_PAM: 
-                    return PrincipalAtMaturity.evalAll(analysisTimes,model,riskFactorModel);
+                    return PrincipalAtMaturity.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_LAM: 
-                    return LinearAmortizer.evalAll(analysisTimes,model,riskFactorModel);
+                    return LinearAmortizer.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_NAM: 
-                    return NegativeAmortizer.evalAll(analysisTimes,model,riskFactorModel);
+                    return NegativeAmortizer.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_ANN: 
-                    return Annuity.evalAll(analysisTimes,model,riskFactorModel);
+                    return Annuity.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_CLM: 
-                    return CallMoney.evalAll(analysisTimes,model,riskFactorModel);
+                    return CallMoney.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_CSH: 
-                    return Cash.evalAll(analysisTimes,model,riskFactorModel);
+                    return Cash.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_STK: 
-                    return Stock.evalAll(analysisTimes,model,riskFactorModel);
+                    return Stock.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_COM: 
-                    return Commodity.evalAll(analysisTimes,model,riskFactorModel);
+                    return Commodity.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_FXOUT: 
-                    return ForeignExchangeOutright.evalAll(analysisTimes,model,riskFactorModel);
+                    return ForeignExchangeOutright.lifecycle(analysisTimes,model,riskFactorModel);
                 default:
                     throw new ContractTypeUnknownException();
             }
