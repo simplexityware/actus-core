@@ -11,6 +11,7 @@ import org.actus.states.StateSpace;
 import org.actus.externals.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 
+import java.time.Period;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class CashTest {
     public ExpectedException thrown = ExpectedException.none();
     
     @Test
-    public void test_CSH_MandatoryAttributes() {
+    public void test_CSH_lifecycle_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
         Map<String, String> map = new HashMap<String, String>();
@@ -65,7 +66,7 @@ public class CashTest {
     }
     
     @Test
-    public void test_CSH_withMultipleAnalysisTimes() {
+    public void test_CSH_lifecycle_withMultipleAnalysisTimes() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "CSH");
@@ -85,6 +86,258 @@ public class CashTest {
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
         ArrayList<ContractEvent> events = Cash.lifecycle(analysisTimes,model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_payoff_withMultipleAnalysisTimes() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.payoff(analysisTimes,model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_events_inWindow() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.events(analysisTimes,model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_events_inPeriod() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_transactions_inWindow() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.transactions(analysisTimes,model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_transactions_inPeriod() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // define risk factor model
+        MarketModel riskFactors = new MarketModel();
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.transactions(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_noncontingent_lifecycle_withMultipleAnalysisTimes() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.lifecycle(analysisTimes,model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_noncontingent_payoff_withMultipleAnalysisTimes() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.payoff(analysisTimes,model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_noncontingent_events_inWindow() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.events(analysisTimes,model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_noncontingent_events_inPeriod() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_noncontingent_transactions_inWindow() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.transactions(analysisTimes,model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_CSH_noncontingent_transactions_inPeriod() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "CSH");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("NotionalPrincipal", "1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Cash.transactions(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
         //System.out.println(events);
     }
 }

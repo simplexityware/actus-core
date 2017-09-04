@@ -37,9 +37,10 @@ import org.actus.functions.pam.POF_CD_PAM;
 import org.actus.functions.swppv.STF_CD_SWPPV;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.time.Period;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents the Plain Vanilla Interest Rate Swap payoff algorithm
@@ -48,11 +49,198 @@ import java.util.Collections;
  */
 public final class PlainVanillaInterestRateSwap {
 
+    // compute contingent lifecycle of the contract
     public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
                                                      ContractModelProvider model,
                                                      RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        
-        // compute events
+
+        // compute non-contingent events
+        ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
+
+        // compute and add contingent events
+        events.addAll(initContingentEvents(model,riskFactorModel));
+
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model);
+
+        // sort the events in the payoff-list according to their time of occurence
+        Collections.sort(events);
+
+        // evaluate events
+        events.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
+
+        // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.type().equals(StringUtils.EventType_AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), null, null)) == -1);
+        }
+
+        // return all evaluated post-StatusDate events as the payoff
+        return events;
+    }
+
+    // compute contingent payoff of the contract
+    public static ArrayList<ContractEvent> payoff(Set<LocalDateTime> analysisTimes,
+                                                  ContractModelProvider model,
+                                                  RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return PlainVanillaInterestRateSwap.lifecycle(analysisTimes,model,riskFactorModel).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    // compute contingent events in time window
+    public static ArrayList<ContractEvent> events(Set<LocalDateTime> analysisTimes,
+                                                  ContractModelProvider model,
+                                                  RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+
+        // compute non-contingent events
+        ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
+
+        // compute and add contingent events
+        events.addAll(initContingentEvents(model,riskFactorModel));
+
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model);
+
+        // sort the events in the payoff-list according to their time of occurence
+        Collections.sort(events);
+
+        // evaluate only contingent events within time window
+        ArrayList<ContractEvent> eventsInWindow = new ArrayList<ContractEvent>();
+        LocalDateTime start = analysisTimes.stream().min(Comparator.naturalOrder()).get();
+        LocalDateTime end = analysisTimes.stream().max(Comparator.naturalOrder()).get();
+        Iterator<ContractEvent> iterator = events.iterator();
+        while(iterator.hasNext()) {
+            ContractEvent event = iterator.next();
+            // stop if we reached end of window
+            if(event.time().isAfter(end)) {
+                break;
+            }
+            // eval event if not end of window reached
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            // add event to output list if after window start
+            // note: need to evaluate also pre-start events in order to update states correctly
+            if(!event.time().isBefore(start)) {
+                eventsInWindow.add(event);
+            }
+        }
+
+        return eventsInWindow;
+    }
+
+    // compute contingent events in time period
+    public static ArrayList<ContractEvent> events(LocalDateTime analysisTime,
+                                                  Period period,
+                                                  ContractModelProvider model,
+                                                  RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return PlainVanillaInterestRateSwap.events(Stream.of(analysisTime,analysisTime.plus(period)).collect(Collectors.toSet()),model,riskFactorModel);
+    }
+
+    // compute contingent transactions in time window
+    public static ArrayList<ContractEvent> transactions(Set<LocalDateTime> analysisTimes,
+                                                        ContractModelProvider model,
+                                                        RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return PlainVanillaInterestRateSwap.events(analysisTimes,model,riskFactorModel).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    // compute contingent transactions in time period
+    public static ArrayList<ContractEvent> transactions(LocalDateTime analysisTime,
+                                                        Period period,
+                                                        ContractModelProvider model,
+                                                        RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return PlainVanillaInterestRateSwap.transactions(Stream.of(analysisTime,analysisTime.plus(period)).collect(Collectors.toSet()),model,riskFactorModel);
+    }
+
+    // compute non-contingent portion of lifecycle of the contract
+    public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
+                                                     ContractModelProvider model) throws AttributeConversionException {
+
+        // compute non-contingent events
+        ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
+
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model);
+
+        // sort the events in the payoff-list according to their time of occurence
+        Collections.sort(events);
+
+        // evaluate only non-contingent events and add these to new list
+        ArrayList<ContractEvent> eventsNonContingent = new ArrayList<ContractEvent>();
+        Iterator<ContractEvent> iterator = events.iterator();
+        while(iterator.hasNext()) {
+            ContractEvent event = iterator.next();
+            if(StringUtils.ContingentEvents.contains(event.type())) {
+                break;
+            }
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            eventsNonContingent.add(event);
+        }
+
+        // return all non-contingent events as the non-contingent part of the lifecycle
+        return events;
+    }
+
+    // compute non-contingent portion of payoff of the contract
+    public static ArrayList<ContractEvent> payoff(Set<LocalDateTime> analysisTimes,
+                                                  ContractModelProvider model) throws AttributeConversionException {
+        return PlainVanillaInterestRateSwap.lifecycle(analysisTimes,model).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    // compute non-contingent events in time window
+    public static ArrayList<ContractEvent> events(Set<LocalDateTime> analysisTimes,
+                                                  ContractModelProvider model) throws AttributeConversionException {
+
+        // compute non-contingent events
+        ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
+
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model);
+
+        // sort the events in the payoff-list according to their time of occurence
+        Collections.sort(events);
+
+        // evaluate only non-contingent events and add these to new list
+        ArrayList<ContractEvent> eventsNonContingent = new ArrayList<ContractEvent>();
+        LocalDateTime start = analysisTimes.stream().min(Comparator.naturalOrder()).get();
+        LocalDateTime end = analysisTimes.stream().max(Comparator.naturalOrder()).get();
+        Iterator<ContractEvent> iterator = events.iterator();
+        while(iterator.hasNext()) {
+            ContractEvent event = iterator.next();
+            // stop if we reached end of window or if first contingent event occured
+            if(event.time().isAfter(end) || StringUtils.ContingentEvents.contains(event.type())) {
+                break;
+            }
+            // eval event if not end of window or first contingent event
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            // add event to output list if after window start
+            // note: need to evaluate also pre-start events in order to update states correctly
+            if(!event.time().isBefore(start)) {
+                eventsNonContingent.add(event);
+            }
+        }
+
+        return eventsNonContingent;
+    }
+
+    // compute non-contingent events in time period
+    public static ArrayList<ContractEvent> events(LocalDateTime analysisTime,
+                                                  Period period,
+                                                  ContractModelProvider model) throws AttributeConversionException {
+        return PlainVanillaInterestRateSwap.events(Stream.of(analysisTime,analysisTime.plus(period)).collect(Collectors.toSet()),model);
+    }
+
+    // compute non-contingent transactions in time window
+    public static ArrayList<ContractEvent> transactions(Set<LocalDateTime> analysisTimes,
+                                                        ContractModelProvider model) throws AttributeConversionException {
+        return PlainVanillaInterestRateSwap.events(analysisTimes,model).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    // compute non-contingent transactions in time period
+    public static ArrayList<ContractEvent> transactions(LocalDateTime analysisTime,
+                                                        Period period,
+                                                        ContractModelProvider model) throws AttributeConversionException {
+        return PlainVanillaInterestRateSwap.transactions(Stream.of(analysisTime,analysisTime.plus(period)).collect(Collectors.toSet()),model);
+    }
+
+    // compute (but not evaluate) non-contingent events
+    private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model) {
         ArrayList<ContractEvent> payoff = new ArrayList<ContractEvent>();
         // analysis events
         payoff.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_SWPPV()));
@@ -70,12 +258,12 @@ public final class PlainVanillaInterestRateSwap {
         }
         // interest payment events
         if (CommonUtils.isNull(model.getAs("DeliverySettlement")) || model.getAs("DeliverySettlement").equals(StringUtils.Settlement_Physical)) {
-            // in case of physical delivery (delivery of individual cash flows) 
+            // in case of physical delivery (delivery of individual cash flows)
             // interest payment schedule
             Set<LocalDateTime> interestSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
-                                                                                 model.getAs("MaturityDate"),
-                                                                                 model.getAs("CycleOfInterestPayment"),
-                                                                                 model.getAs("EndOfMonthConvention"));
+                    model.getAs("MaturityDate"),
+                    model.getAs("CycleOfInterestPayment"),
+                    model.getAs("EndOfMonthConvention"));
             // fixed rate events                                                                                                    model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
             payoff.addAll(EventFactory.createEvents(interestSchedule, StringUtils.EventType_IP, model.getAs("Currency"), new POF_IPFix_SWPPV(), new STF_IPFix_SWPPV(), model.getAs("BusinessDayConvention")));
             // floating rate events                                                                                                    model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
@@ -83,26 +271,37 @@ public final class PlainVanillaInterestRateSwap {
         } else {
             // in case of cash delivery (cash settlement)                                                                                                model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
             payoff.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
-                                                                                 model.getAs("MaturityDate"),
-                                                                                 model.getAs("CycleOfInterestPayment"),
-                                                                                 model.getAs("EndOfMonthConvention")), 
-                            StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_SWPPV(), new STF_IP_SWPPV(), model.getAs("BusinessDayConvention")));
-            
+                    model.getAs("MaturityDate"),
+                    model.getAs("CycleOfInterestPayment"),
+                    model.getAs("EndOfMonthConvention")),
+                    StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_SWPPV(), new STF_IP_SWPPV(), model.getAs("BusinessDayConvention")));
+
         }
-        
-        // rate reset         
+
+        // rate reset
         payoff.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                                                                                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
-                                                 StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_SWPPV(), model.getAs("BusinessDayConvention")));
-        // add counterparty default risk-factor contingent events
-        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
-            payoff.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
-                                             StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_PAM(), new STF_CD_SWPPV()));
-        }
+                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
+                StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_SWPPV(), model.getAs("BusinessDayConvention")));
         // remove all pre-status date events
         payoff.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
-                                                                  null)) == -1);
-        // initialize state space per status date
+                null)) == -1);
+
+        return payoff;
+    }
+
+    // compute (but not evaluate) contingent events
+    private static ArrayList<ContractEvent> initContingentEvents(ContractModelProvider model, RiskFactorModelProvider riskFactorModel) {
+        ArrayList<ContractEvent> payoff = new ArrayList<ContractEvent>();
+        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
+            payoff.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
+                    StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_PAM(), new STF_CD_SWPPV()));
+        }
+
+        return payoff;
+    }
+
+    // initialize state space per status date
+    private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
@@ -111,14 +310,6 @@ public final class PlainVanillaInterestRateSwap {
             states.nominalRate = model.getAs("NominalInterestRate");
             states.nominalAccrued = model.getAs("AccruedInterest");
         }
-        
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(payoff);
-
-        // evaluate events
-        payoff.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
-        
-        // return all evaluated post-StatusDate events as the payoff
-        return payoff;
+        return states;
     }
 }

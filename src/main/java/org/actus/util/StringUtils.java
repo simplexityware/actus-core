@@ -5,6 +5,10 @@
  */
 package org.actus.util;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Contains constants representing String-conventions
  */
@@ -75,4 +79,16 @@ public final class StringUtils {
     // settlement types
     public final static char Settlement_Physical = 'D';
     public final static char Settlement_Cash = 'S';
+
+    // transaction-type events
+    public final static Set<String> TransactionalEvents = Stream.of(
+            StringUtils.EventType_IED,StringUtils.EventType_DV,StringUtils.EventType_FP,
+            StringUtils.EventType_IP,StringUtils.EventType_PP,StringUtils.EventType_PR,
+            StringUtils.EventType_PRD,StringUtils.EventType_PY,StringUtils.EventType_STD,
+            StringUtils.EventType_TD).collect(Collectors.toSet());
+
+    // risk factor state contingent events
+    public final static Set<String> ContingentEvents = Stream.of(
+            StringUtils.EventType_CD,StringUtils.EventType_RR,StringUtils.EventType_SC,
+            StringUtils.EventType_DV,StringUtils.EventType_PP,StringUtils.EventType_STD).collect(Collectors.toSet());
 }

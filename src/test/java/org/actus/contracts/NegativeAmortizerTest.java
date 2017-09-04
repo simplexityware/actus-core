@@ -11,6 +11,7 @@ import org.actus.states.StateSpace;
 import org.actus.externals.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 
+import java.time.Period;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class NegativeAmortizerTest {
     public ExpectedException thrown = ExpectedException.none();
        
     @Test
-    public void test_NAM_MandatoryAttributes() {
+    public void test_NAM_lifecycle_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
         Map<String, String> map = new HashMap<String, String>();
@@ -72,7 +73,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_MandatoryAttributes_withMaturity() {
+    public void test_NAM_lifecycle_MandatoryAttributes_withMaturity() {
         thrown = ExpectedException.none();
         // define attributes
         Map<String, String> map = new HashMap<String, String>();
@@ -101,7 +102,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withPRANX() {
+    public void test_NAM_lifecycle_withPRANX() {
         thrown = ExpectedException.none();
         // define attributes
         Map<String, String> map = new HashMap<String, String>();
@@ -130,7 +131,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIPCL() {
+    public void test_NAM_lifecycle_withIPCL() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -159,7 +160,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIPCLandIPANX() {
+    public void test_NAM_lifecycle_withIPCLandIPANX() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -189,7 +190,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRRCLandRRANX() {
+    public void test_NAM_lifecycle_withIP_withRRCLandRRANX() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -221,7 +222,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSCwhere000() {
+    public void test_NAM_lifecycle_withIP_withRR_withSCwhere000() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -252,7 +253,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSCwhereI00() {
+    public void test_NAM_lifecycle_withIP_withRR_withSCwhereI00() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -283,7 +284,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSCwhereIN0() {
+    public void test_NAM_lifecycle_withIP_withRR_withSCwhereIN0() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -314,7 +315,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSCwhereIN0_withSCCL() {
+    public void test_NAM_lifecycle_withIP_withRR_withSCwhereIN0_withSCCL() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -346,7 +347,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSCwhereIN0_withSCCLandSCANX() {
+    public void test_NAM_lifecycle_withIP_withRR_withSCwhereIN0_withSCCLandSCANX() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -379,7 +380,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFPwhereA() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFPwhereA() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -414,7 +415,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFPwhereN() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFPwhereN() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -449,7 +450,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOPCL() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOPCL() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -486,7 +487,7 @@ public class NegativeAmortizerTest {
     }
         
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOPANX() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOPANX() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -522,7 +523,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOPCLandOPANX() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOPCLandOPANX() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -559,7 +560,7 @@ public class NegativeAmortizerTest {
     }
 
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOP_withPYwhereO() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOP_withPYwhereO() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -597,7 +598,7 @@ public class NegativeAmortizerTest {
     }
 
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOP_withPYwhereA() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOP_withPYwhereA() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -636,7 +637,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOP_withPYwhereN() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOP_withPYwhereN() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -675,7 +676,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOP_withPYwhereI() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOP_withPYwhereI() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -713,7 +714,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNT() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNT() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -752,7 +753,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNTIED() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNTIED() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -792,7 +793,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNTL() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNTL() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -833,7 +834,7 @@ public class NegativeAmortizerTest {
     }
     
     @Test
-    public void test_NAM_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNTLwithIPCBANX() {
+    public void test_NAM_lifecycle_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNTLwithIPCBANX() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "NAM");
@@ -873,12 +874,12 @@ public class NegativeAmortizerTest {
         // lifecycle LAM contract
         ArrayList<ContractEvent> events = NegativeAmortizer.lifecycle(analysisTimes,model,riskFactors);
     }
-    
+
     @Test
-    public void test_NAM_withIP_withRR_withSC_withOP_withIPCB_withMultipleAnalysisTimes() {
+    public void test_LAM_lifecycle_withIP_withRR_withSC_withOP_withIPCB_withMultipleAnalysisTimes() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "NAM");
+        map.put("ContractType", "LAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -909,11 +910,427 @@ public class NegativeAmortizerTest {
         analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
         analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
-        MarketModel riskFactors = new MarketModel();
+        NegativeAmortizerTest.MarketModel riskFactors = new NegativeAmortizerTest.MarketModel();
         // lifecycle LAM contract
         ArrayList<ContractEvent> events = NegativeAmortizer.lifecycle(analysisTimes,model,riskFactors);
         //System.out.println(events);
     }
 
+    @Test
+    public void test_LAM_payoff_withIP_withRR_withSC_withOP_withIPCB_withMultipleAnalysisTimes() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // define risk factor model
+        NegativeAmortizerTest.MarketModel riskFactors = new NegativeAmortizerTest.MarketModel();
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.payoff(analysisTimes,model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_events_inWindow_withIP_withRR_withSC_withOP_withIPCB() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // define risk factor model
+        NegativeAmortizerTest.MarketModel riskFactors = new NegativeAmortizerTest.MarketModel();
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.events(analysisTimes,model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_events_inPeriod_withIP_withRR_withSC_withOP_withIPCB() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define risk factor model
+        NegativeAmortizerTest.MarketModel riskFactors = new NegativeAmortizerTest.MarketModel();
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_transactions_inWindow_withIP_withRR_withSC_withOP_withIPCB() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // define risk factor model
+        NegativeAmortizerTest.MarketModel riskFactors = new NegativeAmortizerTest.MarketModel();
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.transactions(analysisTimes,model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_transactions_inPeriod_withIP_withRR_withSC_withOP_withIPCB() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define risk factor model
+        NegativeAmortizerTest.MarketModel riskFactors = new NegativeAmortizerTest.MarketModel();
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.transactions(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofWeeks(1),model,riskFactors);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_noncontingent_lifecycle_withIP_withRR_withSC_withOP_withIPCB_withMultipleAnalysisTimes() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.lifecycle(analysisTimes,model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_noncontingent_payoff_withIP_withRR_withSC_withOP_withIPCB_withMultipleAnalysisTimes() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.payoff(analysisTimes,model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_noncontingent_events_inWindow_withIP_withRR_withSC_withOP_withIPCB() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // define risk factor model
+        NegativeAmortizerTest.MarketModel riskFactors = new NegativeAmortizerTest.MarketModel();
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.events(analysisTimes,model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_noncontingent_events_inPeriod_withIP_withRR_withSC_withOP_withIPCB() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.events(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofWeeks(1),model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_noncontingent_transactions_inWindow_withIP_withRR_withSC_withOP_withIPCB() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // define analysis times
+        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
+        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
+        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.transactions(analysisTimes,model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_LAM_noncontingent_transactions_inPeriod_withIP_withRR_withSC_withOP_withIPCB() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "LAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = NegativeAmortizer.transactions(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofWeeks(1),model);
+        //System.out.println(events);
+    }
 
 }
