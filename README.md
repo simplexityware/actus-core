@@ -58,7 +58,7 @@ Questions and feedback
 
 Consult our [homepage](http://www.actusfrf.org) for general information. 
 
-Questions should be directed to info@projectactus.org.
+Questions should be directed to info@actusfrf.org.
 
 Bugs can be reported as a GitHub issue at
 https://github.com/projectactus/actus-core/issues.
