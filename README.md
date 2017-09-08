@@ -3,14 +3,11 @@
 actus-core
 =======
 
-[![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-
 Project ACTUS develops and maintains a number of Java libraries (the actus libraries) as part of its algorithmic standards.
 
 This repository contains the source code of the actus-core library, project ACTUS' core library implementing the Contract Types.
 
-The actus libraries are released as Open Source Software under the
-[Apache v2.0 license](http://www.apache.org/licenses/LICENSE-2.0.html). 
+The actus libraries will be released as Free and Open Source Software. 
 
 Documentation
 -------------
