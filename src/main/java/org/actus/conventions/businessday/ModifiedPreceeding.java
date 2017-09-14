@@ -1,9 +1,10 @@
-package org.actus.conventions.businessday;
-/**
- * Copyright (C) 2016 - present by ACTUS Foundation for Financial Research
+/*
+ * Copyright (C) 2016 - present by ACTUS Financial Research Foundation
  *
  * Please see distribution for license.
  */
+
+package org.actus.conventions.businessday;
 import org.actus.externals.BusinessDayCalendarProvider;
 
 import java.time.LocalDateTime;
