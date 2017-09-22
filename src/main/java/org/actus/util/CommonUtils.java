@@ -11,6 +11,6 @@ package org.actus.util;
 public final class CommonUtils {
     
     public static boolean isNull(Object o) {
-        return (o == null)? true : false;
+        return (o == null || String.valueOf(o).equals("NULL"))? true : false;
     }
 }
