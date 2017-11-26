@@ -515,7 +515,7 @@ public class CallMoneyTest {
     }
 
     @Test
-    public void test_CLM_events_inWindow_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
+    public void test_CLM_next_5_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "CLM");
@@ -538,21 +538,15 @@ public class CallMoneyTest {
         map.put("BusinessDayCalendar","CSP");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = CallMoney.events(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = CallMoney.next(LocalDateTime.parse("2016-01-01T00:00:00"),5,model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_CLM_events_inPeriod_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
+    public void test_CLM_next_5_fromSD_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "CLM");
@@ -578,12 +572,12 @@ public class CallMoneyTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = CallMoney.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model,riskFactors);
+        ArrayList<ContractEvent> events = CallMoney.next(5,model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_CLM_transactions_inWindow_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
+    public void test_CLM_next_within_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "CLM");
@@ -606,21 +600,15 @@ public class CallMoneyTest {
         map.put("BusinessDayCalendar","CSP");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = CallMoney.transactions(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = CallMoney.next(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofDays(10),model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_CLM_transactions_inPeriod_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
+    public void test_CLM_next_within_fromSD_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "CLM");
@@ -646,7 +634,7 @@ public class CallMoneyTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = CallMoney.transactions(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model,riskFactors);
+        ArrayList<ContractEvent> events = CallMoney.next(Period.ofWeeks(1),model,riskFactors);
         //System.out.println(events);
     }
 
@@ -721,7 +709,7 @@ public class CallMoneyTest {
     }
 
     @Test
-    public void test_CLM_noncontingent_events_inWindow_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
+    public void test_CLM_noncontingent_next_5_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "CLM");
@@ -744,19 +732,13 @@ public class CallMoneyTest {
         map.put("BusinessDayCalendar","CSP");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = CallMoney.events(analysisTimes,model);
+        ArrayList<ContractEvent> events = CallMoney.next(5,model);
         //System.out.println(events);
     }
 
     @Test
-    public void test_CLM_noncontingent_events_inPeriod_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
+    public void test_CLM_noncontingent_next_within_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "CLM");
@@ -780,71 +762,8 @@ public class CallMoneyTest {
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = CallMoney.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
+        ArrayList<ContractEvent> events = CallMoney.next(Period.ofWeeks(1),model);
         //System.out.println(events);
     }
 
-    @Test
-    public void test_CLM_noncontingent_transactions_inWindow_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "6M");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","N");
-        map.put("FeeRate","0.01");
-        map.put("Calendar","MondayToFriday");
-        map.put("BusinessDayCalendar","CSP");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = CallMoney.transactions(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_CLM_noncontingent_transactions_inPeriod_withMD_withIP_withRR_withFP_withCalendar_withBDC() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "6M");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","N");
-        map.put("FeeRate","0.01");
-        map.put("Calendar","MondayToFriday");
-        map.put("BusinessDayCalendar","CSP");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = CallMoney.transactions(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
-        //System.out.println(events);
-    }
 }

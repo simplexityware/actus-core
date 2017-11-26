@@ -424,7 +424,7 @@ public class PlainVanillaInterestRateSwapTest {
     }
 
     @Test
-    public void test_SWPPV_events_inWindow_withIP_withSTDwhereS_withPRD() {
+    public void test_SWPPV_next_5_withIP_withSTDwhereS_withPRD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "SWPPV");
@@ -445,21 +445,15 @@ public class PlainVanillaInterestRateSwapTest {
         map.put("PriceAtPurchaseDate", "50.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.events(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.next(LocalDateTime.parse("2016-01-01T00:00:00"),5,model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_SWPPV_events_inPeriod_withIP_withSTDwhereS_withPRD() {
+    public void test_SWPPV_next_5_fromSD_withIP_withSTDwhereS_withPRD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "SWPPV");
@@ -483,12 +477,12 @@ public class PlainVanillaInterestRateSwapTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model,riskFactors);
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.next(5,model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_SWPPV_transactions_inWindow_withIP_withSTDwhereS_withPRD() {
+    public void test_SWPPV_next_within_withIP_withSTDwhereS_withPRD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "SWPPV");
@@ -509,21 +503,15 @@ public class PlainVanillaInterestRateSwapTest {
         map.put("PriceAtPurchaseDate", "50.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.transactions(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.next(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofDays(10),model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_SWPPV_transactions_inPeriod_withIP_withSTDwhereS_withPRD() {
+    public void test_SWPPV_next_within_fromSD_withIP_withSTDwhereS_withPRD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "SWPPV");
@@ -547,7 +535,7 @@ public class PlainVanillaInterestRateSwapTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.transactions(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model,riskFactors);
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.next(Period.ofWeeks(1),model,riskFactors);
         //System.out.println(events);
     }
 
@@ -618,7 +606,7 @@ public class PlainVanillaInterestRateSwapTest {
     }
 
     @Test
-    public void test_SWPPV_noncontingent_events_inWindow_withIP_withSTDwhereS_withPRD() {
+    public void test_SWPPV_noncontingent_next_5_withIP_withSTDwhereS_withPRD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "SWPPV");
@@ -639,19 +627,13 @@ public class PlainVanillaInterestRateSwapTest {
         map.put("PriceAtPurchaseDate", "50.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.events(analysisTimes,model);
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.next(5,model);
         //System.out.println(events);
     }
 
     @Test
-    public void test_SWPPV_noncontingent_events_inPeriod_withIP_withSTDwhereS_withPRD() {
+    public void test_SWPPV_noncontingent_next_within_withIP_withSTDwhereS_withPRD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "SWPPV");
@@ -673,67 +655,8 @@ public class PlainVanillaInterestRateSwapTest {
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
+        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.next(Period.ofWeeks(1),model);
         //System.out.println(events);
     }
 
-    @Test
-    public void test_SWPPV_noncontingent_transactions_inWindow_withIP_withSTDwhereS_withPRD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2015-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("DeliverySettlement","S");
-        map.put("PurchaseDate", "2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate", "50.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.transactions(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_SWPPV_noncontingent_transactions_inPeriod_withIP_withSTDwhereS_withPRD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2015-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("DeliverySettlement","S");
-        map.put("PurchaseDate", "2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate", "50.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.transactions(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
-        //System.out.println(events);
-    }
 }

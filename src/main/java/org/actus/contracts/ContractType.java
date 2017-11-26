@@ -295,555 +295,443 @@ public final class ContractType {
     }
 
     /**
-     * Evaluates all contract events within a specified time window
+     * Evaluates the 'n' next contract events
      * <p>
-     *     The set of contract attributes are mapped to a stream of contract events according
+     *     The set of contract attributes are mapped to the {@code n} next contract events according
      *     to the legal logic of the respective Contract Type and contingent
-     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}. The
-     *     generated stream of contract events contains all post-status date events that occur
-     *     within the window of times specified.
+     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}.
+     *     Argument {@code from} is used as the reference time as from which the next {@code n}
+     *     events are to be evaluated.
      * </p>
      * <p>
-     *     The window of contract events is taken as the time period from time 
-     *     {@code analysisTimes.stream().min(Comparator.naturalOrder())} to time
-     *     {@code analysisTimes.stream().max(Comparator.naturalOrder())} including
-     *     limits.
-     * </p>
-     * <p>
-     *    For each time in argument {@code analysisTimes} an analytical event is added to
-     *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-     *    at that time. Therefore, the generated analytical events do not affect the
-     *    contract's lifecycle.
-     * </p>
-     * <p>
-     *     This method invokes the {@code events(Set<LocalDateTime> analysisTimes,ContractModel model, RiskFactorModelProvider riskFactorModel)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
      *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
      *     throws a {@link ContractTypeUnknownException}.
      * </p>
      *
-     * @param analysisTimes  a series of analysis times
+     * @param from  the reference time from which the 'n' next events are to be evaluated
+     * @param n the number of 'next' events to be evaluated
      * @param model the model carrying the contract attributes
      * @param riskFactorModel an external model of the risk factor dynamics
-     * @return the contract's contingent lifecycle
+     * @return the next 'n' contract events
      * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
      * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
      *
      */
-    public static ArrayList<ContractEvent> events(Set<LocalDateTime> analysisTimes,
-                                                     ContractModelProvider model,
-                                                     RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
+    public static ArrayList<ContractEvent> next(LocalDateTime from,
+                                                int n,
+                                                ContractModelProvider model,
+                                                RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
         switch((String) model.getAs("ContractType")) {
             case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.events(analysisTimes,model,riskFactorModel);
+                return PrincipalAtMaturity.next(from,n,model,riskFactorModel);
             case StringUtils.ContractType_LAM:
-                return LinearAmortizer.events(analysisTimes,model,riskFactorModel);
+                return LinearAmortizer.next(from,n,model,riskFactorModel);
             case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.events(analysisTimes,model,riskFactorModel);
+                return NegativeAmortizer.next(from,n,model,riskFactorModel);
             case StringUtils.ContractType_ANN:
-                return Annuity.events(analysisTimes,model,riskFactorModel);
+                return Annuity.next(from,n,model,riskFactorModel);
             case StringUtils.ContractType_CLM:
-                return CallMoney.events(analysisTimes,model,riskFactorModel);
+                return CallMoney.next(from,n,model,riskFactorModel);
             case StringUtils.ContractType_CSH:
-                return Cash.events(analysisTimes,model,riskFactorModel);
+                return Cash.next(from,n,model,riskFactorModel);
             case StringUtils.ContractType_STK:
-                return Stock.events(analysisTimes,model,riskFactorModel);
+                return Stock.next(from,n,model,riskFactorModel);
             case StringUtils.ContractType_COM:
-                return Commodity.events(analysisTimes,model,riskFactorModel);
+                return Commodity.next(from,n,model,riskFactorModel);
             case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.events(analysisTimes,model,riskFactorModel);
+                return ForeignExchangeOutright.next(from,n,model,riskFactorModel);
             case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.events(analysisTimes,model,riskFactorModel);
+                return PlainVanillaInterestRateSwap.next(from,n,model,riskFactorModel);
             default:
                 throw new ContractTypeUnknownException();
         }
     }
 
     /**
-     * Evaluates the non-contingent contract events within a time window
+     * Evaluates the 'n' next contract events
      * <p>
-     *     The set of contract attributes are mapped to a stream of contract events according
-     *     to the legal logic of the respective Contract Type. The
-     *     generated stream of contract events contains all post-status date events that occur
-     *     within the window of times specified.
+     *     The set of contract attributes are mapped to the {@code n} next contract events
+     *     with respect to the contract's {@code StatusDate} according
+     *     to the legal logic of the respective Contract Type and contingent
+     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}.
      * </p>
      * <p>
-     *     The window of times is taken as the time period from time 
-     *     {@code analysisTimes.stream().min(Comparator.naturalOrder())} to time
-     *     {@code analysisTimes.stream().max(Comparator.naturalOrder())} including
-     *     limits.
+     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
+     *     throws a {@link ContractTypeUnknownException}.
+     * </p>
+     *
+     * @param n the number of 'next' events to be evaluated
+     * @param model the model carrying the contract attributes
+     * @param riskFactorModel an external model of the risk factor dynamics
+     * @return the next 'n' contract events
+     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
+     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
+     *
+     */
+    public static ArrayList<ContractEvent> next(int n,
+                                                ContractModelProvider model,
+                                                RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
+        switch((String) model.getAs("ContractType")) {
+            case StringUtils.ContractType_PAM:
+                return PrincipalAtMaturity.next(n,model,riskFactorModel);
+            case StringUtils.ContractType_LAM:
+                return LinearAmortizer.next(n,model,riskFactorModel);
+            case StringUtils.ContractType_NAM:
+                return NegativeAmortizer.next(n,model,riskFactorModel);
+            case StringUtils.ContractType_ANN:
+                return Annuity.next(n,model,riskFactorModel);
+            case StringUtils.ContractType_CLM:
+                return CallMoney.next(n,model,riskFactorModel);
+            case StringUtils.ContractType_CSH:
+                return Cash.next(n,model,riskFactorModel);
+            case StringUtils.ContractType_STK:
+                return Stock.next(n,model,riskFactorModel);
+            case StringUtils.ContractType_COM:
+                return Commodity.next(n,model,riskFactorModel);
+            case StringUtils.ContractType_FXOUT:
+                return ForeignExchangeOutright.next(n,model,riskFactorModel);
+            case StringUtils.ContractType_SWPPV:
+                return PlainVanillaInterestRateSwap.next(n,model,riskFactorModel);
+            default:
+                throw new ContractTypeUnknownException();
+        }
+    }
+
+    /**
+     * Evaluates the next contract events within a certain time period
+     * <p>
+     *     The set of contract attributes are mapped to the stream of next contract events
+     *     within a specified time period according
+     *     to the legal logic of the respective Contract Type and contingent
+     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}.
+     *     Argument {@code from} is used as the reference time as from which the {@code within}
+     *     period is evaluated.
      * </p>
      * <p>
-     *     The non-contingent window of contract events evaluates the legal logic of the respective
-     *     Contract Type within the time window up to the point in time where the first
-     *     risk factor contingent contract event occurs. Therefore, the non-contingent window of
-     *     contract events matches the portion of the contingent window of contract events up to 
-     *     the first contingent event. Further, for a contract with purely non-contingent events 
+     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
+     *     throws a {@link ContractTypeUnknownException}.
+     * </p>
+     *
+     * @param from  the reference time from which the 'n' next events are to be evaluated
+     * @param within the period within the 'next' events are to be evaluated
+     * @param model the model carrying the contract attributes
+     * @param riskFactorModel an external model of the risk factor dynamics
+     * @return the next 'n' contract events
+     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
+     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
+     *
+     */
+    public static ArrayList<ContractEvent> next(LocalDateTime from,
+                                                Period within,
+                                                ContractModelProvider model,
+                                                RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
+        switch((String) model.getAs("ContractType")) {
+            case StringUtils.ContractType_PAM:
+                return PrincipalAtMaturity.next(from,within,model,riskFactorModel);
+            case StringUtils.ContractType_LAM:
+                return LinearAmortizer.next(from,within,model,riskFactorModel);
+            case StringUtils.ContractType_NAM:
+                return NegativeAmortizer.next(from,within,model,riskFactorModel);
+            case StringUtils.ContractType_ANN:
+                return Annuity.next(from,within,model,riskFactorModel);
+            case StringUtils.ContractType_CLM:
+                return CallMoney.next(from,within,model,riskFactorModel);
+            case StringUtils.ContractType_CSH:
+                return Cash.next(from,within,model,riskFactorModel);
+            case StringUtils.ContractType_STK:
+                return Stock.next(from,within,model,riskFactorModel);
+            case StringUtils.ContractType_COM:
+                return Commodity.next(from,within,model,riskFactorModel);
+            case StringUtils.ContractType_FXOUT:
+                return ForeignExchangeOutright.next(from,within,model,riskFactorModel);
+            case StringUtils.ContractType_SWPPV:
+                return PlainVanillaInterestRateSwap.next(from,within,model,riskFactorModel);
+            default:
+                throw new ContractTypeUnknownException();
+        }
+    }
+
+    /**
+     * Evaluates the next contract events within a certain time period
+     * <p>
+     *     The set of contract attributes are mapped to the stream of next contract events
+     *     within a specified time period according
+     *     to the legal logic of the respective Contract Type and contingent
+     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}.
+     *     The contract's {@code StatusDate} is used as the reference time as from which
+     *     the {@code within} period is evaluated.
+     * </p>
+     * <p>
+     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
+     *     throws a {@link ContractTypeUnknownException}.
+     * </p>
+     *
+     * @param within the period within the 'next' events are to be evaluated
+     * @param model the model carrying the contract attributes
+     * @param riskFactorModel an external model of the risk factor dynamics
+     * @return the next 'n' contract events
+     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
+     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
+     *
+     */
+    public static ArrayList<ContractEvent> next(Period within,
+                                                ContractModelProvider model,
+                                                RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
+        switch((String) model.getAs("ContractType")) {
+            case StringUtils.ContractType_PAM:
+                return PrincipalAtMaturity.next(within,model,riskFactorModel);
+            case StringUtils.ContractType_LAM:
+                return LinearAmortizer.next(within,model,riskFactorModel);
+            case StringUtils.ContractType_NAM:
+                return NegativeAmortizer.next(within,model,riskFactorModel);
+            case StringUtils.ContractType_ANN:
+                return Annuity.next(within,model,riskFactorModel);
+            case StringUtils.ContractType_CLM:
+                return CallMoney.next(within,model,riskFactorModel);
+            case StringUtils.ContractType_CSH:
+                return Cash.next(within,model,riskFactorModel);
+            case StringUtils.ContractType_STK:
+                return Stock.next(within,model,riskFactorModel);
+            case StringUtils.ContractType_COM:
+                return Commodity.next(within,model,riskFactorModel);
+            case StringUtils.ContractType_FXOUT:
+                return ForeignExchangeOutright.next(within,model,riskFactorModel);
+            case StringUtils.ContractType_SWPPV:
+                return PlainVanillaInterestRateSwap.next(within,model,riskFactorModel);
+            default:
+                throw new ContractTypeUnknownException();
+        }
+    }
+
+    /**
+     * Evaluates the 'n' next non-contingent contract events
+     * <p>
+     *     The set of contract attributes are mapped to the {@code n} next contract events according
+     *     to the legal logic of the respective Contract Type. If the next {@code n} events
+     *     include a contingent contract event only the non-contingent events prior to the first
+     *     occurrence of a contingent event are evaluated.
+     *     Argument {@code from} is used as the reference time as from which the next {@code n}
+     *     events are to be evaluated.
+     * </p>
+     * <p>
+     *     Note, the stream of the {@code n} next non-contingent contract events matches the portion
+     *     of the stream of the {@code n} next contingent events up to the first contingent event.
+     *     Further, for a contract with purely non-contingent events
      *     (e.g. a {@link PrincipalAtMaturity} without {@code RateReset}, {@code Scaling},
-     *     {@code CreditDefault}, etc.) contingent and non-contingent window of contract events are 
+     *     {@code CreditDefault}, etc.) contingent and non-contingent event streams are
      *     the same.
      * </p>
      * <p>
-     *    For each time in argument {@code analysisTimes} an analytical event is added to
-     *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-     *    at that time. Therefore, the generated analytical events do not affect the
-     *    contract's lifecycle.
-     * </p>
-     * <p>
-     *     This method invokes the {@code events(Set<LocalDateTime> analysisTimes,ContractModel model)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
      *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
      *     throws a {@link ContractTypeUnknownException}.
      * </p>
      *
-     * @param analysisTimes  a series of analysis times
+     * @param from  the reference time from which the 'n' next events are to be evaluated
+     * @param n the number of 'next' events to be evaluated
      * @param model the model carrying the contract attributes
-     * @return the non-contingent part of the contract's lifecycle
+     * @return the next 'n' contract events
      * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
      * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
      *
      */
-    public static ArrayList<ContractEvent> events(Set<LocalDateTime> analysisTimes,
-                                                     ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
+    public static ArrayList<ContractEvent> next(LocalDateTime from,
+                                                int n,
+                                                ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
         switch((String) model.getAs("ContractType")) {
             case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.events(analysisTimes,model);
+                return PrincipalAtMaturity.next(from,n,model);
             case StringUtils.ContractType_LAM:
-                return LinearAmortizer.events(analysisTimes,model);
+                return LinearAmortizer.next(from,n,model);
             case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.events(analysisTimes,model);
+                return NegativeAmortizer.next(from,n,model);
             case StringUtils.ContractType_ANN:
-                return Annuity.events(analysisTimes,model);
+                return Annuity.next(from,n,model);
             case StringUtils.ContractType_CLM:
-                return CallMoney.events(analysisTimes,model);
+                return CallMoney.next(from,n,model);
             case StringUtils.ContractType_CSH:
-                return Cash.events(analysisTimes,model);
+                return Cash.next(from,n,model);
             case StringUtils.ContractType_STK:
-                return Stock.events(analysisTimes,model);
+                return Stock.next(from,n,model);
             case StringUtils.ContractType_COM:
-                return Commodity.events(analysisTimes,model);
+                return Commodity.next(from,n,model);
             case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.events(analysisTimes,model);
+                return ForeignExchangeOutright.next(from,n,model);
             case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.events(analysisTimes,model);
+                return PlainVanillaInterestRateSwap.next(from,n,model);
             default:
                 throw new ContractTypeUnknownException();
         }
     }
 
     /**
-     * Evaluates all contract events within a time period
+     * Evaluates the 'n' next contract events
      * <p>
-     *     The set of contract attributes are mapped to a stream of contract events according
+     *     The set of contract attributes are mapped to the {@code n} next contract events
+     *     with respect to the contract's {@code StatusDate} according
      *     to the legal logic of the respective Contract Type and contingent
-     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}. The
-     *     generated stream of contract events contains all post-status date events that occur
-     *     within the window of times specified through a window start date and time period.
+     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}.
      * </p>
      * <p>
-     *     The window of contract events is taken as the time period from time 
-     *     {@code analysisTimes} to time {@code analysisTimes.plus(period)} including
-     *     limits.
-     * </p>
-     * <p>
-     *    For each time in argument {@code analysisTimes} an analytical event is added to
-     *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-     *    at that time. Therefore, the generated analytical events do not affect the
-     *    contract's lifecycle.
-     * </p>
-     * <p>
-     *     This method invokes the {@code events(LocalDateTime analysisTime,Period period, ContractModel model, RiskFactorModelProvider riskFactorModel)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
-     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
-     *     throws a {@link ContractTypeUnknownException}.
-     * </p>
-     *
-     * @param analysisTime  a single analysis time marking the window start
-     * @param period the period within which events are evaluated 
-     * @param model the model carrying the contract attributes
-     * @param riskFactorModel an external model of the risk factor dynamics
-     * @return the contract's contingent lifecycle
-     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
-     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
-     *
-     */
-    public static ArrayList<ContractEvent> events(LocalDateTime analysisTime,
-                                                  Period period,
-                                                  ContractModelProvider model,
-                                                  RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
-        switch((String) model.getAs("ContractType")) {
-            case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.events(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_LAM:
-                return LinearAmortizer.events(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.events(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_ANN:
-                return Annuity.events(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_CLM:
-                return CallMoney.events(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_CSH:
-                return Cash.events(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_STK:
-                return Stock.events(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_COM:
-                return Commodity.events(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.events(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.events(analysisTime,period,model,riskFactorModel);
-            default:
-                throw new ContractTypeUnknownException();
-        }
-    }
-
-    /**
-     * Evaluates the non-contingent contract events within a time period
-     * <p>
-     *     The set of contract attributes are mapped to a stream of contract events according
-     *     to the legal logic of the respective Contract Type. The
-     *     generated stream of contract events contains all post-status date events that occur
-     *     within the window of times specified through a window start date and time period.
-     * </p>
-     * <p>
-     *     The window of contract events is taken as the time period from time 
-     *     {@code analysisTimes} to time {@code analysisTimes.plus(period)} including
-     *     limits.
-     * </p>
-     * <p>
-     *     The non-contingent window of contract events evaluates the legal logic of the respective
-     *     Contract Type within the time window up to the point in time where the first
-     *     risk factor contingent contract event occurs. Therefore, the non-contingent window of
-     *     contract events matches the portion of the contingent window of contract events up to 
-     *     the first contingent event. Further, for a contract with purely non-contingent events 
+     *     Note, the stream of the {@code n} next non-contingent contract events matches the portion
+     *     of the stream of the {@code n} next contingent events up to the first contingent event.
+     *     Further, for a contract with purely non-contingent events
      *     (e.g. a {@link PrincipalAtMaturity} without {@code RateReset}, {@code Scaling},
-     *     {@code CreditDefault}, etc.) contingent and non-contingent window of contract events are 
+     *     {@code CreditDefault}, etc.) contingent and non-contingent event streams are
      *     the same.
      * </p>
      * <p>
-     *    For time {@code analysisTime} an analytical event is added to
-     *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-     *    at that time. Therefore, the generated analytical events do not affect the
-     *    contract's lifecycle.
-     * </p>
-     * <p>
-     *     This method invokes the {@code events(LocalDateTime analysisTime,Period period,ContractModel model)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
      *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
      *     throws a {@link ContractTypeUnknownException}.
      * </p>
      *
-     * @param analysisTime  a single analysis time marking the window start
-     * @param period the period within which events are evaluated
+     * @param n the number of 'next' events to be evaluated
      * @param model the model carrying the contract attributes
-     * @return the non-contingent part of the contract's lifecycle
+     * @return the next 'n' contract events
      * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
      * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
      *
      */
-    public static ArrayList<ContractEvent> events(LocalDateTime analysisTime,
-                                                  Period period,
-                                                  ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
+    public static ArrayList<ContractEvent> next(int n,
+                                                ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
         switch((String) model.getAs("ContractType")) {
             case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.events(analysisTime,period,model);
+                return PrincipalAtMaturity.next(n,model);
             case StringUtils.ContractType_LAM:
-                return LinearAmortizer.events(analysisTime,period,model);
+                return LinearAmortizer.next(n,model);
             case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.events(analysisTime,period,model);
+                return NegativeAmortizer.next(n,model);
             case StringUtils.ContractType_ANN:
-                return Annuity.events(analysisTime,period,model);
+                return Annuity.next(n,model);
             case StringUtils.ContractType_CLM:
-                return CallMoney.events(analysisTime,period,model);
+                return CallMoney.next(n,model);
             case StringUtils.ContractType_CSH:
-                return Cash.events(analysisTime,period,model);
+                return Cash.next(n,model);
             case StringUtils.ContractType_STK:
-                return Stock.events(analysisTime,period,model);
+                return Stock.next(n,model);
             case StringUtils.ContractType_COM:
-                return Commodity.events(analysisTime,period,model);
+                return Commodity.next(n,model);
             case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.events(analysisTime,period,model);
+                return ForeignExchangeOutright.next(n,model);
             case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.events(analysisTime,period,model);
+                return PlainVanillaInterestRateSwap.next(n,model);
             default:
                 throw new ContractTypeUnknownException();
         }
     }
 
     /**
-     * Evaluates all transaction events within a specified time window
+     * Evaluates the next contract events within a certain time period
      * <p>
-     *     The set of contract attributes are mapped to a stream of transaction events according
-     *     to the legal logic of the respective Contract Type and contingent
-     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}. The
-     *     generated stream of transaction events contains all post-status date transaction
-     *     events that occur within the window of times specified.
+     *     The set of contract attributes are mapped to the stream of next contract events
+     *     within a specified time period according to the legal logic of the respective Contract Type.
+     *     Argument {@code from} is used as the reference time as from which the {@code within}
+     *     period is evaluated.
      * </p>
      * <p>
-     *     The window of transaction events is taken as the time period from time 
-     *     {@code analysisTimes.stream().min(Comparator.naturalOrder())} to time
-     *     {@code analysisTimes.stream().max(Comparator.naturalOrder())} including
-     *     limits.
-     * </p>
-     * <p>
-     *    For each time in argument {@code analysisTimes} an analytical event is added to
-     *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-     *    at that time. Therefore, the generated analytical events do not affect the
-     *    contract's lifecycle.
-     * </p>
-     * <p>
-     *     This method invokes the {@code transactions(Set<LocalDateTime> analysisTimes, ContractModel model, RiskFactorModelProvider riskFactorModel)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
-     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
-     *     throws a {@link ContractTypeUnknownException}.
-     * </p>
-     *
-     * @param analysisTimes  a series of analysis times
-     * @param model the model carrying the contract attributes
-     * @param riskFactorModel an external model of the risk factor dynamics
-     * @return the transaction events within the time window
-     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
-     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
-     *
-     */
-    public static ArrayList<ContractEvent> transactions(Set<LocalDateTime> analysisTimes,
-                                                  ContractModelProvider model,
-                                                  RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
-        switch((String) model.getAs("ContractType")) {
-            case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.transactions(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_LAM:
-                return LinearAmortizer.transactions(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.transactions(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_ANN:
-                return Annuity.transactions(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_CLM:
-                return CallMoney.transactions(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_CSH:
-                return Cash.transactions(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_STK:
-                return Stock.transactions(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_COM:
-                return Commodity.transactions(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.transactions(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.transactions(analysisTimes,model,riskFactorModel);
-            default:
-                throw new ContractTypeUnknownException();
-        }
-    }
-
-    /**
-     * Evaluates the non-contingent transaction events within a time window
-     * <p>
-     *     The set of contract attributes are mapped to a stream of transaction events according
-     *     to the legal logic of the respective Contract Type. The
-     *     generated stream of transaction events contains all post-status date transaction events 
-     *     that occur within the window of times specified.
-     * </p>
-     * <p>
-     *     The window of times is taken as the time period from time 
-     *     {@code analysisTimes.stream().min(Comparator.naturalOrder())} to time
-     *     {@code analysisTimes.stream().max(Comparator.naturalOrder())} including
-     *     limits.
-     * </p>
-     * <p>
-     *     The non-contingent window of transaction events evaluates the legal logic of the respective
-     *     Contract Type within the time window up to the point in time where the first
-     *     risk factor contingent contract event occurs. Therefore, the non-contingent window of
-     *     transaction events matches the portion of the contingent window of transaction events up to 
-     *     the first contingent contract event. Further, for a contract with purely non-contingent events 
+     *     Note, the stream of the next non-contingent contract events matches the portion
+     *     of the stream of the next contingent events up to the first contingent event.
+     *     Further, for a contract with purely non-contingent events
      *     (e.g. a {@link PrincipalAtMaturity} without {@code RateReset}, {@code Scaling},
-     *     {@code CreditDefault}, etc.) contingent and non-contingent window of transaction events are 
+     *     {@code CreditDefault}, etc.) contingent and non-contingent event streams are
      *     the same.
      * </p>
      * <p>
-     *    For each time in argument {@code analysisTimes} an analytical event is added to
-     *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-     *    at that time. Therefore, the generated analytical events do not affect the
-     *    contract's lifecycle.
-     * </p>
-     * <p>
-     *     This method invokes the {@code transactions(Set<LocalDateTime> analysisTimes, ContractModel model)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
      *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
      *     throws a {@link ContractTypeUnknownException}.
      * </p>
      *
-     * @param analysisTimes  a series of analysis times
+     * @param from  the reference time from which the 'n' next events are to be evaluated
+     * @param within the period within the 'next' events are to be evaluated
      * @param model the model carrying the contract attributes
-     * @return the non-contingent transaction events within the time window
+     * @return the next 'n' contract events
      * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
      * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
      *
      */
-    public static ArrayList<ContractEvent> transactions(Set<LocalDateTime> analysisTimes,
-                                                  ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
+    public static ArrayList<ContractEvent> next(LocalDateTime from,
+                                                Period within,
+                                                ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
         switch((String) model.getAs("ContractType")) {
             case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.transactions(analysisTimes,model);
+                return PrincipalAtMaturity.next(from,within,model);
             case StringUtils.ContractType_LAM:
-                return LinearAmortizer.transactions(analysisTimes,model);
+                return LinearAmortizer.next(from,within,model);
             case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.transactions(analysisTimes,model);
+                return NegativeAmortizer.next(from,within,model);
             case StringUtils.ContractType_ANN:
-                return Annuity.transactions(analysisTimes,model);
+                return Annuity.next(from,within,model);
             case StringUtils.ContractType_CLM:
-                return CallMoney.transactions(analysisTimes,model);
+                return CallMoney.next(from,within,model);
             case StringUtils.ContractType_CSH:
-                return Cash.transactions(analysisTimes,model);
+                return Cash.next(from,within,model);
             case StringUtils.ContractType_STK:
-                return Stock.transactions(analysisTimes,model);
+                return Stock.next(from,within,model);
             case StringUtils.ContractType_COM:
-                return Commodity.transactions(analysisTimes,model);
+                return Commodity.next(from,within,model);
             case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.transactions(analysisTimes,model);
+                return ForeignExchangeOutright.next(from,within,model);
             case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.transactions(analysisTimes,model);
+                return PlainVanillaInterestRateSwap.next(from,within,model);
             default:
                 throw new ContractTypeUnknownException();
         }
     }
 
     /**
-     * Evaluates all transaction events within a time period
+     * Evaluates the next contract events within a certain time period
      * <p>
-     *     The set of contract attributes are mapped to a stream of transaction events according
+     *     The set of contract attributes are mapped to the stream of next contract events
+     *     within a specified time period according
      *     to the legal logic of the respective Contract Type and contingent
-     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}. The
-     *     generated stream of transaction events contains all post-status date transaction events 
-     *     that occur within the window of times specified through a window start date and time period.
+     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}.
+     *     The contract's {@code StatusDate} is used as the reference time as from which
+     *     the {@code within} period is evaluated.
      * </p>
      * <p>
-     *     The window of transaction events is taken as the time period from time 
-     *     {@code analysisTimes} to time {@code analysisTimes.plus(period)} including
-     *     limits.
-     * </p>
-     * <p>
-     *    For each time in argument {@code analysisTimes} an analytical event is added to
-     *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-     *    at that time. Therefore, the generated analytical events do not affect the
-     *    contract's lifecycle.
-     * </p>
-     * <p>
-     *     This method invokes the {@code transactions(LocalDateTime analysisTime, Period period, ContractModel model, RiskFactorModelProvider riskFactorModel)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
-     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
-     *     throws a {@link ContractTypeUnknownException}.
-     * </p>
-     *
-     * @param analysisTime  a single analysis time marking the window start
-     * @param period the period within which events are evaluated 
-     * @param model the model carrying the contract attributes
-     * @param riskFactorModel an external model of the risk factor dynamics
-     * @return the transaction events within the time period specified
-     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
-     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
-     *
-     */
-    public static ArrayList<ContractEvent> transactions(LocalDateTime analysisTime,
-                                                  Period period,
-                                                  ContractModelProvider model,
-                                                  RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
-        switch((String) model.getAs("ContractType")) {
-            case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.transactions(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_LAM:
-                return LinearAmortizer.transactions(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.transactions(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_ANN:
-                return Annuity.transactions(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_CLM:
-                return CallMoney.transactions(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_CSH:
-                return Cash.transactions(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_STK:
-                return Stock.transactions(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_COM:
-                return Commodity.transactions(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.transactions(analysisTime,period,model,riskFactorModel);
-            case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.transactions(analysisTime,period,model,riskFactorModel);
-            default:
-                throw new ContractTypeUnknownException();
-        }
-    }
-
-    /**
-     * Evaluates the non-contingent transaction events within a time period
-     * <p>
-     *     The set of contract attributes are mapped to a stream of transaction events according
-     *     to the legal logic of the respective Contract Type. The
-     *     generated stream of transaction events contains all post-status date transaction events 
-     *     that occur within the window of times specified through a window start date and time period.
-     * </p>
-     * <p>
-     *     The window of transaction events is taken as the time period from time 
-     *     {@code analysisTimes} to time {@code analysisTimes.plus(period)} including
-     *     limits.
-     * </p>
-     * <p>
-     *     The non-contingent window of transaction events evaluates the legal logic of the respective
-     *     Contract Type within the time window up to the point in time where the first
-     *     risk factor contingent contract event occurs. Therefore, the non-contingent window of
-     *     transaction events matches the portion of the window of contingent transaction events up to 
-     *     the first contingent event. Further, for a contract with purely non-contingent events 
+     *     Note, the stream of the next non-contingent contract events matches the portion
+     *     of the stream of the next contingent events up to the first contingent event.
+     *     Further, for a contract with purely non-contingent events
      *     (e.g. a {@link PrincipalAtMaturity} without {@code RateReset}, {@code Scaling},
-     *     {@code CreditDefault}, etc.) contingent and non-contingent window of transaction events are 
+     *     {@code CreditDefault}, etc.) contingent and non-contingent event streams are
      *     the same.
      * </p>
      * <p>
-     *    For time {@code analysisTime} an analytical event is added to
-     *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-     *    at that time. Therefore, the generated analytical events do not affect the
-     *    contract's lifecycle.
-     * </p>
-     * <p>
-     *     This method invokes the {@code transactions(LocalDateTime analysisTime, Period period, ContractModel model)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
      *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
      *     throws a {@link ContractTypeUnknownException}.
      * </p>
      *
-     * @param analysisTime  a single analysis time marking the window start
-     * @param period the period within which events are evaluated
+     * @param within the period within the 'next' events are to be evaluated
      * @param model the model carrying the contract attributes
-     * @return the non-contingent transaction events within the time period specified
+     * @return the next 'n' contract events
      * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
      * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
      *
      */
-    public static ArrayList<ContractEvent> transactions(LocalDateTime analysisTime,
-                                                  Period period,
-                                                  ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
+    public static ArrayList<ContractEvent> next(Period within,
+                                                ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
         switch((String) model.getAs("ContractType")) {
             case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.transactions(analysisTime,period,model);
+                return PrincipalAtMaturity.next(within,model);
             case StringUtils.ContractType_LAM:
-                return LinearAmortizer.transactions(analysisTime,period,model);
+                return LinearAmortizer.next(within,model);
             case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.transactions(analysisTime,period,model);
+                return NegativeAmortizer.next(within,model);
             case StringUtils.ContractType_ANN:
-                return Annuity.transactions(analysisTime,period,model);
+                return Annuity.next(within,model);
             case StringUtils.ContractType_CLM:
-                return CallMoney.transactions(analysisTime,period,model);
+                return CallMoney.next(within,model);
             case StringUtils.ContractType_CSH:
-                return Cash.transactions(analysisTime,period,model);
+                return Cash.next(within,model);
             case StringUtils.ContractType_STK:
-                return Stock.transactions(analysisTime,period,model);
+                return Stock.next(within,model);
             case StringUtils.ContractType_COM:
-                return Commodity.transactions(analysisTime,period,model);
+                return Commodity.next(within,model);
             case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.transactions(analysisTime,period,model);
+                return ForeignExchangeOutright.next(within,model);
             case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.transactions(analysisTime,period,model);
+                return PlainVanillaInterestRateSwap.next(within,model);
             default:
                 throw new ContractTypeUnknownException();
         }
     }
-    
 }

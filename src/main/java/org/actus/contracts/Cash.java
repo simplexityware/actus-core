@@ -91,38 +91,36 @@ public final class Cash {
         return payoff;
     }
 
-    // compute contingent events within time window
-    // note: this is trivial as only 1 single non-transactional event (at first analysis time) occurs
-    public static ArrayList<ContractEvent> events(Set<LocalDateTime> analysisTimes,
-                                                  ContractModelProvider model,
-                                                  RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        return Cash.lifecycle(analysisTimes,model,riskFactorModel);
+    // compute next n non-contingent events
+    // note: this is trivial as no events at all
+    public static ArrayList<ContractEvent> next(LocalDateTime from,
+                                                int n,
+                                                ContractModelProvider model,
+                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return new ArrayList<ContractEvent>();
     }
 
-    // compute contingent events within time period
-    // note: this is trivial as only 1 single non-transactional event (at first analysis time) occurs
-    public static ArrayList<ContractEvent> events(LocalDateTime analysisTime,
-                                                  Period period,
-                                                  ContractModelProvider model,
-                                                  RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        return Cash.events(Stream.of(analysisTime,analysisTime.plus(period)).collect(Collectors.toSet()),model,riskFactorModel);
+    // compute next n non-contingent events
+    // note: this is trivial as no events at all
+    public static ArrayList<ContractEvent> next(int n,
+                                                ContractModelProvider model,
+                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return new ArrayList<ContractEvent>();
     }
 
-    // compute contingent transactions within time window
-    // note: this is trivial as only 1 single non-transactional event (at first analysis time) occurs
-    public static ArrayList<ContractEvent> transactions(Set<LocalDateTime> analysisTimes,
-                                                  ContractModelProvider model,
-                                                  RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        return Cash.payoff(analysisTimes,model,riskFactorModel);
+    // compute next non-contingent events within period
+    public static ArrayList<ContractEvent> next(LocalDateTime from,
+                                                Period within,
+                                                ContractModelProvider model,
+                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return new ArrayList<ContractEvent>();
     }
 
-    // compute contingent transactions within time period
-    // note: this is trivial as only 1 single non-transactional event (at first analysis time) occurs
-    public static ArrayList<ContractEvent> transactions(LocalDateTime analysisTime,
-                                                  Period period,
-                                                  ContractModelProvider model,
-                                                  RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        return Cash.transactions(Stream.of(analysisTime,analysisTime.plus(period)).collect(Collectors.toSet()),model,riskFactorModel);
+    // compute next n non-contingent events
+    public static ArrayList<ContractEvent> next(Period within,
+                                                ContractModelProvider model,
+                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return new ArrayList<ContractEvent>();
     }
 
     // compute non-contingent lifecycle of the contract
@@ -178,30 +176,32 @@ public final class Cash {
         return payoff;
     }
 
-    // compute non-contingent events within time window
-    public static ArrayList<ContractEvent> events(Set<LocalDateTime> analysisTimes,
-                                                  ContractModelProvider model) throws AttributeConversionException {
-        return Cash.lifecycle(analysisTimes,model);
+    // compute next n non-contingent events
+    // note: this is trivial as no events at all
+    public static ArrayList<ContractEvent> next(LocalDateTime from,
+                                                int n,
+                                                ContractModelProvider model) throws AttributeConversionException {
+        return new ArrayList<ContractEvent>();
     }
 
-    // compute non-contingent events within time period
-    public static ArrayList<ContractEvent> events(LocalDateTime analysisTime,
-                                                  Period period,
-                                                  ContractModelProvider model) throws AttributeConversionException {
-        return Cash.lifecycle(Stream.of(analysisTime,analysisTime.plus(period)).collect(Collectors.toSet()),model);
+    // compute next n non-contingent events
+    // note: this is trivial as no events at all
+    public static ArrayList<ContractEvent> next(int n,
+                                                ContractModelProvider model) throws AttributeConversionException {
+        return new ArrayList<ContractEvent>();
     }
 
-    // compute non-contingent transactions within time window
-    public static ArrayList<ContractEvent> transactions(Set<LocalDateTime> analysisTimes,
-                                                        ContractModelProvider model) throws AttributeConversionException {
-        return Cash.payoff(analysisTimes,model);
+    // compute next non-contingent events within period
+    public static ArrayList<ContractEvent> next(LocalDateTime from,
+                                                Period within,
+                                                ContractModelProvider model) throws AttributeConversionException {
+        return new ArrayList<ContractEvent>();
     }
 
-    // compute non-contingent transactions within time period
-    public static ArrayList<ContractEvent> transactions(LocalDateTime analysisTime,
-                                                        Period period,
-                                                        ContractModelProvider model) throws AttributeConversionException {
-        return Cash.transactions(Stream.of(analysisTime,analysisTime.plus(period)).collect(Collectors.toSet()),model);
+    // compute next n non-contingent events
+    public static ArrayList<ContractEvent> next(Period within,
+                                                ContractModelProvider model) throws AttributeConversionException {
+        return new ArrayList<ContractEvent>();
     }
 
 }

@@ -717,7 +717,7 @@ public class PrincipalAtMaturityTest {
     }
 
     @Test
-    public void test_PAM_events_inWindow_withIP_withRR_withSC_withOP() {
+    public void test_PAM_next_5_withIP_withRR_withSC_withOP() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -739,21 +739,15 @@ public class PrincipalAtMaturityTest {
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.events(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.next(LocalDateTime.parse("2016-01-01T00:00:00"),5,model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_PAM_events_inPeriod_withIP_withRR_withSC_withOP() {
+    public void test_PAM_next_5_fromSD_withIP_withRR_withSC_withOP() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -778,12 +772,12 @@ public class PrincipalAtMaturityTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.events(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofWeeks(1),model,riskFactors);
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.next(5,model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_PAM_transactions_inWindow_withIP_withRR_withSC_withOP() {
+    public void test_PAM_next_within_withIP_withRR_withSC_withOP() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -805,21 +799,15 @@ public class PrincipalAtMaturityTest {
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.transactions(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.next(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofDays(10),model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_PAM_transactions_inPeriod_withIP_withRR_withSC_withOP() {
+    public void test_PAM_next_within_fromSD_withIP_withRR_withSC_withOP() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -844,7 +832,7 @@ public class PrincipalAtMaturityTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.transactions(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofWeeks(1),model,riskFactors);
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.next(Period.ofWeeks(1),model,riskFactors);
         //System.out.println(events);
     }
 
@@ -917,7 +905,7 @@ public class PrincipalAtMaturityTest {
     }
 
     @Test
-    public void test_PAM_noncontingent_events_inWindow_withIP_withRR_withSC_withOP() {
+    public void test_PAM_noncontingent_next_5_withIP_withRR_withSC_withOP() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -939,19 +927,13 @@ public class PrincipalAtMaturityTest {
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.events(analysisTimes,model);
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.next(5,model);
         //System.out.println(events);
     }
 
     @Test
-    public void test_PAM_noncontingent_events_inPeriod_withIP_withRR_withSC_withOP() {
+    public void test_PAM_noncontingent_next_within_withIP_withRR_withSC_withOP() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "PAM");
@@ -977,72 +959,8 @@ public class PrincipalAtMaturityTest {
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
+        ArrayList<ContractEvent> events = PrincipalAtMaturity.next(Period.ofWeeks(1),model);
         //System.out.println(events);
     }
 
-    @Test
-    public void test_PAM_noncontingent_transactions_inWindow_withIP_withRR_withSC_withOP() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "PAM");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("NominalInterestRate","0.01");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("ScalingEffect","IN0");
-        map.put("CycleOfScalingIndex","1Q-");
-        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
-        map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.transactions(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_PAM_noncontingent_transactions_inPeriod_withIP_withRR_withSC_withOP() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "PAM");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("NominalInterestRate","0.01");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("ScalingEffect","IN0");
-        map.put("CycleOfScalingIndex","1Q-");
-        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
-        map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = PrincipalAtMaturity.transactions(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
-        //System.out.println(events);
-    }
 }

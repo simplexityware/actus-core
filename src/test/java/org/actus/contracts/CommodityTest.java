@@ -167,7 +167,7 @@ public class CommodityTest {
     }
 
     @Test
-    public void test_COM_events_inWindow_withPRD_withTD() {
+    public void test_COM_next_5_withPRD_withTD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "COM");
@@ -181,21 +181,15 @@ public class CommodityTest {
         map.put("PriceAtTerminationDate","1000.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.events(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = Commodity.next(LocalDateTime.parse("2016-01-01T00:00:00"),5,model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_COM_events_inPeriod_withPRD_withTD() {
+    public void test_COM_next_5_fromSD_withPRD_withTD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "COM");
@@ -212,12 +206,12 @@ public class CommodityTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model,riskFactors);
+        ArrayList<ContractEvent> events = Commodity.next(5,model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_COM_transactions_inWindow_withPRD_withTD() {
+    public void test_COM_next_within_withPRD_withTD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "COM");
@@ -231,21 +225,15 @@ public class CommodityTest {
         map.put("PriceAtTerminationDate","1000.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.transactions(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = Commodity.next(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofDays(10),model,riskFactors);
         //System.out.println(events);
     }
 
     @Test
-    public void test_COM_transactions_inPeriod_withPRD_withTD() {
+    public void test_COM_next_within_fromSD_withPRD_withTD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "COM");
@@ -262,7 +250,7 @@ public class CommodityTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.transactions(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model,riskFactors);
+        ArrayList<ContractEvent> events = Commodity.next(Period.ofWeeks(1),model,riskFactors);
         //System.out.println(events);
     }
 
@@ -319,7 +307,7 @@ public class CommodityTest {
     }
 
     @Test
-    public void test_COM_noncontingent_events_inWindow_withPRD_withTD() {
+    public void test_COM_noncontingent_next_5_withPRD_withTD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "COM");
@@ -333,19 +321,13 @@ public class CommodityTest {
         map.put("PriceAtTerminationDate","1000.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.events(analysisTimes,model);
+        ArrayList<ContractEvent> events = Commodity.next(5,model);
         //System.out.println(events);
     }
 
     @Test
-    public void test_COM_noncontingent_events_inPeriod_withPRD_withTD() {
+    public void test_COM_noncontingent_next_within_withPRD_withTD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "COM");
@@ -360,53 +342,7 @@ public class CommodityTest {
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.events(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_COM_noncontingent_transactions_inWindow_withPRD_withTD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "COM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("Currency", "USD");
-        map.put("PurchaseDate","2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate","1000.0");
-        map.put("TerminationDate","2016-01-05T00:00:00");
-        map.put("PriceAtTerminationDate","1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.transactions(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_COM_noncontingent_transactions_inPeriod_withPRD_withTD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "COM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("Currency", "USD");
-        map.put("PurchaseDate","2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate","1000.0");
-        map.put("TerminationDate","2016-01-05T00:00:00");
-        map.put("PriceAtTerminationDate","1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.transactions(LocalDateTime.parse("2016-01-01T00:00:00"), Period.ofWeeks(1),model);
+        ArrayList<ContractEvent> events = Commodity.next(Period.ofWeeks(1),model);
         //System.out.println(events);
     }
 }
