@@ -6,7 +6,7 @@
 package org.actus.conventions.businessday;
 
 import org.actus.AttributeConversionException;
-import org.actus.externals.BusinessDayCalendarProvider;
+import org.actus.time.calendar.BusinessDayCalendarProvider;
 import org.actus.util.StringUtils;
 import org.actus.util.CommonUtils;
 

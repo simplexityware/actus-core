@@ -3,7 +3,7 @@
  *
  * Please see distribution for license.
  */
-package org.actus.externals;
+package org.actus.time.calendar;
 
 import java.time.LocalDateTime;
 

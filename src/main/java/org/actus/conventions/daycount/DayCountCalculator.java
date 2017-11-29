@@ -5,8 +5,7 @@
  */
 package org.actus.conventions.daycount;
 
-import org.actus.externals.BusinessDayCalendarProvider;
-import org.actus.conventions.daycount.DayCountConvention;
+import org.actus.time.calendar.BusinessDayCalendarProvider;
 import org.actus.util.StringUtils;
 
 import java.time.LocalDateTime;
