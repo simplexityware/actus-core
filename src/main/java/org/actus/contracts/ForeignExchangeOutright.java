@@ -6,7 +6,7 @@
 package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
-import org.actus.externals.ContractModelProvider;
+import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.functions.stk.*;
@@ -14,9 +14,7 @@ import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
-import org.actus.time.ScheduleFactory;
 import org.actus.util.CommonUtils;
-import org.actus.util.Constants;
 import org.actus.util.StringUtils;
 import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
@@ -35,7 +33,6 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Represents the Foreign Exchange Outright payoff algorithm

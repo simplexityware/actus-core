@@ -5,7 +5,7 @@
  */
 package org.actus.functions;
 
-import org.actus.externals.ContractModelProvider;
+import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.states.StateSpace;
 import org.actus.conventions.daycount.DayCountCalculator;

@@ -8,7 +8,7 @@ package org.actus.contracts;
 import org.actus.ContractTypeUnknownException;
 import org.actus.AttributeConversionException;
 import org.actus.externals.RiskFactorModelProvider;
-import org.actus.externals.ContractModelProvider;
+import org.actus.attributes.ContractModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.util.StringUtils;
 

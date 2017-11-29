@@ -7,7 +7,7 @@ package org.actus.events;
 
 import org.actus.functions.StateTransitionFunction;
 import org.actus.functions.PayOffFunction;
-import org.actus.externals.ContractModelProvider;
+import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.states.StateSpace;
 import org.actus.conventions.daycount.DayCountCalculator;

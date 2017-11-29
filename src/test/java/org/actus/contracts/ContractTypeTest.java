@@ -9,7 +9,7 @@ import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
-import org.actus.externals.ContractModelProvider;
+import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 
 import java.util.Set;

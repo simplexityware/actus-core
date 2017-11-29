@@ -5,7 +5,6 @@
  */
 package org.actus.attributes;
 
-import org.actus.externals.ContractModelProvider;
 import org.actus.time.calendar.BusinessDayCalendarProvider;
 import org.actus.time.calendar.NoHolidaysCalendar;
 import org.actus.time.calendar.MondayToFridayCalendar;

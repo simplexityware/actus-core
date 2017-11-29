@@ -5,7 +5,7 @@
  */
 package org.actus.util;
 
-import org.actus.externals.ContractModelProvider;
+import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.time.ScheduleFactory;
 

@@ -6,7 +6,7 @@
 package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
-import org.actus.externals.ContractModelProvider;
+import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
@@ -51,7 +51,6 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Represents the Negative-Amortizer payoff algorithm

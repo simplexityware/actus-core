@@ -8,7 +8,7 @@ package org.actus.functions.lam;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.util.CommonUtils;
 import org.actus.states.StateSpace;
-import org.actus.externals.ContractModelProvider;
+import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;

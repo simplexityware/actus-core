@@ -3,7 +3,7 @@
  *
  * Please see distribution for license.
  */
-package org.actus.externals;
+package org.actus.attributes;
 
 /**
  * A data structure representing the set of ACTUS contract attributes

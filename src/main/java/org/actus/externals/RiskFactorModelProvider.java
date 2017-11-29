@@ -5,6 +5,7 @@
  */
 package org.actus.externals;
 
+import org.actus.attributes.ContractModelProvider;
 import org.actus.states.StateSpace;
 import java.time.LocalDateTime;
 import java.util.Set;

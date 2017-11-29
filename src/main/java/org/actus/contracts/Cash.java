@@ -6,7 +6,7 @@
 package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
-import org.actus.externals.ContractModelProvider;
+import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
@@ -25,8 +25,6 @@ import java.time.Period;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Represents the Cash payoff algorithm
