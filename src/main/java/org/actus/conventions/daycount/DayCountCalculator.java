@@ -18,7 +18,17 @@ public class DayCountCalculator {
     private DayCountConvention convention;
 
     /**
-     * Constructor
+     * Generic Constructor
+     *
+     * @param convention the {@link DayCountConvention}
+     * @return
+     */
+    public DayCountCalculator(DayCountConvention convention) {
+        this.convention = convention;
+    }
+
+    /**
+     * Convenience Constructor
      * 
      * @param convention the {@link DayCountConvention}
      * @param calendar the {@link BusinessDayCalendar} to be used in case of {@code convention="B/252"}
