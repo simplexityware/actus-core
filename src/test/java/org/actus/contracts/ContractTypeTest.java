@@ -54,7 +54,7 @@ public class ContractTypeTest {
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
         map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
+        map.put("DayCountConventionProvider", "A/AISDA");
         map.put("Currency", "USD");
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("MaturityDate", "2017-01-01T00:00:00");
@@ -79,7 +79,7 @@ public class ContractTypeTest {
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
         map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
+        map.put("DayCountConventionProvider", "A/AISDA");
         map.put("Currency", "USD");
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("MaturityDate", "2017-01-01T00:00:00");
@@ -104,7 +104,7 @@ public class ContractTypeTest {
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
         map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
+        map.put("DayCountConventionProvider", "A/AISDA");
         map.put("Currency", "USD");
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("MaturityDate", "2017-01-01T00:00:00");
@@ -140,7 +140,7 @@ public class ContractTypeTest {
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
         map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
+        map.put("DayCountConventionProvider", "A/AISDA");
         map.put("Currency", "USD");
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("CycleOfPrincipalRedemption", "1Q-");
@@ -168,7 +168,7 @@ public class ContractTypeTest {
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
         map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
+        map.put("DayCountConventionProvider", "A/AISDA");
         map.put("Currency", "USD");
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("CycleOfPrincipalRedemption", "1Q-");
@@ -197,7 +197,7 @@ public class ContractTypeTest {
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
         map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
+        map.put("DayCountConventionProvider", "A/AISDA");
         map.put("Currency", "USD");
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("CycleOfPrincipalRedemption", "1Q-");
@@ -226,7 +226,7 @@ public class ContractTypeTest {
         map.put("LegalEntityIDCounterparty", "CORP-XY");
         map.put("LegalEntityIDCounterparty", "CORP-XY");
         map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
+        map.put("DayCountConventionProvider", "A/AISDA");
         map.put("Currency", "USD");
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("NotionalPrincipal", "1000.0");

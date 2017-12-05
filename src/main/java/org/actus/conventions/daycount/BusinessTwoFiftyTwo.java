@@ -18,7 +18,7 @@ import java.time.temporal.ChronoUnit;
  * 
  * @see
  */
-public final class BusinessTwoFiftyTwo implements DayCountConvention {
+public final class BusinessTwoFiftyTwo implements DayCountConventionProvider {
 	private BusinessDayCalendarProvider calendar;
 
 	public void setCalendar(BusinessDayCalendarProvider calendar) {

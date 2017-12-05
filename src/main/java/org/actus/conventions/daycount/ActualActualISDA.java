@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
  * 
  * @see http://www2.isda.org
  */
-public final class ActualActualISDA implements DayCountConvention {
+public final class ActualActualISDA implements DayCountConventionProvider {
 
 	@Override
 	public double dayCount(LocalDateTime startTime, LocalDateTime endTime) {

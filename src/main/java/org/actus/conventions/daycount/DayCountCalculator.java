@@ -12,25 +12,25 @@ import java.time.LocalDateTime;
 
 /**
  * Component for the calculation of time-periods between two time-instances 
- * according to a {@link DayCountConvention}
+ * according to a {@link DayCountConventionProvider}
  */
 public class DayCountCalculator {
-    private DayCountConvention convention;
+    private DayCountConventionProvider convention;
 
     /**
      * Generic Constructor
      *
-     * @param convention the {@link DayCountConvention}
+     * @param convention the {@link DayCountConventionProvider}
      * @return
      */
-    public DayCountCalculator(DayCountConvention convention) {
+    public DayCountCalculator(DayCountConventionProvider convention) {
         this.convention = convention;
     }
 
     /**
      * Convenience Constructor
      * 
-     * @param convention the {@link DayCountConvention}
+     * @param convention the {@link DayCountConventionProvider}
      * @param calendar the {@link BusinessDayCalendar} to be used in case of {@code convention="B/252"}
      * @return
      */

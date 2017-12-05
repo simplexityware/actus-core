@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * <p>
  * Make sure, new conventions implement this interface when adding to the library.
  */
-public interface DayCountConvention {
+public interface DayCountConventionProvider {
 	
 	/**
 	 * Compute the number of days between two time-instances

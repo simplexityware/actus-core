@@ -18,7 +18,7 @@ import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
  * 
  * @see http://www2.isda.org
  */
-public class ThirtyEThreeSixtyISDA implements DayCountConvention {
+public class ThirtyEThreeSixtyISDA implements DayCountConventionProvider {
 	private LocalDateTime maturityDate;
     
     /**

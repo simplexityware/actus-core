@@ -80,7 +80,7 @@ public final class NegativeAmortizer {
         Collections.sort(events);
 
         // evaluate events
-        events.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
+        events.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention")));
 
         // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
         if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
@@ -133,7 +133,7 @@ public final class NegativeAmortizer {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -179,7 +179,7 @@ public final class NegativeAmortizer {
                 break;
             }
             // eval event and update counter
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
             nextEvents.add(event);
             k+=1;
         }
@@ -222,7 +222,7 @@ public final class NegativeAmortizer {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -268,7 +268,7 @@ public final class NegativeAmortizer {
                 break;
             }
             // eval event and update counter
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
             nextEvents.add(event);
         }
 
@@ -298,7 +298,7 @@ public final class NegativeAmortizer {
             if(StringUtils.ContingentEvents.contains(event.type())) {
                 break;
             }
-            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
             eventsNonContingent.add(event);
         }
 
@@ -344,7 +344,7 @@ public final class NegativeAmortizer {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -386,7 +386,7 @@ public final class NegativeAmortizer {
                 break;
             }
             // eval event and update counter
-            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
             nextEvents.add(event);
             k+=1;
         }
@@ -425,7 +425,7 @@ public final class NegativeAmortizer {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -467,7 +467,7 @@ public final class NegativeAmortizer {
                 break;
             }
             // eval event and update counter
-            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
             nextEvents.add(event);
         }
 
@@ -611,7 +611,7 @@ public final class NegativeAmortizer {
                     lastEvent = model.getAs("CycleAnchorDateOfPrincipalRedemption");
                 }
                 Period cyclePeriod = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
-                double coupon = model.<Double>getAs("NotionalPrincipal")*model.<Double>getAs("NominalInterestRate")*model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(model.getAs("CycleAnchorDateOfPrincipalRedemption"), model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").plus(cyclePeriod));
+                double coupon = model.<Double>getAs("NotionalPrincipal")*model.<Double>getAs("NominalInterestRate")*model.<DayCountCalculator>getAs("DayCountConventionProvider").dayCountFraction(model.getAs("CycleAnchorDateOfPrincipalRedemption"), model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").plus(cyclePeriod));
                 maturity = lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/(model.<Double>getAs("NextPrincipalRedemptionPayment")-coupon))));
             } else {
                 maturity = model.<LocalDateTime>getAs("InitialExchangeDate").plus(Constants.MAX_LIFETIME);

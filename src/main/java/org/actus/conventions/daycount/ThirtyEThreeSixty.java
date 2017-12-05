@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * 
  * @see http://www2.isda.org
  */
-public class ThirtyEThreeSixty implements DayCountConvention {
+public class ThirtyEThreeSixty implements DayCountConventionProvider {
     
 	@Override
 	public double dayCount(LocalDateTime startTime, LocalDateTime endTime) {

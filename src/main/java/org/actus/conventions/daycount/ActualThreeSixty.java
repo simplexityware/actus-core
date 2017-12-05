@@ -13,7 +13,7 @@ import java.time.temporal.ChronoUnit;
  * 
  * @see http://www2.isda.org
  */
-public final class ActualThreeSixty implements DayCountConvention {
+public final class ActualThreeSixty implements DayCountConventionProvider {
 
 	@Override
 	public double dayCount(LocalDateTime startTime, LocalDateTime endTime) {
