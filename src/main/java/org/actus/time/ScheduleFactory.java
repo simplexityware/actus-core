@@ -34,7 +34,7 @@ import java.util.HashSet;
  * The class is a utility class with only static methods and no constructor, i.e. instances
  * of this class cannot be created but its methods only be accessed in a static way.
  * 
- * @see http://www.projectactus.org/projectactus/?page_id=356
+ * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">http://www.projectactus.org/projectactus/?page_id=356</a>
  */
 public final class ScheduleFactory {
     
@@ -44,7 +44,13 @@ public final class ScheduleFactory {
 
 	/**
 	 * Create a schedule of dates
-	 * 
+	 *
+	 * Depending on which schedule parameters are provided, a set of
+	 * dates is generated from (including) startTime to (including)
+	 * endTime with a periodic {@code cycle} (if provided).
+	 *
+	 * Note, a time at {@code endTime} is always added.
+	 *
 	 * @param startTime the start time of the schedule
 	 * @param endTime the end time of the schedule
 	 * @param cycle the schedule cycle
@@ -52,7 +58,31 @@ public final class ScheduleFactory {
 	 * @return an unordered set of schedule times
 	 * 
 	 */
-	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention) throws AttributeConversionException {    
+	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention) throws AttributeConversionException {
+		return ScheduleFactory.createSchedule(startTime,endTime,cycle,endOfMonthConvention,true);
+	}
+
+
+	/**
+	 * Create a schedule of dates including or not the schedule end time
+	 *
+	 * Depending on which schedule parameters are provided, a set of
+	 * dates is generated from (including) startTime to (including)
+	 * endTime with a periodic {@code cycle} (if provided).
+	 *
+	 * Parameter {@code addEndTime} allows for specifying whether or not
+	 * an additional time should be added to the schedule at the schedule
+	 * {@code endtime}.
+	 *
+	 * @param startTime the start time of the schedule
+	 * @param endTime the end time of the schedule
+	 * @param cycle the schedule cycle
+	 * @param endOfMonthConvention the convention to be applied
+	 * @param addEndTime should an additional time be generated at {@code endTime}
+	 * @return an unordered set of schedule times
+	 *
+	 */
+	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention, boolean addEndTime) throws AttributeConversionException {
 		EndOfMonthAdjuster adjuster;
 		Set<LocalDateTime> timesSet = new HashSet<LocalDateTime>();
         Period period;
@@ -64,7 +94,10 @@ public final class ScheduleFactory {
 		    if (!CommonUtils.isNull(startTime)) {
 		      timesSet.add(startTime);
 		    }
-		    timesSet.add(endTime);
+		    // add or not additional time at endTime
+			if(addEndTime) {
+				timesSet.add(endTime);
+			}
 			return timesSet;
 		}
         
@@ -82,14 +115,18 @@ public final class ScheduleFactory {
 		LocalDateTime newTime = LocalDateTime.from(startTime);
 		
 		// create schedule based on end-of-month-convention
-		  while (newTime.isBefore(endTime)) {
-		     timesSet.add(newTime);
-			 increment = period.multipliedBy(counter);
-			 newTime = adjuster.shift(startTime.plus(increment));
-			 counter++;
-		  }		    
-		timesSet.add(endTime);
-		
+		while (newTime.isBefore(endTime)) {
+		   	timesSet.add(newTime);
+			increment = period.multipliedBy(counter);
+			newTime = adjuster.shift(startTime.plus(increment));
+			counter++;
+		}
+
+		// add (or not) additional time at endTime
+		if(addEndTime) {
+			timesSet.add(endTime);
+		}
+
         // now adjust for the last stub
 		if (stub == StringUtils.LongStub && timesSet.size() > 2 && !endTime.equals(newTime)) {
 		    //System.out.println("In method with par " + period + " " + multiplier + " " + newTime.minus(period.multipliedBy(multiplier)));
