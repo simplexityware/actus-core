@@ -43,6 +43,7 @@ import org.actus.functions.pam.POF_CD_PAM;
 import org.actus.functions.pam.STF_CD_PAM;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
@@ -437,7 +438,7 @@ public final class PrincipalAtMaturity {
         // TODO: some attributes can be null
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
-        if (!((LocalDateTime) model.getAs("InitialExchangeDate")).isAfter(model.getAs("StatusDate"))) {
+        if (model.<LocalDateTime>getAs("StatusDate").isAfter(model.getAs("InitialExchangeDate"))) {
             states.nominalValue = model.getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
             states.nominalAccrued = model.getAs("AccruedInterest");
