@@ -17,7 +17,7 @@ public class ActualThreeSixtyFiveFixed implements DayCountConventionProvider {
 
 	@Override
 	public double dayCount(LocalDateTime startTime, LocalDateTime endTime) {
-		return ChronoUnit.DAYS.between(startTime, startTime);
+		return ChronoUnit.DAYS.between(startTime, endTime);
 	}
 
 	@Override

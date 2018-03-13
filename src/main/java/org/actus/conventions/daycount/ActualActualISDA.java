@@ -18,7 +18,7 @@ public final class ActualActualISDA implements DayCountConventionProvider {
 
 	@Override
 	public double dayCount(LocalDateTime startTime, LocalDateTime endTime) {
-		return ChronoUnit.DAYS.between(startTime, startTime);
+		return ChronoUnit.DAYS.between(startTime, endTime);
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public final class ActualActualISDA implements DayCountConventionProvider {
         
 		if (y1 == y2) {
 			double basis = (Year.isLeap(y1)) ? 366.0 : 365.0;
-			return (ChronoUnit.DAYS.between(startTime, startTime) / basis);
+			return (ChronoUnit.DAYS.between(startTime, endTime) / basis);
 		}
 		
 		double firstBasis = (Year.isLeap(y1)) ? 366.0 : 365.0;
