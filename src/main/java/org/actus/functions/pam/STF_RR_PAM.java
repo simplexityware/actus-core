@@ -24,7 +24,8 @@ public final class STF_RR_PAM implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
-        states.nominalRate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"),time,states,model);
+        states.nominalRate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
+            * model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
         states.lastEventTime = time;
         
         // copy post-event-states
