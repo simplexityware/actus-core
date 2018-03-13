@@ -431,6 +431,8 @@ public final class PrincipalAtMaturity {
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
+        states.nominalScalingMultiplier = 1;
+        states.interestScalingMultiplier = 1;
 
         // TODO: some attributes can be null
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
@@ -440,8 +442,6 @@ public final class PrincipalAtMaturity {
             states.nominalRate = model.getAs("NominalInterestRate");
             states.nominalAccrued = model.getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
-            states.nominalScalingMultiplier = 1;
-            states.interestScalingMultiplier = 1;
         }
         
         // return the initialized state space
