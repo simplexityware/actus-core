@@ -317,7 +317,7 @@ public final class ForeignExchangeOutright {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {

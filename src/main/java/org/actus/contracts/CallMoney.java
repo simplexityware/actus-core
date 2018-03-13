@@ -67,7 +67,7 @@ public final class CallMoney {
         Collections.sort(events);
 
         // evaluate events
-        events.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention")));
+        events.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
 
         // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
         if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
@@ -120,7 +120,7 @@ public final class CallMoney {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -166,7 +166,7 @@ public final class CallMoney {
                 break;
             }
             // eval event and update counter
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             nextEvents.add(event);
             k+=1;
         }
@@ -209,7 +209,7 @@ public final class CallMoney {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -255,7 +255,7 @@ public final class CallMoney {
                 break;
             }
             // eval event and update counter
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             nextEvents.add(event);
         }
 
@@ -285,7 +285,7 @@ public final class CallMoney {
             if(StringUtils.ContingentEvents.contains(event.type())) {
                 break;
             }
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             eventsNonContingent.add(event);
         }
 
@@ -331,7 +331,7 @@ public final class CallMoney {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -373,7 +373,7 @@ public final class CallMoney {
                 break;
             }
             // eval event and update counter
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             nextEvents.add(event);
             k+=1;
         }
@@ -412,7 +412,7 @@ public final class CallMoney {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -454,7 +454,7 @@ public final class CallMoney {
                 break;
             }
             // eval event and update counter
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             nextEvents.add(event);
         }
 

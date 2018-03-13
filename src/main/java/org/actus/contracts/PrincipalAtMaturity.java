@@ -73,7 +73,7 @@ public final class PrincipalAtMaturity {
         Collections.sort(events);
 
         // evaluate events
-        events.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention")));
+        events.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
 
         // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
         if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
@@ -84,11 +84,45 @@ public final class PrincipalAtMaturity {
         return events;
     }
 
+    // compute non-contingent portion of lifecycle of the contract
+    public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
+                                                     ContractModelProvider model) throws AttributeConversionException {
+
+        // compute non-contingent events
+        ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
+
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model);
+
+        // sort the events in the payoff-list according to their time of occurence
+        Collections.sort(events);
+
+        // evaluate only non-contingent events and add these to new list
+        Iterator<ContractEvent> iterator = events.iterator();
+        while(iterator.hasNext()) {
+            ContractEvent event = iterator.next();
+            if(StringUtils.ContingentEvents.contains(event.type())) {
+                break;
+            }
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+        }
+
+        // return events (evaluated non-contingent and non-evaluated contingent
+        return events;
+    }
+
     // compute contingent payoff of the contract
     public static ArrayList<ContractEvent> payoff(Set<LocalDateTime> analysisTimes,
                                                   ContractModelProvider model,
                                                   RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         return PrincipalAtMaturity.lifecycle(analysisTimes,model,riskFactorModel).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+
+    // compute non-contingent portion of payoff of the contract
+    public static ArrayList<ContractEvent> payoff(Set<LocalDateTime> analysisTimes,
+                                                  ContractModelProvider model) throws AttributeConversionException {
+        return PrincipalAtMaturity.lifecycle(analysisTimes,model).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
     }
 
     // compute next n events
@@ -123,7 +157,48 @@ public final class PrincipalAtMaturity {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            // add event to output list if after window start
+            // note: need to evaluate also pre-start events in order to update states correctly
+            if(!event.time().isBefore(from)) {
+                nextEvents.add(event);
+                k+=1;
+            }
+        }
+
+        return nextEvents;
+    }
+
+    // compute next n non-contingent events
+    public static ArrayList<ContractEvent> next(LocalDateTime from,
+                                                int n,
+                                                ContractModelProvider model) throws AttributeConversionException {
+        // convert single time input to set of times
+        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
+        times.add(from);
+
+        // compute non-contingent events
+        ArrayList<ContractEvent> events = initEvents(times,model);
+
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model);
+
+        // sort the events in the payoff-list according to their time of occurence
+        Collections.sort(events);
+
+        // evaluate only contingent events within time window
+        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
+        Iterator<ContractEvent> iterator = events.iterator();
+        int k=0;
+        while(iterator.hasNext()) {
+            ContractEvent event = iterator.next();
+
+            // stop if we reached number of events or if first contingent event occured
+            if(k>=n || StringUtils.ContingentEvents.contains(event.type())) {
+                break;
+            }
+            // eval event if not end of window reached
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -139,39 +214,13 @@ public final class PrincipalAtMaturity {
     public static ArrayList<ContractEvent> next(int n,
                                                 ContractModelProvider model,
                                                 RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        // convert single time input to set of times
-        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-        times.add(model.getAs("StatusDate"));
+        return next(model.getAs("StatusDate"),n,model,riskFactorModel);
+    }
 
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(times,model);
-
-        // compute and add contingent events
-        events.addAll(initContingentEvents(times,model,riskFactorModel));
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only contingent events within time window
-        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        int k=0;
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-            // stop if we reached number of events
-            if(k>=n) {
-                break;
-            }
-            // eval event and update counter
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
-            nextEvents.add(event);
-            k+=1;
-        }
-
-        return nextEvents;
+    // compute next n events
+    public static ArrayList<ContractEvent> next(int n,
+                                                ContractModelProvider model) throws AttributeConversionException {
+        return next(model.getAs("StatusDate"),n,model);
     }
 
     // compute next events within period
@@ -206,7 +255,7 @@ public final class PrincipalAtMaturity {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -217,157 +266,7 @@ public final class PrincipalAtMaturity {
         return nextEvents;
     }
 
-    // compute next n events
-    public static ArrayList<ContractEvent> next(Period within,
-                                                ContractModelProvider model,
-                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        // convert single time input to set of times
-        LocalDateTime from = model.getAs("StatusDate");
-        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-        times.add(from);
-
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(times,model);
-
-        // compute and add contingent events
-        events.addAll(initContingentEvents(times,model,riskFactorModel));
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only contingent events within time window
-        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        LocalDateTime end = from.plus(within);
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-            // stop if we reached end of period
-            if(event.time().isAfter(end)) {
-                break;
-            }
-            // eval event and update counter
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
-            nextEvents.add(event);
-        }
-
-        return nextEvents;
-    }
-
-    // compute non-contingent portion of lifecycle of the contract
-    public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
-                                                     ContractModelProvider model) throws AttributeConversionException {
-
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only non-contingent events and add these to new list
-        ArrayList<ContractEvent> eventsNonContingent = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-            if(StringUtils.ContingentEvents.contains(event.type())) {
-                break;
-            }
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
-            eventsNonContingent.add(event);
-        }
-
-        // return all non-contingent events as the non-contingent part of the lifecycle
-        return events;
-    }
-
-    // compute non-contingent portion of payoff of the contract
-    public static ArrayList<ContractEvent> payoff(Set<LocalDateTime> analysisTimes,
-                                                  ContractModelProvider model) throws AttributeConversionException {
-        return PrincipalAtMaturity.lifecycle(analysisTimes,model).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
-    }
-
     // compute next n non-contingent events
-    public static ArrayList<ContractEvent> next(LocalDateTime from,
-                                                int n,
-                                                ContractModelProvider model) throws AttributeConversionException {
-        // convert single time input to set of times
-        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-        times.add(from);
-
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(times,model);
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only contingent events within time window
-        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        int k=0;
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-
-            // stop if we reached number of events or if first contingent event occured
-            if(k>=n || StringUtils.ContingentEvents.contains(event.type())) {
-                break;
-            }
-            // eval event if not end of window reached
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
-            // add event to output list if after window start
-            // note: need to evaluate also pre-start events in order to update states correctly
-            if(!event.time().isBefore(from)) {
-                nextEvents.add(event);
-                k+=1;
-            }
-        }
-
-        return nextEvents;
-    }
-
-    // compute next n non-contingent events
-    public static ArrayList<ContractEvent> next(int n,
-                                                ContractModelProvider model) throws AttributeConversionException {
-        // convert single time input to set of times
-        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-        times.add(model.getAs("StatusDate"));
-
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(times,model);
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only contingent events within time window
-        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        int k=0;
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-            // stop if we reached number of events or if first contingent event occured
-            if(k>=n || StringUtils.ContingentEvents.contains(event.type())) {
-                break;
-            }
-            // eval event and update counter
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
-            nextEvents.add(event);
-            k+=1;
-        }
-
-        return nextEvents;
-    }
-
-    // compute next non-contingent events within period
     public static ArrayList<ContractEvent> next(LocalDateTime from,
                                                 Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
@@ -390,12 +289,13 @@ public final class PrincipalAtMaturity {
         LocalDateTime end = from.plus(within);
         while(iterator.hasNext()) {
             ContractEvent event = iterator.next();
+
             // stop if we reached number of events or if first contingent event occured
             if(event.time().isAfter(end) || StringUtils.ContingentEvents.contains(event.type())) {
                 break;
             }
             // eval event if not end of window reached
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
+            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
             // add event to output list if after window start
             // note: need to evaluate also pre-start events in order to update states correctly
             if(!event.time().isBefore(from)) {
@@ -406,39 +306,18 @@ public final class PrincipalAtMaturity {
         return nextEvents;
     }
 
-    // compute next n non-contingent events
+
+    // compute next n events
+    public static ArrayList<ContractEvent> next(Period within,
+                                                ContractModelProvider model,
+                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return next(model.getAs("StatusDate"),within,model,riskFactorModel);
+    }
+
+    // compute next n events
     public static ArrayList<ContractEvent> next(Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
-        // convert single time input to set of times
-        LocalDateTime from = model.getAs("StatusDate");
-        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-        times.add(from);
-
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(times,model);
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only contingent events within time window
-        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        LocalDateTime end = from.plus(within);
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-            // stop if we reached number of events or if first contingent event occured
-            if(event.time().isAfter(end) || StringUtils.ContingentEvents.contains(event.type())) {
-                break;
-            }
-            // eval event and update counter
-            event.eval(states, model, null, model.getAs("DayCountConventionProvider"), model.getAs("BusinessDayConvention"));
-            nextEvents.add(event);
-        }
-
-        return nextEvents;
+        return next(model.getAs("StatusDate"),within,model);
     }
     
     private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model) throws AttributeConversionException {
@@ -462,7 +341,8 @@ public final class PrincipalAtMaturity {
                                                         EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                                                                                                                  model.getAs("MaturityDate"),
                                                                                                                  model.getAs("CycleOfInterestPayment"),
-                                                                                                                 model.getAs("EndOfMonthConvention")),
+                                                                                                                 model.getAs("EndOfMonthConvention"),
+                                                                                                                 true),
                                                                                   StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_PAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention"));
             // adapt if interest capitalization set
             if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
@@ -487,21 +367,21 @@ public final class PrincipalAtMaturity {
             // rate reset (if specified)
             if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {            
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                                                                                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
+                                                                                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
                                                  StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention")));
             }
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) { 
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),
-                                                                            model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention")),
+                                                                            model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
                                              StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP_PAM(), new STF_FP_PAM(), model.getAs("BusinessDayConvention")));
         }
         // scaling (if specified)
         String scalingEffect=model.getAs("ScalingEffect");
         if (!CommonUtils.isNull(scalingEffect) && (scalingEffect.contains("I") || scalingEffect.contains("N"))) { 
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfScalingIndex"), model.getAs("MaturityDate"),
-                                                                            model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention")),
+                                                                            model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention"),false),
                                              StringUtils.EventType_SC, model.getAs("Currency"), new POF_SC_PAM(), new STF_SC_PAM(), model.getAs("BusinessDayConvention")));
         }
         // termination
@@ -525,7 +405,7 @@ public final class PrincipalAtMaturity {
         if (!(CommonUtils.isNull(model.getAs("CycleOfOptionality")) && CommonUtils.isNull(model.getAs("CycleAnchorDateOfOptionality")))) {
             Set<LocalDateTime> times;
             if(!CommonUtils.isNull(model.getAs("CycleOfOptionality"))) {
-                times = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfOptionality"), model.getAs("MaturityDate"),model.getAs("CycleOfOptionality"), model.getAs("EndOfMonthConvention"));
+                times = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfOptionality"), model.getAs("MaturityDate"),model.getAs("CycleOfOptionality"), model.getAs("EndOfMonthConvention"),true);
             } else {
                 times = riskFactorModel.times(model.getAs("ObjectCodeOfPrepaymentModel"));
                 times.removeIf(e -> e.compareTo(model.getAs("CycleAnchorDateOfOptionality"))==-1);
