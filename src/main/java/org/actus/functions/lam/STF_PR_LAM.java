@@ -30,9 +30,6 @@ public final class STF_PR_LAM implements StateTransitionFunction {
         	states.nextPrincipalRedemptionPayment = 0.0;
         }
         states.nominalValue -=  states.nextPrincipalRedemptionPayment;
-        if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL")) {
-            states.interestCalculationBase = states.nominalValue;    
-        }
         states.lastEventTime = time;
         
         // copy post-event-states

@@ -29,6 +29,7 @@ import org.actus.functions.lam.POF_MD_LAM;
 import org.actus.functions.pam.STF_IP_PAM;
 import org.actus.functions.pam.STF_PR_PAM;
 import org.actus.functions.pam.POF_IPCI_PAM;
+import org.actus.functions.pam.POF_IP_PAM;
 import org.actus.functions.lam.STF_IPCI_LAM;
 import org.actus.functions.pam.POF_RR_PAM;
 import org.actus.functions.lam.STF_RR_LAM;
@@ -46,6 +47,7 @@ import org.actus.functions.lam.POF_TD_LAM;
 import org.actus.functions.pam.STF_TD_PAM;
 import org.actus.functions.pam.POF_CD_PAM;
 import org.actus.functions.lam.STF_CD_LAM;
+import org.actus.functions.PayOffFunction;
 import org.actus.functions.lam.POF_IPCB_LAM;
 import org.actus.functions.lam.STF_IPCB_LAM;
 
@@ -488,9 +490,14 @@ public final class LinearAmortizer {
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
                                                                             model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
                                             StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_LAM(), new STF_PR_LAM(), model.getAs("BusinessDayConvention")));     
+        PayOffFunction POF_IP = null;
+        if(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NT"))
+        	POF_IP = new POF_IP_PAM();
+        else POF_IP = new POF_IP_LAM();
+        
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
 																			model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
-											StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));    
+											StringUtils.EventType_IP, model.getAs("Currency"), POF_IP, new STF_IP_PAM(), model.getAs("BusinessDayConvention")));    
         
         if (!CommonUtils.isNull(model.getAs("MaturityDate"))) {
         	        	events.forEach(e->{
@@ -565,7 +572,7 @@ public final class LinearAmortizer {
         // interest calculation base (if specified)
         if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL")) { 
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestCalculationBase"), maturity,
-                                                                            model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention")),
+                                                                            model.getAs("CycleOfInterestCalculationBase"), model.getAs("EndOfMonthConvention"),false),
                                              StringUtils.EventType_IPCB, model.getAs("Currency"), new POF_IPCB_LAM(), new STF_IPCB_LAM(), model.getAs("BusinessDayConvention")));
         }
         // termination
