@@ -487,6 +487,9 @@ public final class NegativeAmortizer {
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
                 model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
                 StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_NAM(), new STF_PR_NAM(), model.getAs("BusinessDayConvention")));
+        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
+        		model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
+        		StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
@@ -626,6 +629,8 @@ public final class NegativeAmortizer {
         // TODO: some attributes can be null
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
+        states.nominalScalingMultiplier = 1;
+        states.interestScalingMultiplier = 1;
         
         // init next principal redemption payment amount (cannot be null for NAM!)
         states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
@@ -635,8 +640,6 @@ public final class NegativeAmortizer {
             states.nominalRate = model.getAs("NominalInterestRate");
             states.nominalAccrued = model.getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
-            states.nominalScalingMultiplier = 1;
-            states.interestScalingMultiplier = 1;
             states.interestCalculationBase = states.contractRoleSign * ( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
         
