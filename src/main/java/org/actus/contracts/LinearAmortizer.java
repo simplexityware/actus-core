@@ -25,7 +25,9 @@ import org.actus.functions.lam.STF_PR_LAM;
 import org.actus.functions.lam.POF_PRD_LAM;
 import org.actus.functions.lam.STF_PRD_LAM;
 import org.actus.functions.lam.POF_IP_LAM;
+import org.actus.functions.lam.POF_MD_LAM;
 import org.actus.functions.pam.STF_IP_PAM;
+import org.actus.functions.pam.STF_PR_PAM;
 import org.actus.functions.pam.POF_IPCI_PAM;
 import org.actus.functions.lam.STF_IPCI_LAM;
 import org.actus.functions.pam.POF_RR_PAM;
@@ -488,7 +490,15 @@ public final class LinearAmortizer {
 																			model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
 											StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));    
         
-		// purchase
+        if (!CommonUtils.isNull(model.getAs("MaturityDate"))) {
+        	        	events.forEach(e->{
+        	        		if(e.type().equals(StringUtils.EventType_PR) && e.time().equals(model.getAs("MaturityDate"))) {
+        	        			e.fPayOff(new POF_MD_LAM());
+        	        			e.fStateTrans(new STF_PR_PAM());
+        	        		}
+        	        	});
+        }
+        // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
         }
