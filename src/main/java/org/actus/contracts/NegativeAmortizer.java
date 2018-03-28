@@ -531,7 +531,7 @@ public final class NegativeAmortizer {
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), maturity,
-                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
+                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_LAM(), model.getAs("BusinessDayConvention")));
          // If NextRateReset is set
              if (model.<Double>getAs("NextResetRate")!=0) {
@@ -552,13 +552,13 @@ public final class NegativeAmortizer {
         // scaling (if specified)
         if (!CommonUtils.isNull(model.getAs("ScalingEffect")) && (model.<String>getAs("ScalingEffect").contains("I") || model.<String>getAs("ScalingEffect").contains("N"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfScalingIndex"), maturity,
-                    model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention")),
+                    model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_SC, model.getAs("Currency"), new POF_SC_PAM(), new STF_SC_LAM(), model.getAs("BusinessDayConvention")));
         }
         // interest calculation base (if specified)
         if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL")) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestCalculationBase"), maturity,
-                    model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention")),
+                    model.getAs("CycleOfInterestCalculationBase"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_IPCB, model.getAs("Currency"), new POF_IPCB_LAM(), new STF_IPCB_LAM(), model.getAs("BusinessDayConvention")));
         }
         // termination
