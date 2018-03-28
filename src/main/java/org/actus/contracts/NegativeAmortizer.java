@@ -37,7 +37,9 @@ import org.actus.functions.lam.STF_SC_LAM;
 import org.actus.functions.pam.POF_PP_PAM;
 import org.actus.functions.lam.STF_PP_LAM;
 import org.actus.functions.pam.POF_PY_PAM;
+import org.actus.functions.pam.POF_RRY_PAM;
 import org.actus.functions.lam.STF_PY_LAM;
+import org.actus.functions.lam.STF_RRY_LAM;
 import org.actus.functions.pam.POF_FP_PAM;
 import org.actus.functions.lam.STF_FP_LAM;
 import org.actus.functions.lam.POF_TD_LAM;
@@ -531,6 +533,15 @@ public final class NegativeAmortizer {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), maturity,
                     model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
                     StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_LAM(), model.getAs("BusinessDayConvention")));
+         // If NextRateReset is set
+             if (model.<Double>getAs("NextResetRate")!=0) {
+                 events.forEach(e->{
+                      if(e.type().equals(StringUtils.EventType_RR) && e.time().equals(model.getAs("CycleAnchorDateOfRateReset"))) {
+                    	  e.fPayOff(new POF_RRY_PAM());
+                    	  e.fStateTrans(new STF_RRY_LAM());
+                      }
+                 });
+             }
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
