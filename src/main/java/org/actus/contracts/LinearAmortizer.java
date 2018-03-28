@@ -621,6 +621,8 @@ public final class LinearAmortizer {
         // TODO: some attributes can be null
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
+        states.nominalScalingMultiplier = 1;
+        states.interestScalingMultiplier = 1;
         
         // init next principal redemption payment amount (can be null!)
         if (CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))) {
@@ -641,8 +643,6 @@ public final class LinearAmortizer {
             states.nominalRate = model.getAs("NominalInterestRate");
             states.nominalAccrued = model.getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
-            states.nominalScalingMultiplier = 1;
-            states.interestScalingMultiplier = 1;
             states.interestCalculationBase = states.contractRoleSign * ( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
         
