@@ -486,7 +486,7 @@ public final class LinearAmortizer {
                                             StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_LAM(), new STF_PR_LAM(), model.getAs("BusinessDayConvention")));     
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
 																			model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
-											StringUtils.EventType_IP, model.getAs("Currency"), POF_IP_LAM, new STF_IP_PAM(), model.getAs("BusinessDayConvention")));    
+											StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));    
         
 		// purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
