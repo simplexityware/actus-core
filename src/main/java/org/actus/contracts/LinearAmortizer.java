@@ -9,6 +9,7 @@ import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
+import org.actus.functions.pam.*;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
@@ -16,36 +17,20 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.util.CycleUtils;
-import org.actus.functions.pam.POF_AD_PAM;
-import org.actus.functions.pam.STF_AD_PAM;
-import org.actus.functions.pam.POF_IED_PAM;
 import org.actus.functions.lam.STF_IED_LAM;
 import org.actus.functions.lam.POF_PR_LAM;
 import org.actus.functions.lam.STF_PR_LAM;
 import org.actus.functions.lam.POF_PRD_LAM;
 import org.actus.functions.lam.STF_PRD_LAM;
 import org.actus.functions.lam.POF_IP_LAM;
-import org.actus.functions.lam.POF_MD_LAM;
-import org.actus.functions.pam.STF_IP_PAM;
-import org.actus.functions.pam.STF_PR_PAM;
-import org.actus.functions.pam.POF_IPCI_PAM;
-import org.actus.functions.pam.POF_IP_PAM;
 import org.actus.functions.lam.STF_IPCI_LAM;
-import org.actus.functions.pam.POF_RR_PAM;
 import org.actus.functions.lam.STF_RR_LAM;
-import org.actus.functions.pam.POF_SC_PAM;
 import org.actus.functions.lam.STF_SC_LAM;
-import org.actus.functions.pam.POF_PP_PAM;
 import org.actus.functions.lam.STF_PP_LAM;
-import org.actus.functions.pam.POF_PY_PAM;
-import org.actus.functions.pam.POF_RRY_PAM;
 import org.actus.functions.lam.STF_PY_LAM;
 import org.actus.functions.lam.STF_RRY_LAM;
-import org.actus.functions.pam.POF_FP_PAM;
 import org.actus.functions.lam.STF_FP_LAM;
 import org.actus.functions.lam.POF_TD_LAM;
-import org.actus.functions.pam.STF_TD_PAM;
-import org.actus.functions.pam.POF_CD_PAM;
 import org.actus.functions.lam.STF_CD_LAM;
 import org.actus.functions.PayOffFunction;
 import org.actus.functions.lam.POF_IPCB_LAM;
@@ -487,25 +472,17 @@ public final class LinearAmortizer {
         // initial exchange
         events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), StringUtils.EventType_IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_LAM()));
         // principal redemption
-        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
-                                                                            model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
-                                            StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_LAM(), new STF_PR_LAM(), model.getAs("BusinessDayConvention")));     
-        PayOffFunction POF_IP = null;
-        if(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NT"))
-        	POF_IP = new POF_IP_PAM();
-        else POF_IP = new POF_IP_LAM();
-        
-        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
-																			model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
-											StringUtils.EventType_IP, model.getAs("Currency"), POF_IP, new STF_IP_PAM(), model.getAs("BusinessDayConvention")));    
-        
+        Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
+                model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"), false);
+        events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_PR,
+                model.getAs("Currency"), new POF_PR_LAM(), new STF_PR_LAM(), model.getAs("BusinessDayConvention")));
+        // interest payments aligned with principal redemption schedule
+        events.addAll(EventFactory.createEvents(prSchedule,
+                StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
+        // additional PR and IP events at maturity (if defined)
         if (!CommonUtils.isNull(model.getAs("MaturityDate"))) {
-        	        	events.forEach(e->{
-        	        		if(e.type().equals(StringUtils.EventType_PR) && e.time().equals(model.getAs("MaturityDate"))) {
-        	        			e.fPayOff(new POF_MD_LAM());
-        	        			e.fStateTrans(new STF_PR_PAM());
-        	        		}
-        	        	});
+            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),new POF_PR_PAM(), new STF_PR_PAM()));
+            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         }
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
@@ -666,11 +643,15 @@ public final class LinearAmortizer {
         }
         
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.nominalValue = model.getAs("NotionalPrincipal");
+            states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
             states.nominalAccrued = model.getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
-            states.interestCalculationBase = states.contractRoleSign * ( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
+            if(CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals("NT")) {
+                states.interestCalculationBase = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
+            } else {
+                states.interestCalculationBase = states.contractRoleSign * model.<Double>getAs("InterestCalculationBaseAmount");
+            }
         }
         
         // return the initialized state space

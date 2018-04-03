@@ -19,9 +19,7 @@ public final class POF_PR_LAM implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-    	if (states.nominalValue != 0) 
-    		return (1 - states.probabilityOfDefault) * states.nominalScalingMultiplier * states.nextPrincipalRedemptionPayment;
-    	else 
-    		return 0.0;
-        }
+		double redemption = states.nextPrincipalRedemptionPayment - Math.max(0, states.nextPrincipalRedemptionPayment - states.nominalValue);
+		return (1 - states.probabilityOfDefault) * states.nominalScalingMultiplier * redemption;
+	}
 }
