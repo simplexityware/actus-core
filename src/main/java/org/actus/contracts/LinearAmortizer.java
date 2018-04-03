@@ -19,7 +19,6 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.util.CycleUtils;
-import org.actus.functions.PayOffFunction;
 
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -53,8 +52,19 @@ public final class LinearAmortizer {
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);
 
-        // evaluate events
-        events.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
+        // evaluate events while outstanding principal is zero
+        Iterator<ContractEvent> iterator = events.iterator();
+        ContractEvent event = iterator.next();
+        while(event.time().isBefore(model.getAs("InitialExchangeDate")) || event.nominalValue()>0.0) {
+            // eval event and update counter
+            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            // move to next event or quit if no event left
+            if(iterator.hasNext()) {
+                event = iterator.next();
+            } else {
+                break;
+            }
+        }
 
         // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
         if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
@@ -610,7 +620,7 @@ public final class LinearAmortizer {
     private static StateSpace initStateSpace(ContractModelProvider model, LocalDateTime maturity) throws AttributeConversionException {
         StateSpace states = new StateSpace();
 
-        // TODO: some attributes can be null
+        // general states to be initialized
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         states.nominalScalingMultiplier = 1;
@@ -629,7 +639,8 @@ public final class LinearAmortizer {
         } else {
             states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
         }
-        
+
+        // init post-IED states
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
             states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
