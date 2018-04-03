@@ -25,7 +25,7 @@ public final class STF_RRY_LAM implements StateTransitionFunction {
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-        states.nominalRate = model.getAs("extResetRate");
+        states.nominalRate = model.getAs("NextResetRate");
         states.lastEventTime = time;
         
         // copy post-event-states

@@ -37,7 +37,9 @@ import org.actus.functions.lam.STF_SC_LAM;
 import org.actus.functions.pam.POF_PP_PAM;
 import org.actus.functions.lam.STF_PP_LAM;
 import org.actus.functions.pam.POF_PY_PAM;
+import org.actus.functions.pam.POF_RRY_PAM;
 import org.actus.functions.lam.STF_PY_LAM;
+import org.actus.functions.lam.STF_RRY_LAM;
 import org.actus.functions.pam.POF_FP_PAM;
 import org.actus.functions.lam.STF_FP_LAM;
 import org.actus.functions.lam.POF_TD_LAM;
@@ -487,6 +489,9 @@ public final class NegativeAmortizer {
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
                 model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
                 StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_NAM(), new STF_PR_NAM(), model.getAs("BusinessDayConvention")));
+        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
+        		model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
+        		StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
@@ -526,8 +531,17 @@ public final class NegativeAmortizer {
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), maturity,
-                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
+                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_LAM(), model.getAs("BusinessDayConvention")));
+         // If NextRateReset is set
+             if (model.<Double>getAs("NextResetRate")!=0) {
+                 events.forEach(e->{
+                      if(e.type().equals(StringUtils.EventType_RR) && e.time().equals(model.getAs("CycleAnchorDateOfRateReset"))) {
+                    	  e.fPayOff(new POF_RRY_PAM());
+                    	  e.fStateTrans(new STF_RRY_LAM());
+                      }
+                 });
+             }
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
@@ -538,13 +552,13 @@ public final class NegativeAmortizer {
         // scaling (if specified)
         if (!CommonUtils.isNull(model.getAs("ScalingEffect")) && (model.<String>getAs("ScalingEffect").contains("I") || model.<String>getAs("ScalingEffect").contains("N"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfScalingIndex"), maturity,
-                    model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention")),
+                    model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_SC, model.getAs("Currency"), new POF_SC_PAM(), new STF_SC_LAM(), model.getAs("BusinessDayConvention")));
         }
         // interest calculation base (if specified)
         if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL")) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestCalculationBase"), maturity,
-                    model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention")),
+                    model.getAs("CycleOfInterestCalculationBase"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_IPCB, model.getAs("Currency"), new POF_IPCB_LAM(), new STF_IPCB_LAM(), model.getAs("BusinessDayConvention")));
         }
         // termination
@@ -626,6 +640,8 @@ public final class NegativeAmortizer {
         // TODO: some attributes can be null
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
+        states.nominalScalingMultiplier = 1;
+        states.interestScalingMultiplier = 1;
         
         // init next principal redemption payment amount (cannot be null for NAM!)
         states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
@@ -635,8 +651,6 @@ public final class NegativeAmortizer {
             states.nominalRate = model.getAs("NominalInterestRate");
             states.nominalAccrued = model.getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
-            states.nominalScalingMultiplier = 1;
-            states.interestScalingMultiplier = 1;
             states.interestCalculationBase = states.contractRoleSign * ( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
         
