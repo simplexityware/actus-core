@@ -129,50 +129,6 @@ public final class PrincipalAtMaturity {
     // compute next n events
     public static ArrayList<ContractEvent> next(LocalDateTime from,
                                                 int n,
-                                                ContractModelProvider model,
-                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        // convert single time input to set of times
-        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-        times.add(from);
-
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(times,model);
-
-        // compute and add contingent events
-        events.addAll(initContingentEvents(times,model,riskFactorModel));
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only contingent events within time window
-        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        int k=0;
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-            // stop if we reached number of events
-            if(k>=n) {
-                break;
-            }
-            // eval event if not end of window reached
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
-            // add event to output list if after window start
-            // note: need to evaluate also pre-start events in order to update states correctly
-            if(!event.time().isBefore(from)) {
-                nextEvents.add(event);
-                k+=1;
-            }
-        }
-
-        return nextEvents;
-    }
-
-    // compute next n non-contingent events
-    public static ArrayList<ContractEvent> next(LocalDateTime from,
-                                                int n,
                                                 ContractModelProvider model) throws AttributeConversionException {
         // convert single time input to set of times
         Set<LocalDateTime> times = new HashSet<LocalDateTime>();
@@ -211,63 +167,13 @@ public final class PrincipalAtMaturity {
         return nextEvents;
     }
 
-    // compute next n events
-    public static ArrayList<ContractEvent> next(int n,
-                                                ContractModelProvider model,
-                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        return next(model.getAs("StatusDate"),n,model,riskFactorModel);
-    }
-
-    // compute next n events
+    // compute next n events (from StatusDate)
     public static ArrayList<ContractEvent> next(int n,
                                                 ContractModelProvider model) throws AttributeConversionException {
         return next(model.getAs("StatusDate"),n,model);
     }
 
     // compute next events within period
-    public static ArrayList<ContractEvent> next(LocalDateTime from,
-                                                Period within,
-                                                ContractModelProvider model,
-                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        // convert single time input to set of times
-        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-        times.add(from);
-
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(times,model);
-
-        // compute and add contingent events
-        events.addAll(initContingentEvents(times,model,riskFactorModel));
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only contingent events within time window
-        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        LocalDateTime end = from.plus(within);
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-            // stop if we reached end of period
-            if(event.time().isAfter(end)) {
-                break;
-            }
-            // eval event if not end of window reached
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
-            // add event to output list if after window start
-            // note: need to evaluate also pre-start events in order to update states correctly
-            if(!event.time().isBefore(from)) {
-                nextEvents.add(event);
-            }
-        }
-
-        return nextEvents;
-    }
-
-    // compute next n non-contingent events
     public static ArrayList<ContractEvent> next(LocalDateTime from,
                                                 Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
@@ -307,15 +213,7 @@ public final class PrincipalAtMaturity {
         return nextEvents;
     }
 
-
-    // compute next n events
-    public static ArrayList<ContractEvent> next(Period within,
-                                                ContractModelProvider model,
-                                                RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        return next(model.getAs("StatusDate"),within,model,riskFactorModel);
-    }
-
-    // compute next n events
+    // compute next events within period (from StatusDate)
     public static ArrayList<ContractEvent> next(Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
         return next(model.getAs("StatusDate"),within,model);
