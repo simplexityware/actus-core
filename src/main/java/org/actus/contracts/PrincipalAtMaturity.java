@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
  */
 public final class PrincipalAtMaturity {
 
-    // compute contingent lifecycle of the contract
+    // forward projection of the entire lifecycle of the contract
     public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
                                                      ContractModelProvider model,
                                                      RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
@@ -85,20 +85,26 @@ public final class PrincipalAtMaturity {
         return events;
     }
 
-    // compute non-contingent portion of lifecycle of the contract
-    public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
-                                                     ContractModelProvider model) throws AttributeConversionException {
+    // forward projection of the payoff of the contract
+    public static ArrayList<ContractEvent> payoff(Set<LocalDateTime> analysisTimes,
+                                                  ContractModelProvider model,
+                                                  RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+        return PrincipalAtMaturity.lifecycle(analysisTimes,model,riskFactorModel).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    // compute the contract schedule
+    public static ArrayList<ContractEvent> schedule(ContractModelProvider model) throws AttributeConversionException {
 
         // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
+        ArrayList<ContractEvent> events = initEvents(new HashSet<LocalDateTime>(),model);
 
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
 
-        // sort the events in the payoff-list according to their time of occurence
+        // sort the events according to their time of occurence
         Collections.sort(events);
 
-        // evaluate only non-contingent events and add these to new list
+        // evaluate events but stop at first contingent event
         Iterator<ContractEvent> iterator = events.iterator();
         while(iterator.hasNext()) {
             ContractEvent event = iterator.next();
@@ -108,29 +114,15 @@ public final class PrincipalAtMaturity {
             event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
         }
 
-        // return events (evaluated non-contingent and non-evaluated contingent
+        // return events
         return events;
     }
 
-    // compute contingent payoff of the contract
-    public static ArrayList<ContractEvent> payoff(Set<LocalDateTime> analysisTimes,
-                                                  ContractModelProvider model,
-                                                  RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        return PrincipalAtMaturity.lifecycle(analysisTimes,model,riskFactorModel).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
-    }
-
-
-    // compute non-contingent portion of payoff of the contract
-    public static ArrayList<ContractEvent> payoff(Set<LocalDateTime> analysisTimes,
-                                                  ContractModelProvider model) throws AttributeConversionException {
-        return PrincipalAtMaturity.lifecycle(analysisTimes,model).stream().filter(ev->StringUtils.TransactionalEvents.contains(ev.type())).collect(Collectors.toCollection(ArrayList::new));
-    }
-
     // compute next n events
-    public static ArrayList<ContractEvent> next(LocalDateTime from,
-                                                int n,
+    public static ArrayList<ContractEvent> next(int n,
                                                 ContractModelProvider model) throws AttributeConversionException {
-        // convert single time input to set of times
+        // define StatusDate as projection start time
+        LocalDateTime from = model.getAs("StatusDate");
         Set<LocalDateTime> times = new HashSet<LocalDateTime>();
         times.add(from);
 
@@ -167,17 +159,11 @@ public final class PrincipalAtMaturity {
         return nextEvents;
     }
 
-    // compute next n events (from StatusDate)
-    public static ArrayList<ContractEvent> next(int n,
-                                                ContractModelProvider model) throws AttributeConversionException {
-        return next(model.getAs("StatusDate"),n,model);
-    }
-
     // compute next events within period
-    public static ArrayList<ContractEvent> next(LocalDateTime from,
-                                                Period within,
+    public static ArrayList<ContractEvent> next(Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
-        // convert single time input to set of times
+        // define StatusDate as projection start time
+        LocalDateTime from = model.getAs("StatusDate");
         Set<LocalDateTime> times = new HashSet<LocalDateTime>();
         times.add(from);
 
@@ -211,12 +197,6 @@ public final class PrincipalAtMaturity {
         }
 
         return nextEvents;
-    }
-
-    // compute next events within period (from StatusDate)
-    public static ArrayList<ContractEvent> next(Period within,
-                                                ContractModelProvider model) throws AttributeConversionException {
-        return next(model.getAs("StatusDate"),within,model);
     }
     
     private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model) throws AttributeConversionException {

@@ -278,137 +278,13 @@ public class ForeignExchangeOutrightTest {
         map.put("SettlementDate", "2016-06-03T00:00:00");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = ForeignExchangeOutright.next(LocalDateTime.parse("2016-01-01T00:00:00"),5,model,riskFactors);
+        ArrayList<ContractEvent> events = ForeignExchangeOutright.next(5,model);
         //System.out.println(events);
     }
 
     @Test
     public void test_FXOUT_next_5_fromSD_withSTD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "FXOUT");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("Currency", "USD");
-        map.put("Currency2", "EUR");
-        map.put("MaturityDate", "2016-06-01T00:00:00");
-        map.put("NotionalPrincipal", "1000");
-        map.put("NotionalPrincipal2", "900");
-        map.put("DeliverySettlement", "S");
-        map.put("SettlementDate", "2016-06-03T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = ForeignExchangeOutright.next(5,model,riskFactors);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_FXOUT_next_within_withSTD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "FXOUT");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("Currency", "USD");
-        map.put("Currency2", "EUR");
-        map.put("MaturityDate", "2016-06-01T00:00:00");
-        map.put("NotionalPrincipal", "1000");
-        map.put("NotionalPrincipal2", "900");
-        map.put("DeliverySettlement", "S");
-        map.put("SettlementDate", "2016-06-03T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = ForeignExchangeOutright.next(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofDays(10),model,riskFactors);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_FXOUT_next_within_fromSD_withSTD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "FXOUT");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("Currency", "USD");
-        map.put("Currency2", "EUR");
-        map.put("MaturityDate", "2016-06-01T00:00:00");
-        map.put("NotionalPrincipal", "1000");
-        map.put("NotionalPrincipal2", "900");
-        map.put("DeliverySettlement", "S");
-        map.put("SettlementDate", "2016-06-03T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = ForeignExchangeOutright.next(Period.ofWeeks(1),model,riskFactors);
-        //System.out.println(events);
-    }
-    @Test
-    public void test_FXOUT_noncontingent_lifecycle_withSTD_withMultipleAnalysisTimes() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "FXOUT");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("Currency", "USD");
-        map.put("Currency2", "EUR");
-        map.put("MaturityDate", "2016-06-01T00:00:00");
-        map.put("NotionalPrincipal", "1000");
-        map.put("NotionalPrincipal2", "900");
-        map.put("DeliverySettlement", "S");
-        map.put("SettlementDate", "2016-06-03T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = ForeignExchangeOutright.lifecycle(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_FXOUT_noncontingent_payoff_withSTD_withMultipleAnalysisTimes() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "FXOUT");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("Currency", "USD");
-        map.put("Currency2", "EUR");
-        map.put("MaturityDate", "2016-06-01T00:00:00");
-        map.put("NotionalPrincipal", "1000");
-        map.put("NotionalPrincipal2", "900");
-        map.put("DeliverySettlement", "S");
-        map.put("SettlementDate", "2016-06-03T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = ForeignExchangeOutright.payoff(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_FXOUT_noncontingent_next_5_withSTD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "FXOUT");
@@ -429,7 +305,28 @@ public class ForeignExchangeOutrightTest {
     }
 
     @Test
-    public void test_FXOUT_noncontingent_next_within_withSTD() {
+    public void test_FXOUT_next_within_withSTD() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "FXOUT");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("Currency2", "EUR");
+        map.put("MaturityDate", "2016-06-01T00:00:00");
+        map.put("NotionalPrincipal", "1000");
+        map.put("NotionalPrincipal2", "900");
+        map.put("DeliverySettlement", "S");
+        map.put("SettlementDate", "2016-06-03T00:00:00");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = ForeignExchangeOutright.next(Period.ofDays(10),model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_FXOUT_next_within_fromSD_withSTD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "FXOUT");
@@ -448,5 +345,24 @@ public class ForeignExchangeOutrightTest {
         ArrayList<ContractEvent> events = ForeignExchangeOutright.next(Period.ofWeeks(1),model);
         //System.out.println(events);
     }
-
+    @Test
+    public void test_FXOUT_schedule_withSTD() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "FXOUT");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("Currency", "USD");
+        map.put("Currency2", "EUR");
+        map.put("MaturityDate", "2016-06-01T00:00:00");
+        map.put("NotionalPrincipal", "1000");
+        map.put("NotionalPrincipal2", "900");
+        map.put("DeliverySettlement", "S");
+        map.put("SettlementDate", "2016-06-03T00:00:00");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = ForeignExchangeOutright.schedule(model);
+        //System.out.println(events);
+    }
 }

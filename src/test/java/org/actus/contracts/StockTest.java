@@ -227,148 +227,13 @@ public class StockTest {
         map.put("PriceAtPurchaseDate","1000.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Stock.next(LocalDateTime.parse("2016-01-01T00:00:00"),5,model,riskFactors);
+        ArrayList<ContractEvent> events = Stock.next(5,model);
         //System.out.println(events);
     }
 
     @Test
     public void test_STK_next_5_fromSD_withDV_withPRD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "STK");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("Currency", "USD");
-        map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
-        map.put("CycleOfDividendPayment","1Q-");
-        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
-        map.put("MarketValueObserved","1000.0");
-        map.put("PurchaseDate","2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate","1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Stock.next(5,model,riskFactors);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_STK_next_within_withDV_withPRD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "STK");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("Currency", "USD");
-        map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
-        map.put("CycleOfDividendPayment","1Q-");
-        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
-        map.put("MarketValueObserved","1000.0");
-        map.put("PurchaseDate","2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate","1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Stock.next(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofDays(10),model,riskFactors);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_STK_next_within_fromSD_withDV_withPRD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "STK");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("Currency", "USD");
-        map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
-        map.put("CycleOfDividendPayment","1Q-");
-        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
-        map.put("MarketValueObserved","1000.0");
-        map.put("PurchaseDate","2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate","1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Stock.next(Period.ofWeeks(1),model,riskFactors);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_STK_noncontingent_lifecycle_withDV_withPRD_withMultipleAnalysisTimes() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "STK");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("Currency", "USD");
-        map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
-        map.put("CycleOfDividendPayment","1Q-");
-        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
-        map.put("MarketValueObserved","1000.0");
-        map.put("PurchaseDate","2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate","1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Stock.lifecycle(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_STK_noncontingent_payoff_withDV_withPRD_withMultipleAnalysisTimes() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "STK");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("Currency", "USD");
-        map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
-        map.put("CycleOfDividendPayment","1Q-");
-        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
-        map.put("MarketValueObserved","1000.0");
-        map.put("PurchaseDate","2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate","1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Stock.payoff(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_STK_noncontingent_next_5_withDV_withPRD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "STK");
@@ -391,7 +256,30 @@ public class StockTest {
     }
 
     @Test
-    public void test_STK_noncontingent_next_within_withDV_withPRD() {
+    public void test_STK_next_within_withDV_withPRD() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "STK");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("Currency", "USD");
+        map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
+        map.put("CycleOfDividendPayment","1Q-");
+        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
+        map.put("MarketValueObserved","1000.0");
+        map.put("PurchaseDate","2016-01-02T00:00:00");
+        map.put("PriceAtPurchaseDate","1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Stock.next(Period.ofDays(10),model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_STK_next_within_fromSD_withDV_withPRD() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
         map.put("ContractType", "STK");
@@ -413,4 +301,26 @@ public class StockTest {
         //System.out.println(events);
     }
 
+    @Test
+    public void test_STK_schedule_withDV_withPRD() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "STK");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("Currency", "USD");
+        map.put("CycleAnchorDateOfDividendPayment","2016-01-01T00:00:00");
+        map.put("CycleOfDividendPayment","1Q-");
+        map.put("MarketObjectCodeOfDividendRate","DIVYIELD");
+        map.put("MarketValueObserved","1000.0");
+        map.put("PurchaseDate","2016-01-02T00:00:00");
+        map.put("PriceAtPurchaseDate","1000.0");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // lifecycle PAM contract
+        ArrayList<ContractEvent> events = Stock.schedule(model);
+        //System.out.println(events);
+    }
 }

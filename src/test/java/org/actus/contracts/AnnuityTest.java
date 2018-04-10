@@ -1013,10 +1013,8 @@ public class AnnuityTest {
         map.put("CycleOfInterestCalculationBase","1Q-");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
         // lifecycle LAM contract
-        ArrayList<ContractEvent> events = Annuity.next(LocalDateTime.parse("2016-01-01T00:00:00"),5,model,riskFactors);
+        ArrayList<ContractEvent> events = Annuity.next(5,model);
         //System.out.println(events);
     }
 
@@ -1048,10 +1046,8 @@ public class AnnuityTest {
         map.put("CycleOfInterestCalculationBase","1Q-");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
         // lifecycle LAM contract
-        ArrayList<ContractEvent> events = Annuity.next(5, model,riskFactors);
+        ArrayList<ContractEvent> events = Annuity.next(5, model);
         //System.out.println(events);
     }
 
@@ -1083,10 +1079,8 @@ public class AnnuityTest {
         map.put("CycleOfInterestCalculationBase","1Q-");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
         // lifecycle LAM contract
-        ArrayList<ContractEvent> events = Annuity.next(LocalDateTime.parse("2016-01-01T00:00:00"),Period.ofDays(10),model,riskFactors);
+        ArrayList<ContractEvent> events = Annuity.next(Period.ofDays(10),model);
         //System.out.println(events);
     }
 
@@ -1121,151 +1115,40 @@ public class AnnuityTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle LAM contract
-        ArrayList<ContractEvent> events = Annuity.next(Period.ofDays(10),model,riskFactors);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_ANN_noncontingent_lifecycle_withIP_withRR_withSC_withOP_withIPCB_withMultipleAnalysisTimes() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "ANN");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
-        map.put("CycleOfPrincipalRedemption", "1Q-");
-        map.put("MaturityDate", "2026-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("NominalInterestRate","0.01");
-        map.put("CycleOfInterestPayment","1M-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("ScalingEffect","IN0");
-        map.put("CycleOfScalingIndex","1Q-");
-        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
-        map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("InterestPaymentCalculationBase","NTL");
-        map.put("InterestPaymentCalculationBaseAmount","1000.0");
-        map.put("CycleOfInterestCalculationBase","1Q-");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle LAM contract
-        ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_ANN_noncontingent_payoff_withIP_withRR_withSC_withOP_withIPCB_withMultipleAnalysisTimes() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "ANN");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
-        map.put("CycleOfPrincipalRedemption", "1Q-");
-        map.put("MaturityDate", "2026-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("NominalInterestRate","0.01");
-        map.put("CycleOfInterestPayment","1M-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("ScalingEffect","IN0");
-        map.put("CycleOfScalingIndex","1Q-");
-        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
-        map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("InterestPaymentCalculationBase","NTL");
-        map.put("InterestPaymentCalculationBaseAmount","1000.0");
-        map.put("CycleOfInterestCalculationBase","1Q-");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // define analysis times
-        Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
-        analysisTimes.add(LocalDateTime.parse("2016-01-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-04-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-07-01T00:00:00"));
-        analysisTimes.add(LocalDateTime.parse("2016-09-01T00:00:00"));
-        // lifecycle LAM contract
-        ArrayList<ContractEvent> events = Annuity.payoff(analysisTimes,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_ANN_noncontingent_next_5_withIP_withRR_withSC_withOP_withIPCB() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "ANN");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
-        map.put("CycleOfPrincipalRedemption", "1Q-");
-        map.put("MaturityDate", "2026-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("NominalInterestRate","0.01");
-        map.put("CycleOfInterestPayment","1M-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("ScalingEffect","IN0");
-        map.put("CycleOfScalingIndex","1Q-");
-        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
-        map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("InterestPaymentCalculationBase","NTL");
-        map.put("InterestPaymentCalculationBaseAmount","1000.0");
-        map.put("CycleOfInterestCalculationBase","1Q-");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle LAM contract
-        ArrayList<ContractEvent> events = Annuity.next(5,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_ANN_noncontingent_next_within_withIP_withRR_withSC_withOP_withIPCB() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "ANN");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
-        map.put("CycleOfPrincipalRedemption", "1Q-");
-        map.put("MaturityDate", "2026-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("NominalInterestRate","0.01");
-        map.put("CycleOfInterestPayment","1M-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("ScalingEffect","IN0");
-        map.put("CycleOfScalingIndex","1Q-");
-        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
-        map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("InterestPaymentCalculationBase","NTL");
-        map.put("InterestPaymentCalculationBaseAmount","1000.0");
-        map.put("CycleOfInterestCalculationBase","1Q-");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle LAM contract
         ArrayList<ContractEvent> events = Annuity.next(Period.ofDays(10),model);
+        //System.out.println(events);
+    }
+
+    @Test
+    public void test_ANN_schedule_withIP_withRR_withSC_withOP_withIPCB() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "ANN");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("MaturityDate", "2026-01-02T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        map.put("CycleOfRateReset","1Q-");
+        map.put("ScalingEffect","IN0");
+        map.put("CycleOfScalingIndex","1Q-");
+        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
+        map.put("ObjectCodeOfPrepaymentModel","IDXY");
+        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBaseAmount","1000.0");
+        map.put("CycleOfInterestCalculationBase","1Q-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // lifecycle LAM contract
+        ArrayList<ContractEvent> events = Annuity.schedule(model);
         //System.out.println(events);
     }
 }
