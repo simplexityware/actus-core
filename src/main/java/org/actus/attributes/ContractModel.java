@@ -136,7 +136,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("LifeCap",(CommonUtils.isNull(attributes.get("LifeCap")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("LifeCap")));
                 map.put("LifeFloor",(CommonUtils.isNull(attributes.get("LifeFloor")))? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("LifeFloor")));
                 map.put("PeriodCap",(CommonUtils.isNull(attributes.get("PeriodCap")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodCap")));
-                map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
+                map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
                 map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
                 map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
@@ -192,7 +192,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("LifeCap",(CommonUtils.isNull(attributes.get("LifeCap")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("LifeCap")));
                 map.put("LifeFloor",(CommonUtils.isNull(attributes.get("LifeFloor")))? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("LifeFloor")));
                 map.put("PeriodCap",(CommonUtils.isNull(attributes.get("PeriodCap")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodCap")));
-                map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
+                map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
                 map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
                 map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
@@ -255,7 +255,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("LifeCap",(CommonUtils.isNull(attributes.get("LifeCap")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("LifeCap")));
                 map.put("LifeFloor",(CommonUtils.isNull(attributes.get("LifeFloor")))? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("LifeFloor")));
                 map.put("PeriodCap",(CommonUtils.isNull(attributes.get("PeriodCap")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodCap")));
-                map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
+                map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
                 map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
                 map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
@@ -318,7 +318,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("LifeCap",(CommonUtils.isNull(attributes.get("LifeCap")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("LifeCap")));
                 map.put("LifeFloor",(CommonUtils.isNull(attributes.get("LifeFloor")))? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("LifeFloor")));
                 map.put("PeriodCap",(CommonUtils.isNull(attributes.get("PeriodCap")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodCap")));
-                map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
+                map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
                 map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
                 map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
