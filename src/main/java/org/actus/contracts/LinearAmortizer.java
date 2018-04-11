@@ -52,19 +52,8 @@ public final class LinearAmortizer {
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);
 
-        // evaluate events while outstanding principal is zero
-        Iterator<ContractEvent> iterator = events.iterator();
-        ContractEvent event = iterator.next();
-        while(event.time().isBefore(model.getAs("InitialExchangeDate")) || event.nominalValue()>0.0) {
-            // eval event and update counter
-            event.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
-            // move to next event or quit if no event left
-            if(iterator.hasNext()) {
-                event = iterator.next();
-            } else {
-                break;
-            }
-        }
+        // evaluate events
+        events.forEach(e -> e.eval(states, model, riskFactorModel, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
 
         // remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
         if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
