@@ -221,17 +221,14 @@ public final class Annuity {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
         }
         // interest payment related
-        if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment"))) {
+        if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment"))) {
             // raw interest payment events
             Set<ContractEvent> interestEvents =
                     EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                             model.getAs("CycleAnchorDateOfPrincipalRedemption"),
                             model.getAs("CycleOfInterestPayment"),
-                            model.getAs("EndOfMonthConvention")),
+                            model.getAs("EndOfMonthConvention"),false),
                             StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention"));
-            // remove last event that falls exactly on cycle anchor date of principal redemption
-            interestEvents.remove(EventFactory.createEvent(model.getAs("CycleAnchorDateOfPrincipalRedemption"), StringUtils.EventType_IP,
-                    model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("BusinessDayConvention")));
             // adapt if interest capitalization set
             if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
                 // for all events with time <= IPCED && type == "IP" do
@@ -251,6 +248,10 @@ public final class Annuity {
                 interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
+        } else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
+            // if no extra interest schedule set but capitalization end date, add single IPCI event
+            events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IPCI,
+                    model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_LAM(), model.getAs("BusinessDayConvention")));
         }
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
