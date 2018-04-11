@@ -215,7 +215,7 @@ public final class Annuity {
         // principal redemption
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
                 model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
-                StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_LAM(), new STF_PR_LAM(), model.getAs("BusinessDayConvention")));
+                StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_NAM(), new STF_PR_NAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
