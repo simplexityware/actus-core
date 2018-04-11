@@ -3,40 +3,29 @@
  *
  * Please see distribution for license.
  */
-package org.actus.functions.pam;
+package org.actus.functions.clm;
 
+import org.actus.attributes.ContractModelProvider;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.conventions.daycount.DayCountCalculator;
+import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
-import org.actus.attributes.ContractModelProvider;
-import org.actus.externals.RiskFactorModelProvider;
-import org.actus.conventions.daycount.DayCountCalculator;
-import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_RR_PAM implements StateTransitionFunction {
+public final class STF_RR_CLM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         double[] postEventStates = new double[8];
 
-        // compute new rate
-        double rate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
-                * model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
-        double deltaRate = rate - states.nominalRate;
-
-        // apply period cap/floor
-        deltaRate = Math.min(Math.max(deltaRate,(-1)*model.<Double>getAs("PeriodFloor")),model.<Double>getAs("LifeCap"));
-        rate = states.nominalRate+deltaRate;
-
-        // apply life cap/floor
-        rate = Math.min(Math.max(rate,model.getAs("LifeFloor")),model.getAs("LifeCap"));
-
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
-        states.nominalRate = rate;
+        states.nominalRate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
+                * model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
         states.lastEventTime = time;
         
         // copy post-event-states

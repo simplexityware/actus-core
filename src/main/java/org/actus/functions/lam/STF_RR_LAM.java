@@ -20,13 +20,25 @@ public final class STF_RR_LAM implements StateTransitionFunction {
     public double[] eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         double[] postEventStates = new double[8];
-        
+
+        // compute new rate
+        double rate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
+                * model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
+        double deltaRate = rate - states.nominalRate;
+
+        // apply period cap/floor
+        deltaRate = Math.min(Math.max(deltaRate,(-1)*model.<Double>getAs("PeriodFloor")),model.<Double>getAs("LifeCap"));
+        rate = states.nominalRate+deltaRate;
+
+        // apply life cap/floor
+        rate = Math.min(Math.max(rate,model.getAs("LifeFloor")),model.getAs("LifeCap"));
+
+
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-        states.nominalRate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"),time,states,model)
-        		        		* model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
+        states.nominalRate = rate;
         states.lastEventTime = time;
         
         // copy post-event-states

@@ -27,7 +27,7 @@ import org.actus.functions.clm.STF_IP_CLM;
 import org.actus.functions.pam.POF_IPCI_PAM;
 import org.actus.functions.pam.STF_IPCI_PAM;
 import org.actus.functions.pam.POF_RR_PAM;
-import org.actus.functions.pam.STF_RR_PAM;
+import org.actus.functions.clm.STF_RR_CLM;
 import org.actus.functions.pam.POF_FP_PAM;
 import org.actus.functions.pam.STF_FP_PAM;
 import org.actus.functions.pam.POF_CD_PAM;
@@ -217,7 +217,7 @@ public final class CallMoney {
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), maturity,
                     model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
-                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention")));
+                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_CLM(), model.getAs("BusinessDayConvention")));
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
