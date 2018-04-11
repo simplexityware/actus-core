@@ -269,6 +269,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","000");
+        map.put("ScalingIndexAtStatusDate","100");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // define analysis times
@@ -300,6 +301,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","I00");
+        map.put("ScalingIndexAtStatusDate","100");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // define analysis times
@@ -331,6 +333,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // define analysis times
@@ -363,6 +366,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
         map.put("CycleOfScalingIndex","1Q-");
+        map.put("ScalingIndexAtStatusDate","100");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // define analysis times
@@ -396,6 +400,7 @@ public class LinearAmortizerTest {
         map.put("ScalingEffect","IN0");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfScalingIndex","2016-06-01T00:00:00");
+        map.put("ScalingIndexAtStatusDate","100");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // define analysis times
@@ -427,6 +432,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","A");
@@ -463,6 +469,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
         map.put("CycleOfScalingIndex","1Q-");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
@@ -498,6 +505,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
         map.put("CycleOfScalingIndex","1Q-");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
@@ -534,6 +542,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         map.put("CycleOfScalingIndex","1Q-");
@@ -570,6 +579,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         map.put("CycleOfOptionality","1Q-");
@@ -611,6 +621,7 @@ public class LinearAmortizerTest {
         map.put("FeeRate","0.01");
         map.put("CycleOfOptionality","1Q-");
         map.put("CycleOfScalingIndex","1Q-");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","O");
@@ -645,6 +656,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         map.put("CycleOfOptionality","1Q-");
@@ -684,6 +696,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         map.put("CycleOfOptionality","1Q-");
@@ -723,6 +736,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         map.put("CycleOfOptionality","1Q-");
@@ -761,6 +775,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         map.put("CycleOfOptionality","1Q-");
@@ -800,6 +815,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         map.put("CycleOfOptionality","1Q-");
@@ -840,6 +856,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         map.put("CycleOfOptionality","1Q-");
@@ -881,6 +898,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
         map.put("CycleOfOptionality","1Q-");
@@ -917,13 +935,15 @@ public class LinearAmortizerTest {
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
         map.put("CycleOfPrincipalRedemption", "1Q-");
-        map.put("NextPrincipalRedemptionPayment", "100.0");
+        map.put("NextPrincipalRedemptionPayment", "500.0");
         map.put("NotionalPrincipal", "1000.0");
         map.put("NominalInterestRate","0.01");
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfScalingIndex","1Q-");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("InterestPaymentCalculationBase","NTL");
@@ -941,7 +961,6 @@ public class LinearAmortizerTest {
         MarketModel riskFactors = new MarketModel();
         // lifecycle LAM contract
         ArrayList<ContractEvent> events = LinearAmortizer.lifecycle(analysisTimes,model,riskFactors);
-        //System.out.println(events);
     }
 
     @Test
@@ -964,6 +983,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
@@ -1005,6 +1025,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
@@ -1038,6 +1059,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
@@ -1071,6 +1093,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
@@ -1104,6 +1127,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
@@ -1137,6 +1161,7 @@ public class LinearAmortizerTest {
         map.put("CycleOfInterestPayment","1M-");
         map.put("CycleOfRateReset","1Q-");
         map.put("ScalingEffect","IN0");
+        map.put("ScalingIndexAtStatusDate","100");
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
