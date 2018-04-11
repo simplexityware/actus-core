@@ -328,9 +328,12 @@ public final class Annuity {
     // determine maturity of the contract
     private static LocalDateTime maturity(ContractModelProvider model) {
         // determine maturity of the contract
-        LocalDateTime maturity = model.getAs("MaturityDate");
-        if (CommonUtils.isNull(maturity)) {
-            if(CommonUtils.isNull(model.getAs("CycleOfRateReset")) || CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals("NT")) {
+        LocalDateTime maturity = null;
+        if(!CommonUtils.isNull(model.getAs("MaturityDate"))) {
+            maturity = model.getAs("MaturityDate");
+        } else if(!CommonUtils.isNull(model.getAs("AmortizationDate"))) {
+            maturity = model.getAs("AmortizationDate");
+        } else if(CommonUtils.isNull(model.getAs("CycleOfRateReset")) || CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals("NT")) {
                 LocalDateTime lastEvent;
                 if(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").isBefore(model.getAs("StatusDate"))) {
                     Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"),model.getAs("StatusDate"),
@@ -344,9 +347,8 @@ public final class Annuity {
                 Period cyclePeriod = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
                 double coupon = model.<Double>getAs("NotionalPrincipal")*model.<Double>getAs("NominalInterestRate")*model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(model.getAs("CycleAnchorDateOfPrincipalRedemption"), model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").plus(cyclePeriod));
                 maturity = lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/(model.<Double>getAs("NextPrincipalRedemptionPayment")-coupon))));
-            } else {
+        } else {
                 maturity = model.<LocalDateTime>getAs("InitialExchangeDate").plus(Constants.MAX_LIFETIME);
-            }
         }
         return maturity;
     }
