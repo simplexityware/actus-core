@@ -352,7 +352,8 @@ public final class Annuity {
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-
+	states.nominalScalingMultiplier = 1;
+        states.interestScalingMultiplier = 1;
         // TODO: some attributes can be null
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
@@ -361,8 +362,6 @@ public final class Annuity {
             states.nominalRate = model.getAs("NominalInterestRate");
             states.nominalAccrued = model.getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
-            states.nominalScalingMultiplier = 1;
-            states.interestScalingMultiplier = 1;
             states.interestCalculationBase = states.contractRoleSign * ( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
         
