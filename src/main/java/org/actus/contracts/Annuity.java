@@ -9,6 +9,8 @@ import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
+import org.actus.functions.nam.POF_PR_NAM;
+import org.actus.functions.nam.STF_PR_NAM;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
