@@ -25,7 +25,7 @@ public final class STF_IP_PAM implements StateTransitionFunction {
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued = 0.0;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-        states.lastEventTime = time;
+        states.lastEventTime = timeAdjuster.shiftCalcTime(time);
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
