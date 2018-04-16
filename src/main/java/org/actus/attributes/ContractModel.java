@@ -14,9 +14,11 @@ import org.actus.AttributeConversionException;
 import org.actus.ContractTypeUnknownException;
 import org.actus.util.StringUtils;
 import org.actus.util.CommonUtils;
+import org.actus.contracts.ContractType;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 import java.time.LocalDateTime;
 
 /**
@@ -55,7 +57,7 @@ public class ContractModel implements ContractModelProvider {
      * of attributes using ACTUS attribute names (in long form) and data types of values
      * as per official ACTUS data dictionary.
      * 
-     * @param attribute a java map of attributes as per ACTUS data dictionary
+     * @param attributes a java map of attributes as per ACTUS data dictionary
      * 
      * @return an instance of ContractModel containing the attributes provided with the method argument
      */
@@ -67,7 +69,7 @@ public class ContractModel implements ContractModelProvider {
     /**
      * Parse the attributes from external String-representation to internal, attribute-specific data types
      * <p>
-     * For the {@link ContratType} indicated in attribute "ContractType" the method goes through the list
+     * For the {@link ContractType} indicated in attribute "ContractType" the method goes through the list
      * of supported attributes and tries to parse these to their respective data type as indicated in the 
      * ACTUS data dictionary ({@linktourl http://www.projectactus.org/projectactus/?page_id=356}). 
      * <p>
@@ -479,7 +481,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("DeliverySettlement",attributes.get("DeliverySettlement"));            
                                 
              break;
-               
+             
             default:
                 throw new ContractTypeUnknownException();
         }
@@ -489,7 +491,77 @@ public class ContractModel implements ContractModelProvider {
         
         return new ContractModel(map);
     }
-    
+
+    /**
+     * Parse the attributes of combined contracts
+     * <p>
+     * For the {@link ContractType} indicated in attribute "ContractType" the method goes through the list
+     * of supported attributes and tries to parse these to their respective data type as indicated in the 
+     * ACTUS data dictionary ({@linktourl http://www.projectactus.org/projectactus/?page_id=356}). 
+     * <p>
+     * For all attributes mandatory to a certain "ContractType" the method expects a not-{@code null} return value
+     * of method {@code get} of the {@code Map<String,String>} method parameter. For non-mandatory attributes, a
+     * {@code null} return value is allowed and treated as that the attribute is not specified. Some attributes may
+     * be mandatory conditional to the value of other attributes. Be referred to the ACTUS data dictionary
+     * for details.
+     *
+     * @param parent an external, raw (String) data representation of the set of parent attributes
+     *
+     * @param child a list of raw (String) data representations of the child attributes
+     *
+     * @return an instance of ContractModel containing the attributes provided with the method argument
+     *
+     * @throws AttributeConversionException if an attribute cannot be parsed to its data type
+     */
+    public static ContractModel parse(Map<String,String> parent, List<Map<String,String>> child) {
+        HashMap<String,Object> map = new HashMap<>();
+        
+        // parse all attributes known to the respective contract type
+        try{
+            switch(parent.get("ContractType")) {
+
+                case StringUtils.ContractType_SWAPS:
+
+                    // parse parent (Swap) attributes
+                    HashMap<String,Object> parentMap = new HashMap<>();
+                    parentMap.put("StatusDate",LocalDateTime.parse(parent.get("StatusDate")));
+                    parentMap.put("ContractRole",parent.get("ContractRole"));
+                    parentMap.put("LegalEntityIDCounterparty",parent.get("LegalEntityIDCounterparty"));
+                    parentMap.put("Currency",parent.get("Currency"));
+                    parentMap.put("PurchaseDate",(CommonUtils.isNull(parent.get("PurchaseDate")))? null : LocalDateTime.parse(parent.get("PurchaseDate")));
+                    parentMap.put("PriceAtPurchaseDate",(CommonUtils.isNull(parent.get("PriceAtPurchaseDate")))? 0.0 : Double.parseDouble(parent.get("PriceAtPurchaseDate")));
+                    parentMap.put("TerminationDate",(CommonUtils.isNull(parent.get("TerminationDate")))? null : LocalDateTime.parse(parent.get("TerminationDate")));
+                    parentMap.put("PriceAtTerminationDate",(CommonUtils.isNull(parent.get("PriceAtTerminationDate")))? 0.0 : Double.parseDouble(parent.get("PriceAtTerminationDate")));
+                    parentMap.put("DeliverySettlement",parent.get("DeliverySettlement"));
+                    map.put("Parent", new ContractModel(parentMap));
+
+                    // parse child attributes
+                    Map<String,String> child1 = (child.get(0).get("ContractID").contains("_C1"))? child.get(0) : child.get(1);
+                    Map<String,String> child2 = (child.get(0).get("ContractID").contains("_C2"))? child.get(0) : child.get(1);
+                    
+                    // define child contract roles
+                    if(parent.get("ContractRole").equals("RFL")) {
+                        child1.put("ContractRole","RPA");
+                        child2.put("ContractRole","RPL");
+                    } else {
+                        child1.put("ContractRole","RPL");
+                        child2.put("ContractRole","RPA");
+                    }
+                    map.put("Child1",ContractModel.parse(child1));
+                    map.put("Child2",ContractModel.parse(child2));
+                    
+                    break;
+
+                default:
+                    throw new ContractTypeUnknownException();
+            }
+        } catch(Exception e) {
+            throw new AttributeConversionException();
+        }
+
+        return new ContractModel(map);
+    }
+                    
     @Override 
     public <T> T getAs(String name) {
         return (T) attributes.get(name);

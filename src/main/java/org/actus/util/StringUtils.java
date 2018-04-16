@@ -25,6 +25,7 @@ public final class StringUtils {
     public final static String ContractType_COM = "COM";
     public final static String ContractType_FXOUT = "FXOUT";
     public final static String ContractType_SWPPV = "SWPPV";
+    public final static String ContractType_SWAPS = "SWAPS";
     
     // cycle stubs
     public final static char LongStub = '+';
@@ -77,8 +78,8 @@ public final class StringUtils {
     public final static String ContractRole_RPL = "RPL";
     
     // settlement types
-    public final static char Settlement_Physical = 'D';
-    public final static char Settlement_Cash = 'S';
+    public final static String Settlement_Physical = "D";
+    public final static String Settlement_Cash = "S";
 
     // transaction-type events
     public final static Set<String> TransactionalEvents = Stream.of(
