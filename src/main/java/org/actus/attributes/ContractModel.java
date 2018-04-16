@@ -496,14 +496,14 @@ public class ContractModel implements ContractModelProvider {
      * Parse the attributes of combined contracts
      * <p>
      * For the {@link ContractType} indicated in attribute "ContractType" the method goes through the list
-     * of supported attributes and tries to parse these to their respective data type as indicated in the 
-     * ACTUS data dictionary ({@linktourl http://www.projectactus.org/projectactus/?page_id=356}). 
+     * of supported attributes on the parent and (various) child level(s) and tries to parse these to their
+     * respective data type as indicated in the ACTUS data dictionary
+     * ({@linktourl http://www.projectactus.org/projectactus/?page_id=356}).
      * <p>
-     * For all attributes mandatory to a certain "ContractType" the method expects a not-{@code null} return value
-     * of method {@code get} of the {@code Map<String,String>} method parameter. For non-mandatory attributes, a
-     * {@code null} return value is allowed and treated as that the attribute is not specified. Some attributes may
-     * be mandatory conditional to the value of other attributes. Be referred to the ACTUS data dictionary
-     * for details.
+     * Parse for combined contracts, in essence, does the same as the respective method for basic contracts
+     * but in addition parses also the child attributes provided in the same {@link ContractModelProvider}.
+     * Thereby, the attributes of the child contracts are expected to come as a list of maps where each map
+     * holds the attributes for a specific child.
      *
      * @param parent an external, raw (String) data representation of the set of parent attributes
      *
