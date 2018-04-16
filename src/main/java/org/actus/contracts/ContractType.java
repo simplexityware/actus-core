@@ -84,6 +84,8 @@ public final class ContractType {
                     return ForeignExchangeOutright.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_SWPPV:
                     return PlainVanillaInterestRateSwap.lifecycle(analysisTimes,model,riskFactorModel);
+                case StringUtils.ContractType_SWAPS:
+                    return Swap.lifecycle(analysisTimes,model,riskFactorModel);
                 default:
                     throw new ContractTypeUnknownException();
             }
@@ -150,6 +152,8 @@ public final class ContractType {
                 return ForeignExchangeOutright.payoff(analysisTimes,model,riskFactorModel);
             case StringUtils.ContractType_SWPPV:
                 return PlainVanillaInterestRateSwap.payoff(analysisTimes,model,riskFactorModel);
+            case StringUtils.ContractType_SWAPS:
+                return Swap.payoff(analysisTimes,model,riskFactorModel);
             default:
                 throw new ContractTypeUnknownException();
         }
@@ -199,6 +203,8 @@ public final class ContractType {
                 return ForeignExchangeOutright.schedule(model);
             case StringUtils.ContractType_SWPPV:
                 return PlainVanillaInterestRateSwap.schedule(model);
+            case StringUtils.ContractType_SWAPS:
+                return Swap.schedule(model);
             default:
                 throw new ContractTypeUnknownException();
         }
@@ -255,6 +261,8 @@ public final class ContractType {
                 return ForeignExchangeOutright.next(n,model);
             case StringUtils.ContractType_SWPPV:
                 return PlainVanillaInterestRateSwap.next(n,model);
+            case StringUtils.ContractType_SWAPS:
+                return Swap.next(n,model);
             default:
                 throw new ContractTypeUnknownException();
         }
@@ -313,6 +321,8 @@ public final class ContractType {
                 return ForeignExchangeOutright.next(within,model);
             case StringUtils.ContractType_SWPPV:
                 return PlainVanillaInterestRateSwap.next(within,model);
+            case StringUtils.ContractType_SWAPS:
+                return Swap.next(within,model);
             default:
                 throw new ContractTypeUnknownException();
         }
