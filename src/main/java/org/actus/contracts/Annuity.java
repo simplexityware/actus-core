@@ -25,6 +25,7 @@ import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.pam.POF_IED_PAM;
 import org.actus.functions.lam.STF_IED_LAM;
+import org.actus.functions.pam.POF_PR_PAM;
 import org.actus.functions.lam.POF_PR_LAM;
 import org.actus.functions.lam.STF_PR_LAM;
 import org.actus.functions.lam.POF_PRD_LAM;
@@ -220,7 +221,7 @@ public final class Annuity {
                 StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_NAM(), new STF_PR_NAM(), model.getAs("BusinessDayConvention")));
 	// additional PR and IP events at maturity (if defined)
         if (!CommonUtils.isNull(model.getAs("MaturityDate"))) {
-            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),new POF_PR_NAM(), stf));
+            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),new POF_PR_PAM(), stf));
             events.add(EventFactory.createEvent(maturity,StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         }
         // purchase
