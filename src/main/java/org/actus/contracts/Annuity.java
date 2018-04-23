@@ -372,7 +372,7 @@ public final class Annuity {
         
         // init next principal redemption payment amount (can be null for ANN!)
         if(CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))) {
-            states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(states.nominalValue, states.nominalAccrued, states.nominalRate, model.getAs("DayCountConvention"), model);
+            states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model.<Double>getAs("NotionalPrincipal"), states.nominalAccrued, model.<Double>getAs("NominalInterestRate"), model.getAs("DayCountConvention"), model);
         } else {
             states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
         }
