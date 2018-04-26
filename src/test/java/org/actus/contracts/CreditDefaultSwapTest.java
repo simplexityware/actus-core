@@ -54,7 +54,7 @@ public class CreditDefaultSwapTest {
         map.put("InitialExchangeDate", "2016-01-02T00:00:00");
         map.put("MaturityDate", "2017-01-01T00:00:00");
         map.put("NotionalPrincipal", "1000.0");
-        map.put("Quantity", "1");
+        map.put("CycleOfFee","1Q-");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // define analysis times
@@ -81,7 +81,7 @@ public class CreditDefaultSwapTest {
         map.put("MaturityDate", "2017-01-01T00:00:00");
         map.put("NotionalPrincipal", "1000.0");
         map.put("NominalInterestRate","0.01");
-        map.put("Quantity", "1");
+        map.put("CycleOfFee","1Q-");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
         // define analysis times

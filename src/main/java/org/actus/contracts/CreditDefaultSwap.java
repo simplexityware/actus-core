@@ -14,6 +14,7 @@ import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.util.CommonUtils;
+import org.actus.util.CycleUtils;
 import org.actus.util.StringUtils;
 
 import org.actus.functions.cdswp.POF_AD_CDSWP;
@@ -51,7 +52,6 @@ import java.util.stream.Collectors;
  * @see <a href="http://www.projectactus.org/"></a>
  */
 public final class CreditDefaultSwap {
-
 
     // forward projection of the entire lifecycle of the contract
     public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
@@ -221,9 +221,6 @@ public final class CreditDefaultSwap {
             events.add(EventFactory.createEvent(model.getAs("MaturityDate"), StringUtils.EventType_MD, model.getAs("Currency"), new POF_MD_CDSWP(), new STF_MD_CDSWP()));
         }
 
-        // EXD
-        // TODO
-
         // settlement date
         if (!CommonUtils.isNull(model.getAs("ExchangeDate"))) {
             if (CommonUtils.isNull(model.getAs("SettlementDate"))) {
@@ -241,16 +238,38 @@ public final class CreditDefaultSwap {
 
         // fee payment 2
         if ( !((CommonUtils.isNull(model.getAs("CycleOfFee"))) || (model.<String>getAs("FeeBasis").equals("A"))) ) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),
-                          model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
-                          StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP2_CDSWP(), new STF_FP2_CDSWP(), model.getAs("BusinessDayConvention")));
-        }
 
+            if ( !(CommonUtils.isNull(model.getAs("CycleAnchorDateOfFee"))) ){
+                 events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),
+                               model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
+                               StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP2_CDSWP(), new STF_FP2_CDSWP(), model.getAs("BusinessDayConvention")));
+            }
+            else {
+                LocalDateTime Tstrt = model.getAs("InitialExchangeDate");
+                Tstrt.plus(CycleUtils.parsePeriod(model.getAs("CycleOfFee")));
+
+                events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(
+                              Tstrt, model.getAs("MaturityDate"),
+                              model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
+                              StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP2_CDSWP(), new STF_FP2_CDSWP(), model.getAs("BusinessDayConvention")));
+            }
+        }
         // fee payment 3
         if ( !((CommonUtils.isNull(model.getAs("CycleOfFee"))) || (model.<String>getAs("FeeBasis").equals("N"))) ) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),
-                          model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
-                          StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP3_CDSWP(), new STF_FP3_CDSWP(), model.getAs("BusinessDayConvention")));
+
+            if ( !(CommonUtils.isNull(model.getAs("CycleAnchorDateOfFee"))) ){
+                events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),
+                              model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
+                              StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP3_CDSWP(), new STF_FP3_CDSWP(), model.getAs("BusinessDayConvention")));
+            }
+            else {
+                LocalDateTime Tstrt = model.getAs("InitialExchangeDate");
+                Tstrt.plus(CycleUtils.parsePeriod(model.getAs("CycleOfFee")));
+
+                events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),
+                              model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
+                              StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP3_CDSWP(), new STF_FP3_CDSWP(), model.getAs("BusinessDayConvention")));
+            }
         }
 
         // interest payment related
@@ -258,9 +277,20 @@ public final class CreditDefaultSwap {
 
             // rate reset (if specified)
             if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
-                events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                        model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                        StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_CDSWP(), new STF_RR_CDSWP(), model.getAs("BusinessDayConvention")));
+
+                if (!CommonUtils.isNull(model.getAs("CycleAnchorDateOfRateReset"))) {
+
+                    events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
+                                  model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"), false),
+                                  StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_CDSWP(), new STF_RR_CDSWP(), model.getAs("BusinessDayConvention")));
+                } else {
+                    LocalDateTime Tstrt = model.getAs("InitialExchangeDate");
+                    Tstrt.plus(CycleUtils.parsePeriod(model.getAs("CycleOfFee")));
+
+                    events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),
+                                  model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
+                                  StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP3_CDSWP(), new STF_FP3_CDSWP(), model.getAs("BusinessDayConvention")));
+                }
             }
         }
 
@@ -278,10 +308,20 @@ public final class CreditDefaultSwap {
 
 
         // add counterparty default risk-factor contingent events
-        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
+        if (riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
             events.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
                     StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_CDSWP(), new STF_CD_CDSWP()));
         }
+
+
+        // execution date
+        // TODO: EXD
+        //if ( !(RF(RefLEI) == {} or t(RF(RefLEI)) > MD) ) {
+        //if (riskFactorModel.keys().contains(model.getAs("RefLEI????"))) {
+        //    single event at t(RF(RefLEI))
+        //events.add(EventFactory.createEvent(model.getAs("RefLEI????"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_EXD_CDSWP(), new STF_EXD_CDSWP()));
+        //}
+
 
         // remove all pre-status date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
@@ -300,11 +340,11 @@ public final class CreditDefaultSwap {
 
         // Value
         if (!CommonUtils.isNull(model.getAs("NotionalPrincipal"))){
-            states.nominalValue = model.<Integer>getAs("Quantity") * model.<Double>getAs("NotionalPrincipal");
+            states.nominalValue = model.<Double>getAs("NotionalPrincipal");
         }
         /*
         else {
-            states.nominalValue = model.<Integer>getAs("Quantity") * // TODO: SU(Nvl per SD ....)
+            states.nominalValue = // TODO: SU(Nvl per SD ....)
         }
         */
 
@@ -314,7 +354,7 @@ public final class CreditDefaultSwap {
         } else if (model.<String>getAs("FeeBasis").equals("N")) {
             states.nominalRate = model.<Double>getAs("FeeRate");
         } else {
-            states.nominalRate = model.<Double>getAs("FeeRate") * model.<Integer>getAs("Quantity");
+            states.nominalRate = model.<Double>getAs("FeeRate");
         }
 
         // Accrued

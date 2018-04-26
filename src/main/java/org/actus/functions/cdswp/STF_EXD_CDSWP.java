@@ -26,7 +26,7 @@ public final class STF_EXD_CDSWP implements StateTransitionFunction {
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalValue = 0.0;
         states.nominalAccrued = 0.0;
-        //states.payoffAtSettlement = (1 - states.RR) * states.nominalValue * states.nominalAccrued; // TODO: Find out what RR is
+        //states.payoffAtSettlement = (1 - states.RRTE) * states.nominalValue + states.nominalAccrued; // TODO: Find out what RR is
         states.lastEventTime = time;
         
         // copy post-event-states

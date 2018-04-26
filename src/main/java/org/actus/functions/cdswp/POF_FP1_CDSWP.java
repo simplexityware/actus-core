@@ -21,7 +21,6 @@ public final class POF_FP1_CDSWP implements PayOffFunction {
     public double eval(LocalDateTime time, StateSpace states, 
                        ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 
-        return (-1) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * (1 - states.probabilityOfDefault)
-                * model.<Integer>getAs("Quantity") * model.<Double>getAs("PremiumDiscountAtIED");
+        return (-1) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * (1 - states.probabilityOfDefault) * model.<Double>getAs("PremiumDiscountAtIED");
     }
 }
