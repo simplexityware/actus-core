@@ -18,36 +18,10 @@ import org.actus.util.Constants;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.util.CycleUtils;
-import org.actus.functions.pam.POF_AD_PAM;
-import org.actus.functions.pam.STF_AD_PAM;
-import org.actus.functions.pam.POF_IED_PAM;
-import org.actus.functions.lam.STF_IED_LAM;
-import org.actus.functions.nam.POF_PR_NAM;
-import org.actus.functions.nam.STF_PR_NAM;
-import org.actus.functions.lam.POF_PRD_LAM;
-import org.actus.functions.lam.STF_PRD_LAM;
-import org.actus.functions.lam.POF_IP_LAM;
-import org.actus.functions.pam.STF_IP_PAM;
-import org.actus.functions.pam.POF_IPCI_PAM;
-import org.actus.functions.lam.STF_IPCI_LAM;
-import org.actus.functions.pam.POF_RR_PAM;
-import org.actus.functions.lam.STF_RR_LAM;
-import org.actus.functions.pam.POF_SC_PAM;
-import org.actus.functions.lam.STF_SC_LAM;
-import org.actus.functions.pam.POF_PP_PAM;
-import org.actus.functions.lam.STF_PP_LAM;
-import org.actus.functions.pam.POF_PY_PAM;
-import org.actus.functions.pam.POF_RRY_PAM;
-import org.actus.functions.lam.STF_PY_LAM;
-import org.actus.functions.lam.STF_RRY_LAM;
-import org.actus.functions.pam.POF_FP_PAM;
-import org.actus.functions.lam.STF_FP_LAM;
-import org.actus.functions.lam.POF_TD_LAM;
-import org.actus.functions.pam.STF_TD_PAM;
-import org.actus.functions.pam.POF_CD_PAM;
-import org.actus.functions.lam.STF_CD_LAM;
-import org.actus.functions.lam.POF_IPCB_LAM;
-import org.actus.functions.lam.STF_IPCB_LAM;
+import org.actus.functions.pam.*;
+import org.actus.functions.lam.*;
+import org.actus.functions.nam.*;
+import org.actus.functions.StateTransitionFunction;
 
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -215,13 +189,17 @@ public final class NegativeAmortizer {
         events.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
         // initial exchange
         events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), StringUtils.EventType_IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_LAM()));
-        // principal redemption
-        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
-                model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
-                StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_NAM(), new STF_PR_NAM(), model.getAs("BusinessDayConvention")));
-        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
-        		model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention")),
-        		StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
+        // principal redemption schedule
+        Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
+                model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"), false);
+        // -> chose right state transition function depending on ipcb attributes
+        StateTransitionFunction stf=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL"))? new STF_PR_NAM() : new STF_PR2_NAM();
+        // regular principal redemption events
+        events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_PR,
+            model.getAs("Currency"), new POF_PR_NAM(), stf, model.getAs("BusinessDayConvention")));
+        // regular interest payments aligned with principal redemption schedule
+        events.addAll(EventFactory.createEvents(prSchedule,
+                StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
