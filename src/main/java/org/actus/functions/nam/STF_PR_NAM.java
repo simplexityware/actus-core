@@ -26,10 +26,7 @@ public final class STF_PR_NAM implements StateTransitionFunction {
         states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-        states.nominalValue -= principalRedemption - states.nominalAccrued;
-        if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL")) {
-            states.interestCalculationBase = states.nominalValue;    
-        }
+        states.nominalValue -= principalRedemption - Math.max(0, principalRedemption - states.nominalValue);
         states.lastEventTime = time;
         
         // copy post-event-states
