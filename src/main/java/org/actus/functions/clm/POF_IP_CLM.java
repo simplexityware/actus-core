@@ -21,6 +21,6 @@ public final class POF_IP_CLM implements PayOffFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return (1 - states.probabilityOfDefault) * 
         (states.nominalAccrued + 
-        dayCounter.dayCountFraction(states.lastEventTime, time) * states.nominalRate * states.nominalValue);
+        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * states.nominalRate * states.nominalValue);
         }
 }

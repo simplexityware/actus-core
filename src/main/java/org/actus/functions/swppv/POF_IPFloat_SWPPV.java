@@ -21,6 +21,6 @@ public final class POF_IPFloat_SWPPV implements PayOffFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return (1 - states.probabilityOfDefault) *
         (states.nominalAccruedFloat + (-1) *
-        dayCounter.dayCountFraction(states.lastEventTime, time) * states.nominalRate * states.nominalValue);
+        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * states.nominalRate * states.nominalValue);
         }
 }

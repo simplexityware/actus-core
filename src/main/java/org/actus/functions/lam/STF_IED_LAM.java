@@ -23,7 +23,7 @@ public final class STF_IED_LAM implements StateTransitionFunction {
         double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
         states.nominalRate = model.<Double>getAs("NominalInterestRate");
         states.lastEventTime = time;

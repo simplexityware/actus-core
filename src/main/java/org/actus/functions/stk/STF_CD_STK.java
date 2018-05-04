@@ -22,7 +22,7 @@ public final class STF_CD_STK implements StateTransitionFunction {
         double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.probabilityOfDefault = riskFactorModel.stateAt(model.getAs("LegalEntityIDCounterparty"),time,states,model);
         states.lastEventTime = time;
         

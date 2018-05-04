@@ -24,10 +24,10 @@ public final class POF_PY_PAM implements PayOffFunction {
             return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("PenaltyRate");
         } else if(model.getAs("PenaltyType").equals("N")) {
             return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) *
-                dayCounter.dayCountFraction(states.lastEventTime, time) * model.<Double>getAs("PenaltyRate") * states.nominalValue;
+                dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * model.<Double>getAs("PenaltyRate") * states.nominalValue;
         } else {
             return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) *
-                dayCounter.dayCountFraction(states.lastEventTime, time) * states.nominalValue * 
+                dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * states.nominalValue * 
                 Math.max(0, states.nominalRate - riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time,states,model));    
         }
     }
