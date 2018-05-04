@@ -22,6 +22,6 @@ public final class POF_IP_LAM implements PayOffFunction {
         return (1 - states.probabilityOfDefault) * 
         states.interestScalingMultiplier *
         (states.nominalAccrued + 
-        dayCounter.dayCountFraction(states.lastEventTime, time) * states.nominalRate * states.interestCalculationBase);
+        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * states.nominalRate * states.interestCalculationBase);
         }
 }

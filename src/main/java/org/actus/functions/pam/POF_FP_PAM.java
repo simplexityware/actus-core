@@ -25,7 +25,7 @@ public final class POF_FP_PAM implements PayOffFunction {
         } else { 
             return (1 - states.probabilityOfDefault) * 
                 (states.feeAccrued + 
-                    dayCounter.dayCountFraction(states.lastEventTime, time) * model.<Double>getAs("FeeRate") * states.nominalValue);
+                    dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * model.<Double>getAs("FeeRate") * states.nominalValue);
         }
     }
 }

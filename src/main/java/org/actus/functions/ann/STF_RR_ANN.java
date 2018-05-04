@@ -35,7 +35,7 @@ public final class STF_RR_ANN implements StateTransitionFunction {
         rate = Math.min(Math.max(rate,model.getAs("LifeFloor")),model.getAs("LifeCap"));
 
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.nominalRate = rate;
