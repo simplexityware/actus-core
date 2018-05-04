@@ -210,7 +210,7 @@ public final class NegativeAmortizer {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
         }
         // interest payment related
-        if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment"))) {
+        if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment"))) {
             // raw interest payment events
             Set<ContractEvent> interestEvents =
                     EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
@@ -240,6 +240,10 @@ public final class NegativeAmortizer {
                 interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
+        }else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
+            // if no extra interest schedule set but capitalization end date, add single IPCI event
+            events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IPCI,
+                    model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_LAM(), model.getAs("BusinessDayConvention")));
         }
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {

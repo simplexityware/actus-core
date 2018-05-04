@@ -15,6 +15,7 @@ import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
+import org.actus.functions.lam.STF_IPCI_LAM;
 import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.pam.POF_IED_PAM;
@@ -214,7 +215,7 @@ public final class PrincipalAtMaturity {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_PAM(), new STF_PRD_PAM()));
         }
         // interest payment related
-        if (!CommonUtils.isNull(model.getAs("NominalInterestRate"))) {
+        if (!CommonUtils.isNull(model.getAs("NominalInterestRate")) && (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")))) {
             // raw interest payment events
             Set<ContractEvent> interestEvents =
                                                         EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
@@ -243,12 +244,17 @@ public final class PrincipalAtMaturity {
                 interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
-            // rate reset (if specified)
-            if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {            
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                                                                                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                                                 StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention")));
-            }
+            
+        }else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
+            // if no extra interest schedule set but capitalization end date, add single IPCI event
+            events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IPCI,
+                    model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_LAM(), model.getAs("BusinessDayConvention")));
+        }
+        // rate reset (if specified)
+        if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {            
+        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
+                                                                            model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
+                                             StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention")));
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) { 
