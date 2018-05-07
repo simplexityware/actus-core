@@ -21,6 +21,7 @@ import org.actus.util.CycleUtils;
 import org.actus.functions.pam.*;
 import org.actus.functions.lam.*;
 import org.actus.functions.nam.*;
+import org.actus.functions.PayOffFunction;
 import org.actus.functions.StateTransitionFunction;
 
 import java.time.LocalDateTime;
@@ -200,11 +201,10 @@ public final class NegativeAmortizer {
         // regular interest payments aligned with principal redemption schedule
         events.addAll(EventFactory.createEvents(prSchedule,
                 StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
-      	// additional PR and IP events at maturity (if defined)
-        if (!CommonUtils.isNull(model.getAs("MaturityDate"))) {
-            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),new POF_PR_PAM(), stf));
+        // -> chose right Payoff function depending on maturity
+        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_PR_PAM():new POF_PR_NAM());
+            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention")));
             events.add(EventFactory.createEvent(maturity,StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
-        }
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
