@@ -13,6 +13,7 @@ import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
+import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 import org.actus.util.StringUtils;
@@ -338,6 +339,15 @@ public final class CreditDefaultSwap {
         states.probabilityOfDefault = 0.0;
         states.payoffAtSettlement = 0.0;
 
+        // init day count calculator
+        DayCountCalculator dayCounter = new DayCountCalculator("A/AISDA", null);
+
+        Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFeePayment"),model.getAs("StatusDate"),
+                model.getAs("CycleOfFeePayment"), model.getAs("EndOfMonthConvention"),false);
+        final Comparator<LocalDateTime> comp = (t1, t2) -> t1.compareTo(t2);
+        LocalDateTime lastEvent = previousEvents.stream().max(comp).get();
+
+
         // Value
         if (!CommonUtils.isNull(model.getAs("NotionalPrincipal"))){
             states.nominalValue = model.<Double>getAs("NotionalPrincipal");
@@ -363,13 +373,14 @@ public final class CreditDefaultSwap {
         } else if (!CommonUtils.isNull(model.getAs("FeeAccrued"))) {
             states.nominalAccrued = model.getAs("FeeAccrued");
         }
-        /*
+
         else if (model.<String>getAs("FeeBasis").equals("N")) {
-            states.nominalAccrued = ; // TODO:
-        } else {
-            states.nominalAccrued = ; // TODO:
+            states.nominalAccrued = dayCounter.dayCountFraction(lastEvent, model.getAs("StatusDate")) * states.nominalValue * states.nominalRate;
         }
-        */
+        else {
+            states.nominalAccrued = (dayCounter.dayCountFraction(lastEvent, model.getAs("StatusDate")) / dayCounter.dayCountFraction(lastEvent.plus(CycleUtils.parsePeriod(model.getAs("CycleOfFee"))), lastEvent) )* states.nominalRate;
+        }
+
 
         states.lastEventTime = model.getAs("StatusDate");
 
