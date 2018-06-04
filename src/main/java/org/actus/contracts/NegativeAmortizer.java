@@ -216,11 +216,8 @@ public final class NegativeAmortizer {
                     EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                             model.getAs("CycleAnchorDateOfPrincipalRedemption"),
                             model.getAs("CycleOfInterestPayment"),
-                            model.getAs("EndOfMonthConvention")),
+                            model.getAs("EndOfMonthConvention"),false),
                             StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention"));
-            // remove last event that falls exactly on cycle anchor date of principal redemption
-            interestEvents.remove(EventFactory.createEvent(model.getAs("CycleAnchorDateOfPrincipalRedemption"), StringUtils.EventType_IP,
-                    model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("BusinessDayConvention")));
             // adapt if interest capitalization set
             if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
                 // for all events with time <= IPCED && type == "IP" do
