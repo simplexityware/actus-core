@@ -14,6 +14,7 @@ import org.actus.functions.nam.STF_PR_NAM;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.util.Constants;
@@ -361,7 +362,10 @@ public final class Annuity {
         
         // init next principal redemption payment amount (can be null for ANN!)
         if(CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))) {
-            states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model.<Double>getAs("NotionalPrincipal"), states.nominalAccrued, model.<Double>getAs("NominalInterestRate"), model.getAs("DayCountConvention"), model);
+        	DayCountCalculator dayCounter = model.getAs("DayCountConvention");
+        	BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
+        	double accrued = model.<Double>getAs("NotionalPrincipal") * model.<Double>getAs("NominalInterestRate") *  dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("InitialExchangeDate")),timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption")));
+        	states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model.<Double>getAs("NotionalPrincipal"), accrued, model.<Double>getAs("NominalInterestRate"), model.getAs("DayCountConvention"), model);
         } else {
             states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
         }
