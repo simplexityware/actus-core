@@ -364,7 +364,8 @@ public final class Annuity {
         if(CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))) {
         	DayCountCalculator dayCounter = model.getAs("DayCountConvention");
         	BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
-        	double accrued = model.<Double>getAs("NotionalPrincipal") * model.<Double>getAs("NominalInterestRate") *  dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("InitialExchangeDate")),timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption")));
+        	LocalDateTime lastEvent = model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").minus(CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption")));
+        	double accrued = model.<Double>getAs("NotionalPrincipal") * model.<Double>getAs("NominalInterestRate") *  dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(lastEvent),timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption")));
         	states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model.<Double>getAs("NotionalPrincipal"), accrued, model.<Double>getAs("NominalInterestRate"), model.getAs("DayCountConvention"), model);
         } else {
             states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
