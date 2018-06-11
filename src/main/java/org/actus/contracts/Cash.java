@@ -82,7 +82,7 @@ public final class Cash {
         Collections.sort(payoff);
 
         // evaluate events
-        payoff.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
+        payoff.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, new BusinessDayAdjuster(null, null)));
 
         // return all evaluated post-StatusDate events as the payoff
         return payoff;
