@@ -17,10 +17,12 @@ import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
+import org.actus.conventions.endofmonth.EndOfMonthAdjuster;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.util.CycleUtils;
 
+import java.io.EOFException;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
@@ -316,6 +318,7 @@ public final class LinearAmortizer {
     }
 
     private static LocalDateTime maturity(ContractModelProvider model) {
+    	EndOfMonthAdjuster adjuster = null;
         // determine maturity of the contract
         LocalDateTime maturity = model.getAs("MaturityDate");
         if (CommonUtils.isNull(maturity)) {
@@ -330,7 +333,8 @@ public final class LinearAmortizer {
                 lastEvent = model.getAs("CycleAnchorDateOfPrincipalRedemption");
             }
             Period cyclePeriod = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
-            maturity = lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/model.<Double>getAs("NextPrincipalRedemptionPayment"))-1));
+            adjuster = new EndOfMonthAdjuster(model.getAs("EndOfMonthConvention"), lastEvent, cyclePeriod);
+            maturity = adjuster.shift(lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/model.<Double>getAs("NextPrincipalRedemptionPayment"))-1)));
         }
         return maturity;
     }
