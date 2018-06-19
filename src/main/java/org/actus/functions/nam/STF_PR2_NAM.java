@@ -22,11 +22,13 @@ public final class STF_PR2_NAM implements StateTransitionFunction {
 		double[] postEventStates = new double[8];
 		double principalRedemption = states.nextPrincipalRedemptionPayment - states.nominalAccrued
 				- states.timeFromLastEvent * states.nominalRate * states.interestCalculationBase;
+		principalRedemption = states.contractRoleSign * principalRedemption - Math.max(0, states.contractRoleSign * principalRedemption - states.contractRoleSign * states.nominalValue);
+		
 		// update state space
 		states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
 		states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
 		states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-		states.nominalValue -= principalRedemption - Math.max(0, principalRedemption - states.nominalValue);
+		states.nominalValue -= states.contractRoleSign * principalRedemption;
 		states.interestCalculationBase = states.nominalValue;
 		states.lastEventTime = time;
 
