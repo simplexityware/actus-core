@@ -17,8 +17,6 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.util.StringUtils;
 import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
-import org.actus.functions.csh.POF_PR_CSH;
-import org.actus.functions.csh.STF_PR_CSH;
 
 
 import java.time.LocalDateTime;
@@ -44,13 +42,12 @@ public final class Cash {
         // compute events
         ArrayList<ContractEvent> lifecycle = new ArrayList<ContractEvent>();
         lifecycle.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-        lifecycle.add(EventFactory.createEvent(Collections.min(analysisTimes).plusSeconds(1), StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_CSH(), new STF_PR_CSH()));
         
         // initialize state space per status date
         StateSpace states = new StateSpace();
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
-        states.nominalValue = model.getAs("NotionalPrincipal");
+        states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
         
         // sort the events in the lifecycle-list according to their time of occurence
         Collections.sort(lifecycle);
