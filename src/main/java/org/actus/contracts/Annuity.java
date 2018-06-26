@@ -236,7 +236,6 @@ public final class Annuity {
                 // also, remove any IP event exactly at IPCED and replace with an IPCI event
                 interestEvents.remove(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IP,
                         model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("BusinessDayConvention")));
-                interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
         } else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
