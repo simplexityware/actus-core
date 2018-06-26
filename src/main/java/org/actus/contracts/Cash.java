@@ -11,6 +11,7 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.util.StringUtils;
@@ -82,7 +83,7 @@ public final class Cash {
         Collections.sort(payoff);
 
         // evaluate events
-        payoff.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
+        payoff.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, new BusinessDayAdjuster(null, null)));
 
         // return all evaluated post-StatusDate events as the payoff
         return payoff;
