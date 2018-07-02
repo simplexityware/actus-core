@@ -210,7 +210,7 @@ public final class Annuity {
             events.add(EventFactory.createEvent(maturity,StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_ANN()));
         }
         // interest payment related
         if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment"))) {
@@ -344,10 +344,22 @@ public final class Annuity {
         }
         return maturity;
     }
+    
+    // Get Annuity Payment Calculation Date 
+    private static LocalDateTime PRDateForAnnuity(ContractModelProvider model) {
+    	LocalDateTime prDate = model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").minus(CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption")));
+		if (prDate.isBefore(model.<LocalDateTime>getAs("InitialExchangeDate"))) {
+			prDate = model.<LocalDateTime>getAs("InitialExchangeDate");
+		}
+		if (prDate.isBefore(model.getAs("StatusDate"))) {
+			prDate = model.getAs("StatusDate");
+		}
+		return prDate;
+    }
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-	states.nominalScalingMultiplier = 1;
+        states.nominalScalingMultiplier = 1;
         states.interestScalingMultiplier = 1;
         // TODO: some attributes can be null
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
@@ -364,8 +376,7 @@ public final class Annuity {
         if(CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))) {
         	DayCountCalculator dayCounter = model.getAs("DayCountConvention");
         	BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
-        	LocalDateTime lastEvent = model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").minus(CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption")));
-        	double accrued = model.<Double>getAs("NotionalPrincipal") * model.<Double>getAs("NominalInterestRate") *  dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(lastEvent),timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption")));
+        	double accrued = model.<Double>getAs("NotionalPrincipal") * model.<Double>getAs("NominalInterestRate") *  dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(PRDateForAnnuity(model)),timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption")));
         	states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model.<Double>getAs("NotionalPrincipal"), accrued, model.<Double>getAs("NominalInterestRate"), model.getAs("DayCountConvention"), model);
         } else {
             states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
