@@ -249,9 +249,14 @@ public final class Annuity {
         }
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), maturity,
+        	Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), maturity,
                     model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_ANN(), model.getAs("BusinessDayConvention")));
+                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_ANN(), model.getAs("BusinessDayConvention"));
+        	
+        	if(model.<Double>getAs("NextResetRate")!=0) 
+        	rateResetEvents.stream().sorted().
+        	filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get().fStateTrans(new STF_RRY_ANN());
+        	events.addAll(rateResetEvents);
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
