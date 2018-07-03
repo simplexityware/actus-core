@@ -24,7 +24,7 @@ public final class POF_IP_NAM implements PayOffFunction {
         // Note: for NAM, interest accrued in excess to PRNXT is capitalized
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         double accrued = states.nominalAccrued + states.interestCalculationBase * states.timeFromLastEvent * states.nominalRate;
-        double capitalization = states.contractRoleSign * Math.max(0,Math.abs(accrued-states.nextPrincipalRedemptionPayment));
+        double capitalization = states.contractRoleSign * Math.max(0,Math.abs(accrued)-Math.abs(states.nextPrincipalRedemptionPayment));
         double interest = accrued - capitalization;
 
         // return interest payoff
