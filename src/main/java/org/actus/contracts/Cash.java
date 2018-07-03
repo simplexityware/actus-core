@@ -53,7 +53,7 @@ public final class Cash {
         Collections.sort(lifecycle);
 
         // evaluate events
-        lifecycle.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
+        lifecycle.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, new BusinessDayAdjuster(null, null)));
         
         // return all evaluated post-StatusDate events as the lifecycle
         return lifecycle;
