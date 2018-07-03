@@ -344,43 +344,25 @@ public final class Annuity {
         }
         return maturity;
     }
-    
-    // Get Annuity Payment Calculation Date 
-    private static LocalDateTime PRDateForAnnuity(ContractModelProvider model) {
-    	LocalDateTime prDate = model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").minus(CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption")));
-		if (prDate.isBefore(model.<LocalDateTime>getAs("InitialExchangeDate"))) {
-			prDate = model.<LocalDateTime>getAs("InitialExchangeDate");
-		}
-		if (prDate.isBefore(model.getAs("StatusDate"))) {
-			prDate = model.getAs("StatusDate");
-		}
-		return prDate;
-    }
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
         states.nominalScalingMultiplier = 1;
         states.interestScalingMultiplier = 1;
-        // TODO: some attributes can be null
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
             states.nominalValue = model.getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
+            // TODO: IPAC can be NULL
             states.nominalAccrued = model.getAs("AccruedInterest");
+            // TODO: FEAC can be NULL
             states.feeAccrued = model.getAs("FeeAccrued");
             states.interestCalculationBase = states.contractRoleSign * ( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
         
         // init next principal redemption payment amount (can be null for ANN!)
-        if(CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))) {
-        	DayCountCalculator dayCounter = model.getAs("DayCountConvention");
-        	BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
-        	double accrued = model.<Double>getAs("NotionalPrincipal") * model.<Double>getAs("NominalInterestRate") *  dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(PRDateForAnnuity(model)),timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption")));
-        	states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model.<Double>getAs("NotionalPrincipal"), accrued, model.<Double>getAs("NominalInterestRate"), model.getAs("DayCountConvention"), model);
-        } else {
-            states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
-        }
+        states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model, model.getAs("NotionalPrincipal"), states.nominalAccrued, model.getAs("NominalInterestRate"));
         
         // return the initialized state space
         return states;
