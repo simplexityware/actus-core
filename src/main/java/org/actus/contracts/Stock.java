@@ -46,7 +46,7 @@ public final class Stock {
                                                      RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
 
         // init day count calculator
-        DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", model.getAs("Calendar"));
+        DayCountCalculator dayCount = new DayCountCalculator("30E/360", model.getAs("Calendar"));
 
         // compute non-contingent events
         ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
@@ -82,7 +82,7 @@ public final class Stock {
     // compute the contract schedule
     public static ArrayList<ContractEvent> schedule(ContractModelProvider model) throws AttributeConversionException {
         // init day count calculator
-        DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", model.getAs("Calendar"));
+        DayCountCalculator dayCount = new DayCountCalculator("30E/360", model.getAs("Calendar"));
 
         // compute non-contingent events
         ArrayList<ContractEvent> events = initEvents(new HashSet<LocalDateTime>(),model);
@@ -117,7 +117,7 @@ public final class Stock {
         times.add(model.getAs("StatusDate"));
 
         // init day count calculator
-        DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", model.getAs("Calendar"));
+        DayCountCalculator dayCount = new DayCountCalculator("30E/360", model.getAs("Calendar"));
 
         // compute non-contingent events
         ArrayList<ContractEvent> events = initEvents(times,model);
@@ -156,7 +156,7 @@ public final class Stock {
         times.add(from);
 
         // init day count calculator
-        DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", model.getAs("Calendar"));
+        DayCountCalculator dayCount = new DayCountCalculator("30E/360", model.getAs("Calendar"));
 
         // compute non-contingent events
         ArrayList<ContractEvent> events = initEvents(times,model);
