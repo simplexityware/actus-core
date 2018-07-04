@@ -200,7 +200,7 @@ public final class Stock {
         if (!CommonUtils.isNull(model.getAs("CycleOfDividendPayment"))) {
             if(CommonUtils.isNull(model.getAs("TerminationDate"))) {
                 events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfDividendPayment"),
-                        model.<LocalDateTime>getAs("CycleAnchorDateOfDividendPayment").plus(Constants.MAX_LIFETIME),
+                        model.<LocalDateTime>getAs("CycleAnchorDateOfDividendPayment").plus(Constants.MAX_LIFETIME_STK),
                         model.getAs("CycleOfDividendPayment"),
                         model.getAs("EndOfMonthConvention")),
                         StringUtils.EventType_DV, model.getAs("Currency"), new POF_DV_STK(), new STF_DV_STK(), model.getAs("BusinessDayConvention")));
