@@ -22,6 +22,6 @@ public final class POF_DV_STK implements PayOffFunction {
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return (1 - states.probabilityOfDefault) * states.contractRoleSign * model.<Double>getAs("MarketValueObserved") *
             riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfDividendRate"), time, states, model) * 
-            dayCounter.dayCountFraction(time.minus(CycleUtils.parsePeriod(model.getAs("CycleOfDividendPayment"))), time);
+            dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(time).minus(CycleUtils.parsePeriod(model.getAs("CycleOfDividendPayment"))), timeAdjuster.shiftCalcTime(time));
     }
 }
