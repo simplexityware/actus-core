@@ -27,7 +27,6 @@ public final class STF_IPCI_LAM implements StateTransitionFunction {
         states.nominalAccrued = 0.0;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.lastEventTime = time;
-	 states.interestCalculationBase = states.nominalValue;
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
