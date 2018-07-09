@@ -20,7 +20,7 @@ public final class POF_PR_NAM implements PayOffFunction {
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         double redemption =  states.nextPrincipalRedemptionPayment - states.nominalAccrued - states.timeFromLastEvent * states.nominalRate * states.interestCalculationBase;
-    	redemption =  states.contractRoleSign * redemption - Math.max(0, states.contractRoleSign * redemption - states.contractRoleSign * states.nominalValue); 
-        return (1 - states.probabilityOfDefault) * states.nominalScalingMultiplier * states.contractRoleSign * redemption;
+    	redemption =  redemption - states.contractRoleSign * Math.max(0, Math.abs(redemption) - Math.abs(states.nominalValue)); 
+        return (1 - states.probabilityOfDefault) * states.nominalScalingMultiplier * redemption;
         }
 }
