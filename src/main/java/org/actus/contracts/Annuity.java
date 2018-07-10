@@ -254,7 +254,7 @@ public final class Annuity {
                     model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_ANN(), model.getAs("BusinessDayConvention"));
         	
-        	if(model.<Double>getAs("NextResetRate")!=0) 
+        	if(!CommonUtils.isNull(model.getAs("NextResetRate"))) 
         	rateResetEvents.stream().sorted().
         	filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get().fStateTrans(new STF_RRY_ANN());
         	events.addAll(rateResetEvents);

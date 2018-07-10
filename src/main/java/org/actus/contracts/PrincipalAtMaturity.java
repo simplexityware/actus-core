@@ -15,36 +15,8 @@ import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
-import org.actus.functions.lam.STF_IPCI_LAM;
-import org.actus.functions.pam.POF_AD_PAM;
-import org.actus.functions.pam.STF_AD_PAM;
-import org.actus.functions.pam.POF_IED_PAM;
-import org.actus.functions.pam.STF_IED_PAM;
-import org.actus.functions.pam.POF_PR_PAM;
-import org.actus.functions.pam.STF_PR_PAM;
-import org.actus.functions.pam.POF_PRD_PAM;
-import org.actus.functions.pam.STF_PRD_PAM;
-import org.actus.functions.pam.POF_IP_PAM;
-import org.actus.functions.pam.STF_IP_PAM;
-import org.actus.functions.pam.POF_IPCI_PAM;
-import org.actus.functions.pam.STF_IPCI_PAM;
-import org.actus.functions.pam.POF_RR_PAM;
-import org.actus.functions.pam.STF_RR_PAM;
-import org.actus.functions.pam.POF_SC_PAM;
-import org.actus.functions.pam.STF_SC_PAM;
-import org.actus.functions.pam.POF_PP_PAM;
-import org.actus.functions.pam.STF_PP_PAM;
-import org.actus.functions.pam.POF_PY_PAM;
-import org.actus.functions.pam.STF_PY_PAM;
-import org.actus.functions.pam.POF_FP_PAM;
-import org.actus.functions.pam.STF_FP_PAM;
-import org.actus.functions.pam.POF_TD_PAM;
-import org.actus.functions.pam.STF_TD_PAM;
-import org.actus.functions.pam.POF_CD_PAM;
-import org.actus.functions.pam.STF_CD_PAM;
+import org.actus.functions.pam.*;
 
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
@@ -248,13 +220,18 @@ public final class PrincipalAtMaturity {
         }else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
             // if no extra interest schedule set but capitalization end date, add single IPCI event
             events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IPCI,
-                    model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_LAM(), model.getAs("BusinessDayConvention")));
+                    model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_PAM(), model.getAs("BusinessDayConvention")));
         }
         // rate reset (if specified)
-        if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {            
-        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                                                                            model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                                             StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention")));
+        if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
+        	Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
+                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
+                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention"));
+        	
+        	if(!CommonUtils.isNull(model.getAs("NextResetRate"))) 
+        	rateResetEvents.stream().sorted().
+        	filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get().fStateTrans(new STF_RRY_PAM());
+        	events.addAll(rateResetEvents);
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) { 
