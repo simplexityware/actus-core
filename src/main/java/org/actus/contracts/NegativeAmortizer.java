@@ -245,18 +245,14 @@ public final class NegativeAmortizer {
         }
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), maturity,
+        	Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), maturity,
                     model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_LAM(), model.getAs("BusinessDayConvention")));
-         // If NextRateReset is set
-             if (model.<Double>getAs("NextResetRate")!=0) {
-                 events.forEach(e->{
-                      if(e.type().equals(StringUtils.EventType_RR) && e.time().equals(model.getAs("CycleAnchorDateOfRateReset"))) {
-                    	  e.fPayOff(new POF_RRY_PAM());
-                    	  e.fStateTrans(new STF_RRY_LAM());
-                      }
-                 });
-             }
+                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_LAM(), model.getAs("BusinessDayConvention"));
+        	
+        	if(!CommonUtils.isNull(model.getAs("NextResetRate"))) 
+        	rateResetEvents.stream().sorted().
+        	filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get().fStateTrans(new STF_RRY_LAM());
+        	events.addAll(rateResetEvents);
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
