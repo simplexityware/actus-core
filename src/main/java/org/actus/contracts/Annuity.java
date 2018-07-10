@@ -213,7 +213,7 @@ public final class Annuity {
             events.add(EventFactory.createEvent(maturity,StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_ANN()));
         }
         // interest payment related
         if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment"))) {
@@ -354,25 +354,22 @@ public final class Annuity {
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-	states.nominalScalingMultiplier = 1;
+        states.nominalScalingMultiplier = 1;
         states.interestScalingMultiplier = 1;
-        // TODO: some attributes can be null
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
             states.nominalValue = model.getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
+            // TODO: IPAC can be NULL
             states.nominalAccrued = model.getAs("AccruedInterest");
+            // TODO: FEAC can be NULL
             states.feeAccrued = model.getAs("FeeAccrued");
             states.interestCalculationBase = states.contractRoleSign * ( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
         
         // init next principal redemption payment amount (can be null for ANN!)
-        if(CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))) {
-            states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model.<Double>getAs("NotionalPrincipal"), states.nominalAccrued, model.<Double>getAs("NominalInterestRate"), model.getAs("DayCountConvention"), model);
-        } else {
-            states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
-        }
+        states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model, model.getAs("NotionalPrincipal"), states.nominalAccrued, model.getAs("NominalInterestRate"));
         
         // return the initialized state space
         return states;

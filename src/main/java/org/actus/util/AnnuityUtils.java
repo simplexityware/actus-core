@@ -26,38 +26,53 @@ public class AnnuityUtils {
 	/**
 	 * Calculate the NextPrincipalRedemption amount
 	 * <p>
-	 * @param outstandingNotional
-	 *            the outstanding notional value
-	 * @param accruedInterest
-	 *            current balance of accrued interest
-	 * @param interestRate
-	 *            the nominal interest rate valid at this date
-	 * @param dayCounter
-	 *            the day counter used for interest calculation
 	 * @param model
 	 *            the model carrying the contract attributes
+	 * @param accruedInterest
+	 * 	 *            current (as per StatusDate) balance of accrued interest
 	 * @return the annuity payment amount
 	 */
-	public static double annuityPayment(double outstandingNotional,
-			double accruedInterest, double interestRate,
-			DayCountCalculator dayCounter, ContractModelProvider model) {
-		LocalDateTime maturity = null;
-		if(!CommonUtils.isNull(model.getAs("MaturityDate"))) {
-			maturity = model.getAs("MaturityDate");
-		} else if(!CommonUtils.isNull(model.getAs("AmortizationDate"))) {
-			maturity = model.getAs("AmortizationDate");
+	public static double annuityPayment(ContractModelProvider model, double outstandingNotional, double accruedInterest, double interestRate) {
+
+		// extract PRNXT from model
+		Double annuityPayment = model.<Double>getAs("NextPrincipalRedemptionPayment");
+
+		// if PRNXT not defined, then calculate
+		if(CommonUtils.isNull(annuityPayment)) {
+
+			LocalDateTime statusDate = model.getAs("StatusDate");
+
+			// determine maturity
+			// note, if PRNXT=NULL then either MD or AMD has to be set
+			LocalDateTime maturity = model.getAs("MaturityDate");
+			if (CommonUtils.isNull(maturity)) {
+				maturity = model.getAs("AmortizationDate");
+			}
+
+			// extract day count convention
+			DayCountCalculator dayCounter = model.getAs("DayCountConvention");
+
+			// determine remaining PR schedule
+			Set<LocalDateTime> eventTimes = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity, model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"));
+			eventTimes.removeIf(d -> d.isBefore(statusDate));
+			eventTimes.remove(statusDate);
+			LocalDateTime[] eventTimesSorted = eventTimes.toArray(new LocalDateTime[eventTimes.size()]);
+			Arrays.sort(eventTimesSorted);
+
+			// determine accrued interest as per next PR event date
+			accruedInterest += outstandingNotional * interestRate * dayCounter.dayCountFraction(statusDate,eventTimesSorted[0]);
+
+			// compute annuityPayment
+			int lb = 1;
+			int ub = eventTimesSorted.length;
+			double scale = Math.abs(outstandingNotional + accruedInterest); // for CNTRL=RPL this is negative
+			double sum = sum(lb, ub, eventTimesSorted, interestRate, dayCounter);
+			double frac = product(lb, ub, eventTimesSorted, interestRate, dayCounter) / (1 + sum);
+			annuityPayment = scale*frac;
 		}
-		Set<LocalDateTime> eventTimes = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"),maturity,model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"));
-        eventTimes.removeIf( d -> d.isBefore(model.getAs("StatusDate")) );
-        eventTimes.remove(model.getAs("StatusDate"));
-        LocalDateTime[] eventTimesSorted = eventTimes.toArray(new LocalDateTime[eventTimes.size()]);
-        Arrays.sort(eventTimesSorted);
-		int lb = 1;
-		int ub = eventTimesSorted.length;
-		double scale = (outstandingNotional + accruedInterest);
-		double sum = sum(lb, ub, eventTimesSorted, interestRate, dayCounter);
-		double frac = product(lb, ub, eventTimesSorted, interestRate, dayCounter) / (1 + sum);
-		return scale * frac;
+
+		// finally, return the annuity payment
+		return annuityPayment;
 	}
 
 	// private method
