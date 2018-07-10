@@ -13,5 +13,6 @@ import java.time.Period;
 public class Constants {
     
     public static final Period MAX_LIFETIME = Period.ofYears(50);
+    public static final Period MAX_LIFETIME_STK = Period.ofYears(10);
     
 }

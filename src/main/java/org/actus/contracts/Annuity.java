@@ -201,8 +201,11 @@ public final class Annuity {
         events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_PR,
             model.getAs("Currency"), new POF_PR_NAM(), stf, model.getAs("BusinessDayConvention")));
         // regular interest payments aligned with principal redemption schedule
-        events.addAll(EventFactory.createEvents(prSchedule,
-                StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention")));
+        events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention")));
+        // generate an IP at PRANX-1PRCL if IPANX is not defined
+        LocalDateTime ipanx = model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").minus(CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption")));
+        if(CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) && ipanx.isAfter(model.getAs("InitialExchangeDate")))
+        	events.add(EventFactory.createEvent(ipanx,StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         // -> chose right Payoff function depending on maturity
         PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_PR_PAM():new POF_PR_NAM());
             events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention")));
@@ -236,7 +239,6 @@ public final class Annuity {
                 // also, remove any IP event exactly at IPCED and replace with an IPCI event
                 interestEvents.remove(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IP,
                         model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("BusinessDayConvention")));
-                interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
         } else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
@@ -246,9 +248,14 @@ public final class Annuity {
         }
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), maturity,
+        	Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), maturity,
                     model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_ANN(), model.getAs("BusinessDayConvention")));
+                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_ANN(), model.getAs("BusinessDayConvention"));
+        	
+        	if(model.<Double>getAs("NextResetRate")!=0) 
+        	rateResetEvents.stream().sorted().
+        	filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get().fStateTrans(new STF_RRY_ANN());
+        	events.addAll(rateResetEvents);
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
