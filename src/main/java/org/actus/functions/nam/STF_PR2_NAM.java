@@ -20,8 +20,7 @@ public final class STF_PR2_NAM implements StateTransitionFunction {
 	public double[] eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		double[] postEventStates = new double[8];
-		double principalRedemption = states.nextPrincipalRedemptionPayment - states.nominalAccrued
-				- states.timeFromLastEvent * states.nominalRate * states.interestCalculationBase;
+		double principalRedemption =  states.nextPrincipalRedemptionPayment - states.lastInterestPayment;
 		principalRedemption = principalRedemption - states.contractRoleSign * Math.max(0, Math.abs(principalRedemption) - Math.abs(states.nominalValue));
 		
 		// update state space

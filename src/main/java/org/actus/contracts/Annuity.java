@@ -201,8 +201,7 @@ public final class Annuity {
         events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_PR,
             model.getAs("Currency"), new POF_PR_NAM(), stf, model.getAs("BusinessDayConvention")));
         // regular interest payments aligned with principal redemption schedule
-        events.addAll(EventFactory.createEvents(prSchedule,
-                StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
+        events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention")));
         // generate an IP at PRANX-1PRCL if IPANX is not defined
         LocalDateTime ipanx = model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").minus(CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption")));
         if(CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) && ipanx.isAfter(model.getAs("InitialExchangeDate")))
@@ -210,7 +209,7 @@ public final class Annuity {
         // -> chose right Payoff function depending on maturity
         PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_PR_PAM():new POF_PR_NAM());
             events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention")));
-            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
+            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_ANN()));
@@ -225,7 +224,7 @@ public final class Annuity {
                             model.getAs("CycleAnchorDateOfPrincipalRedemption"),
                             model.getAs("CycleOfInterestPayment"),
                             model.getAs("EndOfMonthConvention"),false),
-                            StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention"));
+                            StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention"));
             // adapt if interest capitalization set
             if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
                 // for all events with time <= IPCED && type == "IP" do
