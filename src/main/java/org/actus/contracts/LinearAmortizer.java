@@ -204,6 +204,8 @@ public final class LinearAmortizer {
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
         }
+        // -> chose right state transition function for IPCI depending on ipcb attributes
+        StateTransitionFunction stf_ipci=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL"))? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
         // interest payment related
         if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment"))) {
             // raw interest payment events
@@ -218,12 +220,12 @@ public final class LinearAmortizer {
                 // for all events with time <= IPCED && type == "IP" do
                 // change type to IPCI and payoff/state-trans functions
                 ContractEvent capitalizationEnd = EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IPCI,
-                                                                            model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_LAM(), model.getAs("BusinessDayConvention"));
+                                                                            model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci, model.getAs("BusinessDayConvention"));
                 interestEvents.forEach(e -> {
                     if (e.type().equals(StringUtils.EventType_IP) && e.compareTo(capitalizationEnd) == -1) {
                         e.type(StringUtils.EventType_IPCI);
                         e.fPayOff(new POF_IPCI_PAM());
-                        e.fStateTrans(new STF_IPCI_LAM());
+                        e.fStateTrans(stf_ipci);
                     }
                 });
                 // also, remove any IP event exactly at IPCED and replace with an IPCI event
@@ -234,7 +236,7 @@ public final class LinearAmortizer {
         }else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
             // if no extra interest schedule set but capitalization end date, add single IPCI event
             events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IPCI,
-                    model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_LAM(), model.getAs("BusinessDayConvention")));
+                    model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci, model.getAs("BusinessDayConvention")));
         }
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {            
