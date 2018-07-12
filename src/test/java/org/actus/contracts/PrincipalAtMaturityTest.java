@@ -7,6 +7,11 @@ package org.actus.contracts;
 
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
+import org.actus.events.EventFactory;
+import org.actus.functions.pam.POF_AD_PAM;
+import org.actus.functions.pam.POF_IP_PAM;
+import org.actus.functions.pam.STF_AD_PAM;
+import org.actus.functions.pam.STF_IP_PAM;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
@@ -19,6 +24,8 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+import org.actus.time.ScheduleFactory;
+import org.actus.util.StringUtils;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -857,4 +864,100 @@ public class PrincipalAtMaturityTest {
         ArrayList<ContractEvent> events = PrincipalAtMaturity.schedule(model);
         //System.out.println(events);
     }
+
+
+    @Test
+    public void test_PAM_apply_AE_preIED() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-01-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // create six analysis (monitoring) events
+        Set<ContractEvent> events = EventFactory.createEvents(
+                ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
+                StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM());
+        // apply events
+        StateSpace postStates = PrincipalAtMaturity.apply(events,model);
+        System.out.print(
+                "Last applied event: " + postStates.lastEventTime + "\n" +
+                        "Post events nominal value: " + postStates.nominalValue + "\n" +
+                        "Post events nominal rate: " + postStates.nominalRate + "\n" +
+                        "Post events nominal accrued: " + postStates.nominalAccrued);
+
+    }
+
+    @Test
+    public void test_PAM_apply_AE_postIED() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-02-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // create six analysis (monitoring) events
+        Set<ContractEvent> events = EventFactory.createEvents(
+                ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
+                StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM());
+        // apply events
+        StateSpace postStates = PrincipalAtMaturity.apply(events,model);
+        System.out.print(
+                "Last applied event: " + postStates.lastEventTime + "\n" +
+                        "Post events nominal value: " + postStates.nominalValue + "\n" +
+                        "Post events nominal rate: " + postStates.nominalRate + "\n" +
+                        "Post events nominal accrued: " + postStates.nominalAccrued);
+
+    }
+
+    @Test
+    public void test_PAM_apply_IP() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "PAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-02-01T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("CycleOfInterestPayment","1M-");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // create six interest payment events according to the contract schedule
+        Set<ContractEvent> events = EventFactory.createEvents(
+                ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),model.getAs("CycleOfInterestPayment"),"SD"),
+                StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_PAM(), new STF_IP_PAM());
+        // apply events
+        StateSpace postStates = PrincipalAtMaturity.apply(events,model);
+        System.out.print(
+                "Last applied event: " + postStates.lastEventTime + "\n" +
+                        "Post events nominal value: " + postStates.nominalValue + "\n" +
+                        "Post events nominal rate: " + postStates.nominalRate + "\n" +
+                        "Post events nominal accrued: " + postStates.nominalAccrued);
+
+    }
+
 }

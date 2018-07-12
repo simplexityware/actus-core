@@ -10,6 +10,7 @@ import org.actus.AttributeConversionException;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.events.ContractEvent;
+import org.actus.states.StateSpace;
 import org.actus.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -323,6 +324,60 @@ public final class ContractType {
                 return PlainVanillaInterestRateSwap.next(within,model);
             case StringUtils.ContractType_SWAPS:
                 return Swap.next(within,model);
+            default:
+                throw new ContractTypeUnknownException();
+        }
+    }
+
+    /**
+     * Applies a Set of contract events to the current state of the contract
+     * <p>
+     *     The {@code Set} of {@link ContractEvent}s is applied to the current contract
+     *     state (i.e. as per attribute {@code StatusDate} in the {@link org.actus.attributes.ContractModel})
+     *     in timely sequence of the provided events. The {@link StateSpace} carrying the
+     *     contract's post-events state is returned.
+     * </p>
+     * <p>
+     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
+     *     throws a {@link ContractTypeUnknownException}.
+     * </p>
+     * <p>
+     *     Note, this method is not yet available for Contract Type {@link Swap} and
+     *     throws a {@link ContractTypeUnknownException} if attempted to be evaluated for the same.
+     * </p>
+     *
+     * @param events a Set of contract events that should be applied in time sequence
+     * @param model the model carrying the contract attributes
+     * @return the post-events contract StateSpace
+     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
+     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
+     *
+     */
+    public static StateSpace apply(Set<ContractEvent> events,
+                                   ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
+        switch((String) model.getAs("ContractType")) {
+            case StringUtils.ContractType_PAM:
+                return PrincipalAtMaturity.apply(events,model);
+            case StringUtils.ContractType_LAM:
+                return LinearAmortizer.apply(events,model);
+            case StringUtils.ContractType_NAM:
+                return NegativeAmortizer.apply(events,model);
+            case StringUtils.ContractType_ANN:
+                return Annuity.apply(events,model);
+            case StringUtils.ContractType_CLM:
+                return CallMoney.apply(events,model);
+            case StringUtils.ContractType_CSH:
+                return Cash.apply(events,model);
+            case StringUtils.ContractType_STK:
+                return Stock.apply(events,model);
+            case StringUtils.ContractType_COM:
+                return Commodity.apply(events,model);
+            case StringUtils.ContractType_FXOUT:
+                return ForeignExchangeOutright.apply(events,model);
+            case StringUtils.ContractType_SWPPV:
+                return PlainVanillaInterestRateSwap.apply(events,model);
+            case StringUtils.ContractType_SWAPS:
+                // TODO: implement (see also Swap class)
             default:
                 throw new ContractTypeUnknownException();
         }

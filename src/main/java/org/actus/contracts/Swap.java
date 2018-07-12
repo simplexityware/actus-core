@@ -276,6 +276,17 @@ public final class Swap {
         return events;
     }
 
+    // apply a set of events to the current state of a contract and return the post events state
+    /*public static StateSpace apply(Set<ContractEvent> events,
+                                   ContractModelProvider model) throws AttributeConversionException {
+
+        // TODO: needs to be implemented
+        //       -> note, in SWAPS CT, events operate on child CTs, not on parent
+
+        // return post events states
+        return states;
+    }*/
+
     // private method that allows creating a "netting" event from two events to be netted
     private static ContractEvent nettingEvent(ContractEvent e1, ContractEvent e2) {
         ContractEvent netting = EventFactory.createEvent(e1.time(), e1.type(), e1.currency(), new POF_NET_SWAPS(e1,e2), new STF_NET_SWAPS(e1,e2));
