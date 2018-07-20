@@ -6,6 +6,7 @@
 package org.actus.externals;
 
 import org.actus.attributes.ContractModelProvider;
+import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -45,16 +46,25 @@ public abstract interface RiskFactorModelProvider {
    * @param id identifier of the risk factor
    * @return set of risk factor event times
    */
+  @Deprecated
   public Set<LocalDateTime> times(String id);
+
+  /**
+   * Returns the set of event times for a particular risk factor
+   *
+   * @param attributes the attributes of the contract evaluating the events
+   * @return set of non-scheduled (contingent) contract events
+   */
+  public Set<ContractEvent> events(ContractModelProvider attributes);
   
   /**
    * Returns the state of a particular risk factor at a future time
    * 
    * @param id identifier of the risk factor
    * @param time future time for which to return the risk factor's state
-   * @param contractStates the inner states of the contract as per @code{time} argument of the method
-   * @param contractAttributes the attributes of the contract calling the method
+   * @param states the inner states of the contract as per @code{time} argument of the method
+   * @param attributes the attributes of the contract evaluating the risk factor state
    * @return double the state of the risk factor
    */
-  public double stateAt(String id, LocalDateTime time, StateSpace contractStates, ContractModelProvider contractAttributes);
+  public double stateAt(String id, LocalDateTime time, StateSpace states, ContractModelProvider attributes);
 }
