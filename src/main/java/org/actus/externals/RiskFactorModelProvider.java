@@ -9,6 +9,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -52,10 +53,14 @@ public abstract interface RiskFactorModelProvider {
   /**
    * Returns the set of event times for a particular risk factor
    *
+   * The default implementation returns an empty set of events.
+   *
    * @param attributes the attributes of the contract evaluating the events
    * @return set of non-scheduled (contingent) contract events
    */
-  public Set<ContractEvent> events(ContractModelProvider attributes);
+  default public Set<ContractEvent> events(ContractModelProvider attributes) {
+    return new HashSet<ContractEvent>();
+  };
   
   /**
    * Returns the state of a particular risk factor at a future time
