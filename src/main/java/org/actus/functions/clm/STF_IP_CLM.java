@@ -28,6 +28,7 @@ public final class STF_IP_CLM implements StateTransitionFunction {
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
         postEventStates[6] = states.probabilityOfDefault;
+        postEventStates[1] = states.nominalValue;
         
         // return post-event-states
         return postEventStates;
