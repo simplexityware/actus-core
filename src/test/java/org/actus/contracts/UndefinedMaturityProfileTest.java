@@ -36,11 +36,6 @@ public class UndefinedMaturityProfileTest {
             return keys;
         }
         
-        public Set<LocalDateTime> times(String id) {
-            Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-            return times;
-        }
-        
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
             return Math.random();
         }
@@ -51,11 +46,6 @@ public class UndefinedMaturityProfileTest {
         public Set<String> keys() {
             Set<String> keys = new HashSet<String>();
             return keys;
-        }
-
-        public Set<LocalDateTime> times(String id) {
-            Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-            return times;
         }
 
         // here, we create a cashflow replication pattern in form of PR events

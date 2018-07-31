@@ -57,7 +57,7 @@ public final class PlainVanillaInterestRateSwap {
         ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
 
         // compute and add contingent events
-        events.addAll(initContingentEvents(model,riskFactorModel));
+        events.addAll(riskFactorModel.events(model));
 
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
@@ -244,17 +244,6 @@ public final class PlainVanillaInterestRateSwap {
         // remove all pre-status date events
         payoff.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
                 null)) == -1);
-
-        return payoff;
-    }
-
-    // compute (but not evaluate) contingent events
-    private static ArrayList<ContractEvent> initContingentEvents(ContractModelProvider model, RiskFactorModelProvider riskFactorModel) {
-        ArrayList<ContractEvent> payoff = new ArrayList<ContractEvent>();
-        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
-            payoff.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
-                    StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_PAM(), new STF_CD_SWPPV()));
-        }
 
         return payoff;
     }

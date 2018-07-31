@@ -31,11 +31,6 @@ public class ContractTypeTest {
             return keys;
         }
         
-        public Set<LocalDateTime> times(String id) {
-            Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-            return times;
-        }
-        
         public double stateAt(String id, LocalDateTime time,StateSpace states,ContractModelProvider contractAttributes) {
             return 0.0;    
         }

@@ -38,7 +38,7 @@ public final class PrincipalAtMaturity {
         ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
 
         // compute and add contingent events
-        events.addAll(initContingentEvents(analysisTimes,model,riskFactorModel));
+        events.addAll(initContingentEvents(model,riskFactorModel));
 
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
@@ -278,28 +278,20 @@ public final class PrincipalAtMaturity {
         return new ArrayList<ContractEvent>(events);
     }
 
-    private static ArrayList<ContractEvent> initContingentEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
+    // compute (without evaluation) all events of the contract
+    private static ArrayList<ContractEvent> initContingentEvents(ContractModelProvider model, RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
         HashSet<ContractEvent> events = new HashSet<ContractEvent>();
 
         // optionality i.e. prepayment right (if specified)
         if (!(CommonUtils.isNull(model.getAs("CycleOfOptionality")) && CommonUtils.isNull(model.getAs("CycleAnchorDateOfOptionality")))) {
-            Set<LocalDateTime> times;
-            if(!CommonUtils.isNull(model.getAs("CycleOfOptionality"))) {
-                times = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfOptionality"), model.getAs("MaturityDate"),model.getAs("CycleOfOptionality"), model.getAs("EndOfMonthConvention"),true);
-            } else {
-                times = riskFactorModel.times(model.getAs("ObjectCodeOfPrepaymentModel"));
-                times.removeIf(e -> e.compareTo(model.getAs("CycleAnchorDateOfOptionality"))==-1);
-            }
+            Set<LocalDateTime> times = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfOptionality"), model.getAs("MaturityDate"),model.getAs("CycleOfOptionality"), model.getAs("EndOfMonthConvention"));
             events.addAll(EventFactory.createEvents(times,StringUtils.EventType_PP, model.getAs("Currency"), new POF_PP_PAM(), new STF_PP_PAM(), model.getAs("BusinessDayConvention")));
-            if(((char) model.getAs("PenaltyType"))!='O') {
+            if(model.<String>getAs("PenaltyType")!="O") {
                 events.addAll(EventFactory.createEvents(times,StringUtils.EventType_PY, model.getAs("Currency"), new POF_PY_PAM(), new STF_PY_PAM(), model.getAs("BusinessDayConvention")));
             }
         }
-        // add counterparty default risk-factor contingent events
-        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
-            events.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
-                    StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_PAM(), new STF_CD_PAM()));
-        }
+        // compute un-scheduled events
+        events.addAll(riskFactorModel.events(model));
 
         // remove all pre-status date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,

@@ -40,11 +40,6 @@ public class PlainVanillaInterestRateSwapTest {
             return keys;
         }
         
-        public Set<LocalDateTime> times(String id) {
-            Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-            return times;
-        }
-        
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
             return 0.0;    
         }

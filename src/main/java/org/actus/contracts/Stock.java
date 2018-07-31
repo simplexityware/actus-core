@@ -52,7 +52,7 @@ public final class Stock {
         ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
 
         // compute and add contingent events
-        events.addAll(initContingentEvents(analysisTimes,model,riskFactorModel));
+        events.addAll(riskFactorModel.events(model));
 
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
@@ -242,23 +242,6 @@ public final class Stock {
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
                 null)) == -1);
 
-        // return events
-        return new ArrayList<ContractEvent>(events);
-    }
-
-    // compute (but not evaluate) contingent events
-    private static ArrayList<ContractEvent> initContingentEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        HashSet<ContractEvent> events = new HashSet<ContractEvent>();
-
-        // add counterparty default risk-factor contingent events
-        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
-            events.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
-                                             StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_PAM(), new STF_CD_STK()));
-        }
-        // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
-                                                                  null)) == -1);
-        
         // return events
         return new ArrayList<ContractEvent>(events);
     }

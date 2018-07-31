@@ -50,22 +50,22 @@ public final class ForeignExchangeOutright {
         DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", null);
         
         // compute events
-        ArrayList<ContractEvent> lifecycle = initEvents(analysisTimes,model);
+        ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
 
         // compute and add contingent events
-        lifecycle.addAll(initContingentEvents(analysisTimes,model,riskFactorModel));
+        events.addAll(riskFactorModel.events(model));
 
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
 
         // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(lifecycle);
+        Collections.sort(events);
 
         // evaluate events
-        lifecycle.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
+        events.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
         
         // return all evaluated post-StatusDate events as the payoff
-        return lifecycle;
+        return events;
     }
 
     // forward projection of the payoff of the contract
@@ -222,22 +222,6 @@ public final class ForeignExchangeOutright {
             events.add(EventFactory.createEvent(settlement, StringUtils.EventType_STD, model.getAs("Currency2"), new POF_STD2_FXOUT(), new STF_STD2_FXOUT(), model.getAs("BusinessDayConvention")));
         } else {
             events.add(EventFactory.createEvent(settlement, StringUtils.EventType_STD, model.getAs("Currency"), new POF_STD_FXOUT(), new STF_STD_FXOUT(), model.getAs("BusinessDayConvention")));
-        }
-        // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
-                null)) == -1);
-
-        // return events
-        return new ArrayList<ContractEvent>(events);
-    }
-
-    // compute (but not evaluate) contingent events
-    private static ArrayList<ContractEvent> initContingentEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        HashSet<ContractEvent> events = new HashSet<ContractEvent>();
-
-        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
-            events.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
-                    StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_PAM(), new STF_CD_FXOUT()));
         }
         // remove all pre-status date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,

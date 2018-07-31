@@ -40,15 +40,6 @@ public abstract interface RiskFactorModelProvider {
    * @return set of unique risk factor IDs
    */
   public Set<String> keys();
-  
-  /**
-   * Returns the set of event times for a particular risk factor
-   * 
-   * @param id identifier of the risk factor
-   * @return set of risk factor event times
-   */
-  @Deprecated
-  public Set<LocalDateTime> times(String id);
 
   /**
    * Returns the set of event times for a particular risk factor
