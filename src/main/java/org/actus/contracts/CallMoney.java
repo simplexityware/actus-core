@@ -228,19 +228,19 @@ public final class CallMoney {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     maturity,
                     model.getAs("CycleOfInterestPayment"),
-                    model.getAs("EndOfMonthConvention")),
+                    model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_IPCI, model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_PAM(), model.getAs("BusinessDayConvention")));
         }
         // rate reset (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), maturity,
-                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
+                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_CLM(), model.getAs("BusinessDayConvention")));
         }
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), maturity,
-                    model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention")),
+                    model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP_PAM(), new STF_FP_PAM(), model.getAs("BusinessDayConvention")));
         }
         // remove all pre-status date events
