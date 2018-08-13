@@ -75,6 +75,8 @@ public final class ContractType {
                     return Annuity.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_CLM: 
                     return CallMoney.lifecycle(analysisTimes,model,riskFactorModel);
+                case StringUtils.ContractType_UMP:
+                    return UndefinedMaturityProfile.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_CSH: 
                     return Cash.lifecycle(analysisTimes,model,riskFactorModel);
                 case StringUtils.ContractType_STK: 
@@ -143,6 +145,8 @@ public final class ContractType {
                 return Annuity.payoff(analysisTimes,model,riskFactorModel);
             case StringUtils.ContractType_CLM:
                 return CallMoney.payoff(analysisTimes,model,riskFactorModel);
+            case StringUtils.ContractType_UMP:
+                return UndefinedMaturityProfile.payoff(analysisTimes,model,riskFactorModel);
             case StringUtils.ContractType_CSH:
                 return Cash.payoff(analysisTimes,model,riskFactorModel);
             case StringUtils.ContractType_STK:
@@ -194,6 +198,8 @@ public final class ContractType {
                 return Annuity.schedule(model);
             case StringUtils.ContractType_CLM:
                 return CallMoney.schedule(model);
+            case StringUtils.ContractType_UMP:
+                return UndefinedMaturityProfile.schedule(model);
             case StringUtils.ContractType_CSH:
                 return Cash.schedule(model);
             case StringUtils.ContractType_STK:
@@ -252,6 +258,8 @@ public final class ContractType {
                 return Annuity.next(n,model);
             case StringUtils.ContractType_CLM:
                 return CallMoney.next(n,model);
+            case StringUtils.ContractType_UMP:
+                return UndefinedMaturityProfile.next(n,model);
             case StringUtils.ContractType_CSH:
                 return Cash.next(n,model);
             case StringUtils.ContractType_STK:
@@ -312,6 +320,8 @@ public final class ContractType {
                 return Annuity.next(within,model);
             case StringUtils.ContractType_CLM:
                 return CallMoney.next(within,model);
+            case StringUtils.ContractType_UMP:
+                return UndefinedMaturityProfile.next(within,model);
             case StringUtils.ContractType_CSH:
                 return Cash.next(within,model);
             case StringUtils.ContractType_STK:
@@ -366,6 +376,8 @@ public final class ContractType {
                 return Annuity.apply(events,model);
             case StringUtils.ContractType_CLM:
                 return CallMoney.apply(events,model);
+            case StringUtils.ContractType_UMP:
+                return UndefinedMaturityProfile.apply(events,model);
             case StringUtils.ContractType_CSH:
                 return Cash.apply(events,model);
             case StringUtils.ContractType_STK:
