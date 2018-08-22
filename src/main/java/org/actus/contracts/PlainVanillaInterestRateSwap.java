@@ -239,7 +239,7 @@ public final class PlainVanillaInterestRateSwap {
 
         // rate reset
         payoff.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
+                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"), false),
                 StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_SWPPV(), model.getAs("BusinessDayConvention")));
         // remove all pre-status date events
         payoff.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
