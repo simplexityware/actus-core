@@ -238,7 +238,7 @@ public final class UndefinedMaturityProfile {
 
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
-        if (model.<LocalDateTime>getAs("StatusDate").isAfter(model.getAs("InitialExchangeDate"))) {
+        if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
             states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
             states.nominalAccrued = model.<Double>getAs("AccruedInterest");
