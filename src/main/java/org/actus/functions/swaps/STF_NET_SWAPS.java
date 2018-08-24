@@ -31,6 +31,7 @@ public final class STF_NET_SWAPS implements StateTransitionFunction {
 
         // net post-event-states
         postEventStates[0] = e1.states()[0];
+        postEventStates[1] = e1.nominalValue() + e2.nominalValue();
         postEventStates[2] = e1.nominalAccrued() + e2.nominalAccrued();
         
         // return post-event-states
