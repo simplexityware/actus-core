@@ -19,6 +19,6 @@ public final class POF_PRD_FXOUT implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return (1 - states.probabilityOfDefault) * states.contractRoleSign * (-1) * model.<Double>getAs("PriceAtPurchaseDate");
+        return (1 - states.probabilityOfDefault) * (-1) * model.<Double>getAs("PriceAtPurchaseDate");
     }
 }
