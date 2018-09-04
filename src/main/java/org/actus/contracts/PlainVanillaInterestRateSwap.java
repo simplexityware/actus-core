@@ -211,10 +211,6 @@ public final class PlainVanillaInterestRateSwap {
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             payoff.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_FXOUT(), new STF_PRD_SWPPV()));
         }
-        // termination
-        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            payoff.add(EventFactory.createEvent(model.getAs("TerminationDate"), StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_SWPPV()));
-        }
         // interest payment events
         if (CommonUtils.isNull(model.getAs("DeliverySettlement")) || model.getAs("DeliverySettlement").equals(StringUtils.Settlement_Physical)) {
             // in case of physical delivery (delivery of individual cash flows)
@@ -241,6 +237,13 @@ public final class PlainVanillaInterestRateSwap {
         payoff.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
                 model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"), false),
                 StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_SWPPV(), model.getAs("BusinessDayConvention")));
+        // termination
+        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
+            ContractEvent termination =
+                                        EventFactory.createEvent(model.getAs("TerminationDate"), StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_SWPPV());
+            payoff.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
+            payoff.add(termination);
+        }
         // remove all pre-status date events
         payoff.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
                 null)) == -1);
