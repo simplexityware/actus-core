@@ -513,7 +513,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? null : Double.parseDouble(attributes.get("NextResetRate")));
                 map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
                 
-                map.put("NominalInterestRate2",(CommonUtils.isNull(attributes.get("NominalInterestRate")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate")));                
+                map.put("NominalInterestRate2",(CommonUtils.isNull(attributes.get("NominalInterestRate2")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate2")));                
                 map.put("MaturityDate",LocalDateTime.parse(attributes.get("MaturityDate")));
                 map.put("DeliverySettlement",attributes.get("DeliverySettlement"));            
                                 

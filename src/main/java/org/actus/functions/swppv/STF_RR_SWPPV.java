@@ -31,7 +31,7 @@ public final class STF_RR_SWPPV implements StateTransitionFunction {
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[1] = states.nominalValue;
+        postEventStates[1] = states.secondaryNominalValue;
         postEventStates[2] = states.nominalAccrued;
         postEventStates[3] = states.nominalRate;
         postEventStates[6] = states.probabilityOfDefault;
