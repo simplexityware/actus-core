@@ -27,6 +27,7 @@ public final class StringUtils {
     public final static String ContractType_FXOUT = "FXOUT";
     public final static String ContractType_SWPPV = "SWPPV";
     public final static String ContractType_SWAPS = "SWAPS";
+    public final static String ContractType_MRGNG = "MRGNG";
     
     // cycle stubs
     public final static char LongStub = '+';
@@ -73,10 +74,15 @@ public final class StringUtils {
     public final static String EventType_IPCB = "IPCB";
     public final static String EventType_DV = "DV";
     public final static String EventType_STD = "STD";
-    
+    public final static String EventType_MR = "MR";
+
     // contract roles
     public final static String ContractRole_RPA = "RPA";
     public final static String ContractRole_RPL = "RPL";
+    public final static String ContractRole_RFL = "RFL";
+    public final static String ContractRole_PFL = "PFL";
+    public final static String ContractRole_LG = "LG";
+    public final static String ContractRole_ST = "ST";
     
     // settlement types
     public final static String Settlement_Physical = "D";

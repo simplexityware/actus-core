@@ -37,11 +37,23 @@ public final class ContractRoleConvention {
         int sign;
         switch(role) {
             case StringUtils.ContractRole_RPA:
-            sign = 1;
-            break;
+                sign = 1;
+                break;
             case StringUtils.ContractRole_RPL:
-            sign = -1;
-            break;
+                sign = -1;
+                break;
+            case StringUtils.ContractRole_RFL:
+                sign = 1;
+                break;
+            case StringUtils.ContractRole_PFL:
+                sign = 1;
+                break;
+            case StringUtils.ContractRole_LG:
+                sign = 1;
+                break;
+            case StringUtils.ContractRole_ST:
+                sign = -1;
+                break;
             default:
                 throw new AttributeConversionException();
         }

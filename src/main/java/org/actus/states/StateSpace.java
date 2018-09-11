@@ -29,7 +29,7 @@ public final class StateSpace {
     public double nextPrincipalRedemptionPayment;
     public double secondaryNominalValue; // analytical result
     public double lastInterestPayment;
-    public double payoffAtSettlement;
+    public double marketValueObserved;
     public double variationMargin; // analytical result
     public double probabilityOfDefault; // analytical result
     public int contractRoleSign;

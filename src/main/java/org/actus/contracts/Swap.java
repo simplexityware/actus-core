@@ -44,8 +44,6 @@ public final class Swap {
     public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
                                                      ContractModelProvider model,
                                                      RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        // extract parent attributes
-        ContractModel parent = model.getAs("Parent");
 
         // compute child 1 and child 2 events
         ArrayList<ContractEvent> child1 = ContractType.lifecycle(analysisTimes,model.getAs("Child1"),riskFactorModel);
@@ -54,8 +52,8 @@ public final class Swap {
         // merge child events
         // apply settlement option, i.e. "delivery" of all events or net "settlement" of events at same time
         ArrayList<ContractEvent> events = null;
-        if(!CommonUtils.isNull(parent.getAs("DeliverySettlement")) &&
-                parent.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
+        if(!CommonUtils.isNull(model.getAs("DeliverySettlement")) &&
+                model.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
             Map<String, ContractEvent> mergedEvents = Stream.concat(child1.stream(), child2.stream())
                     .collect(Collectors.toMap(
                             e -> e.time() + e.type(), // event key for merging
@@ -88,28 +86,28 @@ public final class Swap {
 
         // init state space and day counter
         StateSpace states = new StateSpace();
-        states.lastEventTime = parent.getAs("StatusDate");
+        states.lastEventTime = model.getAs("StatusDate");
         DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", null);
 
         // purchase
-        if (!CommonUtils.isNull(parent.getAs("PurchaseDate"))) {
-            ContractEvent purchase = EventFactory.createEvent(parent.getAs("PurchaseDate"), StringUtils.EventType_PRD, parent.getAs("Currency"), new POF_PRD_SWAPS(), new STF_PRD_STK());
+        if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            ContractEvent purchase = EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_SWAPS(), new STF_PRD_STK());
             events.removeIf(e -> e.compareTo(purchase) == -1); // remove all pre-purchase events
-            purchase.eval(states,parent,riskFactorModel,dayCount,null);
+            purchase.eval(states,model,riskFactorModel,dayCount,null);
             events.add(purchase);
         }
         // termination
-        if (!CommonUtils.isNull(parent.getAs("TerminationDate"))) {
+        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
             ContractEvent termination =
-                    EventFactory.createEvent(parent.getAs("TerminationDate"), StringUtils.EventType_TD, parent.getAs("Currency"), new POF_TD_SWAPS(), new STF_TD_STK());
+                    EventFactory.createEvent(model.getAs("TerminationDate"), StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_SWAPS(), new STF_TD_STK());
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             states.lastEventTime = events.get(events.size()-1).time();
-            termination.eval(states,parent,riskFactorModel,dayCount,null);
+            termination.eval(states,model,riskFactorModel,dayCount,null);
             events.add(termination);
         }
 
         // remove all pre-status date events
-        ContractEvent sdEvent = EventFactory.createEvent(parent.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null);
+        ContractEvent sdEvent = EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null);
         events.removeIf(e -> e.compareTo(sdEvent) == -1);
 
         // return events
@@ -126,9 +124,6 @@ public final class Swap {
     // compute the contract schedule
     public static ArrayList<ContractEvent> schedule(ContractModelProvider model) throws AttributeConversionException {
 
-        // extract parent attributes
-        ContractModel parent = model.getAs("Parent");
-
         // compute child 1 and child 2 events
         ArrayList<ContractEvent> child1 = ContractType.schedule(model.getAs("Child1"));
         ArrayList<ContractEvent> child2 = ContractType.schedule(model.getAs("Child2"));
@@ -136,8 +131,8 @@ public final class Swap {
         // merge child events
         // apply settlement option, i.e. "delivery" of all events or net "settlement" of events at same time
         ArrayList<ContractEvent> events = null;
-        if(!CommonUtils.isNull(parent.getAs("DeliverySettlement")) &&
-                parent.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
+        if(!CommonUtils.isNull(model.getAs("DeliverySettlement")) &&
+                model.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
             Map<String, ContractEvent> mergedEvents = Stream.concat(child1.stream(), child2.stream())
                     .collect(Collectors.toMap(
                             e -> e.time() + e.type(), // event key for merging
@@ -167,7 +162,7 @@ public final class Swap {
         }
 
         // remove all pre-status date events
-        ContractEvent sdEvent = EventFactory.createEvent(parent.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null);
+        ContractEvent sdEvent = EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null);
         events.removeIf(e -> e.compareTo(sdEvent) == -1);
 
         // return events
@@ -177,9 +172,6 @@ public final class Swap {
     // compute next n events
     public static ArrayList<ContractEvent> next(int n,
                                                 ContractModelProvider model) throws AttributeConversionException {
-        // extract parent attributes
-        ContractModel parent = model.getAs("Parent");
-
         // compute child 1 and child 2 events
         ArrayList<ContractEvent> child1 = ContractType.next(n,model.getAs("Child1"));
         ArrayList<ContractEvent> child2 = ContractType.next(n,model.getAs("Child2"));
@@ -187,8 +179,8 @@ public final class Swap {
         // merge child events
         // apply settlement option, i.e. "delivery" of all events or net "settlement" of events at same time
         ArrayList<ContractEvent> events = null;
-        if(!CommonUtils.isNull(parent.getAs("DeliverySettlement")) &&
-                parent.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
+        if(!CommonUtils.isNull(model.getAs("DeliverySettlement")) &&
+                model.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
             Map<String, ContractEvent> mergedEvents = Stream.concat(child1.stream(), child2.stream())
                     .collect(Collectors.toMap(
                             e -> e.time() + e.type(), // event key for merging
@@ -218,7 +210,7 @@ public final class Swap {
         }
 
         // remove all pre-status date events
-        ContractEvent sdEvent = EventFactory.createEvent(parent.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null);
+        ContractEvent sdEvent = EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null);
         events.removeIf(e -> e.compareTo(sdEvent) == -1);
 
         // return events
@@ -228,9 +220,6 @@ public final class Swap {
     // compute next n non-contingent events
     public static ArrayList<ContractEvent> next(Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
-        // extract parent attributes
-        ContractModel parent = model.getAs("Parent");
-
         // compute child 1 and child 2 events
         ArrayList<ContractEvent> child1 = ContractType.next(within,model.getAs("Child1"));
         ArrayList<ContractEvent> child2 = ContractType.next(within,model.getAs("Child2"));
@@ -238,8 +227,8 @@ public final class Swap {
         // merge child events
         // apply settlement option, i.e. "delivery" of all events or net "settlement" of events at same time
         ArrayList<ContractEvent> events = null;
-        if(!CommonUtils.isNull(parent.getAs("DeliverySettlement")) &&
-                parent.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
+        if(!CommonUtils.isNull(model.getAs("DeliverySettlement")) &&
+                model.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
             Map<String, ContractEvent> mergedEvents = Stream.concat(child1.stream(), child2.stream())
                     .collect(Collectors.toMap(
                             e -> e.time() + e.type(), // event key for merging
@@ -269,7 +258,7 @@ public final class Swap {
         }
 
         // remove all pre-status date events
-        ContractEvent sdEvent = EventFactory.createEvent(parent.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null);
+        ContractEvent sdEvent = EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null);
         events.removeIf(e -> e.compareTo(sdEvent) == -1);
 
         // return events

@@ -6,6 +6,7 @@
 package org.actus.contracts;
 
 import org.actus.attributes.ContractModel;
+import org.actus.attributes.ContractModel2;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.externals.RiskFactorModelProvider;
@@ -38,15 +39,6 @@ public class SwapTest {
     public void test_SWAPS_lifecycle_MandatoryAttributes() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -79,13 +71,19 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-02-01T00:00:00"));
@@ -100,16 +98,6 @@ public class SwapTest {
     public void test_SWAPS_lifecycle_withDelivery() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "D");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -142,13 +130,20 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "D");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-02-01T00:00:00"));
@@ -163,16 +158,6 @@ public class SwapTest {
     public void test_SWAPS_lifecycle_withSettlement() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -205,13 +190,20 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement","S");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-02-01T00:00:00"));
@@ -226,18 +218,6 @@ public class SwapTest {
     public void test_SWAPS_lifecycle_withSettlement_withPurchase() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-        parent.put("PurchaseDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtPurchaseDate", "-95");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -270,13 +250,22 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "S");
+        parent.put("PurchaseDate", "2016-05-01T00:00:00");
+        parent.put("PriceAtPurchaseDate", "-95");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-02-01T00:00:00"));
@@ -291,18 +280,6 @@ public class SwapTest {
     public void test_SWAPS_lifecycle_withSettlement_withTermination() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-        parent.put("TerminationDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtTerminationDate", "105");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -335,13 +312,22 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "S");
+        parent.put("TerminationDate", "2016-05-01T00:00:00");
+        parent.put("PriceAtTerminationDate", "105");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-02-01T00:00:00"));
@@ -356,20 +342,6 @@ public class SwapTest {
     public void test_SWAPS_lifecycle_withSettlement_withPurchaseAndTermination() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-        parent.put("PurchaseDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtPurchaseDate", "-95");
-        parent.put("TerminationDate", "2016-11-01T00:00:00");
-        parent.put("PriceAtTerminationDate", "105");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -402,14 +374,24 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "S");
+        parent.put("PurchaseDate", "2016-05-01T00:00:00");
+        parent.put("PriceAtPurchaseDate", "-95");
+        parent.put("TerminationDate", "2016-11-01T00:00:00");
+        parent.put("PriceAtTerminationDate", "105");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
-        // define analysis times
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-02-01T00:00:00"));
         // define risk factor model
@@ -423,20 +405,6 @@ public class SwapTest {
     public void test_SWAPS_lifecycle_withDelivery_withPurchaseAndTermination() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "D");
-        parent.put("PurchaseDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtPurchaseDate", "-95");
-        parent.put("TerminationDate", "2016-11-01T00:00:00");
-        parent.put("PriceAtTerminationDate", "105");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -469,13 +437,24 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "D");
+        parent.put("PurchaseDate", "2016-05-01T00:00:00");
+        parent.put("PriceAtPurchaseDate", "-95");
+        parent.put("TerminationDate", "2016-11-01T00:00:00");
+        parent.put("PriceAtTerminationDate", "105");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-02-01T00:00:00"));
@@ -490,20 +469,6 @@ public class SwapTest {
     public void test_SWAPS_payoff_withDelivery_withPurchaseAndTermination() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "D");
-        parent.put("PurchaseDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtPurchaseDate", "-95");
-        parent.put("TerminationDate", "2016-11-01T00:00:00");
-        parent.put("PriceAtTerminationDate", "105");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -536,13 +501,24 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "D");
+        parent.put("PurchaseDate", "2016-05-01T00:00:00");
+        parent.put("PriceAtPurchaseDate", "-95");
+        parent.put("TerminationDate", "2016-11-01T00:00:00");
+        parent.put("PriceAtTerminationDate", "105");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-02-01T00:00:00"));
@@ -557,20 +533,6 @@ public class SwapTest {
     public void test_SWAPS_payoff_withSettlement_withPurchaseAndTermination() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-        parent.put("PurchaseDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtPurchaseDate", "-95");
-        parent.put("TerminationDate", "2016-11-01T00:00:00");
-        parent.put("PriceAtTerminationDate", "105");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -603,13 +565,24 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "S");
+        parent.put("PurchaseDate", "2016-05-01T00:00:00");
+        parent.put("PriceAtPurchaseDate", "-95");
+        parent.put("TerminationDate", "2016-11-01T00:00:00");
+        parent.put("PriceAtTerminationDate", "105");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         // define analysis times
         Set<LocalDateTime> analysisTimes = new HashSet<LocalDateTime>();
         analysisTimes.add(LocalDateTime.parse("2016-02-01T00:00:00"));
@@ -624,16 +597,6 @@ public class SwapTest {
     public void test_SWAPS_schedule_withDelivery() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "D");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -666,13 +629,20 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "D");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         // lifecycle SWAPS contract
         ArrayList<ContractEvent> events = Swap.schedule(model);
         System.out.println(events);
@@ -682,16 +652,6 @@ public class SwapTest {
     public void test_SWAPS_schedule_withSettlement() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -724,13 +684,20 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "S");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         // lifecycle SWAPS contract
         ArrayList<ContractEvent> events = Swap.next(5,model);
         System.out.println(events);
@@ -740,16 +707,6 @@ public class SwapTest {
     public void test_SWAPS_next_withN_withSettlement() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -782,13 +739,20 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "S");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         // lifecycle SWAPS contract
         ArrayList<ContractEvent> events = Swap.next(5,model);
         System.out.println(events);
@@ -798,16 +762,6 @@ public class SwapTest {
     public void test_SWAPS_next_withN_withDelivery() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "D");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -840,13 +794,20 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "D");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         // lifecycle SWAPS contract
         ArrayList<ContractEvent> events = Swap.next(5,model);
         System.out.println(events);
@@ -856,16 +817,6 @@ public class SwapTest {
     public void test_SWAPS_next_withinPeriod_withSettlement() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -898,13 +849,20 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "S");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         // lifecycle SWAPS contract
         ArrayList<ContractEvent> events = Swap.next(Period.ofDays(5),model);
         System.out.println(events);
@@ -914,16 +872,6 @@ public class SwapTest {
     public void test_SWAPS_next_withinPeriod_withDelivery() {
         thrown = ExpectedException.none();
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "D");
-
         // define child 1 attributes
         Map<String, String> child1 = new HashMap<String, String>();
         child1.put("ContractType", "PAM");
@@ -956,13 +904,20 @@ public class SwapTest {
         child2.put("CycleOfRateReset","1Q-");
         child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
+        // define parent attributes
+        Map<String, Object> parent = new HashMap<String, Object>();
+        parent.put("ContractType", "SWAPS");
+        parent.put("ContractID", "XYZ");
+        parent.put("StatusDate", "2016-01-01T00:00:00");
+        parent.put("ContractRole", "RFL");
+        parent.put("LegalEntityIDCounterparty", "CORP-XY");
+        parent.put("Currency", "USD");
+        parent.put("DeliverySettlement", "D");
+        parent.put(((String) parent.get("ContractID"))+"_C1",child1);
+        parent.put(((String) parent.get("ContractID"))+"_C2",child2);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
+        ContractModel2 model = ContractModel2.parse(parent);// define analysis times
         // lifecycle SWAPS contract
         ArrayList<ContractEvent> events = Swap.next(Period.ofDays(5),model);
         System.out.println(events);
