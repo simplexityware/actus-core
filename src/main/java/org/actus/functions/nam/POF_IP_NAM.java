@@ -7,6 +7,7 @@ package org.actus.functions.nam;
 
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.PayOffFunction;
@@ -28,6 +29,6 @@ public final class POF_IP_NAM implements PayOffFunction {
         double interest = accrued - capitalization;
 
         // return interest payoff
-        return (1 - states.probabilityOfDefault) * states.interestScalingMultiplier * interest;
+        return ContractDefaultConvention.performanceIndicator(states.contractStatus) * states.interestScalingMultiplier * interest;
     }
 }

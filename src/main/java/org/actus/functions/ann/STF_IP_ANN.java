@@ -32,7 +32,6 @@ public final class STF_IP_ANN implements StateTransitionFunction {
         postEventStates[0] = states.timeFromLastEvent;
         postEventStates[1] = states.nominalValue;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         postEventStates[7] = states.feeAccrued;
 
         // return post-event-states

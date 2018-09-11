@@ -93,4 +93,11 @@ public final class StringUtils {
     public final static Set<String> ContingentEvents = Stream.of(
             StringUtils.EventType_CD,StringUtils.EventType_RR,StringUtils.EventType_SC,
             StringUtils.EventType_DV,StringUtils.EventType_PP,StringUtils.EventType_STD).collect(Collectors.toSet());
+
+    // contract status
+    public final static String ContractStatus_Performant = "PF";
+    public final static String ContractStatus_Delayed = "DL";
+    public final static String ContractStatus_Delinquent = "DQ";
+    public final static String ContractStatus_Default = "DF";
+
 }

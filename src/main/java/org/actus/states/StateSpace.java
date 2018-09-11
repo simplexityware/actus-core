@@ -5,6 +5,8 @@
  */
 package org.actus.states;
 
+import org.actus.util.StringUtils;
+
 import java.time.LocalDateTime;
 
 /**
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
  */
 public final class StateSpace {
     public LocalDateTime lastEventTime;
+    public String contractStatus = StringUtils.ContractStatus_Performant; // TODO: initialize together with other states
     public double timeFromLastEvent; // analytical result
     public double nominalValue; // analytical result
     public double nominalAccrued; // analytical result
@@ -31,7 +34,6 @@ public final class StateSpace {
     public double lastInterestPayment;
     public double payoffAtSettlement;
     public double variationMargin; // analytical result
-    public double probabilityOfDefault; // analytical result
     public int contractRoleSign;
     public double nominalAccruedFix;
     public double nominalAccruedFloat;

@@ -5,6 +5,7 @@
  */
 package org.actus.functions.stk;
 
+import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -20,7 +21,7 @@ public final class POF_DV_STK implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return (1 - states.probabilityOfDefault) * states.contractRoleSign * model.<Integer>getAs("Quantity") * model.<Double>getAs("MarketValueObserved") *
+        return ContractDefaultConvention.performanceIndicator(states.contractStatus) * states.contractRoleSign * model.<Integer>getAs("Quantity") * model.<Double>getAs("MarketValueObserved") *
             riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfDividendRate"), time, states, model) * 
             dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(time.minus(CycleUtils.parsePeriod(model.getAs("CycleOfDividendPayment")))), timeAdjuster.shiftCalcTime(time));
     }

@@ -30,7 +30,6 @@ public final class STF_IPFix_SWPPV implements StateTransitionFunction {
         postEventStates[0] = states.timeFromLastEvent;
         postEventStates[1] = states.nominalValue;
         postEventStates[3] = model.<Double>getAs("NominalInterestRate");
-        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;

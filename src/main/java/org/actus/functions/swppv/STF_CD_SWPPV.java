@@ -11,6 +11,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +27,7 @@ public final class STF_CD_SWPPV implements StateTransitionFunction {
         states.nominalAccrued += (model.<Double>getAs("NominalInterestRate") - states.nominalRate) * states.nominalValue * states.timeFromLastEvent;
         states.nominalAccruedFix += model.<Double>getAs("NominalInterestRate") * states.nominalValue * states.timeFromLastEvent;
         states.nominalAccruedFloat += (-1) * states.nominalRate * states.nominalValue * states.timeFromLastEvent;
-        states.probabilityOfDefault = riskFactorModel.stateAt(model.getAs("LegalEntityIDCounterparty"),time,states,model);
+        states.contractStatus = StringUtils.ContractStatus_Default;
         states.lastEventTime = time;
         
         // copy post-event-states
@@ -34,7 +35,6 @@ public final class STF_CD_SWPPV implements StateTransitionFunction {
         postEventStates[1] = states.nominalValue;
         postEventStates[2] = states.nominalAccrued;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;

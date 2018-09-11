@@ -30,7 +30,6 @@ public final class STF_IPFloat_SWPPV implements StateTransitionFunction {
         postEventStates[0] = states.timeFromLastEvent;
         postEventStates[1] = states.secondaryNominalValue;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;

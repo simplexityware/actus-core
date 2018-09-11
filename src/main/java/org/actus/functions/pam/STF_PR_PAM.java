@@ -31,7 +31,6 @@ public final class STF_PR_PAM implements StateTransitionFunction {
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;
