@@ -546,35 +546,6 @@ public class UndefinedMaturityProfileTest {
     }
 
     @Test
-    public void test_UMP_next_5_withIP_withRR_withFP_withCalendar_withBDC() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "UMP");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "6M");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","N");
-        map.put("FeeRate","0.01");
-        map.put("Calendar","MondayToFriday");
-        map.put("BusinessDayCalendar","CSP");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = UndefinedMaturityProfile.next(5,model);
-        //System.out.println(events);
-    }
-
-    @Test
     public void test_UMP_next_within_withIP_withRR_withFP_withCalendar_withBDC() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();

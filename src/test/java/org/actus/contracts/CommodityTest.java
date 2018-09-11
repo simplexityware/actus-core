@@ -61,7 +61,7 @@ public class CommodityTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Stock.lifecycle(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = Commodity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -83,7 +83,7 @@ public class CommodityTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Stock.lifecycle(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = Commodity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -107,7 +107,7 @@ public class CommodityTest {
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Stock.lifecycle(analysisTimes,model,riskFactors);
+        ArrayList<ContractEvent> events = Commodity.lifecycle(analysisTimes,model,riskFactors);
     }
     
     @Test
@@ -163,46 +163,6 @@ public class CommodityTest {
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
         ArrayList<ContractEvent> events = Commodity.payoff(analysisTimes,model,riskFactors);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_COM_next_5_withPRD_withTD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "COM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("Currency", "USD");
-        map.put("PurchaseDate","2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate","1000.0");
-        map.put("TerminationDate","2016-01-05T00:00:00");
-        map.put("PriceAtTerminationDate","1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.next(5,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_COM_next_5_fromSD_withPRD_withTD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "COM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("Currency", "USD");
-        map.put("PurchaseDate","2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate","1000.0");
-        map.put("TerminationDate","2016-01-05T00:00:00");
-        map.put("PriceAtTerminationDate","1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Commodity.next(5,model);
         //System.out.println(events);
     }
 

@@ -87,12 +87,6 @@ public final class Commodity {
     }
 
     // compute next n non-contingent events
-    public static ArrayList<ContractEvent> next(int n,
-                                                ContractModelProvider model) throws AttributeConversionException {
-        return new ArrayList<ContractEvent>();
-    }
-
-    // compute next n non-contingent events
     public static ArrayList<ContractEvent> next(Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
         return new ArrayList<ContractEvent>();

@@ -218,66 +218,6 @@ public final class ContractType {
     }
 
     /**
-     * Evaluates the 'n' next contract events
-     * <p>
-     *     The set of contract attributes are mapped to the {@code n} next contract events
-     *     with respect to the contract's {@code StatusDate} according
-     *     to the legal logic of the respective Contract Type and contingent
-     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}.
-     * </p>
-     * <p>
-     *     Note, the stream of the {@code n} next non-contingent contract events matches the portion
-     *     of the stream of the {@code n} next contingent events up to the first contingent event.
-     *     Further, for a contract with purely non-contingent events
-     *     (e.g. a {@link PrincipalAtMaturity} without {@code RateReset}, {@code Scaling},
-     *     {@code CreditDefault}, etc.) contingent and non-contingent event streams are
-     *     the same.
-     * </p>
-     * <p>
-     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
-     *     throws a {@link ContractTypeUnknownException}.
-     * </p>
-     *
-     * @param n the number of 'next' events to be evaluated
-     * @param model the model carrying the contract attributes
-     * @return the next 'n' contract events
-     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
-     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
-     *
-     */
-    public static ArrayList<ContractEvent> next(int n,
-                                                ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
-        switch((String) model.getAs("ContractType")) {
-            case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.next(n,model);
-            case StringUtils.ContractType_LAM:
-                return LinearAmortizer.next(n,model);
-            case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.next(n,model);
-            case StringUtils.ContractType_ANN:
-                return Annuity.next(n,model);
-            case StringUtils.ContractType_CLM:
-                return CallMoney.next(n,model);
-            case StringUtils.ContractType_UMP:
-                return UndefinedMaturityProfile.next(n,model);
-            case StringUtils.ContractType_CSH:
-                return Cash.next(n,model);
-            case StringUtils.ContractType_STK:
-                return Stock.next(n,model);
-            case StringUtils.ContractType_COM:
-                return Commodity.next(n,model);
-            case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.next(n,model);
-            case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.next(n,model);
-            case StringUtils.ContractType_SWAPS:
-                return Swap.next(n,model);
-            default:
-                throw new ContractTypeUnknownException();
-        }
-    }
-
-    /**
      * Evaluates the next contract events within a certain time period
      * <p>
      *     The set of contract attributes are mapped to the stream of next contract events

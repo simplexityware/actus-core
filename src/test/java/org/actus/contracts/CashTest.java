@@ -114,38 +114,6 @@ public class CashTest {
     }
 
     @Test
-    public void test_CSH_next_5() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CSH");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("Currency", "USD");
-        map.put("NotionalPrincipal", "1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Cash.next(5,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_CSH_next_5_fromSD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CSH");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("Currency", "USD");
-        map.put("NotionalPrincipal", "1000.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle PAM contract
-        ArrayList<ContractEvent> events = Cash.next(5,model);
-        //System.out.println(events);
-    }
-
-    @Test
     public void test_CSH_next_within() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
