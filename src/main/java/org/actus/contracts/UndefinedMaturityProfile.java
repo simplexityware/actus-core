@@ -199,7 +199,9 @@ public final class UndefinedMaturityProfile {
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-
+        states.nominalScalingMultiplier = 1;
+        states.interestScalingMultiplier = 1;
+        
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
