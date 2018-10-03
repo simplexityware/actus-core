@@ -53,7 +53,13 @@ public final class UndefinedMaturityProfile {
 
         // compute scheduled events
         events.addAll(initEvents(model,maturity));
-
+        // termination
+        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
+            ContractEvent termination =
+                    EventFactory.createEvent(model.getAs("TerminationDate"), StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_PAM(), new STF_TD_PAM());
+            events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
+            events.add(termination);
+        }
         // add analysis events
         events.addAll(EventFactory.createEvents(analysisTimes, StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
 
@@ -187,21 +193,15 @@ public final class UndefinedMaturityProfile {
                     model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP_PAM(), new STF_FP_PAM(), model.getAs("BusinessDayConvention")));
         }
-        // termination
-        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            ContractEvent termination =
-                    EventFactory.createEvent(model.getAs("TerminationDate"), StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_PAM(), new STF_TD_PAM());
-            events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
-            events.add(termination);
-        }
-
         // return events
         return new ArrayList<ContractEvent>(events);
     }
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-
+        states.nominalScalingMultiplier = 1;
+        states.interestScalingMultiplier = 1;
+        
         states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
