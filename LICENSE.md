@@ -6,9 +6,9 @@ THIS [ACTUSfrf] CORE LICENSE sets forth the terms and conditions on which the [A
 
 ### Section 1.	Definitions
 
-1.1. __“ACTUS”__ means, as the context requires, the Foundation, the Association, or any successors in interest to the copyrights in the [ACTUSfrf] Core Software.
-1.2. __“[ACTUSfrf] Core Software”__ means those certain computer programs so identified by ACTUS from time to time.
-1.3. __“[ACTUSfrf] Core License”__ means this [ACTUSfrf] Core License or such successor license as shall be promulgated by the Association from time to time to apply to the [ACTUSfrf] Core Software.
+1. __“ACTUS”__ means, as the context requires, the Foundation, the Association, or any successors in interest to the copyrights in the [ACTUSfrf] Core Software.
+2. __“[ACTUSfrf] Core Software”__ means those certain computer programs so identified by ACTUS from time to time.
+3. __“[ACTUSfrf] Core License”__ means this [ACTUSfrf] Core License or such successor license as shall be promulgated by the Association from time to time to apply to the [ACTUSfrf] Core Software.
 1.4. __“[ACTUSfrf] Data Dictionary”__ means the Data Dictionary promulgated by ACTUS or by a standards organization specified by ACTUS.
 1.5. __“[ACTUSfrf] Name”__ means the term “[ACTUSfrf],” or any other term adopted and used by ACTUS, as a trademark or service mark, either alone or in combination with other words, phrases, or graphical matter.
 1.6. __“[ACTUSfrf] Standard”__ means a work, including without limitation, the [ACTUSfrf] Data Dictionary promulgated by ACTUS and the [ACTUSfrf] Algorithmic Standards Document,  copyrighted by ACTUS and containing express assertions that such work sets forth a standard established by ACTUS, in all cases as such work may be modified from time to time by ACTUS.
