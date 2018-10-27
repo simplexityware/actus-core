@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 /**
  * Represents the Swap payoff algorithm
  *
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a href="https://www.actusfrf.org"></a>
  */
 public final class Swap {
 

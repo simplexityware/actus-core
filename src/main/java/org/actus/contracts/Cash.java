@@ -28,7 +28,7 @@ import java.util.Collections;
 /**
  * Represents the Cash payoff algorithm
  * 
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a https://www.actusfrf.org"></a>
  */
 public final class Cash {
 

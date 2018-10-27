@@ -34,7 +34,7 @@ public final class EventFactory {
   /**
    * Create a single {@link ContractEvent}
    * 
-   * @param time the schedule time
+   * @param scheduleTime the schedule time
    * @param type the event type
    * @param currency the event currency
    * @param payOff the event pay-off function
@@ -48,7 +48,7 @@ public final class EventFactory {
       /**
    * Create a single {@link ContractEvent} shifting the event time according to a business day convention
    * 
-   * @param time the schedule time
+   * @param scheduleTime the schedule time
    * @param type the event type
    * @param currency the event currency
    * @param payOff the event pay-off function
@@ -63,7 +63,7 @@ public final class EventFactory {
   /**
    * Create a series of {@link ContractEvent}s from a times-schedule
    * 
-   * @param schedule an unordered set of schedule times
+   * @param eventSchedule an unordered set of schedule times
    * @param type the event type
    * @param currency the event currency
    * @param payOff the event pay-off function
@@ -86,7 +86,7 @@ public final class EventFactory {
   /**
    * Create a series of {@link ContractEvent}s from a times-schedule shifting the event times according to a business day convention
    * 
-   * @param schedule an unordered set of schedule times
+   * @param eventSchedule an unordered set of schedule times
    * @param type the event type
    * @param currency the event currency
    * @param payOff the event pay-off function

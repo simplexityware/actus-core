@@ -23,9 +23,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Represents the Principal-At-Maturity payoff algorithm
+ * Represents the Principal At Maturity payoff algorithm
  * 
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a href="https://www.actusfrf.org"></a>
  */
 public final class PrincipalAtMaturity {
 

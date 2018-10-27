@@ -31,7 +31,7 @@ import java.util.*;
 /**
  * Represents the Commodity payoff algorithm
  * 
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a https://www.actusfrf.org"></a>
  */
 public final class Commodity {
 

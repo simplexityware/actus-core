@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * Represents the Undefined Maturity Profile payoff algorithm
  *
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a href="https://www.actusfrf.org"></a>
  */
 public final class UndefinedMaturityProfile {
 

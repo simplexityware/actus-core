@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 /**
  * Represents the Annuity contract algorithm
  * 
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a https://www.actusfrf.org"></a>
  */
 public final class Annuity {
 

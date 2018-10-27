@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * an external market model (cf. {@link RiskFactorModelProvider}) and analysis times 
  * (cf. {@code analysisTimes}) onto a vector of contingent contract events (cf. {@link ContractEvent}).
  * </p>
- * @see <a href="http://www.projectactus.org">ACTUS</a>
+ * @see <a href="https://www.actusfrf.org">ACTUS Website</a>
  */
 public final class ContractType {
     

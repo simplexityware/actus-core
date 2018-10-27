@@ -28,9 +28,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Represents the Linear-Amortizer payoff algorithm
+ * Represents the Linear Amortizer payoff algorithm
  * 
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a href="https://www.actusfrf.org"></a>
  */
 public final class LinearAmortizer {
 

@@ -13,13 +13,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A representation of an external Comprehensive Risk Factor Model
+ * A representation of an external Risk Factor Observer
  * <p>
  * Generally, the payoff of financial instruments is evaluated in the context of an environment that
  * embodies the dynamics (and therewith future states) of all relevant stochastic risk factors - or what
- * we call the Comprehensive Risk Factor Model. Thus, method {@code lifecycle} of a {@link ContractType} produces
+ * we call the Risk Factor Observer. Thus, method {@code ContractType.lifecycle} produces
  * a series of Risk Factor state contingent {@link ContractEvent}s. An external {@code RiskFactorModelProvider} 
- * implements these dynamics and allows to retrieve the state of all defined risk factors identified
+ * implements this dynamics and allows to retrieve the state of all defined risk factors identified
  * through a unique {@code id} at any future time.
  * <p>
  * Note, all sorts of external variables on which the payoff of a {@link ContractType} is conditioned
@@ -30,7 +30,7 @@ import java.util.Set;
  * attribute {@code LegalEntityIDCounterparty}, or the market value of an underlying linked to through
  * attribute {@code ContractID} of the underlying.
  * <p>
- * @see <a href="http://www.projectactus.org">ACTUS</a>
+ * @see <a href="https://www.actusfrf.org">ACTUS Website</a>
  */
 public abstract interface RiskFactorModelProvider {
   

@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
  * {@link ContractModelProvider} interface. Thus, depending on the system ACTUS is embedded in,
  * more efficient data structures and parsing methods are possible.
  * 
- * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">ACTUS Data Dictionary</a>
+ * @see <a href="https://www.actusfrf.org/data-dictionary">ACTUS Data Dictionary</a>
  */
 public class ContractModel implements ContractModelProvider {
     private Map<String,Object> attributes;
@@ -71,7 +71,7 @@ public class ContractModel implements ContractModelProvider {
      * <p>
      * For the {@link ContractType} indicated in attribute "ContractType" the method goes through the list
      * of supported attributes and tries to parse these to their respective data type as indicated in the 
-     * ACTUS data dictionary ({@linktourl http://www.projectactus.org/projectactus/?page_id=356}). 
+     * ACTUS data dictionary ({@linktourl https://www.actusfrf.org/data-dictionary}).
      * <p>
      * For all attributes mandatory to a certain "ContractType" the method expects a not-{@code null} return value
      * of method {@code get} of the {@code Map<String,String>} method parameter. For non-mandatory attributes, a
@@ -535,7 +535,7 @@ public class ContractModel implements ContractModelProvider {
      * For the {@link ContractType} indicated in attribute "ContractType" the method goes through the list
      * of supported attributes on the parent and (various) child level(s) and tries to parse these to their
      * respective data type as indicated in the ACTUS data dictionary
-     * ({@linktourl http://www.projectactus.org/projectactus/?page_id=356}).
+     * ({@linktourl https://www.actusfrf.org/data-dictionary}).
      * <p>
      * Parse for combined contracts, in essence, does the same as the respective method for basic contracts
      * but in addition parses also the child attributes provided in the same {@link ContractModelProvider}.
