@@ -1,4 +1,4 @@
-[![ProjectACTUS](https://github.com/projectactus/actus-resources/blob/master/logos/actus_logo.jpg "ACTUS Financial Research Foundation")](http://www.actusfrf.org)
+[![ACTUS](https://github.com/actusfrf/actus-resources/blob/master/logos/actus_logo.jpg "ACTUS Financial Research Foundation")](https://www.actusfrf.org)
 
 actus-core
 =======
@@ -12,7 +12,7 @@ The actus libraries will be released as Free and Open Source Software.
 Documentation
 -------------
 
-Documentation for Project ACTUS can be found at http://www.actusfrf.org.
+Documentation for Project ACTUS can be found at https://www.actusfrf.org.
 
 Documentation for Project ACTUS' various API's will be made public soon.
 
@@ -49,19 +49,19 @@ actus libraries
 
 The actus libraries are formed by a number of components:
 
-* [actus-core](https://github.com/projectactus/actus-core#actus-core/README.md)
-* [actus-testsuite](https://github.com/projectactus/actus-testsuite#actus-testsuite/README.md)
+* [actus-core](https://github.com/actusfrf/actus-core#actus-core/README.md)
+* [actus-testsuite](https://github.com/actusfrf/actus-testsuite#actus-testsuite/README.md)
 
 
 Questions and feedback
 ----------------------
 
-Consult our [homepage](http://www.actusfrf.org) for general information. 
+Consult our [homepage](https://www.actusfrf.org) for general information. 
 
 Questions should be directed to info@actusfrf.org.
 
 Bugs can be reported as a GitHub issue at
-https://github.com/projectactus/actus-core/issues.
+https://github.com/actusfrf/actus-core/issues.
 
 Contributing
 ------------
@@ -71,7 +71,7 @@ contributions from an motivated developers community.
 
 While we welcome any contribution we require developers to follow a
 certain protocol. You may find more information on our 
-[homepage](http://www.actusfrf.org).
+[homepage](https://www.actusfrf.org).
 
 Contributions to the actus library can generally be made through pull 
 requests on GitHub. Therefore, the first thing you should do is to get
