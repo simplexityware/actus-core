@@ -202,12 +202,11 @@ public final class UndefinedMaturityProfile {
         states.nominalScalingMultiplier = 1;
         states.interestScalingMultiplier = 1;
         
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
+            states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
-            states.nominalAccrued = model.<Double>getAs("AccruedInterest");
+            states.nominalAccrued = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
         }
 

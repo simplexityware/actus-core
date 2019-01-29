@@ -45,9 +45,8 @@ public final class Cash {
         
         // initialize state space per status date
         StateSpace states = new StateSpace();
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
-        states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
+        states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
         
         // sort the events in the lifecycle-list according to their time of occurence
         Collections.sort(lifecycle);
@@ -72,7 +71,6 @@ public final class Cash {
 
         // initialize state space per status date
         StateSpace states = new StateSpace();
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         states.nominalValue = model.getAs("NotionalPrincipal");
 

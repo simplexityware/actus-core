@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.StateTransitionFunction;
@@ -21,7 +22,7 @@ public final class STF_PR2_NAM implements StateTransitionFunction {
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		double[] postEventStates = new double[8];
 		double principalRedemption =  states.nextPrincipalRedemptionPayment - states.lastInterestPayment;
-		principalRedemption = principalRedemption - states.contractRoleSign * Math.max(0, Math.abs(principalRedemption) - Math.abs(states.nominalValue));
+		principalRedemption = principalRedemption - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.nominalValue));
 		
 		// update state space
 		states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);

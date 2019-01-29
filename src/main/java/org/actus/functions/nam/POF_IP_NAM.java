@@ -8,6 +8,7 @@ package org.actus.functions.nam;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.contractdefault.ContractDefaultConvention;
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.PayOffFunction;
@@ -25,7 +26,7 @@ public final class POF_IP_NAM implements PayOffFunction {
         // Note: for NAM, interest accrued in excess to PRNXT is capitalized
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         double accrued = states.nominalAccrued + states.interestCalculationBase * timeFromLastEvent * states.nominalRate;
-        double capitalization = states.contractRoleSign * Math.max(0,Math.abs(accrued)-Math.abs(states.nextPrincipalRedemptionPayment));
+        double capitalization = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0,Math.abs(accrued)-Math.abs(states.nextPrincipalRedemptionPayment));
         double interest = accrued - capitalization;
 
         // return interest payoff

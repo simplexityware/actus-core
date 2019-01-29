@@ -5,6 +5,7 @@
 */
 package org.actus.functions.ann;
 
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 import org.actus.util.AnnuityUtils;
@@ -28,7 +29,7 @@ public class STF_PRD_ANN implements StateTransitionFunction {
 		states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
 		states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
 		states.lastEventTime = time;
-		states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model, states.nominalValue, states.nominalAccrued, states.nominalRate);
+		states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, states.nominalValue, states.nominalAccrued, states.nominalRate);
 
 		// copy post-event-states
 		postEventStates[0] = states.timeFromLastEvent;

@@ -59,7 +59,6 @@ public final class Commodity {
                 null)) == -1);
         // initialize state space per status date
         StateSpace states = new StateSpace();
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
 
         // sort the events in the payoff-list according to their time of occurence

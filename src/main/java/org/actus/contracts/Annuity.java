@@ -326,20 +326,19 @@ public final class Annuity {
         StateSpace states = new StateSpace();
         states.nominalScalingMultiplier = 1;
         states.interestScalingMultiplier = 1;
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.nominalValue = model.getAs("NotionalPrincipal");
+            states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(double)model.getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
             // TODO: IPAC can be NULL
-            states.nominalAccrued = model.getAs("AccruedInterest");
+            states.nominalAccrued = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(double)model.getAs("AccruedInterest");
             // TODO: FEAC can be NULL
             states.feeAccrued = model.getAs("FeeAccrued");
-            states.interestCalculationBase = states.contractRoleSign * ( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
+            states.interestCalculationBase = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
         
         // init next principal redemption payment amount (can be null for ANN!)
-        states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(model, model.getAs("NotionalPrincipal"), states.nominalAccrued, model.getAs("NominalInterestRate"));
+        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, model.getAs("NotionalPrincipal"), model.getAs("AccruedInterest"), model.getAs("NominalInterestRate"));
         
         // return the initialized state space
         return states;

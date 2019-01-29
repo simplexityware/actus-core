@@ -7,6 +7,7 @@ package org.actus.functions.ump;
 
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.StateTransitionFunction;
@@ -29,7 +30,7 @@ public final class STF_PR_UMP implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
-        states.nominalValue -= states.contractRoleSign * payoff;
+        states.nominalValue -= ContractRoleConvention.roleSign(model.getAs("ContractRole"))*payoff;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.lastEventTime = time;
         

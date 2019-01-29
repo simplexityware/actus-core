@@ -212,7 +212,6 @@ public final class Stock {
         StateSpace states = new StateSpace();
 
         // TODO: some attributes can be null
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         
         // return the initialized state space

@@ -801,7 +801,7 @@ public class PrincipalAtMaturityTest {
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.schedule(model);
-        //System.out.println(events);
+        System.out.println(events);
     }
 
 

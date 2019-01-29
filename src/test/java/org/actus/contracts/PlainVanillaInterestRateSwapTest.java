@@ -75,6 +75,7 @@ public class PlainVanillaInterestRateSwapTest {
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
         ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.lifecycle(analysisTimes,model,riskFactors);
+        System.out.println(events);
     }
     
     

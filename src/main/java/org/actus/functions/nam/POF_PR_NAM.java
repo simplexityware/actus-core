@@ -6,6 +6,7 @@
 package org.actus.functions.nam;
 
 import org.actus.conventions.contractdefault.ContractDefaultConvention;
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -21,7 +22,7 @@ public final class POF_PR_NAM implements PayOffFunction {
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
     	double redemption =  states.nextPrincipalRedemptionPayment - states.lastInterestPayment;
-    	redemption =  redemption - states.contractRoleSign * Math.max(0, Math.abs(redemption) - Math.abs(states.nominalValue)); 
+    	redemption =  redemption - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(redemption) - Math.abs(states.nominalValue));
         return ContractDefaultConvention.performanceIndicator(states.contractStatus) * states.nominalScalingMultiplier * redemption;
         }
 }

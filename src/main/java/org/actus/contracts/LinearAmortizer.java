@@ -310,7 +310,6 @@ public final class LinearAmortizer {
         StateSpace states = new StateSpace();
 
         // general states to be initialized
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         states.nominalScalingMultiplier = 1;
         states.interestScalingMultiplier = 1;
@@ -324,21 +323,21 @@ public final class LinearAmortizer {
             remainingEvents.remove(model.getAs("StatusDate"));
             int n = remainingEvents.size();
             // compute periodic payment in order to redeem entire nominal value
-            states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal")/n;
+            states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal")/n;
         } else {
-            states.nextPrincipalRedemptionPayment = states.contractRoleSign * model.<Double>getAs("NextPrincipalRedemptionPayment");
+            states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NextPrincipalRedemptionPayment");
         }
 
         // init post-IED states
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
+            states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
-            states.nominalAccrued = model.getAs("AccruedInterest");
+            states.nominalAccrued = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
             if(CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals("NT")) {
-                states.interestCalculationBase = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
+                states.interestCalculationBase = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
             } else {
-                states.interestCalculationBase = states.contractRoleSign * model.<Double>getAs("InterestCalculationBaseAmount");
+                states.interestCalculationBase = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("InterestCalculationBaseAmount");
             }
         }
         

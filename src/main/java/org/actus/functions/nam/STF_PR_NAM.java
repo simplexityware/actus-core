@@ -5,6 +5,7 @@
  */
 package org.actus.functions.nam;
 
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -21,7 +22,7 @@ public final class STF_PR_NAM implements StateTransitionFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         double[] postEventStates = new double[8];
         double principalRedemption =  states.nextPrincipalRedemptionPayment - states.lastInterestPayment;
-        principalRedemption = principalRedemption - states.contractRoleSign * Math.max(0, Math.abs(principalRedemption) - Math.abs(states.nominalValue));
+        principalRedemption = principalRedemption - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.nominalValue));
 
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
