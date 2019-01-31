@@ -77,6 +77,12 @@ public final class StringUtils {
     // contract roles
     public final static String ContractRole_RPA = "RPA";
     public final static String ContractRole_RPL = "RPL";
+    public final static String ContractRole_BUY = "BUY";
+    public final static String ContractRole_SEL = "SEL";
+    public final static String ContractRole_RFL = "RFL";
+    public final static String ContractRole_PFL = "PFL";
+    public final static String ContractRole_RF = "RF";
+    public final static String ContractRole_PF = "PF";
     
     // settlement types
     public final static String Settlement_Physical = "D";
