@@ -84,7 +84,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
      * <p>
      * Note that this does also update the event's natural order
      * 
-     * @param the new event type
+     * @param type the new event type
      */
     public void type(String type) {
         this.type = type;  
@@ -177,7 +177,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     /**
      * Change the payoff function of this event
      * 
-     * @param the new payoff function
+     * @param function the new payoff function
      */
     public void fPayOff(PayOffFunction function) {
         this.fPayOff = function;
@@ -186,7 +186,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     /**
      * Change the state-transition function of this event
      * 
-     * @param the new state-transition function
+     * @param function the new state-transition function
      */
     public void fStateTrans(StateTransitionFunction function) {
         this.fStateTrans = function;

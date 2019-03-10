@@ -24,7 +24,7 @@ public final class STF_IED_PAM implements StateTransitionFunction {
         double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
         states.nominalRate = model.getAs("NominalInterestRate");
         states.lastEventTime = time;
@@ -32,7 +32,7 @@ public final class STF_IED_PAM implements StateTransitionFunction {
         // if cycle anchor date of interest payment prior to IED, then update nominal accrued accordingly
         if(!CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) &&
                 model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment").isBefore(model.getAs("InitialExchangeDate"))) {
-            states.nominalAccrued=states.nominalValue*states.nominalRate*dayCounter.dayCountFraction(model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment"),time);
+            states.nominalAccrued=states.nominalValue*states.nominalRate*dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment")),timeAdjuster.shiftCalcTime(time));
         }
 
         // copy post-event-states
@@ -40,7 +40,6 @@ public final class STF_IED_PAM implements StateTransitionFunction {
         postEventStates[1] = states.nominalValue;
         postEventStates[2] = states.nominalAccrued;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;

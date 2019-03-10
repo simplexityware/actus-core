@@ -22,18 +22,13 @@ public final class BusinessDayAdjuster {
     /**
      * Constructor
      * 
-     * {@link EndOfMonthConvention}-adjustments are made when creating a schedule of {@link ContractEvent}-dates
-     * using the {@link ScheduleFactory}. Whether or not schedule dates are shifted to the end of month is 
-     * determined by
-     * <ul>
-     *      <li> The convention: "SD" = same day and means not adjusting, "EM" = end of month and means adjusting</li>
-     *      <li> The start date of the schedule: dates are only shifted if the schedule start date is an end-of-month date</li>
-     *      <li> the cycle of the schedule: dates are only shifted if the schedule cycle is based on a "M" period unit or multiple thereof</li>
-     * </ul>
+     * {@link BusinessDayConvention}-adjustments are made when creating a schedule of {@link ContractEvent}-dates
+     * using the {@link ScheduleFactory}. Whether or not schedule dates are shifted to a "nearest" business
+     * day and whether this shift is only applied for the date of occurence of an event or also to the
+     * calculation of related quantities, e.g. accrued interest, is determined by the actual convention.
      * 
-     * @param convention indicates the {@link EndOfMonthConvention} to be applied
-     * @param refDate the schedule start date
-     * @param periodUnit the period unit of the cycle used in the schedule
+     * @param convention indicates the {@link BusinessDayConvention} to be applied
+     * @param calendar provides the {@link BusinessDayCalendarProvider} used with the convention
      * @throws AttributeConversionException if {@code convention} or {@code calendar} does not conform with the ACTUS Data Dictionary
      * @return 
      */

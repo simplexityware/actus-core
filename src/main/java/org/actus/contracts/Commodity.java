@@ -11,6 +11,7 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.util.StringUtils;
@@ -30,7 +31,7 @@ import java.util.*;
 /**
  * Represents the Commodity payoff algorithm
  * 
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a https://www.actusfrf.org"></a>
  */
 public final class Commodity {
 
@@ -58,14 +59,13 @@ public final class Commodity {
                 null)) == -1);
         // initialize state space per status date
         StateSpace states = new StateSpace();
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(lifecycle);
 
         // evaluate events
-        lifecycle.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
+        lifecycle.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, new BusinessDayAdjuster(null, null)));
 
         // return all evaluated post-StatusDate events as the payoff
         return lifecycle;
@@ -86,14 +86,28 @@ public final class Commodity {
     }
 
     // compute next n non-contingent events
-    public static ArrayList<ContractEvent> next(int n,
+    public static ArrayList<ContractEvent> next(Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
         return new ArrayList<ContractEvent>();
     }
 
-    // compute next n non-contingent events
-    public static ArrayList<ContractEvent> next(Period within,
-                                                ContractModelProvider model) throws AttributeConversionException {
-        return new ArrayList<ContractEvent>();
+    // apply a set of events to the current state of a contract and return the post events state
+    public static StateSpace apply(Set<ContractEvent> events,
+                                   ContractModelProvider model) throws AttributeConversionException {
+
+        // initialize state space per status date
+        StateSpace states = new StateSpace();
+        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
+        states.lastEventTime = model.getAs("StatusDate");
+
+        // sort the events according to their time sequence
+        ArrayList<ContractEvent> seqEvents = new ArrayList<>(events);
+        Collections.sort(seqEvents);
+
+        // apply events according to their time sequence to current state
+        seqEvents.forEach(e -> e.eval(states, model, null, new DayCountCalculator("A/AISDA", null), new BusinessDayAdjuster(null, null)));
+
+        // return post events states
+        return states;
     }
 }

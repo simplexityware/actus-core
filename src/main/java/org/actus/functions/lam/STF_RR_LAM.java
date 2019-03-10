@@ -35,7 +35,7 @@ public final class STF_RR_LAM implements StateTransitionFunction {
 
 
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.nominalRate = rate;
@@ -46,7 +46,6 @@ public final class STF_RR_LAM implements StateTransitionFunction {
         postEventStates[1] = states.nominalValue;
         postEventStates[2] = states.nominalAccrued;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         postEventStates[7] = states.feeAccrued;
         
         // return post-event-states

@@ -22,12 +22,11 @@ public final class STF_PRD_STK implements StateTransitionFunction {
         double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.lastEventTime = time;
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;

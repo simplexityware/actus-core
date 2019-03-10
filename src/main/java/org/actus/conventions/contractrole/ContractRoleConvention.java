@@ -37,9 +37,15 @@ public final class ContractRoleConvention {
         int sign;
         switch(role) {
             case StringUtils.ContractRole_RPA:
+            case StringUtils.ContractRole_BUY:
+            case StringUtils.ContractRole_RFL:
+            case StringUtils.ContractRole_RF:
             sign = 1;
             break;
             case StringUtils.ContractRole_RPL:
+            case StringUtils.ContractRole_SEL:
+            case StringUtils.ContractRole_PFL:
+            case StringUtils.ContractRole_PF:
             sign = -1;
             break;
             default:

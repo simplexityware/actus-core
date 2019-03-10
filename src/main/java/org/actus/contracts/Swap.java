@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 /**
  * Represents the Swap payoff algorithm
  *
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a href="https://www.actusfrf.org"></a>
  */
 public final class Swap {
 
@@ -174,57 +174,6 @@ public final class Swap {
         return events;
     }
 
-    // compute next n events
-    public static ArrayList<ContractEvent> next(int n,
-                                                ContractModelProvider model) throws AttributeConversionException {
-        // extract parent attributes
-        ContractModel parent = model.getAs("Parent");
-
-        // compute child 1 and child 2 events
-        ArrayList<ContractEvent> child1 = ContractType.next(n,model.getAs("Child1"));
-        ArrayList<ContractEvent> child2 = ContractType.next(n,model.getAs("Child2"));
-
-        // merge child events
-        // apply settlement option, i.e. "delivery" of all events or net "settlement" of events at same time
-        ArrayList<ContractEvent> events = null;
-        if(!CommonUtils.isNull(parent.getAs("DeliverySettlement")) &&
-                parent.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
-            Map<String, ContractEvent> mergedEvents = Stream.concat(child1.stream(), child2.stream())
-                    .collect(Collectors.toMap(
-                            e -> e.time() + e.type(), // event key for merging
-                            e -> e, // event itself
-                            (e1, e2) -> nettingEvent(e1,e2) // "merger" function
-                            )
-                    );
-            events = new ArrayList<>(mergedEvents.values());
-        } else { // "net" only analysis events
-            // step 1: merge all analysis events of child contracts
-            Map<String, ContractEvent> mergedEvents = Stream
-                    .concat(child1.stream(), child2.stream())
-                    .filter(e->e.type().equals(StringUtils.EventType_AD))
-                    .collect(Collectors.toMap(
-                            e -> e.time() + e.type(), // event key for merging
-                            e -> e, // event itself
-                            (e1, e2) -> nettingEvent(e1,e2) // "merger" function
-                            )
-                    );
-            // step 2: concatenate non-analysis events and merged analysis events
-            events = Stream
-                    .concat(Stream
-                                    .concat(child1.stream(),child2.stream())
-                                    .filter(e->!e.type().equals(StringUtils.EventType_AD)),
-                            mergedEvents.values().stream())
-                    .collect(Collectors.toCollection(ArrayList::new));
-        }
-
-        // remove all pre-status date events
-        ContractEvent sdEvent = EventFactory.createEvent(parent.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null);
-        events.removeIf(e -> e.compareTo(sdEvent) == -1);
-
-        // return events
-        return events;
-    }
-
     // compute next n non-contingent events
     public static ArrayList<ContractEvent> next(Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
@@ -275,6 +224,17 @@ public final class Swap {
         // return events
         return events;
     }
+
+    // apply a set of events to the current state of a contract and return the post events state
+    /*public static StateSpace apply(Set<ContractEvent> events,
+                                   ContractModelProvider model) throws AttributeConversionException {
+
+        // TODO: needs to be implemented
+        //       -> note, in SWAPS CT, events operate on child CTs, not on parent
+
+        // return post events states
+        return states;
+    }*/
 
     // private method that allows creating a "netting" event from two events to be netted
     private static ContractEvent nettingEvent(ContractEvent e1, ContractEvent e2) {

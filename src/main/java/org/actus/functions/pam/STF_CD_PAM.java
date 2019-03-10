@@ -11,6 +11,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.util.StringUtils;
 
 import java.time.LocalDateTime;
 
@@ -22,10 +23,10 @@ public final class STF_CD_PAM implements StateTransitionFunction {
         double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-        states.probabilityOfDefault = riskFactorModel.stateAt(model.getAs("LegalEntityIDCounterparty"),time,states,model);
+        states.contractStatus = StringUtils.ContractStatus_Default;
         states.lastEventTime = time;
         
         // copy post-event-states
@@ -33,7 +34,6 @@ public final class STF_CD_PAM implements StateTransitionFunction {
         postEventStates[1] = states.nominalValue;
         postEventStates[2] = states.nominalAccrued;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         postEventStates[7] = states.feeAccrued;
         
         // return post-event-states

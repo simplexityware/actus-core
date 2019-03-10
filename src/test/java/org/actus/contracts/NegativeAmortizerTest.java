@@ -7,6 +7,13 @@ package org.actus.contracts;
 
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
+import org.actus.events.EventFactory;
+import org.actus.functions.nam.POF_IP_NAM;
+import org.actus.functions.nam.POF_PR_NAM;
+import org.actus.functions.nam.STF_IP_NAM;
+import org.actus.functions.nam.STF_PR_NAM;
+import org.actus.functions.pam.POF_AD_PAM;
+import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
@@ -19,6 +26,8 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+import org.actus.time.ScheduleFactory;
+import org.actus.util.StringUtils;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -29,11 +38,6 @@ public class NegativeAmortizerTest {
         public Set<String> keys() {
             Set<String> keys = new HashSet<String>();
             return keys;
-        }
-        
-        public Set<LocalDateTime> times(String id) {
-            Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-            return times;
         }
         
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
@@ -958,72 +962,6 @@ public class NegativeAmortizerTest {
     }
 
     @Test
-    public void test_LAM_next_5_withIP_withRR_withSC_withOP_withIPCB() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "LAM");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
-        map.put("CycleOfPrincipalRedemption", "1Q-");
-        map.put("NextPrincipalRedemptionPayment", "100.0");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("NominalInterestRate","0.01");
-        map.put("CycleOfInterestPayment","1M-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("ScalingEffect","IN0");
-        map.put("CycleOfScalingIndex","1Q-");
-        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
-        map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("InterestPaymentCalculationBase","NTL");
-        map.put("InterestPaymentCalculationBaseAmount","1000.0");
-        map.put("CycleOfInterestCalculationBase","1Q-");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.next(5,model);
-        //System.out.println(events);
-    }
-
-    @Test
-    public void test_LAM_next_5_fromSD_withIP_withRR_withSC_withOP_withIPCB() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "LAM");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("CycleAnchorDateOfPrincipalRedemption","2016-07-01T00:00:00");
-        map.put("CycleOfPrincipalRedemption", "1Q-");
-        map.put("NextPrincipalRedemptionPayment", "100.0");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("NominalInterestRate","0.01");
-        map.put("CycleOfInterestPayment","1M-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("ScalingEffect","IN0");
-        map.put("CycleOfScalingIndex","1Q-");
-        map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
-        map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("InterestPaymentCalculationBase","NTL");
-        map.put("InterestPaymentCalculationBaseAmount","1000.0");
-        map.put("CycleOfInterestCalculationBase","1Q-");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        // lifecycle LAM contract
-        ArrayList<ContractEvent> events = NegativeAmortizer.next(5,model);
-        //System.out.println(events);
-    }
-
-    @Test
     public void test_LAM_next_within_withIP_withRR_withSC_withOP_withIPCB() {
         thrown = ExpectedException.none();
         Map<String, String> map = new HashMap<String, String>();
@@ -1120,5 +1058,76 @@ public class NegativeAmortizerTest {
         // lifecycle LAM contract
         ArrayList<ContractEvent> events = NegativeAmortizer.schedule(model);
         //System.out.println(events);
+    }
+
+    @Test
+    public void test_NAM_apply_AE() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "NAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-02-02T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("NextPrincipalRedemptionPayment","100");
+        map.put("InterestCalculationBase","NT");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // create six analysis (monitoring) events
+        Set<ContractEvent> events = EventFactory.createEvents(
+                ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
+                StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM());
+        // apply events
+        StateSpace postStates = NegativeAmortizer.apply(events,model);
+        System.out.print(
+                "Last applied event: " + postStates.lastEventTime + "\n" +
+                        "Post events nominal value: " + postStates.nominalValue + "\n" +
+                        "Post events nominal rate: " + postStates.nominalRate + "\n" +
+                        "Post events nominal accrued: " + postStates.nominalAccrued);
+
+    }
+
+    @Test
+    public void test_NAM_apply_IP_PR() {
+        thrown = ExpectedException.none();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("ContractType", "NAM");
+        map.put("Calendar", "NoHolidayCalendar");
+        map.put("StatusDate", "2016-02-02T00:00:00");
+        map.put("ContractRole", "RPA");
+        map.put("LegalEntityIDCounterparty", "CORP-XY");
+        map.put("DayCountConvention", "A/AISDA");
+        map.put("Currency", "USD");
+        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
+        map.put("CycleOfPrincipalRedemption", "1Q-");
+        map.put("MaturityDate", "2017-01-01T00:00:00");
+        map.put("NotionalPrincipal", "1000.0");
+        map.put("NominalInterestRate","0.01");
+        map.put("NextPrincipalRedemptionPayment","100");
+        map.put("InterestCalculationBase","NT");
+        // parse attributes
+        ContractModel model = ContractModel.parse(map);
+        // create six interest payment events according to the contract schedule
+        Set<ContractEvent> events = EventFactory.createEvents(
+                ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(1),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),model.getAs("CycleOfPrincipalRedemption"),"SD"),
+                StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_NAM(), new STF_IP_NAM());
+        events.addAll(EventFactory.createEvents(
+                ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(1),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),model.getAs("CycleOfPrincipalRedemption"),"SD"),
+                StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_NAM(), new STF_PR_NAM()));
+        // apply events
+        StateSpace postStates = NegativeAmortizer.apply(events,model);
+        System.out.print(
+                "Last applied event: " + postStates.lastEventTime + "\n" +
+                        "Post events nominal value: " + postStates.nominalValue + "\n" +
+                        "Post events nominal rate: " + postStates.nominalRate + "\n" +
+                        "Post events nominal accrued: " + postStates.nominalAccrued);
+
     }
 }

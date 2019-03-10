@@ -20,6 +20,7 @@ public final class StringUtils {
     public final static String ContractType_NAM = "NAM";
     public final static String ContractType_ANN = "ANN";
     public final static String ContractType_CLM = "CLM";
+    public final static String ContractType_UMP = "UMP";
     public final static String ContractType_CSH = "CSH";
     public final static String ContractType_STK = "STK";
     public final static String ContractType_COM = "COM";
@@ -78,6 +79,12 @@ public final class StringUtils {
     // contract roles
     public final static String ContractRole_RPA = "RPA";
     public final static String ContractRole_RPL = "RPL";
+    public final static String ContractRole_BUY = "BUY";
+    public final static String ContractRole_SEL = "SEL";
+    public final static String ContractRole_RFL = "RFL";
+    public final static String ContractRole_PFL = "PFL";
+    public final static String ContractRole_RF = "RF";
+    public final static String ContractRole_PF = "PF";
     
     // settlement types
     public final static String Settlement_Physical = "D";
@@ -94,4 +101,11 @@ public final class StringUtils {
     public final static Set<String> ContingentEvents = Stream.of(
             StringUtils.EventType_CD,StringUtils.EventType_RR,StringUtils.EventType_SC,
             StringUtils.EventType_DV,StringUtils.EventType_PP,StringUtils.EventType_STD).collect(Collectors.toSet());
+
+    // contract status
+    public final static String ContractStatus_Performant = "PF";
+    public final static String ContractStatus_Delayed = "DL";
+    public final static String ContractStatus_Delinquent = "DQ";
+    public final static String ContractStatus_Default = "DF";
+
 }

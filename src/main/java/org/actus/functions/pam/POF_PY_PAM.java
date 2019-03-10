@@ -5,6 +5,7 @@
  */
 package org.actus.functions.pam;
 
+import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -21,13 +22,13 @@ public final class POF_PY_PAM implements PayOffFunction {
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         if(model.getAs("PenaltyType").equals("A")) {
-            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("PenaltyRate");
+            return ContractDefaultConvention.performanceIndicator(states.contractStatus) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("PenaltyRate");
         } else if(model.getAs("PenaltyType").equals("N")) {
-            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) *
-                dayCounter.dayCountFraction(states.lastEventTime, time) * model.<Double>getAs("PenaltyRate") * states.nominalValue;
+            return ContractDefaultConvention.performanceIndicator(states.contractStatus) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) *
+                dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * model.<Double>getAs("PenaltyRate") * states.nominalValue;
         } else {
-            return (1 - states.probabilityOfDefault) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) *
-                dayCounter.dayCountFraction(states.lastEventTime, time) * states.nominalValue * 
+            return ContractDefaultConvention.performanceIndicator(states.contractStatus) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) *
+                dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * states.nominalValue * 
                 Math.max(0, states.nominalRate - riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time,states,model));    
         }
     }

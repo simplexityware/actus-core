@@ -6,18 +6,20 @@
 package org.actus.externals;
 
 import org.actus.attributes.ContractModelProvider;
+import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A representation of an external Comprehensive Risk Factor Model
+ * A representation of an external Risk Factor Observer
  * <p>
  * Generally, the payoff of financial instruments is evaluated in the context of an environment that
  * embodies the dynamics (and therewith future states) of all relevant stochastic risk factors - or what
- * we call the Comprehensive Risk Factor Model. Thus, method {@code lifecycle} of a {@link ContractType} produces
+ * we call the Risk Factor Observer. Thus, method {@code ContractType.lifecycle} produces
  * a series of Risk Factor state contingent {@link ContractEvent}s. An external {@code RiskFactorModelProvider} 
- * implements these dynamics and allows to retrieve the state of all defined risk factors identified
+ * implements this dynamics and allows to retrieve the state of all defined risk factors identified
  * through a unique {@code id} at any future time.
  * <p>
  * Note, all sorts of external variables on which the payoff of a {@link ContractType} is conditioned
@@ -28,7 +30,7 @@ import java.util.Set;
  * attribute {@code LegalEntityIDCounterparty}, or the market value of an underlying linked to through
  * attribute {@code ContractID} of the underlying.
  * <p>
- * @see <a href="http://www.projectactus.org">ACTUS</a>
+ * @see <a href="https://www.actusfrf.org">ACTUS Website</a>
  */
 public abstract interface RiskFactorModelProvider {
   
@@ -38,23 +40,27 @@ public abstract interface RiskFactorModelProvider {
    * @return set of unique risk factor IDs
    */
   public Set<String> keys();
-  
+
   /**
    * Returns the set of event times for a particular risk factor
-   * 
-   * @param id identifier of the risk factor
-   * @return set of risk factor event times
+   *
+   * The default implementation returns an empty set of events.
+   *
+   * @param attributes the attributes of the contract evaluating the events
+   * @return set of non-scheduled (contingent) contract events
    */
-  public Set<LocalDateTime> times(String id);
+  default public Set<ContractEvent> events(ContractModelProvider attributes) {
+    return new HashSet<ContractEvent>();
+  };
   
   /**
    * Returns the state of a particular risk factor at a future time
    * 
    * @param id identifier of the risk factor
    * @param time future time for which to return the risk factor's state
-   * @param contractStates the inner states of the contract as per @code{time} argument of the method
-   * @param contractAttributes the attributes of the contract calling the method
+   * @param states the inner states of the contract as per @code{time} argument of the method
+   * @param attributes the attributes of the contract evaluating the risk factor state
    * @return double the state of the risk factor
    */
-  public double stateAt(String id, LocalDateTime time, StateSpace contractStates, ContractModelProvider contractAttributes);
+  public double stateAt(String id, LocalDateTime time, StateSpace states, ContractModelProvider attributes);
 }

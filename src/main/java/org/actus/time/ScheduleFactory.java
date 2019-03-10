@@ -33,8 +33,6 @@ import java.util.HashSet;
  * <p>
  * The class is a utility class with only static methods and no constructor, i.e. instances
  * of this class cannot be created but its methods only be accessed in a static way.
- * 
- * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">http://www.projectactus.org/projectactus/?page_id=356</a>
  */
 public final class ScheduleFactory {
     

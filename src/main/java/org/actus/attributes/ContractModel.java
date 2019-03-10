@@ -33,7 +33,7 @@ import java.time.LocalDateTime;
  * {@link ContractModelProvider} interface. Thus, depending on the system ACTUS is embedded in,
  * more efficient data structures and parsing methods are possible.
  * 
- * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">ACTUS Data Dictionary</a>
+ * @see <a href="https://www.actusfrf.org/data-dictionary">ACTUS Data Dictionary</a>
  */
 public class ContractModel implements ContractModelProvider {
     private Map<String,Object> attributes;
@@ -71,7 +71,7 @@ public class ContractModel implements ContractModelProvider {
      * <p>
      * For the {@link ContractType} indicated in attribute "ContractType" the method goes through the list
      * of supported attributes and tries to parse these to their respective data type as indicated in the 
-     * ACTUS data dictionary ({@linktourl http://www.projectactus.org/projectactus/?page_id=356}). 
+     * ACTUS data dictionary ({@linktourl https://www.actusfrf.org/data-dictionary}).
      * <p>
      * For all attributes mandatory to a certain "ContractType" the method expects a not-{@code null} return value
      * of method {@code get} of the {@code Map<String,String>} method parameter. For non-mandatory attributes, a
@@ -141,7 +141,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
                 map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
-                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
+                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? null : Double.parseDouble(attributes.get("NextResetRate")));
                 map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
                 
                 map.put("MaturityDate",LocalDateTime.parse(attributes.get("MaturityDate")));
@@ -197,7 +197,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
                 map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
-                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
+                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? null : Double.parseDouble(attributes.get("NextResetRate")));
                 map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
 
                 
@@ -260,7 +260,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
                 map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
-                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
+                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? null : Double.parseDouble(attributes.get("NextResetRate")));
                 map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
                 
                 // present for LAM, NAM, ANN but not PAM
@@ -323,7 +323,7 @@ public class ContractModel implements ContractModelProvider {
                 map.put("PeriodFloor",(CommonUtils.isNull(attributes.get("PeriodFloor")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
                 map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
-                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
+                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? null : Double.parseDouble(attributes.get("NextResetRate")));
                 map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
 
                 // present for LAM, NAM, ANN but not PAM
@@ -371,9 +371,46 @@ public class ContractModel implements ContractModelProvider {
                 map.put("RateSpread",(CommonUtils.isNull(attributes.get("RateSpread")))? 0.0 : Double.parseDouble(attributes.get("RateSpread")));
                 map.put("MarketObjectCodeOfRateReset",attributes.get("MarketObjectCodeOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
-                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
+                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? null : Double.parseDouble(attributes.get("NextResetRate")));
                 map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
-                
+
+                break;
+            case StringUtils.ContractType_UMP:
+
+                map.put("Calendar",(!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar());
+                map.put("BusinessDayConvention",new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
+                map.put("EndOfMonthConvention",(CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention"));
+                map.put("ContractType",attributes.get("ContractType"));
+                map.put("StatusDate",LocalDateTime.parse(attributes.get("StatusDate")));
+                map.put("ContractRole",attributes.get("ContractRole"));
+                map.put("LegalEntityIDCounterparty",attributes.get("LegalEntityIDCounterparty"));
+                map.put("CycleAnchorDateOfFee",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee")))? ( (CommonUtils.isNull(attributes.get("CycleOfFee")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
+                map.put("CycleOfFee",attributes.get("CycleOfFee"));
+                map.put("FeeBasis",(CommonUtils.isNull(attributes.get("FeeBasis")))? "0" : attributes.get("FeeBasis"));
+                map.put("FeeRate",(CommonUtils.isNull(attributes.get("FeeRate")))? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
+                map.put("FeeAccrued",(CommonUtils.isNull(attributes.get("FeeAccrued")))? 0.0 : Double.parseDouble(attributes.get("FeeAccrued")));
+                map.put("CycleAnchorDateOfInterestPayment",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment")))? ( (CommonUtils.isNull(attributes.get("CycleOfInterestPayment")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment")));
+                map.put("CycleOfInterestPayment",attributes.get("CycleOfInterestPayment"));
+                map.put("NominalInterestRate",(CommonUtils.isNull(attributes.get("NominalInterestRate")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate")));
+                map.put("DayCountConvention",new DayCountCalculator(attributes.get("DayCountConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
+                map.put("AccruedInterest",(CommonUtils.isNull(attributes.get("AccruedInterest")))? 0.0 : Double.parseDouble(attributes.get("AccruedInterest")));
+                map.put("Currency",attributes.get("Currency"));
+                map.put("InitialExchangeDate",LocalDateTime.parse(attributes.get("InitialExchangeDate")));
+                map.put("NotionalPrincipal",Double.parseDouble(attributes.get("NotionalPrincipal")));
+                map.put("TerminationDate",(CommonUtils.isNull(attributes.get("TerminationDate")))? null : LocalDateTime.parse(attributes.get("TerminationDate")));
+                map.put("PriceAtTerminationDate",(CommonUtils.isNull(attributes.get("PriceAtTerminationDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")));
+
+                map.put("XDayNotice", attributes.get("XDayNotice"));
+                map.put("MaximumPenaltyFreeDisbursement", (CommonUtils.isNull(attributes.get("MaximumPenaltyFreeDisbursement")))? attributes.get("NotionalPrincipal") : attributes.get("MaximumPenaltyFreeDisbursement"));
+
+                map.put("CycleAnchorDateOfRateReset",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfRateReset")))? ( (CommonUtils.isNull(attributes.get("CycleOfRateReset")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfRateReset")));
+                map.put("CycleOfRateReset",attributes.get("CycleOfRateReset"));
+                map.put("RateSpread",(CommonUtils.isNull(attributes.get("RateSpread")))? 0.0 : Double.parseDouble(attributes.get("RateSpread")));
+                map.put("MarketObjectCodeOfRateReset",attributes.get("MarketObjectCodeOfRateReset"));
+                map.put("FixingDays",attributes.get("FixingDays"));
+                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? null : Double.parseDouble(attributes.get("NextResetRate")));
+                map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 1.0 : Double.parseDouble(attributes.get("RateMultiplier")));
+
                 break;                
             case StringUtils.ContractType_CSH:
             
@@ -473,10 +510,10 @@ public class ContractModel implements ContractModelProvider {
                 map.put("MarketObjectCodeOfRateReset",attributes.get("MarketObjectCodeOfRateReset"));
                 map.put("CyclePointOfRateReset",attributes.get("CyclePointOfRateReset"));
                 map.put("FixingDays",attributes.get("FixingDays"));
-                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? 0.0 : Double.parseDouble(attributes.get("NextResetRate")));
+                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? null : Double.parseDouble(attributes.get("NextResetRate")));
                 map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
                 
-                map.put("NominalInterestRate2",(CommonUtils.isNull(attributes.get("NominalInterestRate")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate")));                
+                map.put("NominalInterestRate2",(CommonUtils.isNull(attributes.get("NominalInterestRate2")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate2")));                
                 map.put("MaturityDate",LocalDateTime.parse(attributes.get("MaturityDate")));
                 map.put("DeliverySettlement",attributes.get("DeliverySettlement"));
 
@@ -556,7 +593,7 @@ public class ContractModel implements ContractModelProvider {
      * For the {@link ContractType} indicated in attribute "ContractType" the method goes through the list
      * of supported attributes on the parent and (various) child level(s) and tries to parse these to their
      * respective data type as indicated in the ACTUS data dictionary
-     * ({@linktourl http://www.projectactus.org/projectactus/?page_id=356}).
+     * ({@linktourl https://www.actusfrf.org/data-dictionary}).
      * <p>
      * Parse for combined contracts, in essence, does the same as the respective method for basic contracts
      * but in addition parses also the child attributes provided in the same {@link ContractModelProvider}.

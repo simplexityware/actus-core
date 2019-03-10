@@ -5,6 +5,8 @@
  */
 package org.actus.functions.stk;
 
+import org.actus.conventions.contractdefault.ContractDefaultConvention;
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -19,6 +21,6 @@ public final class POF_PRD_STK implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return (1 - states.probabilityOfDefault) * states.contractRoleSign * (-1) * model.<Integer>getAs("Quantity") * model.<Double>getAs("PriceAtPurchaseDate");
+        return ContractDefaultConvention.performanceIndicator(states.contractStatus) * ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(-1) * model.<Integer>getAs("Quantity") * model.<Double>getAs("PriceAtPurchaseDate");
     }
 }

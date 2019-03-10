@@ -5,6 +5,7 @@
  */
 package org.actus.functions.ann;
 
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 import org.actus.util.AnnuityUtils;
@@ -35,19 +36,18 @@ public final class STF_RR_ANN implements StateTransitionFunction {
         rate = Math.min(Math.max(rate,model.getAs("LifeFloor")),model.getAs("LifeCap"));
 
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.nominalRate = rate;
         states.lastEventTime = time;
-        states.nextPrincipalRedemptionPayment = states.contractRoleSign * AnnuityUtils.annuityPayment(states.nominalValue, states.nominalAccrued, states.nominalRate, dayCounter, model);
+        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, states.nominalValue, states.nominalAccrued, states.nominalRate);
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
         postEventStates[1] = states.nominalValue;
         postEventStates[2] = states.nominalAccrued;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         postEventStates[7] = states.feeAccrued;
         
         // return post-event-states

@@ -23,16 +23,16 @@ public final class STF_IED_SWPPV implements StateTransitionFunction {
         double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
+        states.secondaryNominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * (-1) * model.<Double>getAs("NotionalPrincipal");
         states.nominalRate = model.<Double>getAs("NominalInterestRate2");
         states.lastEventTime = time;
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[1] = states.nominalValue;
+        postEventStates[1] = states.secondaryNominalValue;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;

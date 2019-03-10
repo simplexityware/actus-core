@@ -5,6 +5,7 @@
  */
 package org.actus.functions.lam;
 
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.util.CommonUtils;
 import org.actus.states.StateSpace;
@@ -23,11 +24,11 @@ public final class STF_IED_LAM implements StateTransitionFunction {
         double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
-        states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
+        states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
         states.nominalRate = model.<Double>getAs("NominalInterestRate");
         states.lastEventTime = time;
-        states.interestCalculationBase = states.contractRoleSign * 
+        states.interestCalculationBase = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*
             ( (CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals("NT"))? 
             model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         
@@ -35,7 +36,6 @@ public final class STF_IED_LAM implements StateTransitionFunction {
         postEventStates[0] = states.timeFromLastEvent;
         postEventStates[1] = states.nominalValue;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;

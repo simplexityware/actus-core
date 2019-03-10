@@ -22,12 +22,13 @@ public final class STF_IP_CLM implements StateTransitionFunction {
         double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalAccrued = 0.0;
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[6] = states.probabilityOfDefault;
+        postEventStates[1] = states.nominalValue;
+        postEventStates[3] = states.nominalRate;
         
         // return post-event-states
         return postEventStates;

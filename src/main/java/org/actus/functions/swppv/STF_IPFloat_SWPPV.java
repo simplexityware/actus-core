@@ -22,15 +22,14 @@ public final class STF_IPFloat_SWPPV implements StateTransitionFunction {
         double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(states.lastEventTime, time);
+        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         states.nominalAccruedFloat = 0.0;
         states.lastEventTime = time;
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[1] = states.nominalValue;
+        postEventStates[1] = states.secondaryNominalValue;
         postEventStates[3] = states.nominalRate;
-        postEventStates[6] = states.probabilityOfDefault;
         
         // return post-event-states
         return postEventStates;

@@ -22,6 +22,7 @@ import org.actus.functions.clm.POF_IED_CLM;
 import org.actus.functions.pam.STF_IED_PAM;
 import org.actus.functions.pam.POF_PR_PAM;
 import org.actus.functions.pam.STF_PR_PAM;
+import org.actus.functions.pam.STF_RRY_PAM;
 import org.actus.functions.clm.POF_IP_CLM;
 import org.actus.functions.clm.STF_IP_CLM;
 import org.actus.functions.pam.POF_IPCI_PAM;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 /**
  * Represents the Call Money payoff algorithm
  * 
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a https://www.actusfrf.org"></a>
  */
 public final class CallMoney {
 
@@ -58,7 +59,7 @@ public final class CallMoney {
         ArrayList<ContractEvent> events = initEvents(analysisTimes,model,maturity);
 
         // compute and add contingent events
-        events.addAll(initContingentEvents(analysisTimes,model,maturity,riskFactorModel));
+        events.addAll(riskFactorModel.events(model));
 
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
@@ -117,44 +118,6 @@ public final class CallMoney {
     }
 
     // compute next n events
-    public static ArrayList<ContractEvent> next(int n,
-                                                ContractModelProvider model) throws AttributeConversionException {
-        // convert single time input to set of times
-        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-        times.add(model.getAs("StatusDate"));
-
-        // determine maturity of the contract
-        LocalDateTime maturity = maturity(model,times);
-
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(times,model,maturity);
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only contingent events within time window
-        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        int k=0;
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-            // stop if we reached number of events or if first contingent event occured
-            if(k>=n || StringUtils.ContingentEvents.contains(event.type())) {
-                break;
-            }
-            // eval event and update counter
-            event.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
-            nextEvents.add(event);
-            k+=1;
-        }
-
-        return nextEvents;
-    }
-
-    // compute next n events
     public static ArrayList<ContractEvent> next(Period within,
                                                 ContractModelProvider model) throws AttributeConversionException {
         // convert single time input to set of times
@@ -192,6 +155,24 @@ public final class CallMoney {
         return nextEvents;
     }
 
+    // apply a set of events to the current state of a contract and return the post events state
+    public static StateSpace apply(Set<ContractEvent> events,
+                                   ContractModelProvider model) throws AttributeConversionException {
+
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model);
+
+        // sort the events according to their time sequence
+        ArrayList<ContractEvent> seqEvents = new ArrayList<>(events);
+        Collections.sort(seqEvents);
+
+        // apply events according to their time sequence to current state
+        seqEvents.forEach(e -> e.eval(states, model, null, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
+
+        // return post events states
+        return states;
+    }
+
     // compute (but not evaluate) non-contingent events of the contract
     private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, LocalDateTime maturity) throws AttributeConversionException {
         HashSet<ContractEvent> events = new HashSet<ContractEvent>();
@@ -210,42 +191,28 @@ public final class CallMoney {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     maturity,
                     model.getAs("CycleOfInterestPayment"),
-                    model.getAs("EndOfMonthConvention")),
+                    model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_IPCI, model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_PAM(), model.getAs("BusinessDayConvention")));
         }
-        // rate reset (if specified)
-        if (!CommonUtils.isNull(model.getAs("CycleOfRateReset"))) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), maturity,
-                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention")),
-                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_CLM(), model.getAs("BusinessDayConvention")));
-        }
+        // rate reset
+    	Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), maturity,
+                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
+                StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_CLM(), model.getAs("BusinessDayConvention"));
+    	
+    	if(!CommonUtils.isNull(model.getAs("NextResetRate"))) 
+    	rateResetEvents.stream().sorted().
+    	filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get().fStateTrans(new STF_RRY_PAM());
+    	events.addAll(rateResetEvents);
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), maturity,
-                    model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention")),
+                    model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),false),
                     StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP_PAM(), new STF_FP_PAM(), model.getAs("BusinessDayConvention")));
         }
         // remove all pre-status date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
                 null)) == -1);
 
-        // return events
-        return new ArrayList<ContractEvent>(events);
-    }
-
-    // compute (but not evaluate) contingent events of the contract
-    private static ArrayList<ContractEvent> initContingentEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, LocalDateTime maturity, RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        HashSet<ContractEvent> events = new HashSet<ContractEvent>();
-
-        // add counterparty default risk-factor contingent events
-        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
-            events.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
-                                             StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_PAM(), new STF_CD_PAM()));
-        }
-        // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
-                                                                  null)) == -1);
-        
         // return events
         return new ArrayList<ContractEvent>(events);
     }
@@ -263,17 +230,16 @@ public final class CallMoney {
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
+        states.nominalScalingMultiplier = 1;
+        states.interestScalingMultiplier = 1;
 
         // TODO: some attributes can be null
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         states.lastEventTime = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.nominalValue = states.contractRoleSign * model.<Double>getAs("NotionalPrincipal");
+            states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
             states.nominalRate = model.getAs("NominalInterestRate");
-            states.nominalAccrued = model.getAs("AccruedInterest");
+            states.nominalAccrued = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
-            states.nominalScalingMultiplier = 1;
-            states.interestScalingMultiplier = 1;
         }
         
         // return the initialized state space

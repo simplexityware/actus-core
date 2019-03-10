@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * Represents the Foreign Exchange Outright payoff algorithm
  * 
- * @see <a href="http://www.projectactus.org/"></a>
+ * @see <a href="https://www.actusfrf.org"></a>
  */
 public final class ForeignExchangeOutright {
 
@@ -50,22 +50,22 @@ public final class ForeignExchangeOutright {
         DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", null);
         
         // compute events
-        ArrayList<ContractEvent> lifecycle = initEvents(analysisTimes,model);
+        ArrayList<ContractEvent> events = initEvents(analysisTimes,model);
 
         // compute and add contingent events
-        lifecycle.addAll(initContingentEvents(analysisTimes,model,riskFactorModel));
+        events.addAll(riskFactorModel.events(model));
 
         // initialize state space per status date
         StateSpace states = initStateSpace(model);
 
         // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(lifecycle);
+        Collections.sort(events);
 
         // evaluate events
-        lifecycle.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
+        events.forEach(e -> e.eval(states, model, riskFactorModel, dayCount, model.getAs("BusinessDayConvention")));
         
         // return all evaluated post-StatusDate events as the payoff
-        return lifecycle;
+        return events;
     }
 
     // forward projection of the payoff of the contract
@@ -101,44 +101,6 @@ public final class ForeignExchangeOutright {
 
         // return events
         return events;
-    }
-
-    // compute next n non-contingent events
-    public static ArrayList<ContractEvent> next(int n,
-                                                ContractModelProvider model) throws AttributeConversionException {
-        // convert single time input to set of times
-        Set<LocalDateTime> times = new HashSet<LocalDateTime>();
-        times.add(model.getAs("StatusDate"));
-
-        // init day count calculator
-        DayCountCalculator dayCount = new DayCountCalculator("A/AISDA", model.getAs("Calendar"));
-
-        // compute non-contingent events
-        ArrayList<ContractEvent> events = initEvents(times,model);
-
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
-
-        // sort the events in the payoff-list according to their time of occurence
-        Collections.sort(events);
-
-        // evaluate only contingent events within time window
-        ArrayList<ContractEvent> nextEvents = new ArrayList<ContractEvent>();
-        Iterator<ContractEvent> iterator = events.iterator();
-        int k=0;
-        while(iterator.hasNext()) {
-            ContractEvent event = iterator.next();
-            // stop if we reached number of events or if first contingent event occured
-            if(k>=n || StringUtils.ContingentEvents.contains(event.type())) {
-                break;
-            }
-            // eval event and update counter
-            event.eval(states, model, null, dayCount, model.getAs("BusinessDayConvention"));
-            nextEvents.add(event);
-            k+=1;
-        }
-
-        return nextEvents;
     }
 
     // compute next n non-contingent events
@@ -179,6 +141,24 @@ public final class ForeignExchangeOutright {
         return nextEvents;
     }
 
+    // apply a set of events to the current state of a contract and return the post events state
+    public static StateSpace apply(Set<ContractEvent> events,
+                                   ContractModelProvider model) throws AttributeConversionException {
+
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model);
+
+        // sort the events according to their time sequence
+        ArrayList<ContractEvent> seqEvents = new ArrayList<>(events);
+        Collections.sort(seqEvents);
+
+        // apply events according to their time sequence to current state
+        seqEvents.forEach(e -> e.eval(states, model, null, new DayCountCalculator("A/AISDA", model.getAs("Calendar")), model.getAs("BusinessDayConvention")));
+
+        // return post events states
+        return states;
+    }
+
     // compute (but not evaluate) non-contingent events
     private static ArrayList<ContractEvent> initEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model) throws AttributeConversionException {
         HashSet<ContractEvent> events = new HashSet<ContractEvent>();
@@ -204,22 +184,6 @@ public final class ForeignExchangeOutright {
             events.add(EventFactory.createEvent(settlement, StringUtils.EventType_STD, model.getAs("Currency2"), new POF_STD2_FXOUT(), new STF_STD2_FXOUT(), model.getAs("BusinessDayConvention")));
         } else {
             events.add(EventFactory.createEvent(settlement, StringUtils.EventType_STD, model.getAs("Currency"), new POF_STD_FXOUT(), new STF_STD_FXOUT(), model.getAs("BusinessDayConvention")));
-        }
-        // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
-                null)) == -1);
-
-        // return events
-        return new ArrayList<ContractEvent>(events);
-    }
-
-    // compute (but not evaluate) contingent events
-    private static ArrayList<ContractEvent> initContingentEvents(Set<LocalDateTime> analysisTimes, ContractModelProvider model, RiskFactorModelProvider riskFactorModel) throws AttributeConversionException {
-        HashSet<ContractEvent> events = new HashSet<ContractEvent>();
-
-        if(riskFactorModel.keys().contains(model.getAs("LegalEntityIDCounterparty"))) {
-            events.addAll(EventFactory.createEvents(riskFactorModel.times(model.getAs("LegalEntityIDCounterparty")),
-                    StringUtils.EventType_CD, model.getAs("Currency"), new POF_CD_PAM(), new STF_CD_FXOUT()));
         }
         // remove all pre-status date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,
