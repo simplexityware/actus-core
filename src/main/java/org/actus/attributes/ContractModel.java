@@ -516,13 +516,88 @@ public class ContractModel implements ContractModelProvider {
                 map.put("NominalInterestRate2",(CommonUtils.isNull(attributes.get("NominalInterestRate2")))? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate2")));                
                 map.put("MaturityDate",LocalDateTime.parse(attributes.get("MaturityDate")));
                 map.put("DeliverySettlement",attributes.get("DeliverySettlement"));            
-                                
-             break;
+            
+                break;
+            case StringUtils.ContractType_CDSWP:
+                map.put("Calendar",(!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar());
+                map.put("BusinessDayConvention",new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
+                map.put("EndOfMonthConvention",(CommonUtils.isNull(attributes.get("EndOfMonthConvention")))? "SD" : attributes.get("EndOfMonthConvention"));
+                map.put("ContractType",attributes.get("ContractType"));
+                map.put("StatusDate",LocalDateTime.parse(attributes.get("StatusDate")));
+                map.put("ContractRole",attributes.get("ContractRole"));
+                
+                
+                //from here on out there are some fields missing
+                //ContractID
+                map.put("ContractID", attributes.get("ContractID"));
+                //ContractStructure
+                map.put("ContractStructure",attributes.get("ContractStructure"));
+                
+                map.put("LegalEntityIDCounterparty",attributes.get("LegalEntityIDCounterparty"));
+                
+                //ContractStatus
+                map.put("ContractStatus",(CommonUtils.isNull(attributes.get("ContractStatus")))? "PF" : attributes.get("ContractStatus"));
+                //Seniority
+                map.put("Seniority",attributes.get("Seniority"));
+                //NonPerformingDate TODO: empty element, what does it have to be?
+                map.put("NonPerformingDate",(CommonUtils.isNull(attributes.get("NonPerformingDate")))? "Contract is performing" : LocalDateTime.parse(attributes.get("NonPerformingDate")));
+                //PrepaymentPeriod, copied like fixing days, there is no "0D" standard element
+                map.put("PrepaymentPeriod",attributes.get("PrepaymentPeriod"));
+                //GracePeriod
+                map.put("GracePeriod",attributes.get("GracePeriod"));
+                //DelinquencyPeriod
+                map.put("DelinquencyPeriod",attributes.get("DelinquencyPeriod"));
+                //DelinquencyRate
+                map.put("DelinquencyRate",(CommonUtils.isNull(attributes.get("DelinquencyRate")))? 0.0 : Double.parseDouble(attributes.get("DelinquencyRate")));
+                
+                map.put("CycleAnchorDateOfFee",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee")))? ( (CommonUtils.isNull(attributes.get("CycleOfFee")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
+                map.put("CycleOfFee",attributes.get("CycleOfFee"));
+                map.put("FeeBasis",(CommonUtils.isNull(attributes.get("FeeBasis")))? "0" : attributes.get("FeeBasis"));
+                map.put("FeeRate",(CommonUtils.isNull(attributes.get("FeeRate")))? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
+                map.put("FeeAccrued",(CommonUtils.isNull(attributes.get("FeeAccrued")))? 0.0 : Double.parseDouble(attributes.get("FeeAccrued")));
+                map.put("Currency",attributes.get("Currency"));
+                
+                //ContractDealDate
+                map.put("ContractDealDate",LocalDateTime.parse(attributes.get("ContractDealDate")));
+                
+                map.put("InitialExchangeDate",LocalDateTime.parse(attributes.get("InitialExchangeDate")));
+                map.put("MaturityDate",LocalDateTime.parse(attributes.get("MaturityDate")));
+                map.put("NotionalPrincipal",Double.parseDouble(attributes.get("NotionalPrincipal"))); 
+                map.put("PriceAtPurchaseDate",(CommonUtils.isNull(attributes.get("PriceAtPurchaseDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtPurchaseDate"))); 
+                map.put("TerminationDate",(CommonUtils.isNull(attributes.get("TerminationDate")))? null : LocalDateTime.parse(attributes.get("TerminationDate")));
+                map.put("PriceAtTerminationDate",(CommonUtils.isNull(attributes.get("PriceAtTerminationDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate"))); 
+                map.put("MarketValueObserved",(CommonUtils.isNull(attributes.get("MarketValueObserved")))? 0.0 : Double.parseDouble(attributes.get("MarketValueObserved"))); 
+                map.put("CycleAnchorDateOfRateReset",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfRateReset")))? ( (CommonUtils.isNull(attributes.get("CycleOfRateReset")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfRateReset")));
+                map.put("CycleOfRateReset",attributes.get("CycleOfRateReset"));
+                map.put("RateSpread",(CommonUtils.isNull(attributes.get("RateSpread")))? 0.0 : Double.parseDouble(attributes.get("RateSpread")));
+                //map.put("MarketObjectCodeOfRateReset",attributes.get("MarketObjectCodeOfRateReset"));
+                map.put("FixingDays",attributes.get("FixingDays"));
+                map.put("NextResetRate",(CommonUtils.isNull(attributes.get("NextResetRate")))? null : Double.parseDouble(attributes.get("NextResetRate")));
+                map.put("RateMultiplier",(CommonUtils.isNull(attributes.get("RateMultiplier")))? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
+                
+                //RecoveryRate
+                map.put("RecoveryRate",(CommonUtils.isNull(attributes.get("RecoveryRate")))? 0.0 : Double.parseDouble(attributes.get("RecoveryRate")));
+                //ExecutionRuleMethod, does this work for Data Format "Enum"?
+                map.put("ExecutionRuleMethod",(CommonUtils.isNull(attributes.get("ExecutionRuleMethod")))? "FTE" : attributes.get("ExecutionRuleMethod"));
+                //ExecutionRuleQualifier
+                map.put("ExecutionRuleQualifier",(CommonUtils.isNull(attributes.get("ExecutionRuleQualifier")))? 1 : Integer.parseInt(attributes.get("ExecutionRuleQualifier")));
+                //RecordedCreditEvents
+                map.put("RecordedCreditEvents",(CommonUtils.isNull(attributes.get("RecordedCreditEvents")))? 0 : Integer.parseInt(attributes.get("RecordedCreditEvents")));
+                
+                map.put("SettlementDate",(CommonUtils.isNull(attributes.get("SettlementDate")))? null : LocalDateTime.parse(attributes.get("SettlementDate")));
+                map.put("DeliverySettlement",attributes.get("DeliverySettlement"));            
+                
+                map.put("DayCountConvention",new DayCountCalculator(attributes.get("DayCountConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
+                
+                
+                break; // nothing else to do for CDSWP
              
             default:
                 throw new ContractTypeUnknownException();
         }
         } catch(Exception e) {
+        	System.out.println(e);
+        	System.out.println(e.getStackTrace()[0].getLineNumber());
             throw new AttributeConversionException();    
         }
         

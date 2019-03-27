@@ -37,4 +37,5 @@ public final class StateSpace {
     public int contractRoleSign;
     public double nominalAccruedFix;
     public double nominalAccruedFloat;
+    public double probabilityOfDefault;
 }
