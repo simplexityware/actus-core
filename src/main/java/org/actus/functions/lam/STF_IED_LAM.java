@@ -32,6 +32,13 @@ public final class STF_IED_LAM implements StateTransitionFunction {
             ( (CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals("NT"))? 
             model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         
+
+        // if cycle anchor date of interest payment prior to IED, then update nominal accrued accordingly
+        if(!CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) &&
+            model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment").isBefore(model.getAs("InitialExchangeDate"))) {
+            states.nominalAccrued += states.interestCalculationBase*states.nominalRate*dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment")),timeAdjuster.shiftCalcTime(time));
+        }
+
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
         postEventStates[1] = states.nominalValue;
