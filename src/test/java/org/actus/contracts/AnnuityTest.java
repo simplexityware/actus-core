@@ -74,6 +74,7 @@ public class AnnuityTest {
         MarketModel riskFactors = new MarketModel();
         // lifecycle LAM contract
         ArrayList<ContractEvent> events = Annuity.lifecycle(analysisTimes,model,riskFactors);
+        System.out.println(events);
     }
     
     @Test
@@ -1116,7 +1117,7 @@ public class AnnuityTest {
                 StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM());
         // apply events
         StateSpace postStates = Annuity.apply(events,model);
-        System.out.print(
+        System.out.println(
                 "Last applied event: " + postStates.lastEventTime + "\n" +
                         "Post events nominal value: " + postStates.nominalValue + "\n" +
                         "Post events nominal rate: " + postStates.nominalRate + "\n" +
@@ -1153,7 +1154,7 @@ public class AnnuityTest {
                 StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_NAM(), new STF_PR_NAM()));
         // apply events
         StateSpace postStates = Annuity.apply(events,model);
-        System.out.print(
+        System.out.println(
                 "Last applied event: " + postStates.lastEventTime + "\n" +
                         "Post events nominal value: " + postStates.nominalValue + "\n" +
                         "Post events nominal rate: " + postStates.nominalRate + "\n" +

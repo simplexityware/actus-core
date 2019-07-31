@@ -23,16 +23,18 @@ public final class STF_PR_SWPPV implements StateTransitionFunction {
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
+        states.nominalAccrued += (model.<Double>getAs("NominalInterestRate") - states.nominalRate) * states.nominalValue * states.timeFromLastEvent;
+        states.nominalAccruedFix += model.<Double>getAs("NominalInterestRate") * states.nominalValue * states.timeFromLastEvent;
+        states.nominalAccruedFloat += (-1) * states.nominalRate * states.nominalValue * states.timeFromLastEvent;
+        states.nominalRate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"),time,states,model) * model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
         states.nominalValue = 0.0;
-        states.nominalRate = 0.0;
-        states.nominalAccrued = 0.0;
-        states.nominalAccruedFix = 0.0;
-        states.nominalAccruedFloat = 0.0;
-        states.feeAccrued = 0.0;
         states.lastEventTime = time;
-        
+
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
+        postEventStates[1] = states.nominalValue;
+        postEventStates[2] = states.nominalAccruedFloat;
+        postEventStates[3] = states.nominalRate;
         
         // return post-event-states
         return postEventStates;

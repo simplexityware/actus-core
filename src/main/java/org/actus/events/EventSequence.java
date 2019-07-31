@@ -43,19 +43,19 @@ switch (eventType) {
     case "IED":
         offset = 20;
         break;
-    case "IP":
+    case "PR":
         offset = 30;
         break;
-    case "IPCI":
+    case "IP":
         offset = 40;
         break;
-      case "FP":
+    case "IPCI":
         offset = 50;
         break;
-      case "DV":
+      case "FP":
         offset = 60;
         break;
-      case "PR":
+      case "DV":
         offset = 70;
         break;
       case "MR":

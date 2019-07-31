@@ -23,7 +23,6 @@ public final class STF_IP_ANN implements StateTransitionFunction {
 
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.lastInterestPayment = states.nominalAccrued + states.nominalValue * states.timeFromLastEvent * states.nominalRate;
         states.nominalAccrued = 0.0;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.lastEventTime = time;

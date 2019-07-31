@@ -23,14 +23,16 @@ public final class STF_PR_PAM implements StateTransitionFunction {
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.nominalValue = 0.0;
-        states.nominalRate = 0.0;
-        states.nominalAccrued = 0.0;
-        states.feeAccrued = 0.0;
+        states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
+        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.lastEventTime = time;
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
+        postEventStates[1] = states.nominalValue;
+        postEventStates[2] = states.nominalAccrued;
+        postEventStates[3] = states.nominalRate;
+        postEventStates[7] = states.feeAccrued;
         
         // return post-event-states
         return postEventStates;

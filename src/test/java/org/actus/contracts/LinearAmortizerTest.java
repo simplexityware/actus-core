@@ -189,6 +189,7 @@ public class LinearAmortizerTest {
         MarketModel riskFactors = new MarketModel();
         // lifecycle LAM contract
         ArrayList<ContractEvent> events = LinearAmortizer.lifecycle(analysisTimes,model,riskFactors);
+        System.out.println(events);
     }
     
     @Test

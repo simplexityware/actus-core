@@ -123,6 +123,7 @@ public class PrincipalAtMaturityTest {
         MarketModel riskFactors = new MarketModel();
         // lifecycle PAM contract
         ArrayList<ContractEvent> events = PrincipalAtMaturity.lifecycle(analysisTimes,model,riskFactors);
+        System.out.println(events);
     }
     
     @Test
@@ -828,7 +829,7 @@ public class PrincipalAtMaturityTest {
                 StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM());
         // apply events
         StateSpace postStates = PrincipalAtMaturity.apply(events,model);
-        System.out.print(
+        System.out.println(
                 "Last applied event: " + postStates.lastEventTime + "\n" +
                         "Post events nominal value: " + postStates.nominalValue + "\n" +
                         "Post events nominal rate: " + postStates.nominalRate + "\n" +
@@ -859,7 +860,7 @@ public class PrincipalAtMaturityTest {
                 StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM());
         // apply events
         StateSpace postStates = PrincipalAtMaturity.apply(events,model);
-        System.out.print(
+        System.out.println(
                 "Last applied event: " + postStates.lastEventTime + "\n" +
                         "Post events nominal value: " + postStates.nominalValue + "\n" +
                         "Post events nominal rate: " + postStates.nominalRate + "\n" +
@@ -891,7 +892,7 @@ public class PrincipalAtMaturityTest {
                 StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_PAM(), new STF_IP_PAM());
         // apply events
         StateSpace postStates = PrincipalAtMaturity.apply(events,model);
-        System.out.print(
+        System.out.println(
                 "Last applied event: " + postStates.lastEventTime + "\n" +
                         "Post events nominal value: " + postStates.nominalValue + "\n" +
                         "Post events nominal rate: " + postStates.nominalRate + "\n" +
