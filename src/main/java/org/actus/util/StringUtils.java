@@ -66,6 +66,7 @@ public final class StringUtils {
     public final static String EventType_IP = "IP";
     public final static String EventType_IPCI = "IPCI";
     public final static String EventType_RR = "RR";
+    public final static String EventType_RRF = "RRF";
     public final static String EventType_SC = "SC";
     public final static String EventType_PRD = "PRD";
     public final static String EventType_TD = "TD";

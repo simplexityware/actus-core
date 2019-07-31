@@ -182,10 +182,15 @@ public final class UndefinedMaturityProfile {
     	Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), maturity,
                 model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
                 StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_CLM(), model.getAs("BusinessDayConvention"));
-    	
-    	if(!CommonUtils.isNull(model.getAs("NextResetRate"))) 
-    	rateResetEvents.stream().sorted().
-    	filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get().fStateTrans(new STF_RRY_PAM());
+        
+        // adapt fixed rate reset event
+        if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
+            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get();
+            fixedEvent.fStateTrans(new STF_RRF_PAM());
+            fixedEvent.type(StringUtils.EventType_RRF);
+            rateResetEvents.add(fixedEvent);
+        }
+
     	events.addAll(rateResetEvents);
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {

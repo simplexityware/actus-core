@@ -229,14 +229,19 @@ public final class Annuity {
                     model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci, model.getAs("BusinessDayConvention")));
         }
         // rate reset
-        	Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), maturity,
-                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_ANN(), model.getAs("BusinessDayConvention"));
-        	
-        	if(!CommonUtils.isNull(model.getAs("NextResetRate"))) 
-        	rateResetEvents.stream().sorted().
-        	filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get().fStateTrans(new STF_RRY_ANN());
-        	events.addAll(rateResetEvents);
+        Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), maturity,
+                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
+                StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_ANN(), model.getAs("BusinessDayConvention"));
+        
+        // adapt fixed rate reset event
+        if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
+            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get();
+            fixedEvent.fStateTrans(new STF_RRF_ANN());
+            fixedEvent.type(StringUtils.EventType_RRF);
+            rateResetEvents.add(fixedEvent);
+        }
+
+        events.addAll(rateResetEvents);
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), maturity,

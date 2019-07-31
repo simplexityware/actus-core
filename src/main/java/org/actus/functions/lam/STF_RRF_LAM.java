@@ -14,7 +14,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_RRY_LAM implements StateTransitionFunction {
+public final class STF_RRF_LAM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 

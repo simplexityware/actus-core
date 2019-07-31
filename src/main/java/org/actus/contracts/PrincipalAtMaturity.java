@@ -200,14 +200,21 @@ public final class PrincipalAtMaturity {
                     model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_PAM(), model.getAs("BusinessDayConvention")));
         }
         // rate reset
-        	Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                    model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                    StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention"));
-        	
-        	if(!CommonUtils.isNull(model.getAs("NextResetRate"))) 
-        	rateResetEvents.stream().sorted().
-        	filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get().fStateTrans(new STF_RRY_PAM());
-        	events.addAll(rateResetEvents);
+        Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
+                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
+                StringUtils.EventType_RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention"));
+        
+        // adapt fixed rate reset event
+        if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
+            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1).findFirst().get();
+            fixedEvent.fStateTrans(new STF_RRF_PAM());
+            fixedEvent.type(StringUtils.EventType_RRF);
+            rateResetEvents.add(fixedEvent);
+        }
+
+        // add all rate reset events
+        events.addAll(rateResetEvents);
+
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) { 
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),

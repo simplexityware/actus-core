@@ -3,12 +3,10 @@
  *
  * Please see distribution for license.
  */
-package org.actus.functions.ann;
+package org.actus.functions.pam;
 
-import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
-import org.actus.util.AnnuityUtils;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
@@ -16,7 +14,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_RRY_ANN implements StateTransitionFunction {
+public final class STF_RRF_PAM implements StateTransitionFunction {
     
     @Override
     public double[] eval(LocalDateTime time, StateSpace states, 
@@ -25,11 +23,10 @@ public final class STF_RRY_ANN implements StateTransitionFunction {
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
+        states.nominalAccrued += states.nominalRate * states.nominalValue * states.timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-        states.nominalRate = model.<Double>getAs("NextResetRate");
+        states.nominalRate = model.getAs("NextResetRate");
         states.lastEventTime = time;
-        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, states.nominalValue, states.nominalAccrued, states.nominalRate);
         
         // copy post-event-states
         postEventStates[0] = states.timeFromLastEvent;
