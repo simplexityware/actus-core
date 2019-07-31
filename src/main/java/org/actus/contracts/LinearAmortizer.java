@@ -173,13 +173,9 @@ public final class LinearAmortizer {
         // regular principal redemption events
         events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_PR,
             model.getAs("Currency"), new POF_PR_LAM(), stf, model.getAs("BusinessDayConvention")));
-        // regular interest payments aligned with principal redemption schedule
-        events.addAll(EventFactory.createEvents(prSchedule,
-                StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         // -> chose right Payoff function depending on maturity
         PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_PR_PAM():new POF_PR_LAM());
-            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention")));
-            events.add(EventFactory.createEvent(maturity,StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
+        events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
@@ -189,11 +185,8 @@ public final class LinearAmortizer {
         // interest payment related
         if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment"))) {
             // raw interest payment events
-            Set<ContractEvent> interestEvents =
-                                                        EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
-                                                                                                                 model.getAs("CycleAnchorDateOfPrincipalRedemption"),
-                                                                                                                 model.getAs("CycleOfInterestPayment"),
-                                                                                                                 model.getAs("EndOfMonthConvention"),false),
+            Set<ContractEvent> interestEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),maturity,
+                                                                                                         model.getAs("CycleOfInterestPayment"),model.getAs("EndOfMonthConvention"),true),
                                                                                   StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention"));
             // adapt if interest capitalization set
             if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
