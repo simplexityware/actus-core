@@ -30,193 +30,6 @@ import java.util.ArrayList;
  */
 public final class ContractType {
     
-  /**
-   * Evaluates the contingent lifecycle of the contract
-   * <p>
-   *     The set of contract attributes are mapped to a stream of contract events according
-   *     to the legal logic of the respective Contract Type and contingent
-   *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}. The
-   *     generated stream of contract events contains all post-status date events that occur
-   *     during the lifetime of the contract thus resulting in the contract's
-   *     risk factor contingent lifecycle.
-   * </p>
-   * <p>
-   *    For each time in argument {@code analysisTimes} an analytical event is added to
-   *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-   *    at that time. Therefore, the generated analytical events do not affect the
-   *    contract's lifecycle.
-   * </p>
-   * <p>
-   *     This method invokes the {@code lifecycle(Set<LocalDateTime> analysisTimes,ContractModel model, RiskFactorModelProvider riskFactorModel)}
-   *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
-   *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
-   *     throws a {@link ContractTypeUnknownException}.
-   * </p>
-   * 
-   * @param analysisTimes  a series of analysis times
-   * @param model the model carrying the contract attributes
-   * @param riskFactorModel an external model of the risk factor dynamics
-   * @return the contract's contingent lifecycle
-   * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
-   * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
-   * 
-   */
-  public static ArrayList<ContractEvent> lifecycle(Set<LocalDateTime> analysisTimes,
-                                                   ContractModelProvider model,
-                                                   RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
-            switch((String) model.getAs("ContractType")) {
-                case StringUtils.ContractType_PAM: 
-                    return PrincipalAtMaturity.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_LAM: 
-                    return LinearAmortizer.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_NAM: 
-                    return NegativeAmortizer.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_ANN: 
-                    return Annuity.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_CLM: 
-                    return CallMoney.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_UMP:
-                    return UndefinedMaturityProfile.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_CSH: 
-                    return Cash.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_STK: 
-                    return Stock.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_COM: 
-                    return Commodity.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_FXOUT: 
-                    return ForeignExchangeOutright.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_SWPPV:
-                    return PlainVanillaInterestRateSwap.lifecycle(analysisTimes,model,riskFactorModel);
-                case StringUtils.ContractType_SWAPS:
-                    return Swap.lifecycle(analysisTimes,model,riskFactorModel);
-                default:
-                    throw new ContractTypeUnknownException();
-            }
-  }
-
-    /**
-     * Evaluates the contingent payoff of the contract
-     * <p>
-     *     The set of contract attributes are mapped to a stream of transaction events according
-     *     to the legal logic of the respective Contract Type and contingent
-     *     to the risk factor dynamics provided with the {@link RiskFactorModelProvider}. The
-     *     generated stream of transaction events contains all post-status date transaction events that 
-     *     occur during the lifetime of the contract thus resulting in the contract's
-     *     risk factor contingent payoff.
-     * </p>
-     * <p>
-     *     Transaction events are a subset of contract events evaluated through the {@code lifecycle} 
-     *     methods that trigger actual transactions of units of assets (for financial contracts
-     *     strictly cash in some currency) from one party to another. Therefore, a contract's
-     *     {@code payoff} evaluates to a subset of contract events from its {@code lifecycle}.
-     * </p>
-     * <p>
-     *    For each time in argument {@code analysisTimes} an analytical event is added to
-     *    the lifecycle with the sole purpose of "collecting" the contract's inner states
-     *    at that time. Therefore, the generated analytical events do not affect the
-     *    contract's lifecycle.
-     * </p>
-     * <p>
-     *     This method invokes the {@code payoff(Set<LocalDateTime> analysisTimes,ContractModel model, RiskFactorModelProvider riskFactorModel)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
-     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
-     *     throws a {@link ContractTypeUnknownException}.
-     * </p>
-     *
-     * @param analysisTimes  a series of analysis times
-     * @param model the model carrying the contract attributes
-     * @param riskFactorModel an external model of the risk factor dynamics
-     * @return the contract's contingent payoff
-     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
-     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
-     *
-     */
-    public static ArrayList<ContractEvent> payoff(Set<LocalDateTime> analysisTimes,
-                                                     ContractModelProvider model,
-                                                     RiskFactorModelProvider riskFactorModel) throws ContractTypeUnknownException,AttributeConversionException {
-        switch((String) model.getAs("ContractType")) {
-            case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_LAM:
-                return LinearAmortizer.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_ANN:
-                return Annuity.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_CLM:
-                return CallMoney.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_UMP:
-                return UndefinedMaturityProfile.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_CSH:
-                return Cash.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_STK:
-                return Stock.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_COM:
-                return Commodity.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.payoff(analysisTimes,model,riskFactorModel);
-            case StringUtils.ContractType_SWAPS:
-                return Swap.payoff(analysisTimes,model,riskFactorModel);
-            default:
-                throw new ContractTypeUnknownException();
-        }
-    }
-
-    /**
-     * Evaluates the contract's schedule
-     * <p>
-     *     The set of contract attributes are mapped to the schedule of the contract according
-     *     to the legal logic of the respective Contract Type. The
-     *     generated contract schedule contains all post-status date events that occur
-     *     during the lifetime of the contract. The events are evaluated up to the first
-     *     contingent event.
-     * </p>
-     * <p>
-     *     This method invokes the {@code schedule(ContractModel model)}
-     *     method of the respective Contract Type-class as indicated by the {@code ContractType} attribute.
-     *     If the {@code ContractType} attribute cannot be resolved to an ACTUS Contract Type the method
-     *     throws a {@link ContractTypeUnknownException}.
-     * </p>
-     *
-     * @param model the model carrying the contract attributes
-     * @return the non-contingent part of the contract's lifecycle
-     * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
-     * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
-     *
-     */
-    public static ArrayList<ContractEvent> schedule(ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
-        switch((String) model.getAs("ContractType")) {
-            case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.schedule(model);
-            case StringUtils.ContractType_LAM:
-                return LinearAmortizer.schedule(model);
-            case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.schedule(model);
-            case StringUtils.ContractType_ANN:
-                return Annuity.schedule(model);
-            case StringUtils.ContractType_CLM:
-                return CallMoney.schedule(model);
-            case StringUtils.ContractType_UMP:
-                return UndefinedMaturityProfile.schedule(model);
-            case StringUtils.ContractType_CSH:
-                return Cash.schedule(model);
-            case StringUtils.ContractType_STK:
-                return Stock.schedule(model);
-            case StringUtils.ContractType_COM:
-                return Commodity.schedule(model);
-            case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.schedule(model);
-            case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.schedule(model);
-            case StringUtils.ContractType_SWAPS:
-                return Swap.schedule(model);
-            default:
-                throw new ContractTypeUnknownException();
-        }
-    }
-
     /**
      * Evaluates the next contract events within a certain time period
      * <p>
@@ -240,40 +53,40 @@ public final class ContractType {
      *     throws a {@link ContractTypeUnknownException}.
      * </p>
      *
-     * @param within the period within the 'next' events are to be evaluated
+     * @param to the time up to which the events are to be evaluated
      * @param model the model carrying the contract attributes
-     * @return the next 'n' contract events
+     * @return a list of contract events scheduled up to 'to'
      * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
      * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
      *
      */
-    public static ArrayList<ContractEvent> next(Period within,
-                                                ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
+    public static ArrayList<ContractEvent> schedule(LocalDateTime to,
+                                                    ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
         switch((String) model.getAs("ContractType")) {
             case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.next(within,model);
+                return PrincipalAtMaturity.schedule(to,model);
             case StringUtils.ContractType_LAM:
-                return LinearAmortizer.next(within,model);
+                return LinearAmortizer.schedule(to,model);
             case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.next(within,model);
+                return NegativeAmortizer.schedule(to,model);
             case StringUtils.ContractType_ANN:
-                return Annuity.next(within,model);
+                return Annuity.schedule(to,model);
             case StringUtils.ContractType_CLM:
-                return CallMoney.next(within,model);
+                return CallMoney.schedule(to,model);
             case StringUtils.ContractType_UMP:
-                return UndefinedMaturityProfile.next(within,model);
+                return UndefinedMaturityProfile.schedule(to,model);
             case StringUtils.ContractType_CSH:
-                return Cash.next(within,model);
+                return Cash.schedule(to,model);
             case StringUtils.ContractType_STK:
-                return Stock.next(within,model);
+                return Stock.schedule(to,model);
             case StringUtils.ContractType_COM:
-                return Commodity.next(within,model);
+                return Commodity.schedule(to,model);
             case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.next(within,model);
+                return ForeignExchangeOutright.schedule(to,model);
             case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.next(within,model);
+                return PlainVanillaInterestRateSwap.schedule(to,model);
             case StringUtils.ContractType_SWAPS:
-                return Swap.next(within,model);
+                return Swap.schedule(to,model);
             default:
                 throw new ContractTypeUnknownException();
         }
@@ -296,38 +109,40 @@ public final class ContractType {
      *     throws a {@link ContractTypeUnknownException} if attempted to be evaluated for the same.
      * </p>
      *
-     * @param events a Set of contract events that should be applied in time sequence
+     * @param events a list of contract events that should be applied in time sequence
      * @param model the model carrying the contract attributes
-     * @return the post-events contract StateSpace
+     * @param observer the observer for external events and data
+     * @return the evaluated events and post-event contract states
      * @throws ContractTypeUnknownException if the provided ContractType field in the {@link ContractModelProvider} cannot be resolved
      * @throws AttributeConversionException if and attribute in {@link ContractModelProvider} cannot be converted to its target data type
      *
      */
-    public static StateSpace apply(Set<ContractEvent> events,
-                                   ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
+    public static ArrayList<ContractEvent> apply(ArrayList<ContractEvent> events,
+                                                 ContractModelProvider model,
+                                                 RiskFactorModelProvider observer) throws ContractTypeUnknownException,AttributeConversionException {
         switch((String) model.getAs("ContractType")) {
             case StringUtils.ContractType_PAM:
-                return PrincipalAtMaturity.apply(events,model);
+                return PrincipalAtMaturity.apply(events,model,observer);
             case StringUtils.ContractType_LAM:
-                return LinearAmortizer.apply(events,model);
+                return LinearAmortizer.apply(events,model,observer);
             case StringUtils.ContractType_NAM:
-                return NegativeAmortizer.apply(events,model);
+                return NegativeAmortizer.apply(events,model,observer);
             case StringUtils.ContractType_ANN:
-                return Annuity.apply(events,model);
+                return Annuity.apply(events,model,observer);
             case StringUtils.ContractType_CLM:
-                return CallMoney.apply(events,model);
+                return CallMoney.apply(events,model,observer);
             case StringUtils.ContractType_UMP:
-                return UndefinedMaturityProfile.apply(events,model);
+                return UndefinedMaturityProfile.apply(events,model,observer);
             case StringUtils.ContractType_CSH:
-                return Cash.apply(events,model);
+                return Cash.apply(events,model,observer);
             case StringUtils.ContractType_STK:
-                return Stock.apply(events,model);
+                return Stock.apply(events,model,observer);
             case StringUtils.ContractType_COM:
-                return Commodity.apply(events,model);
+                return Commodity.apply(events,model,observer);
             case StringUtils.ContractType_FXOUT:
-                return ForeignExchangeOutright.apply(events,model);
+                return ForeignExchangeOutright.apply(events,model,observer);
             case StringUtils.ContractType_SWPPV:
-                return PlainVanillaInterestRateSwap.apply(events,model);
+                return PlainVanillaInterestRateSwap.apply(events,model,observer);
             case StringUtils.ContractType_SWAPS:
                 // TODO: implement (see also Swap class)
             default:
