@@ -87,6 +87,8 @@ public final class ContractType {
                 return PlainVanillaInterestRateSwap.schedule(to,model);
             case StringUtils.ContractType_SWAPS:
                 return Swap.schedule(to,model);
+            case StringUtils.ContractType_LAX:
+            	return ExoticLinearAmortizer.schedule(to, model);
             default:
                 throw new ContractTypeUnknownException();
         }
