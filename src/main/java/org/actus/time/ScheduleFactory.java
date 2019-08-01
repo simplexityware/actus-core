@@ -81,10 +81,9 @@ public final class ScheduleFactory {
 	 *
 	 */
 	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention, boolean addEndTime) throws AttributeConversionException {
-		EndOfMonthAdjuster adjuster;
+		EndOfMonthAdjuster shifter;
+		CycleAdjuster adjuster;
 		Set<LocalDateTime> timesSet = new HashSet<LocalDateTime>();
-        Period period;
-        Period increment;
         char stub;
         
 		// if no cycle then only start (if specified) and end dates
@@ -98,26 +97,25 @@ public final class ScheduleFactory {
 			}
 			return timesSet;
 		}
-        
-        // parse cycle
-        period = CycleUtils.parsePeriod(cycle);
 
         // parse stub
         stub = CycleUtils.parseStub(cycle);
         
         // parse end of month convention
-        adjuster = new EndOfMonthAdjuster(endOfMonthConvention, startTime, period);
-        
+        shifter = new EndOfMonthAdjuster(endOfMonthConvention, startTime, cycle);
+		
+		// parse cycle adjuster
+		adjuster = new CycleAdjuster(cycle);
+
 		// init helpers for schedule creation
-		int counter = 1;
-		LocalDateTime newTime = LocalDateTime.from(startTime);
+		LocalDateTime scheduledTime = LocalDateTime.from(startTime);
+		LocalDateTime shiftedTime = LocalDateTime.from(startTime); // note, first time not shifted
 		
 		// create schedule based on end-of-month-convention
-		while (newTime.isBefore(endTime)) {
-		   	timesSet.add(newTime);
-			increment = period.multipliedBy(counter);
-			newTime = adjuster.shift(startTime.plus(increment));
-			counter++;
+		while (shiftedTime.isBefore(endTime)) {
+		   	timesSet.add(shiftedTime);
+			scheduledTime = adjuster.plusCycle(scheduledTime);
+			shiftedTime = shifter.shift(scheduledTime);
 		}
 
 		// add (or not) additional time at endTime
@@ -126,9 +124,9 @@ public final class ScheduleFactory {
 		}
 
         // now adjust for the last stub
-		if (stub == StringUtils.LongStub && timesSet.size() > 2 && !endTime.equals(newTime)) {
+		if (stub == StringUtils.LongStub && timesSet.size() > 2 && !endTime.equals(shiftedTime)) {
 		    //System.out.println("In method with par " + period + " " + multiplier + " " + newTime.minus(period.multipliedBy(multiplier)));
-			timesSet.remove(adjuster.shift(startTime.plus(period.multipliedBy((counter-2)))));
+			timesSet.remove(shifter.shift(adjuster.minusCycle(scheduledTime)));
 		}
 		
 		// return schedule

@@ -26,13 +26,13 @@ public class EndOfMonthAdjusterTest {
     @Test
     public void test_AttributeConversionException() {
         thrown.expect(AttributeConversionException.class);
-        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("INEXISTENT", LocalDateTime.of(2016, 02, 29, 0, 0), Period.ofMonths(1));
+        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("INEXISTENT", LocalDateTime.of(2016, 02, 29, 0, 0), "1M-");
     }
 
     @Test
     public void test_SD_StartDateIsNotEOM_CycleM() {
         thrown = ExpectedException.none();
-        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("SD", LocalDateTime.of(2016, 02, 1, 0, 0), Period.ofMonths(1));
+        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("SD", LocalDateTime.of(2016, 02, 1, 0, 0), "1M-");
 
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -55,7 +55,7 @@ public class EndOfMonthAdjusterTest {
     @Test
     public void test_SD_StartDateIsEOM_CycleD() {
         thrown = ExpectedException.none();
-        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("SD", LocalDateTime.of(2016, 02, 29, 0, 0), Period.ofDays(1));
+        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("SD", LocalDateTime.of(2016, 02, 29, 0, 0), "1D-");
 
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -78,7 +78,7 @@ public class EndOfMonthAdjusterTest {
         @Test
     public void test_SD_StartDateIsEOM_CycleW() {
         thrown = ExpectedException.none();
-        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("SD", LocalDateTime.of(2016, 02, 29, 0, 0), Period.ofWeeks(1));
+        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("SD", LocalDateTime.of(2016, 02, 29, 0, 0), "1W-");
 
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -101,7 +101,7 @@ public class EndOfMonthAdjusterTest {
     @Test
     public void test_SD_StartDateIsEOM_CycleM() {
         thrown = ExpectedException.none();
-        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("SD", LocalDateTime.of(2016, 02, 29, 0, 0), Period.ofMonths(1));
+        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("SD", LocalDateTime.of(2016, 02, 29, 0, 0), "1M-");
 
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -124,7 +124,7 @@ public class EndOfMonthAdjusterTest {
     @Test
     public void test_EOM_StartDateIsNotEOM_CycleM() {
         thrown = ExpectedException.none();
-        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("EOM", LocalDateTime.of(2016, 02, 1, 0, 0), Period.ofMonths(1));
+        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("EOM", LocalDateTime.of(2016, 02, 1, 0, 0), "1M-");
 
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -147,7 +147,7 @@ public class EndOfMonthAdjusterTest {
     @Test
     public void test_EOM_StartDateIsEOM_CycleD() {
         thrown = ExpectedException.none();
-        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("EOM", LocalDateTime.of(2016, 02, 29, 0, 0), Period.ofDays(1));
+        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("EOM", LocalDateTime.of(2016, 02, 29, 0, 0), "1D-");
 
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -170,7 +170,7 @@ public class EndOfMonthAdjusterTest {
         @Test
     public void test_EOM_StartDateIsEOM_CycleW() {
         thrown = ExpectedException.none();
-        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("EOM", LocalDateTime.of(2016, 02, 29, 0, 0), Period.ofWeeks(1));
+        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("EOM", LocalDateTime.of(2016, 02, 29, 0, 0), "1W-");
 
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();
@@ -193,7 +193,7 @@ public class EndOfMonthAdjusterTest {
     @Test
     public void test_EOM_StartDateIsEOM_CycleM() {
         thrown = ExpectedException.none();
-        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("EOM", LocalDateTime.of(2016, 02, 29, 0, 0), Period.ofMonths(1));
+        EndOfMonthAdjuster adjuster = new EndOfMonthAdjuster("EOM", LocalDateTime.of(2016, 02, 29, 0, 0), "1M-");
 
         // list of unadjusted times
         List<LocalDateTime> unadjustedTimes = new ArrayList<LocalDateTime>();

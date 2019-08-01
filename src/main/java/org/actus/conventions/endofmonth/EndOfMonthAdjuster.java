@@ -6,6 +6,7 @@
 package org.actus.conventions.endofmonth;
 
 import org.actus.AttributeConversionException;
+import org.actus.util.CycleUtils;
 import org.actus.util.StringUtils;
 import org.actus.conventions.endofmonth.EndOfMonthConvention;
 import org.actus.conventions.endofmonth.SameDay;
@@ -36,16 +37,16 @@ public final class EndOfMonthAdjuster {
      * 
      * @param convention indicates the {@link EndOfMonthConvention} to be applied
      * @param refDate the schedule start date
-     * @param period the period of the cycle used in the schedule
+     * @param cycle the cycle used in the schedule
      * @throws AttributeConversionException if {@code convention} does not conform with the ACTUS Data Dictionary
      * @return 
      */
-    public EndOfMonthAdjuster(String convention, LocalDateTime refDate, Period period) throws AttributeConversionException {
+    public EndOfMonthAdjuster(String convention, LocalDateTime refDate, String cycle) throws AttributeConversionException {
         switch (convention) {
             case StringUtils.EndOfMonthConvention_EndOfMonth:
                 // note, internally, units which are a multiple of "1M" are converted to "XM" why here we only have to check
                 // for period-unit M when deciding whether or not to shift a date
-                if (refDate.equals(refDate.with(lastDayOfMonth())) && period.getMonths() > 0) {
+                if (refDate.equals(refDate.with(lastDayOfMonth())) && CycleUtils.parsePeriod(cycle).getMonths() > 0) {
                     this.convention = new EndOfMonth();
                 } else {
                     this.convention = new SameDay();

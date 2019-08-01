@@ -174,9 +174,9 @@ public final class LinearAmortizer {
             } else {
                 lastEvent = model.getAs("CycleAnchorDateOfPrincipalRedemption");
             }
-            Period cyclePeriod = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
-            adjuster = new EndOfMonthAdjuster(model.getAs("EndOfMonthConvention"), lastEvent, cyclePeriod);
-            maturity = adjuster.shift(lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/model.<Double>getAs("NextPrincipalRedemptionPayment"))-1)));
+            String cycle = model.getAs("CycleOfPrincipalRedemption");
+            adjuster = new EndOfMonthAdjuster(model.getAs("EndOfMonthConvention"), lastEvent, cycle);
+            maturity = adjuster.shift(lastEvent.plus(CycleUtils.parsePeriod(cycle).multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/model.<Double>getAs("NextPrincipalRedemptionPayment"))-1)));
         }
         return maturity;
     }
