@@ -170,10 +170,6 @@ public class ExoticLinearAmortizerTest {
 		ValuedMarketModel riskFactors = new ValuedMarketModel(times, values);
 		// apply events
 		ArrayList<ContractEvent> events = ExoticLinearAmortizer.apply(schedule, model, riskFactors);
-		events.forEach(a->{
-			System.err.print(a);
-			System.err.println();
-		});
 	}
 
 	@Test
@@ -237,10 +233,8 @@ public class ExoticLinearAmortizerTest {
 				LocalDateTime.parse("2015-06-01T00:00:00") };
 		Double[] values = { 2.0, 1.2, 1.5, 0.8, 1.3, 0.5 };
 		ValuedMarketModel riskFactors = new ValuedMarketModel(times, values);
-		System.out.println(schedule);
 		// apply events
 		ArrayList<ContractEvent> events = ExoticLinearAmortizer.apply(schedule, model, riskFactors);
-		System.err.println("PRD:: " + events);
 	}
 
 }
