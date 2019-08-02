@@ -56,6 +56,9 @@ public class DayCountCalculator {
                 this.convention = new BusinessTwoFiftyTwo();
                 // TODO: ((BusinessTwoFiftyTwo) this.convention).setCalendar(calendar);
                 break;
+            case StringUtils.DayCountConvention_A336:
+            	this.convention = new ActualThreeThirtySix();
+                break;
         }
     }
 
