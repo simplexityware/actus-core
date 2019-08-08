@@ -34,18 +34,18 @@ public class ActualActualISDATest {
     }
 
     @Test
-    public void test_daycount_ActualActualISDA_2() {
-        thrown = ExpectedException.none();
-        double result = 179.0;
-        assertEquals(result, convention.dayCount(localDate1,localDate3),0);
-    }
-    
-    @Test
     public void test_dayCountFraction_ActualActualISDA_1() {
         thrown = ExpectedException.none();
         double result = 0.15616438356164383; // 57 divided by 365 (not leap year basis)
         assertEquals(result, convention.dayCountFraction(localDate1,localDate2),0);
     }
+    
+    @Test
+    public void test_daycount_ActualActualISDA_2() {
+        thrown = ExpectedException.none();
+        double result = 179.0;
+        assertEquals(result, convention.dayCount(localDate1,localDate3),0);
+    }  
 
     @Test
     public void test_dayCountFraction_ActualActualISDA_2() {

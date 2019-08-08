@@ -35,19 +35,19 @@ public class ActualThreeThirtySixTest {
     }
 
     @Test
-    public void test_daycount_ActualThreeThirtySix_2() {
-        thrown = ExpectedException.none();
-        double result = 149.0;
-        assertEquals(result, convention.dayCount(localDate1,localDate3),0);
-    }
-    
-    @Test
     public void test_dayCountFraction_ActualThreeThirtySix_1() {
         thrown = ExpectedException.none();
         double result =0.2619047619047619; // 88 divided by 336
         assertEquals(result, convention.dayCountFraction(localDate1,localDate2),0.0);
     }
 
+    @Test
+    public void test_daycount_ActualThreeThirtySix_2() {
+        thrown = ExpectedException.none();
+        double result = 149.0;
+        assertEquals(result, convention.dayCount(localDate1,localDate3),0);
+    }
+    
     @Test
     public void test_dayCountFraction_ActualThreeThirtySix_2() {
         thrown = ExpectedException.none();
