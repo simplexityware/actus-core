@@ -155,6 +155,18 @@ public final class LinearAmortizer {
         // apply events according to their time sequence to current state
         events.forEach(e -> e.eval(states, model, observer, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
 
+        // Removing all events after nominal value going to zero
+     	List<ContractEvent> removingEvents = new ArrayList<>();
+     	events.forEach(e -> {
+     		if (e.states()[1] == 0.0) {
+     			if ((e.type().equalsIgnoreCase("PR") && e.payoff() != 0.0) || e.type().equalsIgnoreCase("IP") && e.payoff()!=0.0) {
+     			} else {
+     				removingEvents.add(e);
+     			}
+     		}
+     	});
+     	events.removeAll(removingEvents);
+     		
         // return evaluated events
         return events;
     }
