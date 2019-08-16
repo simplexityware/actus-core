@@ -91,10 +91,15 @@ public final class ExoticLinearAmortizer {
 					prStf = new STF_PI_LAX(Double.parseDouble(prPayment[i]));
 					prPof = new POF_PI_LAX(Double.parseDouble(prPayment[i]));
 				}
-				events.addAll(EventFactory.createEvents(
-						ScheduleFactory.createSchedule(prLocalDate[i], prLocalDate[i + 1], prCycle[i],
-								model.getAs("EndOfMonthConvention"), false),
+				if(prLocalDate[i + 1] == model.getAs("MaturityDate")) {
+					events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(prLocalDate[i], prLocalDate[i + 1], prCycle[i],
+							model.getAs("EndOfMonthConvention"), true),
+					prType, model.getAs("Currency"), prPof, prStf, model.getAs("BusinessDayConvention")));
+				}else {
+					events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(prLocalDate[i], prLocalDate[i + 1], prCycle[i],
+									model.getAs("EndOfMonthConvention"), false),
 						prType, model.getAs("Currency"), prPof, prStf, model.getAs("BusinessDayConvention")));
+				}
 			}
 		}
 
