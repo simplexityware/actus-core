@@ -52,13 +52,16 @@ public final class Annuity {
         // principal redemption schedule
         Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
                 model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"), false);
+        // interest payment schedule
+        Set<LocalDateTime> ipSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"), maturity,
+                model.getAs("CycleOfInterestPayment"), model.getAs("EndOfMonthConvention"), false);
         // -> chose right state transition function depending on ipcb attributes
         StateTransitionFunction stf=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL"))? new STF_PR_NAM() : new STF_PR2_NAM();
         // regular principal redemption events
         events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_PR,
             model.getAs("Currency"), new POF_PR_NAM(), stf, model.getAs("BusinessDayConvention")));
         // regular interest payments aligned with principal redemption schedule
-        events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention")));
+        events.addAll(EventFactory.createEvents(ipSchedule, StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention")));
         // generate an IP at PRANX-1PRCL if IPANX is not defined
         LocalDateTime ipanx = model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").minus(CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption")));
         if(CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) && ipanx.isAfter(model.getAs("InitialExchangeDate")))
@@ -78,7 +81,7 @@ public final class Annuity {
             // raw interest payment events
             Set<ContractEvent> interestEvents =
                     EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
-                            model.getAs("CycleAnchorDateOfPrincipalRedemption"),
+                            model.getAs("CycleAnchorDateOfInterestPayment"),
                             model.getAs("CycleOfInterestPayment"),
                             model.getAs("EndOfMonthConvention"),false),
                             StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention"));
