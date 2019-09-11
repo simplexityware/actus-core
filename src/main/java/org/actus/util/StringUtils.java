@@ -44,6 +44,7 @@ public final class StringUtils {
     public final static String DayCountConvention_B252 = "B/252";
     public final static String DayCountConvention_30E360 = "30E/360";
     public final static String DayCountConvention_30E360ISDA = "30E/360ISDA";
+    public final static String DayCountConvention_A336 = "A/336";
     
     // business day conventions
     public final static String BusinessDayConvention_S = "SAME";
