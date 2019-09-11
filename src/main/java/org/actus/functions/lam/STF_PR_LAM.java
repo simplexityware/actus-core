@@ -11,6 +11,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.conventions.contractrole.ContractRoleConvention;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ public final class STF_PR_LAM implements StateTransitionFunction {
     public double[] eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         double[] postEventStates = new double[8];
-        double redemption = states.nextPrincipalRedemptionPayment - states.contractRoleSign * Math.max(0, Math.abs(states.nextPrincipalRedemptionPayment) - Math.abs(states.nominalValue));
+        double redemption = states.nextPrincipalRedemptionPayment - ContractRoleConvention.roleSign(model.getAs("ContractRole")) * Math.max(0, Math.abs(states.nextPrincipalRedemptionPayment) - Math.abs(states.nominalValue));
         
         // update state space
         states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
