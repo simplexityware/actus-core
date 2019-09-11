@@ -147,6 +147,8 @@ public final class ContractType {
                 return PlainVanillaInterestRateSwap.apply(events,model,observer);
             case StringUtils.ContractType_SWAPS:
                 // TODO: implement (see also Swap class)
+            case StringUtils.ContractType_LAX:
+            	return ExoticLinearAmortizer.apply(events, model, observer);
             default:
                 throw new ContractTypeUnknownException();
         }
