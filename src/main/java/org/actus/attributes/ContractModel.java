@@ -550,6 +550,13 @@ public class ContractModel implements ContractModelProvider {
            	 map.put("LifeCap",(CommonUtils.isNull(attributes.get("LifeCap")))? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("LifeCap")));
            	 map.put("LifeFloor",(CommonUtils.isNull(attributes.get("LifeFloor")))? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("LifeFloor")));
            	 map.put("Calendar",(!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday"))? new MondayToFridayCalendar() : new NoHolidaysCalendar());
+           	 map.put("CycleAnchorDateOfInterestCalculationBase",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestCalculationBase")))? ( (CommonUtils.isNull(attributes.get("CycleOfInterestCalculationBase")))? null : LocalDateTime.parse(attributes.get("InitialExchangeDate")) ) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestCalculationBase")));
+             map.put("CycleOfInterestCalculationBase", attributes.get("CycleOfInterestCalculationBase"));
+             map.put("InterestCalculationBase",attributes.get("InterestCalculationBase"));
+             map.put("InterestCalculationBaseAmount",(CommonUtils.isNull(attributes.get("InterestCalculationBaseAmount")))? 0.0 : Double.parseDouble(attributes.get("InterestCalculationBaseAmount")));
+             map.put("CycleAnchorDateOfPrincipalRedemption",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfPrincipalRedemption")))? LocalDateTime.parse(attributes.get("InitialExchangeDate")) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfPrincipalRedemption")));
+             map.put("BusinessDayConvention",new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
+           	 
            	 break;
             default:
                 throw new ContractTypeUnknownException();
