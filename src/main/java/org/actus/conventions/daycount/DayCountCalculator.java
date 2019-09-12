@@ -59,6 +59,9 @@ public class DayCountCalculator {
             case StringUtils.DayCountConvention_A336:
             	this.convention = new ActualThreeThirtySix();
                 break;
+            case StringUtils.DayCountConvention_28336:
+            	this.convention = new TwentyEightThreeThirtySix();
+            	break;
         }
     }
 
