@@ -37,8 +37,8 @@ public class ThirtyEThreeSixtyISDA implements DayCountConventionProvider {
 		d1 = (d1 == startTime.with(lastDayOfMonth()).getDayOfMonth()) ? 
 		30 : d1;
 		int d2 = endTime.getDayOfMonth();
-		d2 = (!(endTime.equals(maturityDate) || endTime.getMonth().getValue()==2) 
-				&& d2 == startTime.with(lastDayOfMonth()).getDayOfMonth()) ? 30 : d2;
+		d2 = (!(endTime.equals(maturityDate) && endTime.getMonth().getValue()==2) 
+				&& d2 == endTime.with(lastDayOfMonth()).getDayOfMonth()) ? 30 : d2;
 		double delD = d2 - d1;
 		double delM = endTime.getMonth().getValue()
 				- startTime.getMonth().getValue();
