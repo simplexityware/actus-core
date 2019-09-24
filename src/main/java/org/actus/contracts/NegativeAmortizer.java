@@ -155,7 +155,12 @@ public final class NegativeAmortizer {
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        events.forEach(e -> e.eval(states, model, observer, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
+        LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
+		ListIterator eventIterator = events.listIterator();
+		while (( states.lastEventTime.isBefore(initialExchangeDate) || states.nominalValue > 0.0) && eventIterator.hasNext()) {
+			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
+					model.getAs("BusinessDayConvention"));
+		}
 
         // return evaluated events
         return events;

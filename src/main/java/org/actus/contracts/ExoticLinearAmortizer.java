@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.ListIterator;
 import java.util.Set;
 
 import org.actus.AttributeConversionException;
@@ -293,9 +294,12 @@ public final class ExoticLinearAmortizer {
 		Collections.sort(events);
 
 		// apply events according to their time sequence to current state
-		events.forEach(e -> e.eval(states, model, observer, model.getAs("DayCountConvention"),
-				model.getAs("BusinessDayConvention")));
-
+		LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
+		ListIterator<ContractEvent> eventIterator = events.listIterator();
+		while (( states.lastEventTime.isBefore(initialExchangeDate) || states.nominalValue > 0.0) && eventIterator.hasNext()) {
+			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
+					model.getAs("BusinessDayConvention"));
+		}
 		// return evaluated events
 		return events;
 	}
