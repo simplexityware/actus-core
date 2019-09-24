@@ -237,4 +237,56 @@ public class ExoticLinearAmortizerTest {
 		ArrayList<ContractEvent> events = ExoticLinearAmortizer.apply(schedule, model, riskFactors);
 	}
 
+	@Test
+	public void test_LAX_schedule_MandatoryAttributes_withMaturity_IPCB() {
+		thrown = ExpectedException.none();
+		// define attributes
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("ContractType", "LAX");
+		map.put("Calendar", "NoHolidayCalendar");
+		map.put("StatusDate", "2019-07-18T00:00:00");
+		map.put("ContractRole", "RPA");
+		map.put("LegalEntityIDCounterparty", "CORP-XY");
+		map.put("DayCountConvention", "A/365");
+		map.put("Currency", "INR");
+		map.put("InitialExchangeDate", "2019-08-11T00:00:00");
+		map.put("MaturityDate", "2019-12-31T00:00:00");
+		map.put("NotionalPrincipal", "10000.0");
+		map.put("NominalInterestRate", "0.18");
+		map.put("EndOfMonthConvention", "SD");
+		map.put("ArrayCycleAnchorDateOfInterestPayment", "2019-08-18T00:00:00,2019-11-10T00:00:00");
+		map.put("ArrayCycleOfInterestPayment", "1W+,1W+");
+		map.put("ArrayCycleAnchorDateOfPrincipalRedemption","2019-08-18T00:00:00,2019-09-15T00:00:00");
+		map.put("ArrayCycleOfPrincipalRedemption", "1W+,1W+");
+		map.put("ArrayNextPrincipalRedemptionPayment", "700,800");
+		map.put("ArrayIncreaseDecrease", "DEC,DEC");
+		map.put("RateMultiplier", "1");
+		map.put("MarketObjectCodeRateReset", "USD.SWP");
+		map.put("AccruedInterest", "0");
+		map.put("InterestCalculationBase","NTL");
+        map.put("InterestCalculationBaseAmount","10000.0");
+
+		// parse attributes
+		ContractModel model = ContractModel.parse(map);
+
+		// compute schedule
+		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(map.get("MaturityDate")),
+				model);
+
+		// add analysis events
+		schedule.addAll(EventFactory.createEvents(
+				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
+						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", "SD"),
+				StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
+		// define risk factor model
+		LocalDateTime[] times = { LocalDateTime.parse("2019-08-18T00:00:00"),
+				LocalDateTime.parse("2019-08-25T00:00:00"), LocalDateTime.parse("2019-09-01T00:00:00"),
+				LocalDateTime.parse("2019-09-08T00:00:00"), LocalDateTime.parse("2019-09-15T00:00:00"),
+				LocalDateTime.parse("2019-09-22T00:00:00") };
+		Double[] values = { 2.0, 1.2, 1.5, 0.8, 1.3, 0.5 };
+		ValuedMarketModel riskFactors = new ValuedMarketModel(times, values);
+		// apply events
+		ArrayList<ContractEvent> events = ExoticLinearAmortizer.apply(schedule, model, riskFactors);
+	}
 }

@@ -30,7 +30,6 @@ public class STF_PR_LAX implements StateTransitionFunction {
 		states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
 		states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
 		states.nominalValue -= redemption;
-		states.interestCalculationBase = states.nominalValue;
 		states.lastEventTime = time;
 		// copy post-event-states
 		postEventStates[0] = states.timeFromLastEvent;

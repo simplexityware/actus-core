@@ -5,31 +5,55 @@
  */
 package org.actus.contracts;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
-import org.actus.externals.RiskFactorModelProvider;
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.events.ContractEvent;
-import org.actus.functions.StateTransitionFunction;
+import org.actus.events.EventFactory;
+import org.actus.externals.RiskFactorModelProvider;
+
 import org.actus.functions.PayOffFunction;
-import org.actus.functions.lam.*;
+import org.actus.functions.StateTransitionFunction;
+import org.actus.functions.lam.POF_IPCB_LAM;
+import org.actus.functions.lam.POF_IP_LAM;
+import org.actus.functions.lam.POF_PRD_LAM;
+import org.actus.functions.lam.POF_TD_LAM;
+import org.actus.functions.lam.STF_FP_LAM;
+import org.actus.functions.lam.STF_IED_LAM;
+import org.actus.functions.lam.STF_IPCB_LAM;
+import org.actus.functions.lam.STF_IPCI2_LAM;
+import org.actus.functions.lam.STF_IPCI_LAM;
+import org.actus.functions.lam.STF_PRD_LAM;
+import org.actus.functions.lam.STF_SC_LAM;
 import org.actus.functions.lax.POF_PI_LAX;
 import org.actus.functions.lax.POF_PR_LAX;
 import org.actus.functions.lax.STF_PI_LAX;
+import org.actus.functions.lax.STF_PI_LAX2;
 import org.actus.functions.lax.STF_PR_LAX;
+import org.actus.functions.lax.STF_PR_LAX2;
 import org.actus.functions.lax.STF_RRF_LAX;
 import org.actus.functions.lax.STF_RRY_LAM;
 import org.actus.functions.lax.STF_RR_LAX;
-import org.actus.functions.pam.*;
+import org.actus.functions.pam.POF_AD_PAM;
+import org.actus.functions.pam.POF_FP_PAM;
+import org.actus.functions.pam.POF_IED_PAM;
+import org.actus.functions.pam.POF_IPCI_PAM;
+import org.actus.functions.pam.POF_RR_PAM;
+import org.actus.functions.pam.POF_SC_PAM;
+import org.actus.functions.pam.STF_AD_PAM;
+import org.actus.functions.pam.STF_IP_PAM;
+import org.actus.functions.pam.STF_TD_PAM;
+
 import org.actus.states.StateSpace;
-import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
-import org.actus.conventions.contractrole.ContractRoleConvention;
-import org.actus.conventions.endofmonth.EndOfMonthAdjuster;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
-
-import java.time.LocalDateTime;
-import java.util.*;
 
 /**
  * Represents the Exotic Linear Amortizer payoff algorithm
@@ -84,11 +108,15 @@ public final class ExoticLinearAmortizer {
 			for (int i = 0; i < prAnchor.length; i++) {
 				if (prIncDec[i].trim().equalsIgnoreCase("DEC")) {
 					prType = StringUtils.EventType_PR;
-					prStf = new STF_PR_LAX(Double.parseDouble(prPayment[i]));
+					prStf = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
+							&& model.getAs("InterestCalculationBase").equals("NTL")) ? 
+							new STF_PR_LAX(Double.parseDouble(prPayment[i])) : new STF_PR_LAX2(Double.parseDouble(prPayment[i]));
 					prPof = new POF_PR_LAX(Double.parseDouble(prPayment[i]));
 				} else {
 					prType = StringUtils.EventType_PI;
-					prStf = new STF_PI_LAX(Double.parseDouble(prPayment[i]));
+					prStf = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
+							&& model.getAs("InterestCalculationBase").equals("NTL")) ? 
+							new STF_PI_LAX(Double.parseDouble(prPayment[i])) : new STF_PI_LAX2(Double.parseDouble(prPayment[i]));
 					prPof = new POF_PI_LAX(Double.parseDouble(prPayment[i]));
 				}
 				events.addAll(EventFactory.createEvents(

@@ -10,11 +10,11 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 
-public class STF_PI_LAX implements StateTransitionFunction {
+public class STF_PR_LAX2 implements StateTransitionFunction {
 
 	private double prPayment = 0;
 
-	public STF_PI_LAX(Double prPayment) {
+	public STF_PR_LAX2(Double prPayment) {
 		this.prPayment = prPayment;
 	}
 
@@ -29,7 +29,8 @@ public class STF_PI_LAX implements StateTransitionFunction {
 				timeAdjuster.shiftCalcTime(time));
 		states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
 		states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-		states.nominalValue += redemption;
+		states.nominalValue -= redemption;
+		states.interestCalculationBase = states.nominalValue;
 		states.lastEventTime = time;
 		// copy post-event-states
 		postEventStates[0] = states.timeFromLastEvent;
@@ -40,5 +41,4 @@ public class STF_PI_LAX implements StateTransitionFunction {
 		// return post-event-states
 		return postEventStates;
 	}
-
 }
