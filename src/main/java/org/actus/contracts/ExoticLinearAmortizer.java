@@ -17,7 +17,7 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.events.ContractEvent;
 import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
-import org.actus.fu.STF_RR_LAX;
+
 import org.actus.functions.PayOffFunction;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.functions.lam.POF_IPCB_LAM;
@@ -39,6 +39,7 @@ import org.actus.functions.lax.STF_PR_LAX;
 import org.actus.functions.lax.STF_PR_LAX2;
 import org.actus.functions.lax.STF_RRF_LAX;
 import org.actus.functions.lax.STF_RRY_LAM;
+import org.actus.functions.lax.STF_RR_LAX;
 import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.pam.POF_FP_PAM;
 import org.actus.functions.pam.POF_IED_PAM;
@@ -48,6 +49,7 @@ import org.actus.functions.pam.POF_SC_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.pam.STF_IP_PAM;
 import org.actus.functions.pam.STF_TD_PAM;
+
 import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
 import org.actus.util.CommonUtils;

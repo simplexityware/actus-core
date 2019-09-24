@@ -1,4 +1,4 @@
-package org.actus.fu;
+package org.actus.functions.lax;
 
 import java.time.LocalDateTime;
 
