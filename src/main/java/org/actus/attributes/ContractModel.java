@@ -556,7 +556,9 @@ public class ContractModel implements ContractModelProvider {
              map.put("InterestCalculationBaseAmount",(CommonUtils.isNull(attributes.get("InterestCalculationBaseAmount")))? 0.0 : Double.parseDouble(attributes.get("InterestCalculationBaseAmount")));
              map.put("CycleAnchorDateOfPrincipalRedemption",(CommonUtils.isNull(attributes.get("CycleAnchorDateOfPrincipalRedemption")))? LocalDateTime.parse(attributes.get("InitialExchangeDate")) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfPrincipalRedemption")));
              map.put("BusinessDayConvention",new BusinessDayAdjuster(attributes.get("BusinessDayConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
-           	 
+             map.put("PurchaseDate",(CommonUtils.isNull(attributes.get("PurchaseDate")))? null : LocalDateTime.parse(attributes.get("PurchaseDate")));
+             map.put("PriceAtPurchaseDate",(CommonUtils.isNull(attributes.get("PriceAtPurchaseDate")))? 0.0 : Double.parseDouble(attributes.get("PriceAtPurchaseDate")));
+             
            	 break;
             default:
                 throw new ContractTypeUnknownException();
