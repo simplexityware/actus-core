@@ -155,7 +155,7 @@ public final class LinearAmortizer {
         // apply events according to their time sequence to current state
         LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
 		ListIterator eventIterator = events.listIterator();
-		while (( states.lastEventTime.isBefore(initialExchangeDate) || states.nominalValue > 0.0) && eventIterator.hasNext()) {
+		while (( states.lastEventTime.isBefore(initialExchangeDate) || states.nominalValue >= 0.0) && eventIterator.hasNext()) {
 			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
 					model.getAs("BusinessDayConvention"));
 		}
@@ -180,9 +180,22 @@ public final class LinearAmortizer {
                 lastEvent = model.getAs("CycleAnchorDateOfPrincipalRedemption");
             }
             String cycle = model.getAs("CycleOfPrincipalRedemption");
-            adjuster = new EndOfMonthAdjuster(model.getAs("EndOfMonthConvention"), lastEvent, cycle);
-            maturity = adjuster.shift(lastEvent.plus(CycleUtils.parsePeriod(cycle).multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/model.<Double>getAs("NextPrincipalRedemptionPayment"))-1)));
-        }
+			adjuster = new EndOfMonthAdjuster(model.getAs("EndOfMonthConvention"), lastEvent, cycle);
+			LocalDateTime IPCED = model.getAs("CapitalizationEndDate");
+			LocalDateTime SD = model.getAs("StatusDate");
+			Optional ofNullable = Optional.ofNullable(IPCED);
+			if (!ofNullable.isPresent()) {
+				maturity = adjuster.shift(lastEvent.plus(CycleUtils.parsePeriod(cycle)
+						.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")
+								/ model.<Double>getAs("NextPrincipalRedemptionPayment")) - 1)));
+			} else {
+				if (IPCED.isAfter(SD)) {
+					maturity = adjuster.shift(lastEvent.plus(CycleUtils.parsePeriod(cycle)
+							.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")
+									/ model.<Double>getAs("NextPrincipalRedemptionPayment")))));
+				}
+			}
+		}
         return maturity;
     }
 
