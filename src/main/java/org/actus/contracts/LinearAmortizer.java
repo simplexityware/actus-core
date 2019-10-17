@@ -160,6 +160,10 @@ public final class LinearAmortizer {
 					model.getAs("BusinessDayConvention"));
 		}
 
+		// remove pre-purchase events if purchase date set (we only consider post-purchase events for analysis)
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.type().equals(StringUtils.EventType_AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), null, null)) == -1);
+        }
         // return evaluated events
         return events;
     }
