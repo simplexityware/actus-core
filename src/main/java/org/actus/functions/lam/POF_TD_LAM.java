@@ -24,6 +24,6 @@ public final class POF_TD_LAM implements PayOffFunction {
         return ContractDefaultConvention.performanceIndicator(states.contractStatus) *
                 ContractRoleConvention.roleSign(model.getAs("ContractRole"))*
         (model.<Double>getAs("PriceAtTerminationDate") + states.nominalAccrued + 
-        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * states.nominalRate * states.interestCalculationBase);
+        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * states.nominalRate * states.nominalValue);
         }
 }
