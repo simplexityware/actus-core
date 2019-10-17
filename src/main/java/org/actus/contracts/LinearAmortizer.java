@@ -25,6 +25,7 @@ import org.actus.util.CycleUtils;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents the Linear Amortizer payoff algorithm
@@ -66,24 +67,31 @@ public final class LinearAmortizer {
             Set<ContractEvent> interestEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),maturity,
                                                                                                         model.getAs("CycleOfInterestPayment"),model.getAs("EndOfMonthConvention"),true),
                                                                                 StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention"));
-            // adapt if interest capitalization set
-            if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
-                // for all events with time <= IPCED && type == "IP" do
-                // change type to IPCI and payoff/state-trans functions
-                ContractEvent capitalizationEnd = EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IPCI,
-                                                                            model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci, model.getAs("BusinessDayConvention"));
-                interestEvents.forEach(e -> {
-                    if (e.type().equals(StringUtils.EventType_IP) && e.compareTo(capitalizationEnd) == -1) {
-                        e.type(StringUtils.EventType_IPCI);
-                        e.fPayOff(new POF_IPCI_PAM());
-                        e.fStateTrans(stf_ipci);
-                    }
-                });
-                // also, remove any IP event exactly at IPCED and replace with an IPCI event
-                interestEvents.remove(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IP,
-                                                                            model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("BusinessDayConvention")));
-            }
-            events.addAll(interestEvents);
+            Set<ContractEvent> interestEventsRemove = null;
+			// adapt if interest capitalization set
+			if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
+				// for all events with time <= IPCED && type == "IP" do
+				// change type to IPCI and payoff/state-trans functions
+				ContractEvent capitalizationEnd = EventFactory.createEvent(model.getAs("CapitalizationEndDate"),
+						StringUtils.EventType_IPCI, model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci,
+						model.getAs("BusinessDayConvention"));
+				interestEvents.forEach(e -> {
+					if (e.type().equals(StringUtils.EventType_IP) && e.compareTo(capitalizationEnd) == -1) {
+						e.type(StringUtils.EventType_IPCI);
+						e.fPayOff(new POF_IPCI_PAM());
+						e.fStateTrans(stf_ipci);
+					}
+				});
+//              // also, remove any IP event exactly at IPCED and replace with an IPCI event  
+				interestEventsRemove = interestEvents.stream().filter(a -> !a.time().equals(capitalizationEnd.time()))
+						.collect(Collectors.toSet());
+				interestEventsRemove.add(capitalizationEnd);
+			}
+			if(interestEventsRemove != null) {
+				events.addAll(interestEventsRemove);
+			}else {
+				events.addAll(interestEvents);
+			}
         }else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
             // if no extra interest schedule set but capitalization end date, add single IPCI event
             events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IPCI,
