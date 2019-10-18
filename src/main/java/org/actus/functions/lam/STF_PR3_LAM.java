@@ -18,11 +18,8 @@ public class STF_PR3_LAM implements StateTransitionFunction {
 	       
 	        // update state space
 	        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-//	        System.err.println(states.nominalRate+" === "+states.nominalValue+" == "+ states.timeFromLastEvent +" == "+states.nominalAccrued+" == "+states.interestCalculationBase);
-//	        System.err.println(states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent);
 	        states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
 	        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-//	        states.interestCalculationBase = states.nominalValue;
 	        states.nominalValue = 0.0;
 	        states.lastEventTime = time;
 	        
