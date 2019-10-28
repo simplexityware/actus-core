@@ -27,7 +27,7 @@ public final class POF_IP_NAM implements PayOffFunction {
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
         double accrued = states.nominalAccrued + states.interestCalculationBase * timeFromLastEvent * states.nominalRate;
         double capitalization = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0,Math.abs(accrued)-Math.abs(states.nextPrincipalRedemptionPayment));
-        double interest = accrued - capitalization;
+        double interest = accrued;
 
         // return interest payoff
         return ContractDefaultConvention.performanceIndicator(states.contractStatus) * states.interestScalingMultiplier * interest;

@@ -32,7 +32,6 @@ public final class STF_IP_NAM implements StateTransitionFunction {
         // update state space
         states.timeFromLastEvent = timeFromLastEvent;
         states.nominalAccrued = 0.0;
-        states.nominalValue += capitalization;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
         states.lastEventTime = time;
 
