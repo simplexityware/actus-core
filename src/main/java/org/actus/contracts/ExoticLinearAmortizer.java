@@ -41,14 +41,17 @@ import org.actus.functions.lax.STF_PR_LAX2;
 import org.actus.functions.lax.STF_RRF_LAX;
 import org.actus.functions.lax.STF_RRY_LAM;
 import org.actus.functions.lax.STF_RR_LAX;
+import org.actus.functions.nam.POF_PR_NAM;
 import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.pam.POF_FP_PAM;
 import org.actus.functions.pam.POF_IED_PAM;
 import org.actus.functions.pam.POF_IPCI_PAM;
+import org.actus.functions.pam.POF_PR_PAM;
 import org.actus.functions.pam.POF_RR_PAM;
 import org.actus.functions.pam.POF_SC_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.pam.STF_IP_PAM;
+import org.actus.functions.pam.STF_PR_PAM;
 import org.actus.functions.pam.STF_TD_PAM;
 
 import org.actus.states.StateSpace;
@@ -81,6 +84,10 @@ public final class ExoticLinearAmortizer {
 					model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
 		}
 
+		 // -> chose right Payoff function depending on maturity
+        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_PR_PAM():new POF_PR_NAM());
+        events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention")));
+		
 		// create principal redemption schedule
 		if (!CommonUtils.isNull(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption"))) {
 
