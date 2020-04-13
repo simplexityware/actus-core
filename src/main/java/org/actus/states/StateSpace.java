@@ -19,21 +19,43 @@ import java.time.LocalDateTime;
  * in the various {@link ContractEvent}s.
  */
 public final class StateSpace {
-    public LocalDateTime lastEventTime;
-    public String contractStatus = StringUtils.ContractStatus_Performant; // TODO: initialize together with other states
-    public double timeFromLastEvent; // analytical result
-    public double nominalValue; // analytical result
-    public double nominalAccrued; // analytical result
-    public double feeAccrued; // analytical result
-    public double nominalRate; // analytical result
-    public double interestCalculationBase;
-    public double interestScalingMultiplier;
-    public double nominalScalingMultiplier;
-    public double nextPrincipalRedemptionPayment;
-    public double secondaryNominalValue; // analytical result
-    public double payoffAtSettlement;
-    public double variationMargin; // analytical result
-    public int contractRoleSign;
-    public double nominalAccruedFix;
-    public double nominalAccruedFloat;
+    public double           accruedInterest; // analytical result
+    public double           accruedInterest2;
+    public String           contractPerformance = StringUtils.ContractStatus_Performant; // TODO: initialize together with other states
+    public double           exerciseAmount;
+    public LocalDateTime    exerciseDate;
+    public double           feeAccrued; // analytical result
+    public double           interestCalculationBaseAmount;
+    public double           interestScalingMultiplier;
+    public double           nextPrincipalRedemptionPayment;
+    public double           nominalInterestRate; // analytical result
+    public double           nominalInterestRate2;
+    public LocalDateTime    nonPerformingDate;
+    public double           notionalPrincipal; // analytical result
+    public double           notionalPrincipal2; // analytical result
+    public double           notionalScalingMultiplier;
+    public LocalDateTime    statusDate;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
