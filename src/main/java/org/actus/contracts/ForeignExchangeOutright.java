@@ -94,8 +94,7 @@ public final class ForeignExchangeOutright {
     // initialize state space per status date
     private static StateSpace initStateSpace(ContractModelProvider model) {
         StateSpace states = new StateSpace();
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
-        states.lastEventTime = model.getAs("StatusDate");
+        states.statusDate = model.getAs("StatusDate");
         return states;
     }
 }

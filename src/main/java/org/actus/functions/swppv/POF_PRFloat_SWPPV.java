@@ -15,7 +15,7 @@ public class POF_PRFloat_SWPPV implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-    	return ContractDefaultConvention.performanceIndicator(states.contractStatus) * states.nominalScalingMultiplier * states.secondaryNominalValue;
+    	return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * states.notionalScalingMultiplier * states.notionalPrincipal2;
         }
 
 }

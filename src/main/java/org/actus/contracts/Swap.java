@@ -125,7 +125,7 @@ public final class Swap {
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-        states.lastEventTime = model.getAs("StatusDate");
+        states.statusDate = model.getAs("StatusDate");
 
         // return the initialized state space
         return states;

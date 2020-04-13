@@ -17,21 +17,20 @@ import java.time.LocalDateTime;
 public final class STF_IP_ANN implements StateTransitionFunction {
 
     @Override
-    public double[] eval(LocalDateTime time, StateSpace states,
+    public StateSpace eval(LocalDateTime time, StateSpace states,
                          ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[8];
+        StateSpace postEventStates = new StateSpace();
 
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.nominalAccrued = 0.0;
-        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-        states.lastEventTime = time;
+        double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
+        states.accruedInterest = 0.0;
+        states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
+        states.statusDate = time;
 
         // copy post-event-states
-        postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[1] = states.nominalValue;
-        postEventStates[3] = states.nominalRate;
-        postEventStates[7] = states.feeAccrued;
+        postEventStates.notionalPrincipal = states.notionalPrincipal;
+        postEventStates.nominalInterestRate = states.nominalInterestRate;
+        postEventStates.feeAccrued = states.feeAccrued;
 
         // return post-event-states
         return postEventStates;

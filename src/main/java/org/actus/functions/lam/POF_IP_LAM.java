@@ -20,9 +20,9 @@ public final class POF_IP_LAM implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) *
+        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) *
         states.interestScalingMultiplier *
-        (states.nominalAccrued + 
-        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * states.nominalRate * states.interestCalculationBase);
+        (states.accruedInterest +
+        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time)) * states.nominalInterestRate * states.interestCalculationBaseAmount);
         }
 }

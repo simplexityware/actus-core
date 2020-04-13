@@ -20,6 +20,6 @@ public final class POF_TD_SWAPS implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) * model.<Double>getAs("PriceAtTerminationDate");
+        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * model.<Double>getAs("PriceAtTerminationDate");
     }
 }

@@ -16,7 +16,7 @@ public class POF_IEDFloat_SWPPV implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) *
+        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) *
         ContractRoleConvention.roleSign(model.getAs("ContractRole")) * 
         (model.<Double>getAs("NotionalPrincipal") + model.<Double>getAs("PremiumDiscountAtIED"));
         }

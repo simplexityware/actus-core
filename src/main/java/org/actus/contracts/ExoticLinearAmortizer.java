@@ -296,7 +296,7 @@ public final class ExoticLinearAmortizer {
 		// apply events according to their time sequence to current state
 		LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
 		ListIterator<ContractEvent> eventIterator = events.listIterator();
-		while (( states.lastEventTime.isBefore(initialExchangeDate) || states.nominalValue > 0.0) && eventIterator.hasNext()) {
+		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal > 0.0) && eventIterator.hasNext()) {
 			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
 					model.getAs("BusinessDayConvention"));
 		}
@@ -319,24 +319,24 @@ public final class ExoticLinearAmortizer {
 		StateSpace states = new StateSpace();
 
 		// general states to be initialized
-		states.lastEventTime = model.getAs("StatusDate");
-		states.nominalScalingMultiplier = 1;
+		states.statusDate = model.getAs("StatusDate");
+		states.notionalScalingMultiplier = 1;
 		states.interestScalingMultiplier = 1;
 
 		
 		if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-			states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+			states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 					* model.<Double>getAs("NotionalPrincipal");
-			states.nominalRate = model.getAs("NominalInterestRate");
-			states.nominalAccrued = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+			states.nominalInterestRate = model.getAs("NominalInterestRate");
+			states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 					* model.<Double>getAs("AccruedInterest");
 			states.feeAccrued = model.getAs("FeeAccrued");
 			if (CommonUtils.isNull(model.getAs("InterestCalculationBase"))
 					|| model.getAs("InterestCalculationBase").equals("NT")) {
-				states.interestCalculationBase = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 						* model.<Double>getAs("NotionalPrincipal");
 			} else {
-				states.interestCalculationBase = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 						* model.<Double>getAs("InterestCalculationBaseAmount");
 			}
 		}

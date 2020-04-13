@@ -20,6 +20,6 @@ public final class POF_PRD_SWAPS implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) * model.<Double>getAs("PriceAtPurchaseDate");
+        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * model.<Double>getAs("PriceAtPurchaseDate");
     }
 }

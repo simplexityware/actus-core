@@ -17,16 +17,14 @@ import java.time.LocalDateTime;
 public final class STF_PRD_STK implements StateTransitionFunction {
     
     @Override
-    public double[] eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[8];
+        StateSpace postEventStates = new StateSpace();
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.lastEventTime = time;
+        states.statusDate = time;
         
         // copy post-event-states
-        postEventStates[0] = states.timeFromLastEvent;
         
         // return post-event-states
         return postEventStates;

@@ -20,7 +20,8 @@ public final class POF_IPFloat_SWPPV implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) *
-        (states.nominalAccruedFloat + (-1) * states.timeFromLastEvent * states.nominalRate * states.nominalValue);
+        double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
+        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) *
+        (states.accruedInterest2 + (-1) * timeFromLastEvent * states.nominalInterestRate * states.notionalPrincipal);
         }
 }

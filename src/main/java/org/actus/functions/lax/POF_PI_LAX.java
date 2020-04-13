@@ -24,8 +24,8 @@ private Double prPayment;
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		
 		double redemption = prPayment - ContractRoleConvention.roleSign(model.getAs("ContractRole"))
-						* Math.max(0, Math.abs(prPayment) - Math.abs(states.nominalValue));
-		return ContractDefaultConvention.performanceIndicator(states.contractStatus) * states.nominalScalingMultiplier
+						* Math.max(0, Math.abs(prPayment) - Math.abs(states.notionalPrincipal));
+		return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * states.notionalScalingMultiplier
 				* redemption;
 	}
 

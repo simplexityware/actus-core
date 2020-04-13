@@ -173,7 +173,7 @@ public final class Annuity {
         // apply events according to their time sequence to current state
         LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
 		ListIterator eventIterator = events.listIterator();
-		while (( states.lastEventTime.isBefore(initialExchangeDate) || states.nominalValue > 0.0) && eventIterator.hasNext()) {
+		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal > 0.0) && eventIterator.hasNext()) {
 			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
 					model.getAs("BusinessDayConvention"));
 		}
@@ -213,17 +213,17 @@ public final class Annuity {
     // initialize the contract states
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-        states.nominalScalingMultiplier = 1;
+        states.notionalScalingMultiplier = 1;
         states.interestScalingMultiplier = 1;
-        states.lastEventTime = model.getAs("StatusDate");
+        states.statusDate = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(double)model.getAs("NotionalPrincipal");
-            states.nominalRate = model.getAs("NominalInterestRate");
+            states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(double)model.getAs("NotionalPrincipal");
+            states.nominalInterestRate = model.getAs("NominalInterestRate");
             // TODO: IPAC can be NULL
-            states.nominalAccrued = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(double)model.getAs("AccruedInterest");
+            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(double)model.getAs("AccruedInterest");
             // TODO: FEAC can be NULL
             states.feeAccrued = model.getAs("FeeAccrued");
-            states.interestCalculationBase = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
+            states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*( (model.getAs("InterestCalculationBase").equals("NT"))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
         
         // init next principal redemption payment amount (can be null for ANN!)

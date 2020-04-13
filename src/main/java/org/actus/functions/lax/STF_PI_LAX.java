@@ -19,24 +19,23 @@ public class STF_PI_LAX implements StateTransitionFunction {
 	}
 
 	@Override
-	public double[] eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
+	public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-		double[] postEventStates = new double[8];
+		StateSpace postEventStates = new StateSpace();
 		double role = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
-		double redemption = role*prPayment - role * Math.max(0, Math.abs(prPayment) - Math.abs(states.nominalValue));
+		double redemption = role*prPayment - role * Math.max(0, Math.abs(prPayment) - Math.abs(states.notionalPrincipal));
 		// update state space
-		states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime),
+		double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate),
 				timeAdjuster.shiftCalcTime(time));
-		states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
-		states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
-		states.nominalValue += redemption;
-		states.lastEventTime = time;
+		states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
+		states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
+		states.notionalPrincipal += redemption;
+		states.statusDate = time;
 		// copy post-event-states
-		postEventStates[0] = states.timeFromLastEvent;
-		postEventStates[1] = states.nominalValue;
-		postEventStates[2] = states.nominalAccrued;
-		postEventStates[3] = states.nominalRate;
-		postEventStates[7] = states.feeAccrued;
+		postEventStates.notionalPrincipal = states.notionalPrincipal;
+		postEventStates.accruedInterest = states.accruedInterest;
+		postEventStates.nominalInterestRate = states.nominalInterestRate;
+		postEventStates.feeAccrued = states.feeAccrued;
 		// return post-event-states
 		return postEventStates;
 	}
