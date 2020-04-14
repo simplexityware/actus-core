@@ -65,7 +65,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         this.fStateTrans = stateTrans;
         this.states = new StateSpace();
     }
-    
+
     /**
      * Returns the time of this event (adjusted for the business-day-convention)
      */
@@ -104,43 +104,6 @@ public final class ContractEvent implements Comparable<ContractEvent> {
      */
     public double payoff() {
         return payoff;    
-    }
-
-    
-    /**
-     * Returns the post-event nominal value state-variable
-     */
-    public double notionalPrincipal() {
-        return states.notionalPrincipal;
-    }
-    
-    /**
-     * Returns the post-event nominal accrued state-variable
-     */    
-    public double accruedInterest() {
-        return states.accruedInterest;
-    }
-    
-    /**
-     * Returns the post-event nominal rate state-variable
-     */
-    public double nominalInterestRate() {
-        return states.nominalInterestRate;
-    }
-    
-    /**
-     * Returns the post-event secondary nominal value state-variable
-     */
-    public double notionalPrincipal2() {
-        return states.notionalPrincipal2;
-    }
-
-    
-    /**
-     * Returns the post-event fee accrued state-variable
-     */
-    public double feeAccrued() {
-        return states.feeAccrued;
     }
 
     /**
@@ -216,42 +179,4 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         this.payoff = fPayOff.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
         this.states = fStateTrans.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
     }
-    
-    /**
-     * Returns an array of Strings representing all analytical elements
-     * <p>
-     * Note that the length of the returned array may change going forward as new states
-     * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
-     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
-     * individually and parse to a String manually.
-     * 
-     * @return an array of Strings with analytical elements
-     */
-    public String[] toArray() {
-        return new String[] {
-            eventTime.toString(),
-            type,
-            currency,
-            Double.toString(payoff),
-            Double.toString(states.notionalPrincipal),
-            Double.toString(states.accruedInterest),
-            Double.toString(states.nominalInterestRate)
-            };
-    }
-    
-    /**
-     * Returns a String-representation of all analytical elements
-     * <p>
-     * Note that the number of analytical elements may change going forward as e.g. new states
-     * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
-     * to use the getter-methods for desired m (e.g. {@code time}, {@code type}, etc.)
-     * individually and parse to a String manually.
-     * 
-     * @return a single String containing all analytical elements
-     */
-    @Override
-    public String toString() {
-        return Arrays.toString(toArray());    
-    }
-
 }
