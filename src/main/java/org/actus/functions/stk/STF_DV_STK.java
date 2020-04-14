@@ -23,9 +23,7 @@ public final class STF_DV_STK implements StateTransitionFunction {
         
         // update state space
         states.statusDate = time;
-        
-        // copy post-event-states
-        
+
         // return post-event-states
         return postEventStates;
         }

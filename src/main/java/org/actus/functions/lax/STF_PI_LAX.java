@@ -36,6 +36,7 @@ public class STF_PI_LAX implements StateTransitionFunction {
 		postEventStates.accruedInterest = states.accruedInterest;
 		postEventStates.nominalInterestRate = states.nominalInterestRate;
 		postEventStates.feeAccrued = states.feeAccrued;
+
 		// return post-event-states
 		return postEventStates;
 	}

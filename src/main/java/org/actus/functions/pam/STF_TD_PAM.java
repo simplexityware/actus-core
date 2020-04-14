@@ -27,7 +27,6 @@ public final class STF_TD_PAM implements StateTransitionFunction {
         states.accruedInterest = 0.0;
         states.feeAccrued = 0.0;
         states.statusDate = time;
-        // copy post-event-states
 
         // return post-event-states
         return postEventStates;

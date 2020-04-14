@@ -25,9 +25,7 @@ public final class STF_CD_STK implements StateTransitionFunction {
         // update state space
         states.contractPerformance = StringUtils.ContractStatus_Default;
         states.statusDate = time;
-        
-        // copy post-event-states
-        
+
         // return post-event-states
         return postEventStates;
         }

@@ -27,7 +27,7 @@ public final class STF_FP_LAM implements StateTransitionFunction {
         states.feeAccrued = 0.0;
         states.statusDate = time;
         
-        // copy post-event-states
+        //copy post-event-states
         postEventStates.notionalPrincipal = states.notionalPrincipal;
         postEventStates.accruedInterest = states.accruedInterest;
         postEventStates.nominalInterestRate = states.nominalInterestRate;

@@ -23,8 +23,6 @@ public final class STF_STD2_FXOUT implements StateTransitionFunction {
         
         // update state space
         states.statusDate = time;
-        
-        // copy post-event-states
 
         // return post-event-states
         return postEventStates;

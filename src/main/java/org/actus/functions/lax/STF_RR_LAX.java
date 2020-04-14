@@ -21,26 +21,26 @@ public final class STF_RR_LAX implements StateTransitionFunction {
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		StateSpace postEventStates = new StateSpace();
 
-				// compute new rate
-				double rate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
-						* model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread") + scheduledRate;
-				double deltaRate = rate - states.nominalInterestRate;
-				
-				// apply period cap/floor
-				deltaRate = Math.min(Math.max(deltaRate, (-1) * model.<Double>getAs("PeriodFloor")),
-						model.<Double>getAs("LifeCap"));
-				rate = states.nominalInterestRate + deltaRate;
+		// compute new rate
+		double rate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
+				* model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread") + scheduledRate;
+		double deltaRate = rate - states.nominalInterestRate;
 
-				// apply life cap/floor
-				rate = Math.min(Math.max(rate, model.getAs("LifeFloor")), model.getAs("LifeCap"));
+		// apply period cap/floor
+		deltaRate = Math.min(Math.max(deltaRate, (-1) * model.<Double>getAs("PeriodFloor")),
+				model.<Double>getAs("LifeCap"));
+		rate = states.nominalInterestRate + deltaRate;
 
-				// update state space
-				double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate),
-						timeAdjuster.shiftCalcTime(time));
-				states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
-				states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-				states.nominalInterestRate = rate;
-				states.statusDate = time;
+		// apply life cap/floor
+		rate = Math.min(Math.max(rate, model.getAs("LifeFloor")), model.getAs("LifeCap"));
+
+		// update state space
+		double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate),
+				timeAdjuster.shiftCalcTime(time));
+		states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
+		states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
+		states.nominalInterestRate = rate;
+		states.statusDate = time;
 
 		// copy post-event-states
 		postEventStates.notionalPrincipal = states.notionalPrincipal;

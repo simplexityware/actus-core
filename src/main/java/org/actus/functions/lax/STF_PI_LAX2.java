@@ -24,6 +24,7 @@ public class STF_PI_LAX2 implements StateTransitionFunction {
 		StateSpace postEventStates = new StateSpace();
 		double role = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
 		double redemption = role * prPayment - role * Math.max(0, Math.abs(prPayment) - Math.abs(states.notionalPrincipal));
+
 		// update state space
 		double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate),
 				timeAdjuster.shiftCalcTime(time));
@@ -32,11 +33,13 @@ public class STF_PI_LAX2 implements StateTransitionFunction {
 		states.notionalPrincipal += redemption;
 		states.interestCalculationBaseAmount = states.notionalPrincipal;
 		states.statusDate = time;
+
 		// copy post-event-states
 		postEventStates.notionalPrincipal = states.notionalPrincipal;
 		postEventStates.accruedInterest = states.accruedInterest;
 		postEventStates.nominalInterestRate = states.nominalInterestRate;
 		postEventStates.feeAccrued = states.feeAccrued;
+
 		// return post-event-states
 		return postEventStates;
 	}

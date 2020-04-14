@@ -29,7 +29,7 @@ public final class STF_PRD_LAM implements StateTransitionFunction {
         
         // copy post-event-states
         postEventStates.notionalPrincipal = states.notionalPrincipal;
-	postEventStates.accruedInterest = states.accruedInterest;
+	    postEventStates.accruedInterest = states.accruedInterest;
         postEventStates.nominalInterestRate = states.nominalInterestRate;
         postEventStates.feeAccrued = states.feeAccrued;
         
