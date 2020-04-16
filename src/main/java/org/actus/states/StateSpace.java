@@ -8,6 +8,7 @@ package org.actus.states;
 import org.actus.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.StringJoiner;
 
 /**
  * A data structure representing various states of a {@link ContractType}
@@ -36,26 +37,32 @@ public final class StateSpace {
     public double           notionalScalingMultiplier;
     public LocalDateTime    statusDate;
 
+    /**
+     * Returns a String-representation of all analytical elements
+     * @return a single String containing all analytical elements
+     */
+    @Override
+    public String toString(){
+        StringJoiner joiner = new StringJoiner(" ");
 
+        joiner.add(Double.toString(accruedInterest))
+                .add(Double.toString(accruedInterest2))
+                .add(contractPerformance)
+                .add(Double.toString(exerciseAmount))
+                .add(exerciseDate.toString())
+                .add(Double.toString(feeAccrued))
+                .add(Double.toString(interestCalculationBaseAmount))
+                .add(Double.toString(interestScalingMultiplier))
+                .add(Double.toString(nextPrincipalRedemptionPayment))
+                .add(Double.toString(nominalInterestRate))
+                .add(Double.toString(nominalInterestRate2))
+                .add(nonPerformingDate.toString())
+                .add(Double.toString(notionalPrincipal))
+                .add(Double.toString(notionalPrincipal2))
+                .add(Double.toString(notionalScalingMultiplier))
+                .add(statusDate.toString())
+        ;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return joiner.toString();
+    }
 }

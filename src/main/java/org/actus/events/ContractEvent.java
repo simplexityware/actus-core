@@ -17,6 +17,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.StringJoiner;
 
 /**
  * Component that provides a data structure for a single event generated during the lifetime of a
@@ -178,5 +179,31 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     public void eval(StateSpace states, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         this.payoff = fPayOff.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
         this.states = fStateTrans.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
+    }
+
+    /**
+     * Returns a String-representation of all analytical elements
+     * <p>
+     * Note that the number of analytical elements may change going forward as e.g. new states
+     * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
+     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.)
+     * individually and parse to a String manually.
+     *
+     * @return a single String containing all analytical elements
+     */
+    @Override
+    public String toString() {
+        StringJoiner joiner = new StringJoiner(" ");
+
+        joiner.add(Long.toString(epochOffset))
+                .add(eventTime.toString())
+                .add(scheduleTime.toString())
+                .add(type)
+                .add(currency)
+                .add(Double.toString(payoff))
+                .add(states.toString())
+        ;
+
+        return joiner.toString();
     }
 }
