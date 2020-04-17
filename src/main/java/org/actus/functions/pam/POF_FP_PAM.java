@@ -22,11 +22,11 @@ public final class POF_FP_PAM implements PayOffFunction {
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         if(model.<String>getAs("FeeBasis").equals("A")) {
-            return ContractDefaultConvention.performanceIndicator(states.contractStatus) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("FeeRate");
+            return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("FeeRate");
         } else { 
-            return ContractDefaultConvention.performanceIndicator(states.contractStatus) *
+            return ContractDefaultConvention.performanceIndicator(states.contractPerformance) *
                 (states.feeAccrued + 
-                    dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * model.<Double>getAs("FeeRate") * states.nominalValue);
+                    dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time)) * model.<Double>getAs("FeeRate") * states.notionalPrincipal);
         }
     }
 }

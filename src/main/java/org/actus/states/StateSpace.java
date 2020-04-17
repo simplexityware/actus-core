@@ -8,6 +8,7 @@ package org.actus.states;
 import org.actus.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.StringJoiner;
 
 /**
  * A data structure representing various states of a {@link ContractType}
@@ -19,21 +20,49 @@ import java.time.LocalDateTime;
  * in the various {@link ContractEvent}s.
  */
 public final class StateSpace {
-    public LocalDateTime lastEventTime;
-    public String contractStatus = StringUtils.ContractStatus_Performant; // TODO: initialize together with other states
-    public double timeFromLastEvent; // analytical result
-    public double nominalValue; // analytical result
-    public double nominalAccrued; // analytical result
-    public double feeAccrued; // analytical result
-    public double nominalRate; // analytical result
-    public double interestCalculationBase;
-    public double interestScalingMultiplier;
-    public double nominalScalingMultiplier;
-    public double nextPrincipalRedemptionPayment;
-    public double secondaryNominalValue; // analytical result
-    public double payoffAtSettlement;
-    public double variationMargin; // analytical result
-    public int contractRoleSign;
-    public double nominalAccruedFix;
-    public double nominalAccruedFloat;
+    public double           accruedInterest; // analytical result
+    public double           accruedInterest2;
+    public String           contractPerformance = StringUtils.ContractStatus_Performant; // TODO: initialize together with other states
+    public double           exerciseAmount;
+    public LocalDateTime    exerciseDate;
+    public double           feeAccrued; // analytical result
+    public double           interestCalculationBaseAmount;
+    public double           interestScalingMultiplier;
+    public double           nextPrincipalRedemptionPayment;
+    public double           nominalInterestRate; // analytical result
+    public double           nominalInterestRate2;
+    public LocalDateTime    nonPerformingDate;
+    public double           notionalPrincipal; // analytical result
+    public double           notionalPrincipal2; // analytical result
+    public double           notionalScalingMultiplier;
+    public LocalDateTime    statusDate;
+
+    /**
+     * Returns a String-representation of all analytical elements
+     * @return a single String containing all analytical elements
+     */
+    @Override
+    public String toString(){
+        StringJoiner joiner = new StringJoiner(" ");
+
+        joiner.add(Double.toString(accruedInterest))
+                .add(Double.toString(accruedInterest2))
+                .add(contractPerformance)
+                .add(Double.toString(exerciseAmount))
+                .add(exerciseDate.toString())
+                .add(Double.toString(feeAccrued))
+                .add(Double.toString(interestCalculationBaseAmount))
+                .add(Double.toString(interestScalingMultiplier))
+                .add(Double.toString(nextPrincipalRedemptionPayment))
+                .add(Double.toString(nominalInterestRate))
+                .add(Double.toString(nominalInterestRate2))
+                .add(nonPerformingDate.toString())
+                .add(Double.toString(notionalPrincipal))
+                .add(Double.toString(notionalPrincipal2))
+                .add(Double.toString(notionalScalingMultiplier))
+                .add(statusDate.toString())
+        ;
+
+        return joiner.toString();
+    }
 }

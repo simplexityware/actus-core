@@ -12,7 +12,7 @@ import org.actus.states.StateSpace;
 public class STF_RRY_LAM implements StateTransitionFunction {
 
 	@Override
-	public double[] eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
+	public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		// TODO Auto-generated method stub
 		return null;

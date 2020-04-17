@@ -124,12 +124,12 @@ public final class PlainVanillaInterestRateSwap {
     // initialize state space per status date
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-        states.nominalScalingMultiplier = 1;
-        states.lastEventTime = model.getAs("StatusDate");
+        states.notionalScalingMultiplier = 1;
+        states.statusDate = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
-            states.nominalRate = model.getAs("NominalInterestRate");
-            states.nominalAccrued = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
+            states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
+            states.nominalInterestRate = model.getAs("NominalInterestRate");
+            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
         }
         return states;
     }

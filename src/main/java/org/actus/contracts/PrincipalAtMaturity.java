@@ -144,15 +144,15 @@ public final class PrincipalAtMaturity {
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-        states.nominalScalingMultiplier = 1;
+        states.notionalScalingMultiplier = 1;
         states.interestScalingMultiplier = 1;
 
         // TODO: some attributes can be null
-        states.lastEventTime = model.getAs("StatusDate");
+        states.statusDate = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
-            states.nominalRate = model.getAs("NominalInterestRate");
-            states.nominalAccrued = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
+            states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
+            states.nominalInterestRate = model.getAs("NominalInterestRate");
+            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
         }
         

@@ -101,7 +101,7 @@ public final class Stock {
         StateSpace states = new StateSpace();
 
         // initialize state variables
-        states.lastEventTime = model.getAs("StatusDate");
+        states.statusDate = model.getAs("StatusDate");
         
         // return the initialized state space
         return states;

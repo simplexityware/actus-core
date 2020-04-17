@@ -24,7 +24,7 @@ public class POF_PR_LAX implements PayOffFunction {
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 
 		double role = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
-		double redemption = role*prPayment - role*Math.max(0, Math.abs(prPayment) - Math.abs(states.nominalValue));
-		return ContractDefaultConvention.performanceIndicator(states.contractStatus) * states.nominalScalingMultiplier*redemption;
+		double redemption = role*prPayment - role*Math.max(0, Math.abs(prPayment) - Math.abs(states.notionalPrincipal));
+		return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * states.notionalScalingMultiplier *redemption;
 	}
 }

@@ -18,27 +18,26 @@ import java.time.LocalDateTime;
 public final class STF_PR_NAM implements StateTransitionFunction {
     
     @Override
-    public double[] eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[8];
+        StateSpace postEventStates = new StateSpace();
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.nominalAccrued += states.nominalRate * states.interestCalculationBase * states.timeFromLastEvent;
-        states.feeAccrued += model.<Double>getAs("FeeRate") * states.nominalValue * states.timeFromLastEvent;
+        double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
+        states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
+        states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
         
-        double principalRedemption =  states.nextPrincipalRedemptionPayment - states.nominalAccrued;
-        principalRedemption = principalRedemption - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.nominalValue));
+        double principalRedemption =  states.nextPrincipalRedemptionPayment - states.accruedInterest;
+        principalRedemption = principalRedemption - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.notionalPrincipal));
 
-        states.nominalValue -= principalRedemption;
-        states.lastEventTime = time;
+        states.notionalPrincipal -= principalRedemption;
+        states.statusDate = time;
         
         // copy post-event-states
-        postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[1] = states.nominalValue;
-        postEventStates[2] = states.nominalAccrued;
-        postEventStates[3] = states.nominalRate;
-        postEventStates[7] = states.feeAccrued;
+        postEventStates.notionalPrincipal = states.notionalPrincipal;
+        postEventStates.accruedInterest = states.accruedInterest;
+        postEventStates.nominalInterestRate = states.nominalInterestRate;
+        postEventStates.feeAccrued = states.feeAccrued;
         
         // return post-event-states
         return postEventStates;

@@ -21,6 +21,6 @@ public final class POF_PRD_STK implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) * ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(-1) * model.<Integer>getAs("Quantity") * model.<Double>getAs("PriceAtPurchaseDate");
+        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(-1) * model.<Integer>getAs("Quantity") * model.<Double>getAs("PriceAtPurchaseDate");
     }
 }

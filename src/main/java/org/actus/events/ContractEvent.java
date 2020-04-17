@@ -5,6 +5,7 @@
  */
 package org.actus.events;
 
+import org.actus.contracts.ContractType;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.functions.PayOffFunction;
 import org.actus.attributes.ContractModelProvider;
@@ -16,6 +17,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
+import java.util.StringJoiner;
 
 /**
  * Component that provides a data structure for a single event generated during the lifetime of a
@@ -33,7 +35,7 @@ import java.util.Arrays;
  * <p>
  */
 public final class ContractEvent implements Comparable<ContractEvent> {
-    protected long epochOffset;
+    protected long                  epochOffset;
     private StateTransitionFunction fStateTrans;
     private PayOffFunction          fPayOff;
     private LocalDateTime           eventTime;
@@ -41,7 +43,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     private String                  type;
     private String                  currency;
     private double                  payoff;
-    private double[]                states;
+    private StateSpace              states;
 
   /**
    * Constructor
@@ -62,9 +64,9 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         this.currency = currency;
         this.fPayOff = payOff;
         this.fStateTrans = stateTrans;
-        this.states = new double[8];
+        this.states = new StateSpace();
     }
-    
+
     /**
      * Returns the time of this event (adjusted for the business-day-convention)
      */
@@ -104,63 +106,6 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     public double payoff() {
         return payoff;    
     }
-    
-    /**
-     * Returns the day count fraction according to the day-count-convention from the last event
-     */
-    public double timeFromLastEvent() {
-        return states[0];    
-    }
-    
-    /**
-     * Returns the post-event nominal value state-variable
-     */
-    public double nominalValue() {
-        return states[1];    
-    }
-    
-    /**
-     * Returns the post-event nominal accrued state-variable
-     */    
-    public double nominalAccrued() {
-        return states[2];    
-    }
-    
-    /**
-     * Returns the post-event nominal rate state-variable
-     */
-    public double nominalRate() {
-        return states[3];    
-    }
-    
-    /**
-     * Returns the post-event secondary nominal value state-variable
-     */
-    public double secondaryNominalValue() {
-        return states[4];    
-    }
-
-    
-    /**
-     * Returns the post-event variation margin state-variable
-     */
-    public double variationMargin() {
-        return states[5];    
-    }
-    
-    /**
-     * Returns the post-event probability of default state-variable
-     */
-    public double probabilityOfDefault() {
-        return states[6];    
-    }
-    
-    /**
-     * Returns the post-event fee accrued state-variable
-     */
-    public double feeAccrued() {
-        return states[7];    
-    }
 
     /**
      * Returns the post-event state-variables
@@ -170,7 +115,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
      * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
      * individually.
      */
-    public double[] states() {
+    public StateSpace states() {
         return states;    
     }
        
@@ -191,7 +136,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     public void fStateTrans(StateTransitionFunction function) {
         this.fStateTrans = function;
     }
-    
+
     /**
      * Imposes the natural ordering of events in an instrument's payoff amongst each other
      * <p>
@@ -235,43 +180,30 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         this.payoff = fPayOff.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
         this.states = fStateTrans.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
     }
-    
-    /**
-     * Returns an array of Strings representing all analytical elements
-     * <p>
-     * Note that the length of the returned array may change going forward as new states
-     * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
-     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
-     * individually and parse to a String manually.
-     * 
-     * @return an array of Strings with analytical elements
-     */
-    public String[] toArray() {
-        return new String[] {
-            eventTime.toString(),
-            type,
-            currency,
-            Double.toString(payoff),
-            Double.toString(states[0]),
-            Double.toString(states[1]),
-            Double.toString(states[2]),
-            Double.toString(states[3])
-            };
-    }
-    
+
     /**
      * Returns a String-representation of all analytical elements
      * <p>
      * Note that the number of analytical elements may change going forward as e.g. new states
      * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
-     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
+     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.)
      * individually and parse to a String manually.
-     * 
+     *
      * @return a single String containing all analytical elements
      */
     @Override
     public String toString() {
-        return Arrays.toString(toArray());    
-    }
+        StringJoiner joiner = new StringJoiner(" ");
 
+        joiner.add(Long.toString(epochOffset))
+                .add(eventTime.toString())
+                .add(scheduleTime.toString())
+                .add(type)
+                .add(currency)
+                .add(Double.toString(payoff))
+                .add(states.toString())
+        ;
+
+        return joiner.toString();
+    }
 }

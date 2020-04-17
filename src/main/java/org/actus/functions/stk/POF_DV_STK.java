@@ -22,7 +22,7 @@ public final class POF_DV_STK implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) * ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Integer>getAs("Quantity") * model.<Double>getAs("MarketValueObserved") *
+        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Integer>getAs("Quantity") * model.<Double>getAs("MarketValueObserved") *
             riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfDividendRate"), time, states, model) * 
             dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(time.minus(CycleUtils.parsePeriod(model.getAs("CycleOfDividendPayment")))), timeAdjuster.shiftCalcTime(time));
     }

@@ -25,14 +25,13 @@ public final class STF_NET_SWAPS implements StateTransitionFunction {
     }
 
     @Override
-    public double[] eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[8];
+        StateSpace postEventStates = new StateSpace();
 
         // net post-event-states
-        postEventStates[0] = e1.states()[0];
-        postEventStates[1] = e1.nominalValue() + e2.nominalValue();
-        postEventStates[2] = e1.nominalAccrued() + e2.nominalAccrued();
+        postEventStates.notionalPrincipal = e1.states().notionalPrincipal + e2.states().notionalPrincipal;
+        postEventStates.accruedInterest = e1.states().accruedInterest + e2.states().accruedInterest;
         
         // return post-event-states
         return postEventStates;

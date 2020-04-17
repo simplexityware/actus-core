@@ -16,8 +16,6 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.util.StringUtils;
 import org.actus.util.CommonUtils;
-import org.actus.functions.pam.POF_AD_PAM;
-import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.stk.POF_PRD_STK;
 import org.actus.functions.stk.STF_PRD_STK;
 import org.actus.functions.stk.POF_TD_STK;
@@ -25,7 +23,6 @@ import org.actus.functions.stk.STF_TD_STK;
 
 
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.*;
 
 /**
@@ -65,8 +62,7 @@ public final class Commodity {
 
         // initialize state space per status date
         StateSpace states = new StateSpace();
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
-        states.lastEventTime = model.getAs("StatusDate");
+        states.statusDate = model.getAs("StatusDate");
 
         // sort the events according to their time sequence
         Collections.sort(events);

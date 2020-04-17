@@ -20,8 +20,8 @@ public final class POF_IP_CLM implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) *
-        (states.nominalAccrued + 
-        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time)) * states.nominalRate * states.nominalValue);
+        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) *
+        (states.accruedInterest +
+        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time)) * states.nominalInterestRate * states.notionalPrincipal);
         }
 }

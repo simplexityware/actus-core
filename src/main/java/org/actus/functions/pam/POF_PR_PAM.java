@@ -20,6 +20,6 @@ public final class POF_PR_PAM implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) * states.nominalScalingMultiplier * states.nominalValue;
+        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * states.notionalScalingMultiplier * states.notionalPrincipal;
         }
 }
