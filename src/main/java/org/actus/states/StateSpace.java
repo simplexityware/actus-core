@@ -8,6 +8,7 @@ package org.actus.states;
 import org.actus.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.StringJoiner;
 
 /**
@@ -49,18 +50,21 @@ public final class StateSpace {
                 .add(Double.toString(accruedInterest2))
                 .add(contractPerformance)
                 .add(Double.toString(exerciseAmount))
-                .add(exerciseDate.toString())
+                //add empty string if not set
+                .add(Objects.isNull(exerciseDate) ? "" : exerciseDate.toString())
                 .add(Double.toString(feeAccrued))
                 .add(Double.toString(interestCalculationBaseAmount))
                 .add(Double.toString(interestScalingMultiplier))
                 .add(Double.toString(nextPrincipalRedemptionPayment))
                 .add(Double.toString(nominalInterestRate))
                 .add(Double.toString(nominalInterestRate2))
-                .add(nonPerformingDate.toString())
+                //add empty string if not set
+                .add(Objects.isNull(nonPerformingDate) ? "" : nonPerformingDate.toString())
                 .add(Double.toString(notionalPrincipal))
                 .add(Double.toString(notionalPrincipal2))
                 .add(Double.toString(notionalScalingMultiplier))
-                .add(statusDate.toString())
+                //add empty string if not set
+                .add(Objects.isNull(statusDate) ? "" : statusDate.toString())
         ;
 
         return joiner.toString();
