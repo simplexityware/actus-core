@@ -7,7 +7,6 @@ package org.actus.functions.swaps;
 
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.PayOffFunction;
@@ -20,6 +19,7 @@ public final class POF_TD_SWAPS implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * model.<Double>getAs("PriceAtTerminationDate");
+        return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+                * model.<Double>getAs("PriceAtTerminationDate");
     }
 }

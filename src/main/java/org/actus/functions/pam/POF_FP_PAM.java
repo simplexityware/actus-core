@@ -5,7 +5,6 @@
  */
 package org.actus.functions.pam;
 
-import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -22,11 +21,14 @@ public final class POF_FP_PAM implements PayOffFunction {
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         if(model.<String>getAs("FeeBasis").equals("A")) {
-            return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("FeeRate");
+            return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+                    * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+                    * model.<Double>getAs("FeeRate");
         } else { 
-            return ContractDefaultConvention.performanceIndicator(states.contractPerformance) *
-                (states.feeAccrued + 
-                    dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time)) * model.<Double>getAs("FeeRate") * states.notionalPrincipal);
+            return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+                    * (states.feeAccrued + dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
+                    * model.<Double>getAs("FeeRate")
+                    * states.notionalPrincipal);
         }
     }
 }

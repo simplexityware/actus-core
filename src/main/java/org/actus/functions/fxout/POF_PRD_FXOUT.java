@@ -5,7 +5,6 @@
  */
 package org.actus.functions.fxout;
 
-import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -20,6 +19,8 @@ public final class POF_PRD_FXOUT implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * (-1) * model.<Double>getAs("PriceAtPurchaseDate");
+        return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+                * (-1)
+                * model.<Double>getAs("PriceAtPurchaseDate");
     }
 }

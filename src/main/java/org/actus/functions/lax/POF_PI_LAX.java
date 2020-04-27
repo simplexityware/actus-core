@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
@@ -25,7 +24,9 @@ private Double prPayment;
 		
 		double redemption = prPayment - ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 						* Math.max(0, Math.abs(prPayment) - Math.abs(states.notionalPrincipal));
-		return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * states.notionalScalingMultiplier
+
+		return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+				* states.notionalScalingMultiplier
 				* redemption;
 	}
 

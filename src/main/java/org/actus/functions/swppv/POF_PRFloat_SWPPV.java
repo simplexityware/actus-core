@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.PayOffFunction;
@@ -15,7 +14,9 @@ public class POF_PRFloat_SWPPV implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-    	return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * states.notionalScalingMultiplier * states.notionalPrincipal2;
+    	return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+                * states.notionalScalingMultiplier
+                * states.notionalPrincipal2;
         }
 
 }

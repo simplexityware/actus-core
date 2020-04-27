@@ -5,7 +5,6 @@
  */
 package org.actus.functions.lam;
 
-import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -20,9 +19,10 @@ public final class POF_IP_LAM implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) *
-        states.interestScalingMultiplier *
-        (states.accruedInterest +
-        dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time)) * states.nominalInterestRate * states.interestCalculationBaseAmount);
+        return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+                * states.interestScalingMultiplier
+                * (states.accruedInterest + dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
+                * states.nominalInterestRate
+                * states.interestCalculationBaseAmount);
         }
 }
