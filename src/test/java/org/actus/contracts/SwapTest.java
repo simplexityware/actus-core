@@ -33,6 +33,9 @@ public class SwapTest {
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
             return 0.0;    
         }
+        public  double stateAt(String id,LocalDateTime time){
+            return Math.random();
+        }
     }
     
     @Rule

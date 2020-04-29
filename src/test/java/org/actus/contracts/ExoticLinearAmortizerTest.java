@@ -40,6 +40,9 @@ public class ExoticLinearAmortizerTest {
 							  ContractModelProvider contractAttributes) {
 			return 0.0;
 		}
+		public  double stateAt(String id,LocalDateTime time){
+            return Math.random();
+        }
 	}
 
 	class ValuedMarketModel implements RiskFactorModelProvider {
@@ -63,6 +66,9 @@ public class ExoticLinearAmortizerTest {
 			SortedMap<LocalDateTime, Double> head = series.subMap(series.firstKey(), time);
 			return head.get(head.lastKey());
 		}
+		public  double stateAt(String id,LocalDateTime time){
+            return Math.random();
+        }
 	}
 
 	@Rule

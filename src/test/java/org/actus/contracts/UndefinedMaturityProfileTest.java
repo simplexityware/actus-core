@@ -37,6 +37,9 @@ public class UndefinedMaturityProfileTest {
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
             return Math.random();
         }
+        public  double stateAt(String id,LocalDateTime time){
+            return Math.random();
+        }
     }
 
     // risk factor model with simple replication payments
@@ -83,6 +86,9 @@ public class UndefinedMaturityProfileTest {
         }
 
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
+            return Math.random();
+        }
+        public  double stateAt(String id,LocalDateTime time){
             return Math.random();
         }
     }
