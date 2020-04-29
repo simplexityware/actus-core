@@ -34,11 +34,14 @@ public class StockTest {
             Set<String> keys = new HashSet<String>();
             return keys;
         }
-        
+
+        @Override
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
             return 0.0;    
         }
-        public  double stateAt(String id,LocalDateTime time){
+
+        @Override
+        public double stateAt(String id,LocalDateTime time){
             return Math.random();
         }
     }

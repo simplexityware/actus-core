@@ -36,11 +36,14 @@ public class ExoticLinearAmortizerTest {
 			return keys;
 		}
 
+		@Override
 		public double stateAt(String id, LocalDateTime time, StateSpace contractStates,
 							  ContractModelProvider contractAttributes) {
 			return 0.0;
 		}
-		public  double stateAt(String id,LocalDateTime time){
+
+		@Override
+		public double stateAt(String id,LocalDateTime time){
             return Math.random();
         }
 	}
@@ -61,12 +64,15 @@ public class ExoticLinearAmortizerTest {
 			return keys;
 		}
 
+		@Override
 		public double stateAt(String id, LocalDateTime time, StateSpace contractStates,
 							  ContractModelProvider contractAttributes) {
 			SortedMap<LocalDateTime, Double> head = series.subMap(series.firstKey(), time);
 			return head.get(head.lastKey());
 		}
-		public  double stateAt(String id,LocalDateTime time){
+
+		@Override
+		public double stateAt(String id,LocalDateTime time){
             return Math.random();
         }
 	}
