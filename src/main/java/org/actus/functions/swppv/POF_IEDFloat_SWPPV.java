@@ -9,13 +9,14 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
+import org.actus.util.CurrencyUtil;
 
 public class POF_IEDFloat_SWPPV implements PayOffFunction {
     
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+        return CurrencyUtil.settlmentCurrencyFxRate(riskFactorModel,model,time)
                 * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                 * (model.<Double>getAs("NotionalPrincipal") + model.<Double>getAs("PremiumDiscountAtIED"));
         }

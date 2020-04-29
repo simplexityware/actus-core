@@ -11,6 +11,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.util.CurrencyUtil;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ public final class POF_IPFloat_SWPPV implements PayOffFunction {
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
-        return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+        return CurrencyUtil.settlmentCurrencyFxRate(riskFactorModel,model,time)
                 * (states.accruedInterest2 + (-1) * timeFromLastEvent * states.nominalInterestRate * states.notionalPrincipal);
         }
 }

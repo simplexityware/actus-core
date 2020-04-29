@@ -12,6 +12,7 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
+import org.actus.util.CurrencyUtil;
 
 import java.time.LocalDateTime;
 
@@ -29,7 +30,7 @@ public final class POF_IP_NAM implements PayOffFunction {
         double interest = accrued - capitalization;
 
         // return interest payoff
-        return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+        return CurrencyUtil.settlmentCurrencyFxRate(riskFactorModel,model,time)
                 * states.interestScalingMultiplier
                 * interest;
     }

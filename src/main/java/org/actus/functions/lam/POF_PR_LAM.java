@@ -12,6 +12,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.util.CurrencyUtil;
 
 import java.time.LocalDateTime;
 
@@ -21,7 +22,7 @@ public final class POF_PR_LAM implements PayOffFunction {
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		double redemption = states.nextPrincipalRedemptionPayment - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(states.nextPrincipalRedemptionPayment) - Math.abs(states.notionalPrincipal));
-		return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+		return CurrencyUtil.settlmentCurrencyFxRate(riskFactorModel,model,time)
 				* states.notionalScalingMultiplier
 				* redemption;
 	}

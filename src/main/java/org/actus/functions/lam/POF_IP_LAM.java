@@ -11,6 +11,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.util.CurrencyUtil;
 
 import java.time.LocalDateTime;
 
@@ -19,7 +20,7 @@ public final class POF_IP_LAM implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+        return CurrencyUtil.settlmentCurrencyFxRate(riskFactorModel,model,time)
                 * states.interestScalingMultiplier
                 * (states.accruedInterest + dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
                 * states.nominalInterestRate

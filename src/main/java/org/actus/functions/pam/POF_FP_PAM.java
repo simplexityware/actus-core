@@ -12,6 +12,7 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.contractrole.ContractRoleConvention;
+import org.actus.util.CurrencyUtil;
 
 import java.time.LocalDateTime;
 
@@ -21,11 +22,11 @@ public final class POF_FP_PAM implements PayOffFunction {
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         if(model.<String>getAs("FeeBasis").equals("A")) {
-            return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+            return CurrencyUtil.settlmentCurrencyFxRate(riskFactorModel,model,time)
                     * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                     * model.<Double>getAs("FeeRate");
         } else { 
-            return riskFactorModel.stateAt(model.getAs("Currency") + "/" + model.getAs("SettlementCurrency"),time,states,model)
+            return CurrencyUtil.settlmentCurrencyFxRate(riskFactorModel,model,time)
                     * (states.feeAccrued + dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
                     * model.<Double>getAs("FeeRate")
                     * states.notionalPrincipal);
