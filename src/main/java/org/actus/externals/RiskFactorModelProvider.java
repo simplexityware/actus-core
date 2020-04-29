@@ -63,4 +63,13 @@ public abstract interface RiskFactorModelProvider {
    * @return double the state of the risk factor
    */
   public double stateAt(String id, LocalDateTime time, StateSpace states, ContractModelProvider attributes);
+
+  /**
+   * Returns the state of a particular risk factor at time
+   *
+   * @param id identifier of the risk factor
+   * @param time future time for which to return the risk factor's state
+   * @return double the state of the risk factor
+   */
+  public double stateAt(String id, LocalDateTime time);
 }
