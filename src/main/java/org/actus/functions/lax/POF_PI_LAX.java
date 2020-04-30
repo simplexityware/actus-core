@@ -9,7 +9,7 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
-import org.actus.util.CurrencyUtil;
+import org.actus.util.CommonUtils;
 
 public class POF_PI_LAX implements PayOffFunction {
 
@@ -26,7 +26,7 @@ private Double prPayment;
 		double redemption = prPayment - ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 						* Math.max(0, Math.abs(prPayment) - Math.abs(states.notionalPrincipal));
 
-		return CurrencyUtil.settlmentCurrencyFxRate(riskFactorModel,model,time)
+		return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
 				* states.notionalScalingMultiplier
 				* redemption;
 	}
