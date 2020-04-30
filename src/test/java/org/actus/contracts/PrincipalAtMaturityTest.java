@@ -40,10 +40,6 @@ public class PrincipalAtMaturityTest {
             return 0.0;    
         }
 
-        @Override
-        public double stateAt(String id,LocalDateTime time){
-            return Math.random();
-        }
     }
     
     @Rule

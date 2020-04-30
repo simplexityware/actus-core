@@ -39,10 +39,6 @@ public class UndefinedMaturityProfileTest {
             return Math.random();
         }
 
-        @Override
-        public double stateAt(String id,LocalDateTime time){
-            return Math.random();
-        }
     }
 
     // risk factor model with simple replication payments
@@ -93,10 +89,6 @@ public class UndefinedMaturityProfileTest {
             return Math.random();
         }
 
-        @Override
-        public double stateAt(String id,LocalDateTime time){
-            return Math.random();
-        }
     }
     
     @Rule
