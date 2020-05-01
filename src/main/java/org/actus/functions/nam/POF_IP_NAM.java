@@ -7,12 +7,12 @@ package org.actus.functions.nam;
 
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.conventions.contractdefault.ContractDefaultConvention;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
+import org.actus.util.CommonUtils;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +30,8 @@ public final class POF_IP_NAM implements PayOffFunction {
         double interest = accrued - capitalization;
 
         // return interest payoff
-        return ContractDefaultConvention.performanceIndicator(states.contractPerformance) * states.interestScalingMultiplier * interest;
+        return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
+                * states.interestScalingMultiplier
+                * interest;
     }
 }

@@ -33,10 +33,12 @@ public class UndefinedMaturityProfileTest {
             Set<String> keys = new HashSet<String>();
             return keys;
         }
-        
+
+        @Override
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
             return Math.random();
         }
+
     }
 
     // risk factor model with simple replication payments
@@ -82,9 +84,11 @@ public class UndefinedMaturityProfileTest {
             return events;
         }
 
+        @Override
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
             return Math.random();
         }
+
     }
     
     @Rule

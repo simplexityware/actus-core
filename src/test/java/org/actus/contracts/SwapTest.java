@@ -29,10 +29,12 @@ public class SwapTest {
             Set<String> keys = new HashSet<String>();
             return keys;
         }
-        
+
+        @Override
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
             return 0.0;    
         }
+
     }
     
     @Rule

@@ -35,10 +35,12 @@ public class ContractTypeTest {
             Set<String> keys = new HashSet<String>();
             return keys;
         }
-        
+
+        @Override
         public double stateAt(String id, LocalDateTime time,StateSpace states,ContractModelProvider contractAttributes) {
             return 0.0;    
         }
+
     }
     
     @Rule
