@@ -1,10 +1,10 @@
 package org.actus.types;
 
-public enum BusinessDayConvention {
+public enum BusinessDayConventionEnum {
     NOS,
     SCF,
     SCMF,
-    CFS,
+    CSF,
     CSMF,
     SCP,
     SCMP,

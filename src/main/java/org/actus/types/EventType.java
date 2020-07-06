@@ -22,5 +22,6 @@ public enum EventType {
     IPCB,
     MD,
     XD,
-    STD
+    STD,
+    PI
 }

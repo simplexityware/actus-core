@@ -6,13 +6,13 @@
 package org.actus.time;
 
 import org.actus.AttributeConversionException;
+import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.util.CycleUtils;
 import org.actus.conventions.endofmonth.EndOfMonthAdjuster;
 
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -56,7 +56,7 @@ public final class ScheduleFactory {
 	 * @return an unordered set of schedule times
 	 * 
 	 */
-	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention) throws AttributeConversionException {
+	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, EndOfMonthConventionEnum endOfMonthConvention) throws AttributeConversionException {
 		return ScheduleFactory.createSchedule(startTime,endTime,cycle,endOfMonthConvention,true);
 	}
 
@@ -80,7 +80,7 @@ public final class ScheduleFactory {
 	 * @return an unordered set of schedule times
 	 *
 	 */
-	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention, boolean addEndTime) throws AttributeConversionException {
+	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, EndOfMonthConventionEnum endOfMonthConvention, boolean addEndTime) throws AttributeConversionException {
 		EndOfMonthAdjuster shifter;
 		CycleAdjuster adjuster;
 		Set<LocalDateTime> timesSet = new HashSet<LocalDateTime>();
@@ -151,7 +151,7 @@ public final class ScheduleFactory {
 	 * @return an unordered set of schedule times
 	 */
 	public static Set<LocalDateTime> createArraySchedule(LocalDateTime[] startTimes,
-			LocalDateTime endTime, String[] cycles, String endOfMonthConvention) {
+			LocalDateTime endTime, String[] cycles, EndOfMonthConventionEnum endOfMonthConvention) {
         Set<LocalDateTime> timesSet = new HashSet<LocalDateTime>();
         
         // add schedules 1 to N-1
