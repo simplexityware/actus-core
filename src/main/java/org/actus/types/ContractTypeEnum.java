@@ -1,6 +1,6 @@
 package org.actus.types;
 
-public enum ContractType {
+public enum ContractTypeEnum {
     PAM,
     ANN,
     NAM,
@@ -8,7 +8,7 @@ public enum ContractType {
     LAX,
     CLM,
     UMP,
-    VSH,
+    CSH,
     STK,
     COM,
     SWAPS,

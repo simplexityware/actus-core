@@ -1,6 +1,6 @@
 package org.actus.types;
 
-public enum EndOfMonthConvention {
+public enum EndOfMonthConventionEnum {
     SD,
     EOM
 }
