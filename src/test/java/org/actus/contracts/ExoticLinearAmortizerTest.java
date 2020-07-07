@@ -25,6 +25,7 @@ import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
 import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
+import org.actus.types.InterestCalculationBase;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

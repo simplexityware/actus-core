@@ -21,6 +21,7 @@ import org.actus.conventions.endofmonth.EndOfMonthAdjuster;
 import org.actus.types.ContractRole;
 import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
+import org.actus.types.InterestCalculationBase;
 import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 
@@ -48,7 +49,7 @@ public final class LinearAmortizer {
         Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
                 model.getAs("CycleOfPrincipalRedemption"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")), false);
         // -> chose right state transition function depending on ipcb attributes
-        StateTransitionFunction stf=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL"))? new STF_PR_LAM() : new STF_PR2_LAM();
+        StateTransitionFunction stf=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL))? new STF_PR_LAM() : new STF_PR2_LAM();
         // regular principal redemption events
         events.addAll(EventFactory.createEvents(prSchedule, EventType.PR,
             model.getAs("Currency"), new POF_PR_LAM(), stf, model.getAs("BusinessDayConvention")));
@@ -60,7 +61,7 @@ public final class LinearAmortizer {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
         }
         // -> chose right state transition function for IPCI depending on ipcb attributes
-        StateTransitionFunction stf_ipci=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL"))? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
+        StateTransitionFunction stf_ipci=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL))? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
         // interest payment related
         if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment"))) {
             // raw interest payment events
@@ -117,7 +118,7 @@ public final class LinearAmortizer {
                                             EventType.SC, model.getAs("Currency"), new POF_SC_PAM(), new STF_SC_LAM(), model.getAs("BusinessDayConvention")));
         }
         // interest calculation base (if specified)
-        if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals("NTL")) { 
+        if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestCalculationBase"), maturity,
                                                                             model.getAs("CycleOfInterestCalculationBase"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")),false),
                                             EventType.IPCB, model.getAs("Currency"), new POF_IPCB_LAM(), new STF_IPCB_LAM(), model.getAs("BusinessDayConvention")));
@@ -215,7 +216,7 @@ public final class LinearAmortizer {
             states.nominalInterestRate = model.getAs("NominalInterestRate");
             states.accruedInterest = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*model.<Double>getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
-            if(CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals("NT")) {
+            if(CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NT)) {
                 states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*model.<Double>getAs("NotionalPrincipal");
             } else {
                 states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*model.<Double>getAs("InterestCalculationBaseAmount");

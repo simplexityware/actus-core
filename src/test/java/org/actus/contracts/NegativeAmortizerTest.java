@@ -699,7 +699,7 @@ public class NegativeAmortizerTest {
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("PenaltyType","O");
+        map.put("PenaltyType","N");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
@@ -882,7 +882,7 @@ public class NegativeAmortizerTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NT");
+        map.put("InterestPaymentCalculationBase", "NT");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
@@ -928,7 +928,7 @@ public class NegativeAmortizerTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NTIED");
+        map.put("InterestPaymentCalculationBase", "NTIED");
         map.put("InterestPaymentCalculationBaseAmount","500.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
@@ -975,7 +975,7 @@ public class NegativeAmortizerTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBase", "NTL");
         map.put("InterestPaymentCalculationBaseAmount","1000.0");
         map.put("CycleOfInterestCalculationBase","1Q-");
         // parse attributes
@@ -1023,7 +1023,7 @@ public class NegativeAmortizerTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBase", "NTL");
         map.put("InterestPaymentCalculationBaseAmount","1000.0");
         map.put("CycleOfInterestCalculationBase","1Q-");
         map.put("CycleAnchorDateOfInterestCalculationBase","2016-04-01T00:00:00");
@@ -1068,7 +1068,7 @@ public class NegativeAmortizerTest {
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBase", "NTL");
         map.put("InterestPaymentCalculationBaseAmount","1000.0");
         map.put("CycleOfInterestCalculationBase","1Q-");
         // parse attributes

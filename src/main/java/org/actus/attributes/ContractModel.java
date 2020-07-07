@@ -15,6 +15,8 @@ import org.actus.AttributeConversionException;
 import org.actus.ContractTypeUnknownException;
 import org.actus.types.BusinessDayConventionEnum;
 import org.actus.types.ContractTypeEnum;
+import org.actus.types.InterestCalculationBase;
+import org.actus.types.PenaltyType;
 import org.actus.util.CommonUtils;
 
 
@@ -125,7 +127,7 @@ public class ContractModel implements ContractModelProvider {
                     // TODO: review prepayment mechanism and attributes
                     map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("CycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality")));
                     map.put("CycleOfOptionality", attributes.get("CycleOfOptionality"));
-                    map.put("PenaltyType", (CommonUtils.isNull(attributes.get("PenaltyType"))) ? 'N' : attributes.get("PenaltyType").charAt(0));
+                    map.put("PenaltyType", (CommonUtils.isNull(attributes.get("PenaltyType"))) ? PenaltyType.valueOf("N") : PenaltyType.valueOf(attributes.get("PenaltyType")));
                     map.put("PenaltyRate", (CommonUtils.isNull(attributes.get("PenaltyRate"))) ? 0.0 : Double.parseDouble(attributes.get("PenaltyRate")));
                     map.put("ObjectCodeOfPrepaymentModel", attributes.get("ObjectCodeOfPrepaymentModel"));
 
@@ -181,7 +183,7 @@ public class ContractModel implements ContractModelProvider {
                     // TODO: review prepayment mechanism and attributes
                     map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("CycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality")));
                     map.put("CycleOfOptionality", attributes.get("CycleOfOptionality"));
-                    map.put("PenaltyType", (CommonUtils.isNull(attributes.get("PenaltyType"))) ? 'N' : attributes.get("PenaltyType").charAt(0));
+                    map.put("PenaltyType", (CommonUtils.isNull(attributes.get("PenaltyType"))) ? PenaltyType.valueOf("N") : PenaltyType.valueOf(attributes.get("PenaltyType")));
                     map.put("PenaltyRate", (CommonUtils.isNull(attributes.get("PenaltyRate"))) ? 0.0 : Double.parseDouble(attributes.get("PenaltyRate")));
                     map.put("ObjectCodeOfPrepaymentModel", attributes.get("ObjectCodeOfPrepaymentModel"));
 
@@ -202,7 +204,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("MaturityDate", (CommonUtils.isNull(attributes.get("MaturityDate")) ? null : LocalDateTime.parse(attributes.get("MaturityDate"))));
                     map.put("CycleAnchorDateOfInterestCalculationBase", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestCalculationBase"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestCalculationBase"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestCalculationBase")));
                     map.put("CycleOfInterestCalculationBase", attributes.get("CycleOfInterestCalculationBase"));
-                    map.put("InterestCalculationBase", attributes.get("InterestCalculationBase"));
+                    map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("InterestCalculationBase"))?null:InterestCalculationBase.valueOf(attributes.get("InterestCalculationBase")));
                     map.put("InterestCalculationBaseAmount", (CommonUtils.isNull(attributes.get("InterestCalculationBaseAmount"))) ? 0.0 : Double.parseDouble(attributes.get("InterestCalculationBaseAmount")));
                     map.put("CycleAnchorDateOfPrincipalRedemption", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfPrincipalRedemption"))) ? LocalDateTime.parse(attributes.get("InitialExchangeDate")) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfPrincipalRedemption")));
                     map.put("CycleOfPrincipalRedemption", attributes.get("CycleOfPrincipalRedemption"));
@@ -244,7 +246,7 @@ public class ContractModel implements ContractModelProvider {
                     // TODO: review prepayment mechanism and attributes
                     map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("CycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality")));
                     map.put("CycleOfOptionality", attributes.get("CycleOfOptionality"));
-                    map.put("PenaltyType", (CommonUtils.isNull(attributes.get("PenaltyType"))) ? 'N' : attributes.get("PenaltyType").charAt(0));
+                    map.put("PenaltyType", (CommonUtils.isNull(attributes.get("PenaltyType"))) ? PenaltyType.valueOf("N") : PenaltyType.valueOf(attributes.get("PenaltyType")));
                     map.put("PenaltyRate", (CommonUtils.isNull(attributes.get("PenaltyRate"))) ? 0.0 : Double.parseDouble(attributes.get("PenaltyRate")));
                     map.put("ObjectCodeOfPrepaymentModel", attributes.get("ObjectCodeOfPrepaymentModel"));
 
@@ -265,7 +267,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("MaturityDate", (CommonUtils.isNull(attributes.get("MaturityDate")) ? null : LocalDateTime.parse(attributes.get("MaturityDate"))));
                     map.put("CycleAnchorDateOfInterestCalculationBase", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestCalculationBase"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestCalculationBase"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestCalculationBase")));
                     map.put("CycleOfInterestCalculationBase", attributes.get("CycleOfInterestCalculationBase"));
-                    map.put("InterestCalculationBase", attributes.get("InterestCalculationBase"));
+                    map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("InterestCalculationBase"))?null:InterestCalculationBase.valueOf(attributes.get("InterestCalculationBase")));
                     map.put("InterestCalculationBaseAmount", (CommonUtils.isNull(attributes.get("InterestCalculationBaseAmount"))) ? 0.0 : Double.parseDouble(attributes.get("InterestCalculationBaseAmount")));
                     map.put("CycleAnchorDateOfPrincipalRedemption", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfPrincipalRedemption"))) ? LocalDateTime.parse(attributes.get("InitialExchangeDate")) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfPrincipalRedemption")));
                     map.put("CycleOfPrincipalRedemption", attributes.get("CycleOfPrincipalRedemption"));
@@ -307,7 +309,7 @@ public class ContractModel implements ContractModelProvider {
                     // TODO: review prepayment mechanism and attributes
                     map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("CycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality")));
                     map.put("CycleOfOptionality", attributes.get("CycleOfOptionality"));
-                    map.put("PenaltyType", (CommonUtils.isNull(attributes.get("PenaltyType"))) ? 'N' : attributes.get("PenaltyType").charAt(0));
+                    map.put("PenaltyType", (CommonUtils.isNull(attributes.get("PenaltyType"))) ? PenaltyType.valueOf("N") : PenaltyType.valueOf(attributes.get("PenaltyType")));
                     map.put("PenaltyRate", (CommonUtils.isNull(attributes.get("PenaltyRate"))) ? 0.0 : Double.parseDouble(attributes.get("PenaltyRate")));
                     map.put("ObjectCodeOfPrepaymentModel", attributes.get("ObjectCodeOfPrepaymentModel"));
 
@@ -328,7 +330,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("MaturityDate", (CommonUtils.isNull(attributes.get("MaturityDate")) ? null : LocalDateTime.parse(attributes.get("MaturityDate"))));
                     map.put("CycleAnchorDateOfInterestCalculationBase", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestCalculationBase"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestCalculationBase"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestCalculationBase")));
                     map.put("CycleOfInterestCalculationBase", attributes.get("CycleOfInterestCalculationBase"));
-                    map.put("InterestCalculationBase", attributes.get("InterestCalculationBase"));
+                    map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("InterestCalculationBase"))?null:InterestCalculationBase.valueOf(attributes.get("InterestCalculationBase")));
                     map.put("InterestCalculationBaseAmount", (CommonUtils.isNull(attributes.get("InterestCalculationBaseAmount"))) ? 0.0 : Double.parseDouble(attributes.get("InterestCalculationBaseAmount")));
                     map.put("CycleAnchorDateOfPrincipalRedemption", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfPrincipalRedemption"))) ? LocalDateTime.parse(attributes.get("InitialExchangeDate")) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfPrincipalRedemption")));
                     map.put("CycleOfPrincipalRedemption", attributes.get("CycleOfPrincipalRedemption"));
@@ -549,7 +551,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("CycleAnchorDateOfInterestCalculationBase", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestCalculationBase"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestCalculationBase"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestCalculationBase")));
                     map.put("CycleOfInterestCalculationBase", attributes.get("CycleOfInterestCalculationBase"));
-                    map.put("InterestCalculationBase", attributes.get("InterestCalculationBase"));
+                    map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("InterestCalculationBase"))?null:InterestCalculationBase.valueOf(attributes.get("InterestCalculationBase")));
                     map.put("InterestCalculationBaseAmount", (CommonUtils.isNull(attributes.get("InterestCalculationBaseAmount"))) ? 0.0 : Double.parseDouble(attributes.get("InterestCalculationBaseAmount")));
                     map.put("CycleAnchorDateOfPrincipalRedemption", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfPrincipalRedemption"))) ? LocalDateTime.parse(attributes.get("InitialExchangeDate")) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfPrincipalRedemption")));
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));

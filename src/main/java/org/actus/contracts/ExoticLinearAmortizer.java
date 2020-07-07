@@ -56,6 +56,7 @@ import org.actus.time.ScheduleFactory;
 import org.actus.types.ContractRole;
 import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
+import org.actus.types.InterestCalculationBase;
 import org.actus.util.CommonUtils;
 
 /**
@@ -112,13 +113,13 @@ public final class ExoticLinearAmortizer {
 				if (prIncDec[i].trim().equalsIgnoreCase("DEC")) {
 					prType = EventType.PR;
 					prStf = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-							&& model.getAs("InterestCalculationBase").equals("NTL")) ? 
+							&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) ?
 							new STF_PR_LAX(Double.parseDouble(prPayment[i])) : new STF_PR_LAX2(Double.parseDouble(prPayment[i]));
 					prPof = new POF_PR_LAX(Double.parseDouble(prPayment[i]));
 				} else {
 					prType = EventType.PI;
 					prStf = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-							&& model.getAs("InterestCalculationBase").equals("NTL")) ? 
+							&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) ?
 							new STF_PI_LAX(Double.parseDouble(prPayment[i])) : new STF_PI_LAX2(Double.parseDouble(prPayment[i]));
 					prPof = new POF_PI_LAX(Double.parseDouble(prPayment[i]));
 				}
@@ -151,7 +152,7 @@ public final class ExoticLinearAmortizer {
 				
 				// define ipci state-transition function
 				StateTransitionFunction stf_ipci = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-						&& model.getAs("InterestCalculationBase").equals("NTL")) ? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
+						&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) ? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
 						
 				// for all events with time <= IPCED && type == "IP" do
 				// change type to IPCI and payoff/state-trans functions
@@ -179,7 +180,7 @@ public final class ExoticLinearAmortizer {
 			
 				// define ipci state-transition function
 				StateTransitionFunction stf_ipci = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-						&& model.getAs("InterestCalculationBase").equals("NTL")) ? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
+						&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) ? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
 						
 				// add single event
 				events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), EventType.IPCI,
@@ -256,7 +257,7 @@ public final class ExoticLinearAmortizer {
 		
 		// interest calculation base (if specified)
 		if (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-				&& model.getAs("InterestCalculationBase").equals("NTL")) {
+				&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) {
 			events.addAll(EventFactory.createEvents(
 					ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestCalculationBase"), maturity,
 							model.getAs("CycleOfInterestCalculationBase"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")), false),

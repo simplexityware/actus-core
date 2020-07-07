@@ -667,7 +667,7 @@ public class PrincipalAtMaturityTest {
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("PenaltyType","O");
+        map.put("PenaltyType","N");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
