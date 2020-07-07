@@ -12,6 +12,7 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.contractrole.ContractRoleConvention;
+import org.actus.types.ContractRole;
 
 import java.time.LocalDateTime;
 
@@ -23,8 +24,8 @@ public final class STF_IED_SWPPV implements StateTransitionFunction {
         StateSpace postEventStates = new StateSpace();
         
         // update state space
-        states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
-        states.notionalPrincipal2 = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * (-1) * model.<Double>getAs("NotionalPrincipal");
+        states.notionalPrincipal = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole"))) * model.<Double>getAs("NotionalPrincipal");
+        states.notionalPrincipal2 = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole"))) * (-1) * model.<Double>getAs("NotionalPrincipal");
         states.nominalInterestRate = model.<Double>getAs("NominalInterestRate2");
         states.statusDate = time;
         

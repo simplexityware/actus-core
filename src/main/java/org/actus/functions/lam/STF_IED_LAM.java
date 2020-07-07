@@ -7,6 +7,7 @@ package org.actus.functions.lam;
 
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.StateTransitionFunction;
+import org.actus.types.ContractRole;
 import org.actus.util.CommonUtils;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -26,7 +27,7 @@ public final class STF_IED_LAM implements StateTransitionFunction {
         // update state space
         states.nominalInterestRate = model.<Double>getAs("NominalInterestRate");
         states.statusDate = time;
-        states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*
+        states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*
             ( (CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals("NT"))? 
             model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         

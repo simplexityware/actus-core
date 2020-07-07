@@ -26,12 +26,6 @@ public class BusinessDayAdjusterTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void test_AttributeConversionException() {
-        thrown.expect(AttributeConversionException.class);
-        BusinessDayAdjuster adjuster = new BusinessDayAdjuster(null, null);
-    }
-
-    @Test
     public void test_SAME_NoHolidaysCalendar() {
         thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.NOS, new NoHolidaysCalendar());

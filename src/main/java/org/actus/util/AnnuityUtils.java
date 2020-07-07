@@ -8,6 +8,7 @@ package org.actus.util;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.time.ScheduleFactory;
+import org.actus.types.EndOfMonthConventionEnum;
 
 import java.util.Set;
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class AnnuityUtils {
 			DayCountCalculator dayCounter = model.getAs("DayCountConvention");
 
 			// determine remaining PR schedule
-			Set<LocalDateTime> eventTimes = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity, model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"));
+			Set<LocalDateTime> eventTimes = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity, model.getAs("CycleOfPrincipalRedemption"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")));
 			eventTimes.removeIf(d -> d.isBefore(statusDate));
 			eventTimes.remove(statusDate);
 			LocalDateTime[] eventTimesSorted = eventTimes.toArray(new LocalDateTime[eventTimes.size()]);

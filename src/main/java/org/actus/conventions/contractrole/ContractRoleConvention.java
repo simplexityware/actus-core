@@ -7,6 +7,7 @@ package org.actus.conventions.contractrole;
 
 import org.actus.AttributeConversionException;
 import org.actus.types.ContractRole;
+import org.actus.util.CommonUtils;
 
 /**
  * Convention determining the direction of cash flows based on attribute ContractRole
@@ -35,6 +36,9 @@ public final class ContractRoleConvention {
      */
     public static int roleSign(ContractRole role) throws AttributeConversionException {
         int sign;
+        if(CommonUtils.isNull(role)){
+            throw new AttributeConversionException();
+        }
         switch(role) {
             case RPA:
             case BUY:

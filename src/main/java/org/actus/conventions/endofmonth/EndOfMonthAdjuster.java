@@ -7,6 +7,7 @@ package org.actus.conventions.endofmonth;
 
 import org.actus.AttributeConversionException;
 import org.actus.types.EndOfMonthConventionEnum;
+import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 import org.actus.conventions.endofmonth.EndOfMonthConvention;
 import org.actus.conventions.endofmonth.SameDay;
@@ -42,6 +43,9 @@ public final class EndOfMonthAdjuster {
      * @return 
      */
     public EndOfMonthAdjuster(EndOfMonthConventionEnum convention, LocalDateTime refDate, String cycle) throws AttributeConversionException {
+        if(CommonUtils.isNull(convention)){
+            throw new AttributeConversionException();
+        }
         switch (convention) {
             case EOM:
                 // note, internally, units which are a multiple of "1M" are converted to "XM" why here we only have to check

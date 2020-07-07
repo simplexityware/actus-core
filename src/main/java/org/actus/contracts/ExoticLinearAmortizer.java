@@ -53,6 +53,8 @@ import org.actus.functions.pam.STF_TD_PAM;
 
 import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
+import org.actus.types.ContractRole;
+import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
 
@@ -122,7 +124,7 @@ public final class ExoticLinearAmortizer {
 				}
 				events.addAll(EventFactory.createEvents(
 						ScheduleFactory.createSchedule(prLocalDate[i], prLocalDate[i + 1], prCycle[i],
-								model.getAs("EndOfMonthConvention"), false),
+								EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")), false),
 						prType, model.getAs("Currency"), prPof, prStf, model.getAs("BusinessDayConvention")));
 			}
 		}
@@ -140,7 +142,7 @@ public final class ExoticLinearAmortizer {
 			// raw interest payment events
 			Set<ContractEvent> interestEvents = EventFactory.createEvents(
 					ScheduleFactory.createArraySchedule(ipAnchor, model.getAs("MaturityDate"), ipCycle,
-							model.getAs("EndOfMonthConvention")),
+							EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention"))),
 					EventType.IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(),
 					model.getAs("BusinessDayConvention"));
 			
@@ -218,7 +220,7 @@ public final class ExoticLinearAmortizer {
 				}
 				rateResetEvents = EventFactory.createEvents(
 						ScheduleFactory.createSchedule(rrLocalDate[i], rrLocalDate[i + 1], rrCycle[i],
-								model.getAs("EndOfMonthConvention"), false),
+								EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")), false),
 						rrType, model.getAs("Currency"), new POF_RR_PAM(), rrStf, model.getAs("BusinessDayConvention"));
 				events.addAll(rateResetEvents);
 			}
@@ -237,7 +239,7 @@ public final class ExoticLinearAmortizer {
 		if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
 			events.addAll(EventFactory.createEvents(
 					ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), maturity,
-							model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention")),
+							model.getAs("CycleOfFee"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention"))),
 					EventType.FP, model.getAs("Currency"), new POF_FP_PAM(), new STF_FP_LAM(),
 					model.getAs("BusinessDayConvention")));
 		}
@@ -247,7 +249,7 @@ public final class ExoticLinearAmortizer {
 				|| model.<String>getAs("ScalingEffect").contains("N"))) {
 			events.addAll(EventFactory.createEvents(
 					ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfScalingIndex"), maturity,
-							model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention"), false),
+							model.getAs("CycleOfScalingIndex"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")), false),
 					EventType.SC, model.getAs("Currency"), new POF_SC_PAM(), new STF_SC_LAM(),
 					model.getAs("BusinessDayConvention")));
 		}
@@ -257,7 +259,7 @@ public final class ExoticLinearAmortizer {
 				&& model.getAs("InterestCalculationBase").equals("NTL")) {
 			events.addAll(EventFactory.createEvents(
 					ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestCalculationBase"), maturity,
-							model.getAs("CycleOfInterestCalculationBase"), model.getAs("EndOfMonthConvention"), false),
+							model.getAs("CycleOfInterestCalculationBase"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")), false),
 					EventType.IPCB, model.getAs("Currency"), new POF_IPCB_LAM(), new STF_IPCB_LAM(),
 					model.getAs("BusinessDayConvention")));
 		}
@@ -325,18 +327,18 @@ public final class ExoticLinearAmortizer {
 
 		
 		if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-			states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+			states.notionalPrincipal = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))
 					* model.<Double>getAs("NotionalPrincipal");
 			states.nominalInterestRate = model.getAs("NominalInterestRate");
-			states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+			states.accruedInterest = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))
 					* model.<Double>getAs("AccruedInterest");
 			states.feeAccrued = model.getAs("FeeAccrued");
 			if (CommonUtils.isNull(model.getAs("InterestCalculationBase"))
 					|| model.getAs("InterestCalculationBase").equals("NT")) {
-				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))
 						* model.<Double>getAs("NotionalPrincipal");
 			} else {
-				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))
 						* model.<Double>getAs("InterestCalculationBaseAmount");
 			}
 		}
