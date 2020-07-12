@@ -58,7 +58,7 @@ public final class CycleUtils {
         
         // parse position from cycle
         try {
-          position = Character.getNumericValue(cycle.charAt(0));
+          position = Integer.parseInt(""+cycle.charAt(0));
         } catch (Exception e) {
           throw(new AttributeConversionException());
         }
@@ -92,6 +92,7 @@ public final class CycleUtils {
         char stub;
         try {
           stub = cycle.split("L")[1].charAt(0);
+          if(!(stub==StringUtils.LongStub || stub==StringUtils.ShortStub)) throw(new AttributeConversionException());
         } catch (Exception e) {
           throw(new AttributeConversionException());
         }
