@@ -30,8 +30,8 @@ public final class StringUtils {
     public final static String ContractType_LAX = "LAX";
     
     // cycle stubs
-    public final static char LongStub = '+';
-    public final static char ShortStub = '-';
+    public final static char LongStub = '0';
+    public final static char ShortStub = '1';
     
     // end of month conventions
     public final static String EndOfMonthConvention_SameDay = "SD";
