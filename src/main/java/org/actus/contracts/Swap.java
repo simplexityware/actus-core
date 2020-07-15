@@ -19,8 +19,8 @@ import org.actus.functions.swaps.POF_PRD_SWAPS;
 import org.actus.functions.swaps.POF_TD_SWAPS;
 import org.actus.functions.swaps.STF_NET_SWAPS;
 import org.actus.states.StateSpace;
+import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
-import org.actus.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -47,23 +47,23 @@ public final class Swap {
         // compute parent events
         // purchase
         if (!CommonUtils.isNull(parent.getAs("PurchaseDate"))) {
-            ContractEvent purchase = EventFactory.createEvent(parent.getAs("PurchaseDate"), StringUtils.EventType_PRD, parent.getAs("Currency"), new POF_PRD_SWAPS(), new STF_PRD_STK());
+            ContractEvent purchase = EventFactory.createEvent(parent.getAs("PurchaseDate"), EventType.PRD, parent.getAs("Currency"), new POF_PRD_SWAPS(), new STF_PRD_STK());
             events.removeIf(e -> e.compareTo(purchase) == -1); // remove all pre-purchase events
             events.add(purchase);
         }
         // termination
         if (!CommonUtils.isNull(parent.getAs("TerminationDate"))) {
             ContractEvent termination =
-                    EventFactory.createEvent(parent.getAs("TerminationDate"), StringUtils.EventType_TD, parent.getAs("Currency"), new POF_TD_SWAPS(), new STF_TD_STK());
+                    EventFactory.createEvent(parent.getAs("TerminationDate"), EventType.TD, parent.getAs("Currency"), new POF_TD_SWAPS(), new STF_TD_STK());
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
 
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(parent.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == -1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(parent.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null)) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null)) == 1);
 
         // return events
         return events;
@@ -103,7 +103,7 @@ public final class Swap {
             // step 1: merge all analysis events of child contracts
             Map<String, ContractEvent> mergedEvents = Stream
                     .concat(child1.stream(), child2.stream())
-                    .filter(e->e.type().equals(StringUtils.EventType_AD))
+                    .filter(e->e.type().equals(EventType.AD))
                     .collect(Collectors.toMap(
                             e -> e.time() + e.type(), // event key for merging
                             e -> e, // event itself
@@ -114,7 +114,7 @@ public final class Swap {
             events = Stream
                     .concat(Stream
                             .concat(child1.stream(),child2.stream())
-                            .filter(e->!e.type().equals(StringUtils.EventType_AD)),
+                            .filter(e->!e.type().equals(EventType.AD)),
                             mergedEvents.values().stream())
                     .collect(Collectors.toCollection(ArrayList::new));
         }*/

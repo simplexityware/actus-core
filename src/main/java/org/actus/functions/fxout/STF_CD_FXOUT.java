@@ -11,7 +11,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.util.StringUtils;
+import org.actus.types.ContractPerformance;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +23,7 @@ public final class STF_CD_FXOUT implements StateTransitionFunction {
         StateSpace postEventStates = new StateSpace();
         
         // update state space
-        states.contractPerformance = StringUtils.ContractStatus_Default;
+        states.contractPerformance = ContractPerformance.DF;
         states.statusDate = time;
         
         // return post-event-states

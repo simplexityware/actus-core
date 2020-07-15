@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 import org.actus.time.ScheduleFactory;
-import org.actus.util.StringUtils;
+import org.actus.types.EndOfMonthConventionEnum;
+import org.actus.types.EventType;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -70,8 +71,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -106,8 +107,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -142,8 +143,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -178,8 +179,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -215,8 +216,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -254,8 +255,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -292,8 +293,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -330,8 +331,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -368,8 +369,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -407,8 +408,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -447,8 +448,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -489,8 +490,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -531,8 +532,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -575,8 +576,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -618,8 +619,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -662,8 +663,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -698,7 +699,7 @@ public class NegativeAmortizerTest {
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("PenaltyType","O");
+        map.put("PenaltyType","N");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
@@ -707,8 +708,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -753,8 +754,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -799,8 +800,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -844,8 +845,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -881,7 +882,7 @@ public class NegativeAmortizerTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NT");
+        map.put("InterestPaymentCalculationBase", "NT");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
@@ -890,8 +891,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -927,7 +928,7 @@ public class NegativeAmortizerTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NTIED");
+        map.put("InterestPaymentCalculationBase", "NTIED");
         map.put("InterestPaymentCalculationBaseAmount","500.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
@@ -937,8 +938,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -974,7 +975,7 @@ public class NegativeAmortizerTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBase", "NTL");
         map.put("InterestPaymentCalculationBaseAmount","1000.0");
         map.put("CycleOfInterestCalculationBase","1Q-");
         // parse attributes
@@ -985,8 +986,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -1022,7 +1023,7 @@ public class NegativeAmortizerTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBase", "NTL");
         map.put("InterestPaymentCalculationBaseAmount","1000.0");
         map.put("CycleOfInterestCalculationBase","1Q-");
         map.put("CycleAnchorDateOfInterestCalculationBase","2016-04-01T00:00:00");
@@ -1034,8 +1035,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -1067,7 +1068,7 @@ public class NegativeAmortizerTest {
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBase", "NTL");
         map.put("InterestPaymentCalculationBaseAmount","1000.0");
         map.put("CycleOfInterestCalculationBase","1Q-");
         // parse attributes
@@ -1078,8 +1079,8 @@ public class NegativeAmortizerTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();

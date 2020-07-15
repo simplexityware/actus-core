@@ -14,6 +14,7 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
+import org.actus.types.ContractRole;
 
 public final class STF_PR2_NAM implements StateTransitionFunction {
 
@@ -28,7 +29,7 @@ public final class STF_PR2_NAM implements StateTransitionFunction {
 		states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
 		
 		double principalRedemption =  states.nextPrincipalRedemptionPayment - states.accruedInterest;
-		principalRedemption = principalRedemption - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.notionalPrincipal));
+		principalRedemption = principalRedemption - ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.notionalPrincipal));
 		
 		states.notionalPrincipal -= principalRedemption;
 		states.interestCalculationBaseAmount = states.notionalPrincipal;
