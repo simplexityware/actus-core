@@ -37,7 +37,7 @@ public final class PrincipalAtMaturity {
         // initial exchange
         events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_PAM()));
         // principal redemption
-        events.add(EventFactory.createEvent(model.getAs("MaturityDate"), StringUtils.EventType_MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM()));
+        events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM()));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_PAM(), new STF_PRD_PAM()));

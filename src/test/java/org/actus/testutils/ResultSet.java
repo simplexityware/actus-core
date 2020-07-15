@@ -1,12 +1,15 @@
 package org.actus.testutils;
 
 import java.time.LocalDateTime;
+
+import org.actus.types.EventType;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class ResultSet {
     LocalDateTime eventDate;
-    String eventType;
+    EventType eventType;
     Double payoff;
     Double notionalPrincipal;
     Double nominalInterestRate;
@@ -20,11 +23,11 @@ public class ResultSet {
         this.eventDate = LocalDateTime.parse(eventDate);
     }
 
-    public String getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 
-    public void setEventType(String eventType) {
+    public void setEventType(EventType eventType) {
         this.eventType = eventType;
     }
 

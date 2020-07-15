@@ -53,7 +53,7 @@ public final class CallMoney {
         // initial exchange
         events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_CLM(), new STF_IED_PAM()));
         // principal redemption
-        events.add(EventFactory.createEvent(maturity, StringUtils.EventType_MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM()));
+        events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM()));
         // interest payment event
         events.add(EventFactory.createEvent(maturity, EventType.IP, model.getAs("Currency"), new POF_IP_CLM(), new STF_IP_CLM()));
         // interest payment capitalization (if specified)
