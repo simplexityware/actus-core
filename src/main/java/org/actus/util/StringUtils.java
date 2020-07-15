@@ -12,18 +12,18 @@ package org.actus.util;
 public final class StringUtils {
 
     // cycle stubs
-    public final static char LongStub = '+';
-    public final static char ShortStub = '-';
-
+    public final static char LongStub = '0';
+    public final static char ShortStub = '1';
+  
     // day count conventions
-    public final static String DayCountConvention_AAISDA = "A/AISDA";
-    public final static String DayCountConvention_A360 = "A/360";
-    public final static String DayCountConvention_A365 = "A/365";
-    public final static String DayCountConvention_B252 = "B/252";
-    public final static String DayCountConvention_30E360 = "30E/360";
-    public final static String DayCountConvention_30E360ISDA = "30E/360ISDA";
-    public final static String DayCountConvention_A336 = "A/336";
-    public final static String DayCountConvention_28336 = "28/336";
+    public final static String DayCountConvention_AAISDA = "AA";
+    public final static String DayCountConvention_A360 = "A360";
+    public final static String DayCountConvention_A365 = "A365";
+    public final static String DayCountConvention_B252 = "B252";
+    public final static String DayCountConvention_30E360 = "30E360";
+    public final static String DayCountConvention_30E360ISDA = "30E360ISDA";
+    public final static String DayCountConvention_A336 = "A336";
+    public final static String DayCountConvention_28336 = "28336";
     
     // calc/shift conventions
     public final static String CalcShiftConvention_CS = "CS";
