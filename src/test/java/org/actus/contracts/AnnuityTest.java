@@ -22,13 +22,14 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 import org.actus.time.ScheduleFactory;
-import org.actus.util.StringUtils;
+import org.actus.types.EndOfMonthConventionEnum;
+import org.actus.types.EventType;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
 public class AnnuityTest {
-    
+
     class MarketModel implements RiskFactorModelProvider {
         public Set<String> keys() {
             Set<String> keys = new HashSet<String>();
@@ -37,14 +38,14 @@ public class AnnuityTest {
 
         @Override
         public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
-            return 0.0;    
+            return 0.0;
         }
 
     }
-    
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-    
+
     @Test
     public void test_ANN_MandatoryAttributes_withMaturity() {
         thrown = ExpectedException.none();
@@ -62,18 +63,18 @@ public class AnnuityTest {
         map.put("MaturityDate", "2017-01-01T00:00:00");
         map.put("NotionalPrincipal", "1000.0");
         map.put("NominalInterestRate","0.01");
-        
+
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-        
+
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -81,7 +82,7 @@ public class AnnuityTest {
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
         System.out.println(events);
     }
-    
+
     @Test
     public void test_ANN_schedule_MandatoryAttributes_withoutMaturity() {
         thrown = ExpectedException.none();
@@ -99,25 +100,25 @@ public class AnnuityTest {
         map.put("NextPrincipalRedemptionPayment", "100.0");
         map.put("NotionalPrincipal", "1000.0");
         map.put("NominalInterestRate","0.01");
-        
+
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_MandatoryAttributes_withMaturityAndPRNXT() {
         thrown = ExpectedException.none();
@@ -140,20 +141,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withPRANX() {
         thrown = ExpectedException.none();
@@ -176,20 +177,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIPCL() {
         thrown = ExpectedException.none();
@@ -212,20 +213,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIPCLandIPANX() {
         thrown = ExpectedException.none();
@@ -249,20 +250,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRRCLandRRANX() {
         thrown = ExpectedException.none();
@@ -288,20 +289,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSCwhere000() {
         thrown = ExpectedException.none();
@@ -326,20 +327,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSCwhereI00() {
         thrown = ExpectedException.none();
@@ -364,20 +365,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSCwhereIN0() {
         thrown = ExpectedException.none();
@@ -402,20 +403,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSCwhereIN0_withSCCL() {
         thrown = ExpectedException.none();
@@ -441,20 +442,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSCwhereIN0_withSCCLandSCANX() {
         thrown = ExpectedException.none();
@@ -481,20 +482,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFPwhereA() {
         thrown = ExpectedException.none();
@@ -523,20 +524,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFPwhereN() {
         thrown = ExpectedException.none();
@@ -565,20 +566,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFP_withOPCL() {
         thrown = ExpectedException.none();
@@ -609,20 +610,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-        
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFP_withOPANX() {
         thrown = ExpectedException.none();
@@ -652,20 +653,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFP_withOPCLandOPANX() {
         thrown = ExpectedException.none();
@@ -696,13 +697,13 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -736,18 +737,18 @@ public class AnnuityTest {
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("PenaltyType","O");
+        map.put("PenaltyType","N");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -787,20 +788,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFP_withOP_withPYwhereN() {
         thrown = ExpectedException.none();
@@ -833,20 +834,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFP_withOP_withPYwhereI() {
         thrown = ExpectedException.none();
@@ -878,20 +879,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNT() {
         thrown = ExpectedException.none();
@@ -919,25 +920,25 @@ public class AnnuityTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NT");
+        map.put("InterestPaymentCalculationBase", "NT");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNTIED() {
         thrown = ExpectedException.none();
@@ -965,26 +966,26 @@ public class AnnuityTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NTIED");
+        map.put("InterestPaymentCalculationBase", "NTIED");
         map.put("InterestPaymentCalculationBaseAmount","500.0");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNTL() {
         thrown = ExpectedException.none();
@@ -1019,20 +1020,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withFP_withOP_withPY_withIPCBwhereNTLwithIPCBANX() {
         thrown = ExpectedException.none();
@@ -1060,7 +1061,7 @@ public class AnnuityTest {
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
         map.put("PenaltyType","I");
-        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBase", "NTL");
         map.put("InterestPaymentCalculationBaseAmount","1000.0");
         map.put("CycleOfInterestCalculationBase","1Q-");
         map.put("CycleAnchorDateOfInterestCalculationBase","2016-04-01T00:00:00");
@@ -1068,20 +1069,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withRR_withSC_withOP_withIPCB_withMultipleAnalysisTimes() {
         thrown = ExpectedException.none();
@@ -1105,27 +1106,27 @@ public class AnnuityTest {
         map.put("CycleOfScalingIndex","1Q-");
         map.put("CycleAnchorDateOfOptionality","2016-06-01T00:00:00");
         map.put("ObjectCodeOfPrepaymentModel","IDXY");
-        map.put("InterestPaymentCalculationBase","NTL");
+        map.put("InterestPaymentCalculationBase", "NTL");
         map.put("InterestPaymentCalculationBaseAmount","1000.0");
         map.put("CycleOfInterestCalculationBase","1Q-");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withPR_case1() {
         thrown = ExpectedException.none();
@@ -1150,20 +1151,20 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
         // apply events
         ArrayList<ContractEvent> events = Annuity.apply(schedule,model,riskFactors);
     }
-    
+
     @Test
     public void test_ANN_schedule_withIP_withPR_case2() {
         thrown = ExpectedException.none();
@@ -1188,12 +1189,12 @@ public class AnnuityTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = Annuity.schedule(LocalDateTime.parse(map.get("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();

@@ -9,6 +9,7 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
+import org.actus.types.ContractRole;
 
 public class STF_PI_LAX implements StateTransitionFunction {
 
@@ -22,7 +23,7 @@ public class STF_PI_LAX implements StateTransitionFunction {
 	public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		StateSpace postEventStates = new StateSpace();
-		double role = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
+		double role = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")));
 		double redemption = role*prPayment - role * Math.max(0, Math.abs(prPayment) - Math.abs(states.notionalPrincipal));
 		// update state space
 		double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate),

@@ -5,38 +5,16 @@
  */
 package org.actus.util;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Contains constants representing String-conventions
  */
 public final class StringUtils {
-    
-    // contract types 
-    public final static String ContractType_PAM = "PAM";
-    public final static String ContractType_LAM = "LAM";
-    public final static String ContractType_NAM = "NAM";
-    public final static String ContractType_ANN = "ANN";
-    public final static String ContractType_CLM = "CLM";
-    public final static String ContractType_UMP = "UMP";
-    public final static String ContractType_CSH = "CSH";
-    public final static String ContractType_STK = "STK";
-    public final static String ContractType_COM = "COM";
-    public final static String ContractType_FXOUT = "FXOUT";
-    public final static String ContractType_SWPPV = "SWPPV";
-    public final static String ContractType_SWAPS = "SWAPS";
-    public final static String ContractType_LAX = "LAX";
-    
+
     // cycle stubs
     public final static char LongStub = '0';
     public final static char ShortStub = '1';
-    
-    // end of month conventions
-    public final static String EndOfMonthConvention_SameDay = "SD";
-    public final static String EndOfMonthConvention_EndOfMonth = "EOM";
-    
+  
     // day count conventions
     public final static String DayCountConvention_AAISDA = "AA";
     public final static String DayCountConvention_A360 = "A360";
@@ -46,13 +24,6 @@ public final class StringUtils {
     public final static String DayCountConvention_30E360ISDA = "30E360ISDA";
     public final static String DayCountConvention_A336 = "A336";
     public final static String DayCountConvention_28336 = "28336";
-    
-    // business day conventions
-    public final static String BusinessDayConvention_S = "SAME";
-    public final static String BusinessDayConvention_F = "F";
-    public final static String BusinessDayConvention_MF = "MF";
-    public final static String BusinessDayConvention_P = "P";
-    public final static String BusinessDayConvention_MP = "MP";
     
     // calc/shift conventions
     public final static String CalcShiftConvention_CS = "CS";
@@ -79,7 +50,6 @@ public final class StringUtils {
     public final static String EventType_DV = "DV";
     public final static String EventType_STD = "STD";
     public final static String EventType_PI = "PI";
-    
     
     // contract roles
     public final static String ContractRole_RPA = "RPA";

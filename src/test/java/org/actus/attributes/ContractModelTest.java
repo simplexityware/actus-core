@@ -10,6 +10,7 @@ import org.actus.AttributeConversionException;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.actus.types.EndOfMonthConventionEnum;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -51,7 +52,7 @@ public class ContractModelTest {
         map.put("ContractType", "PAM");
         map.put("Calendar", "org.actus.time.calendar.NoHolidaysCalendar");
         map.put("BusinessDayConvention", "SCF");
-        map.put("EndOfMonthConvention", "SD");
+        map.put("EndOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
         map.put("LegalEntityIDCounterparty", "CORP-XY");

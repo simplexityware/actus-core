@@ -22,7 +22,8 @@ import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 import org.actus.time.ScheduleFactory;
-import org.actus.util.StringUtils;
+import org.actus.types.EndOfMonthConventionEnum;
+import org.actus.types.EventType;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -70,8 +71,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -107,8 +108,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -144,8 +145,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -181,8 +182,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -218,8 +219,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -254,8 +255,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -290,8 +291,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -328,8 +329,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -368,8 +369,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -408,8 +409,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -446,8 +447,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -484,8 +485,8 @@ public class PlainVanillaInterestRateSwapTest {
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();

@@ -26,7 +26,6 @@ import org.junit.jupiter.api.DynamicTest;
 
 
 public class PrincipalAtMaturityTest {
-    
     @TestFactory
     public Stream<DynamicTest> test() {
         String testFile = "./src/test/resources/actus/actus-tests-PAM.json";
@@ -39,14 +38,13 @@ public class PrincipalAtMaturityTest {
 
         // go through test-id and perform test
         return testIds.stream().map(testId -> {
-
             // extract test for test ID
             TestData test = tests.get(testId);
 
             // create market model from data
             List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
             DataObserver observer = ContractTestUtils.createObserver(dataObserved);
-
+          
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 

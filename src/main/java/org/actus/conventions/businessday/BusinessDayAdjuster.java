@@ -6,8 +6,10 @@
 package org.actus.conventions.businessday;
 
 import org.actus.AttributeConversionException;
+import org.actus.events.ContractEvent;
+import org.actus.time.ScheduleFactory;
 import org.actus.time.calendar.BusinessDayCalendarProvider;
-import org.actus.util.StringUtils;
+import org.actus.types.BusinessDayConventionEnum;
 import org.actus.util.CommonUtils;
 
 import java.time.LocalDateTime;
@@ -32,47 +34,42 @@ public final class BusinessDayAdjuster {
      * @throws AttributeConversionException if {@code convention} or {@code calendar} does not conform with the ACTUS Data Dictionary
      * @return 
      */
-    public BusinessDayAdjuster(String convention, BusinessDayCalendarProvider calendar) {
-        String suffix;
-        String prefix;
-
-        // convert contract attributes
-        if (CommonUtils.isNull(convention) || convention.equals(StringUtils.BusinessDayConvention_S)) {
-            
+    public BusinessDayAdjuster(BusinessDayConventionEnum convention, BusinessDayCalendarProvider calendar) {
+        if (CommonUtils.isNull(convention) || convention.equals(BusinessDayConventionEnum.NOS)) {
             this.bdConvention = new Same();
             this.scConvention = new ShiftCalc();
-
         } else {
-
-            try {
-                prefix = convention.substring(0, 2);
-                suffix = convention.substring(2);
-            } catch (Exception e) {
-                throw new AttributeConversionException();
-            }
-
-            switch (prefix) {
-                case StringUtils.CalcShiftConvention_CS:
+            switch (convention) {
+                case CSF:
                     scConvention = new CalcShift();
-                    break;
-                case StringUtils.CalcShiftConvention_SC:
-                    scConvention = new ShiftCalc();
-                    break;
-                default:
-                    throw new AttributeConversionException();
-            }
-
-            switch (suffix) {
-                case StringUtils.BusinessDayConvention_F:
                     bdConvention = new Following(calendar);
                     break;
-                case StringUtils.BusinessDayConvention_MF:
+                case CSMF:
+                    scConvention = new CalcShift();
                     bdConvention = new ModifiedFollowing(calendar);
                     break;
-                case StringUtils.BusinessDayConvention_P:
+                case CSP:
+                    scConvention = new CalcShift();
                     bdConvention = new Preceeding(calendar);
                     break;
-                case StringUtils.BusinessDayConvention_MP:
+                case CSMP:
+                    scConvention = new CalcShift();
+                    bdConvention = new ModifiedPreceeding(calendar);
+                    break;
+                case SCF:
+                    scConvention = new ShiftCalc();
+                    bdConvention = new Following(calendar);
+                    break;
+                case SCMF:
+                    scConvention = new ShiftCalc();
+                    bdConvention = new ModifiedFollowing(calendar);
+                    break;
+                case SCP:
+                    scConvention = new ShiftCalc();
+                    bdConvention = new Preceeding(calendar);
+                    break;
+                case SCMP:
+                    scConvention = new ShiftCalc();
                     bdConvention = new ModifiedPreceeding(calendar);
                     break;
                 default:
