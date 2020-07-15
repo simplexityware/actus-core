@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
 
@@ -68,14 +68,14 @@ public class PrincipalAtMaturityTest {
 
             // extract test results
             List<ResultSet> expectedResults = test.getResults();
-            for(int i=0; i<expectedResults.size(); i++) {
-                System.out.println("expectedResults: " + expectedResults.get(i).toString());
-                System.out.println("computedResults: " + computedResults.get(i).toString());
-            }
             
+            // round results to available precision
+            computedResults.forEach(result -> result.roundTo(12));
+            expectedResults.forEach(result -> result.roundTo(12));
+
             // create dynamic test
             return DynamicTest.dynamicTest("Test: " + testId,
-                () -> assertEquals(expectedResults, computedResults));
+                () -> Assertions.assertArrayEquals(expectedResults.toArray(), computedResults.toArray()));
         });
     }
 }

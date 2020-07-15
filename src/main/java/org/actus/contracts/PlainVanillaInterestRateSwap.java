@@ -46,7 +46,7 @@ public final class PlainVanillaInterestRateSwap {
             // float initial exchange
             events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), StringUtils.EventType_IED, model.getAs("Currency"), new POF_IEDFloat_SWPPV(), new STF_IED_SWPPV()));
             // fixed principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), StringUtils.EventType_PR, model.getAs("Currency"), new POF_PR_PAM(), new STF_PR_SWPPV()));
+            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), StringUtils.EventType_MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_SWPPV()));
             // float principal redemption
             events.add(EventFactory.createEvent(model.getAs("MaturityDate"), StringUtils.EventType_PR, model.getAs("Currency"), new POF_PRFloat_SWPPV(), new STF_PR_SWPPV()));
             // interest payment schedule

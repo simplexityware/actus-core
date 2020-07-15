@@ -51,7 +51,7 @@ public final class LinearAmortizer {
         events.addAll(EventFactory.createEvents(prSchedule, StringUtils.EventType_PR,
             model.getAs("Currency"), new POF_PR_LAM(), stf, model.getAs("BusinessDayConvention")));
         // -> chose right Payoff function depending on maturity
-        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_PR_PAM():new POF_PR_LAM());
+        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_MD_PAM():new POF_PR_LAM());
         events.add(EventFactory.createEvent(maturity,StringUtils.EventType_PR,model.getAs("Currency"),pof,new STF_PR_LAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {

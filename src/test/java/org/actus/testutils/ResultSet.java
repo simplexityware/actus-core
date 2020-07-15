@@ -1,6 +1,8 @@
 package org.actus.testutils;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class ResultSet {
     LocalDateTime eventDate;
@@ -58,12 +60,45 @@ public class ResultSet {
         this.accruedInterest = accruedInterest;
     }
 
+    public void roundTo(int decimals) {
+        // round payoff
+        BigDecimal bd = new BigDecimal(Double.toString(this.payoff));
+        this.payoff = bd.setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+
+        // round notional principal
+        bd = new BigDecimal(Double.toString(this.notionalPrincipal));
+        this.notionalPrincipal = bd.setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+
+        // round interest rate
+        bd = new BigDecimal(Double.toString(this.nominalInterestRate));
+        this.nominalInterestRate = bd.setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+
+        // round accrued interest
+        bd = new BigDecimal(Double.toString(this.accruedInterest));
+        this.accruedInterest = bd.setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+    }
+
     public String toString() {
         return "Date: " + eventDate + ", " +
             "Type: " + eventType + ", " +
             "Payoff: " + payoff + ", " +
-            "Notinoal: " + notionalPrincipal + ", " +
+            "Notional: " + notionalPrincipal + ", " +
             "Rate: " + nominalInterestRate + ", " +
             "Accrued: " + accruedInterest;
     }
+
+    // for assertEquals in JUnit testing
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ResultSet resultsToCompare = (ResultSet) o;
+        return eventDate.equals(resultsToCompare.eventDate) &&
+                eventType.equals(resultsToCompare.eventType) &&
+                payoff.equals(resultsToCompare.payoff) &&
+                notionalPrincipal.equals(resultsToCompare.notionalPrincipal) &&
+                nominalInterestRate.equals(resultsToCompare.nominalInterestRate) &&
+                accruedInterest.equals(resultsToCompare.accruedInterest);
+    }
+
 }
