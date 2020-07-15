@@ -37,6 +37,8 @@ public final class StateSpace {
     public double               notionalPrincipal2; // analytical result
     public double               notionalScalingMultiplier;
     public LocalDateTime        statusDate;
+    public LocalDateTime        maturityDate;
+    public LocalDateTime        terminationDate;
 
     /**
      * Returns a String-representation of all analytical elements
@@ -65,6 +67,8 @@ public final class StateSpace {
                 .add(Double.toString(notionalScalingMultiplier))
                 //add empty string if not set
                 .add(Objects.isNull(statusDate) ? "" : statusDate.toString())
+                .add(Objects.isNull(terminationDate) ? "" : terminationDate.toString())
+                .add(Objects.isNull(maturityDate) ? "" : maturityDate.toString())
         ;
 
         return joiner.toString();
