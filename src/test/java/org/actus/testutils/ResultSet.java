@@ -11,6 +11,7 @@ public class ResultSet {
     LocalDateTime eventDate;
     EventType eventType;
     Double payoff;
+    String currency;
     Double notionalPrincipal;
     Double nominalInterestRate;
     Double accruedInterest;
@@ -37,6 +38,14 @@ public class ResultSet {
 
     public void setPayoff(Double payoff) {
         this.payoff = payoff;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public Double getNotionalPrincipal() {
@@ -85,6 +94,7 @@ public class ResultSet {
         return "Date: " + eventDate + ", " +
             "Type: " + eventType + ", " +
             "Payoff: " + payoff + ", " +
+            "Currency: " + currency + "," +
             "Notional: " + notionalPrincipal + ", " +
             "Rate: " + nominalInterestRate + ", " +
             "Accrued: " + accruedInterest;
@@ -99,6 +109,7 @@ public class ResultSet {
         return eventDate.equals(resultsToCompare.eventDate) &&
                 eventType.equals(resultsToCompare.eventType) &&
                 payoff.equals(resultsToCompare.payoff) &&
+                currency.equals(resultsToCompare.currency) &&
                 notionalPrincipal.equals(resultsToCompare.notionalPrincipal) &&
                 nominalInterestRate.equals(resultsToCompare.nominalInterestRate) &&
                 accruedInterest.equals(resultsToCompare.accruedInterest);

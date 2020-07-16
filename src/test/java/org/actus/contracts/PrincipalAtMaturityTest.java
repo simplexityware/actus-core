@@ -58,6 +58,7 @@ public class PrincipalAtMaturityTest {
                 results.setEventDate(e.time().toString());
                 results.setEventType(e.type());
                 results.setPayoff(e.payoff());
+                results.setCurrency(e.currency());
                 results.setNotionalPrincipal(e.states().notionalPrincipal);
                 results.setNominalInterestRate(e.states().nominalInterestRate);
                 results.setAccruedInterest(e.states().accruedInterest);
