@@ -70,8 +70,8 @@ public final class Annuity {
         if(CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) && ipanx.isAfter(model.getAs("InitialExchangeDate")))
         	events.add(EventFactory.createEvent(ipanx,EventType.IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention")));
         // -> chose right Payoff function depending on maturity
-        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_PR_PAM():new POF_PR_NAM());
-            events.add(EventFactory.createEvent(maturity,EventType.PR,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention")));
+        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_MD_PAM():new POF_PR_NAM());
+            events.add(EventFactory.createEvent(maturity,EventType.MD,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention")));
             events.add(EventFactory.createEvent(maturity,EventType.IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {

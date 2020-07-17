@@ -19,7 +19,7 @@ import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
 import org.actus.functions.clm.POF_IED_CLM;
 import org.actus.functions.pam.STF_IED_PAM;
-import org.actus.functions.pam.POF_PR_PAM;
+import org.actus.functions.pam.POF_MD_PAM;
 import org.actus.functions.pam.STF_PR_PAM;
 import org.actus.functions.pam.STF_RRF_PAM;
 import org.actus.functions.clm.POF_IP_CLM;
@@ -53,7 +53,7 @@ public final class CallMoney {
         // initial exchange
         events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_CLM(), new STF_IED_PAM()));
         // principal redemption
-        events.add(EventFactory.createEvent(maturity, EventType.PR, model.getAs("Currency"), new POF_PR_PAM(), new STF_PR_PAM()));
+        events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM()));
         // interest payment event
         events.add(EventFactory.createEvent(maturity, EventType.IP, model.getAs("Currency"), new POF_IP_CLM(), new STF_IP_CLM()));
         // interest payment capitalization (if specified)

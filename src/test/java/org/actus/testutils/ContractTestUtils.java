@@ -24,7 +24,7 @@ public class ContractTestUtils {
         Map<String, String> map = new HashMap<String, String>();
         for (Map.Entry<String, Object> entry : data.entrySet()) {
 
-            System.out.println(entry.getKey() + ":" + entry.getValue());
+            //System.out.println(entry.getKey() + ":" + entry.getValue());
 
             // capitalize input json keys as required in contract model parser
             map.put(entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1), entry.getValue().toString());

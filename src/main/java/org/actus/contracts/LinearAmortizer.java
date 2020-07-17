@@ -53,9 +53,9 @@ public final class LinearAmortizer {
         // regular principal redemption events
         events.addAll(EventFactory.createEvents(prSchedule, EventType.PR,
             model.getAs("Currency"), new POF_PR_LAM(), stf, model.getAs("BusinessDayConvention")));
-        // -> chose right Payoff function depending on maturity
-        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_PR_PAM():new POF_PR_LAM());
-        events.add(EventFactory.createEvent(maturity,EventType.PR,model.getAs("Currency"),pof,new STF_PR_LAM(), model.getAs("BusinessDayConvention")));
+	// -> chose right Payoff function depending on maturity
+        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_MD_PAM():new POF_PR_LAM());
+	events.add(EventFactory.createEvent(maturity,EventType.PR,model.getAs("Currency"),pof,new STF_PR_LAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));

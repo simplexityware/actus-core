@@ -28,4 +28,5 @@ public final class StringUtils {
     // calc/shift conventions
     public final static String CalcShiftConvention_CS = "CS";
     public final static String CalcShiftConvention_SC = "SC";
+
 }

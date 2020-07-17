@@ -15,7 +15,7 @@ import org.actus.util.CommonUtils;
 
 import java.time.LocalDateTime;
 
-public final class POF_PR_PAM implements PayOffFunction {
+public final class POF_MD_PAM implements PayOffFunction {
     
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
