@@ -46,16 +46,24 @@ public final class Stock {
         // dividend payment related
         if (!CommonUtils.isNull(model.getAs("CycleOfDividendPayment"))) {
             if(CommonUtils.isNull(model.getAs("TerminationDate"))) {
-                events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfDividendPayment"),
-                        model.<LocalDateTime>getAs("CycleAnchorDateOfDividendPayment").plus(Constants.MAX_LIFETIME_STK),
-                        model.getAs("CycleOfDividendPayment"),
-                        EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention"))),
-                        EventType.DV, model.getAs("Currency"), new POF_DV_STK(), new STF_DV_STK(), model.getAs("BusinessDayConvention")));
+                events.addAll(EventFactory.createEvents(
+                        ScheduleFactory.createSchedule(
+                                model.getAs("CycleAnchorDateOfDividendPayment"),
+                                model.<LocalDateTime>getAs("CycleAnchorDateOfDividendPayment").plus(Constants.MAX_LIFETIME_STK),
+                                model.getAs("CycleOfDividendPayment"),
+                                model.getAs("EndOfMonthConvention")
+                        ),
+                        EventType.DV,
+                        model.getAs("Currency"),
+                        new POF_DV_STK(),
+                        new STF_DV_STK(),
+                        model.getAs("BusinessDayConvention"))
+                );
             } else {
                 events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfDividendPayment"),
                         model.getAs("TerminationDate"),
                         model.getAs("CycleOfDividendPayment"),
-                        EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention"))),
+                        model.getAs("EndOfMonthConvention")),
                         EventType.DV, model.getAs("Currency"), new POF_DV_STK(), new STF_DV_STK(), model.getAs("BusinessDayConvention")));
 
             }

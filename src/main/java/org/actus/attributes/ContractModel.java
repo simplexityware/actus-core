@@ -13,10 +13,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.AttributeConversionException;
 import org.actus.ContractTypeUnknownException;
-import org.actus.types.BusinessDayConventionEnum;
-import org.actus.types.ContractTypeEnum;
-import org.actus.types.InterestCalculationBase;
-import org.actus.types.PenaltyType;
+import org.actus.types.*;
 import org.actus.util.CommonUtils;
 
 
@@ -90,18 +87,18 @@ public class ContractModel implements ContractModelProvider {
 
         // parse all attributes known to the respective contract type
         try {
+            map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
             switch (ContractTypeEnum.valueOf(attributes.get("ContractType"))) {
                 case PAM:
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
-                    map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("CycleAnchorDateOfFee", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee"))) ? ((CommonUtils.isNull(attributes.get("CycleOfFee"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
                     map.put("CycleOfFee", attributes.get("CycleOfFee"));
-                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? "0" : attributes.get("FeeBasis"));
+                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? null : FeeBasis.valueOf(attributes.get("FeeBasis")));
                     map.put("FeeRate", (CommonUtils.isNull(attributes.get("FeeRate"))) ? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
                     map.put("FeeAccrued", (CommonUtils.isNull(attributes.get("FeeAccrued"))) ? 0.0 : Double.parseDouble(attributes.get("FeeAccrued")));
                     map.put("CycleAnchorDateOfInterestPayment", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestPayment"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment")));
@@ -110,7 +107,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("DayCountConvention", new DayCountCalculator(attributes.get("DayCountConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
                     map.put("AccruedInterest", (CommonUtils.isNull(attributes.get("AccruedInterest"))) ? 0.0 : Double.parseDouble(attributes.get("AccruedInterest")));
                     map.put("CapitalizationEndDate", (CommonUtils.isNull(attributes.get("CapitalizationEndDate"))) ? null : LocalDateTime.parse(attributes.get("CapitalizationEndDate")));
-                    map.put("CyclePointOfInterestPayment", attributes.get("CyclePointOfInterestPayment"));
+                    /// TODO : check if non null for fixing swap test map.put("CyclePointOfInterestPayment", CyclePointOfInterestPayment.valueOf(attributes.get("CyclePointOfInterestPayment")));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("InitialExchangeDate", LocalDateTime.parse(attributes.get("InitialExchangeDate")));
                     map.put("PremiumDiscountAtIED", (CommonUtils.isNull(attributes.get("PremiumDiscountAtIED"))) ? 0.0 : Double.parseDouble(attributes.get("PremiumDiscountAtIED")));
@@ -123,7 +120,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("ScalingIndexAtStatusDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate")));
                     map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("CycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex")));
                     map.put("CycleOfScalingIndex", attributes.get("CycleOfScalingIndex"));
-                    map.put("ScalingEffect", attributes.get("ScalingEffect"));
+                    map.put("ScalingEffect", ScalingEffect.valueOf(attributes.get("ScalingEffect")));
                     // TODO: review prepayment mechanism and attributes
                     map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("CycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality")));
                     map.put("CycleOfOptionality", attributes.get("CycleOfOptionality"));
@@ -139,7 +136,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("LifeFloor", (CommonUtils.isNull(attributes.get("LifeFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("LifeFloor")));
                     map.put("PeriodCap", (CommonUtils.isNull(attributes.get("PeriodCap"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodCap")));
                     map.put("PeriodFloor", (CommonUtils.isNull(attributes.get("PeriodFloor"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
-                    map.put("CyclePointOfRateReset", attributes.get("CyclePointOfRateReset"));
+                    map.put("CyclePointOfRateReset", CyclePointOfRateReset.valueOf(attributes.get("CyclePointOfRateReset")));
                     map.put("FixingDays", attributes.get("FixingDays"));
                     map.put("NextResetRate", (CommonUtils.isNull(attributes.get("NextResetRate"))) ? null : Double.parseDouble(attributes.get("NextResetRate")));
                     map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("RateMultiplier"))) ? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
@@ -150,14 +147,14 @@ public class ContractModel implements ContractModelProvider {
                 case LAM:
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("CycleAnchorDateOfFee", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee"))) ? ((CommonUtils.isNull(attributes.get("CycleOfFee"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
                     map.put("CycleOfFee", attributes.get("CycleOfFee"));
-                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? "0" : attributes.get("FeeBasis"));
+                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? null : FeeBasis.valueOf(attributes.get("FeeBasis")));
                     map.put("FeeRate", (CommonUtils.isNull(attributes.get("FeeRate"))) ? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
                     map.put("FeeAccrued", (CommonUtils.isNull(attributes.get("FeeAccrued"))) ? 0.0 : Double.parseDouble(attributes.get("FeeAccrued")));
                     map.put("CycleAnchorDateOfInterestPayment", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestPayment"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment")));
@@ -166,7 +163,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("DayCountConvention", new DayCountCalculator(attributes.get("DayCountConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
                     map.put("AccruedInterest", (CommonUtils.isNull(attributes.get("AccruedInterest"))) ? 0.0 : Double.parseDouble(attributes.get("AccruedInterest")));
                     map.put("CapitalizationEndDate", (CommonUtils.isNull(attributes.get("CapitalizationEndDate"))) ? null : LocalDateTime.parse(attributes.get("CapitalizationEndDate")));
-                    map.put("CyclePointOfInterestPayment", attributes.get("CyclePointOfInterestPayment"));
+                    map.put("CyclePointOfInterestPayment", CyclePointOfInterestPayment.valueOf(attributes.get("CyclePointOfInterestPayment")));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("InitialExchangeDate", LocalDateTime.parse(attributes.get("InitialExchangeDate")));
                     map.put("PremiumDiscountAtIED", (CommonUtils.isNull(attributes.get("PremiumDiscountAtIED"))) ? 0.0 : Double.parseDouble(attributes.get("PremiumDiscountAtIED")));
@@ -179,7 +176,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("ScalingIndexAtStatusDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate")));
                     map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("CycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex")));
                     map.put("CycleOfScalingIndex", attributes.get("CycleOfScalingIndex"));
-                    map.put("ScalingEffect", attributes.get("ScalingEffect"));
+                    map.put("ScalingEffect", ScalingEffect.valueOf(attributes.get("ScalingEffect")));
                     // TODO: review prepayment mechanism and attributes
                     map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("CycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality")));
                     map.put("CycleOfOptionality", attributes.get("CycleOfOptionality"));
@@ -195,7 +192,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("LifeFloor", (CommonUtils.isNull(attributes.get("LifeFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("LifeFloor")));
                     map.put("PeriodCap", (CommonUtils.isNull(attributes.get("PeriodCap"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodCap")));
                     map.put("PeriodFloor", (CommonUtils.isNull(attributes.get("PeriodFloor"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
-                    map.put("CyclePointOfRateReset", attributes.get("CyclePointOfRateReset"));
+                    map.put("CyclePointOfRateReset", CyclePointOfRateReset.valueOf(attributes.get("CyclePointOfRateReset")));
                     map.put("FixingDays", attributes.get("FixingDays"));
                     map.put("NextResetRate", (CommonUtils.isNull(attributes.get("NextResetRate"))) ? null : Double.parseDouble(attributes.get("NextResetRate")));
                     map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("RateMultiplier"))) ? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
@@ -204,7 +201,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("MaturityDate", (CommonUtils.isNull(attributes.get("MaturityDate")) ? null : LocalDateTime.parse(attributes.get("MaturityDate"))));
                     map.put("CycleAnchorDateOfInterestCalculationBase", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestCalculationBase"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestCalculationBase"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestCalculationBase")));
                     map.put("CycleOfInterestCalculationBase", attributes.get("CycleOfInterestCalculationBase"));
-                    map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("InterestCalculationBase"))?null:InterestCalculationBase.valueOf(attributes.get("InterestCalculationBase")));
+                    map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("InterestCalculationBase")) ? null : InterestCalculationBase.valueOf(attributes.get("InterestCalculationBase")));
                     map.put("InterestCalculationBaseAmount", (CommonUtils.isNull(attributes.get("InterestCalculationBaseAmount"))) ? 0.0 : Double.parseDouble(attributes.get("InterestCalculationBaseAmount")));
                     map.put("CycleAnchorDateOfPrincipalRedemption", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfPrincipalRedemption"))) ? LocalDateTime.parse(attributes.get("InitialExchangeDate")) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfPrincipalRedemption")));
                     map.put("CycleOfPrincipalRedemption", attributes.get("CycleOfPrincipalRedemption"));
@@ -213,14 +210,14 @@ public class ContractModel implements ContractModelProvider {
                 case NAM:
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("CycleAnchorDateOfFee", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee"))) ? ((CommonUtils.isNull(attributes.get("CycleOfFee"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
                     map.put("CycleOfFee", attributes.get("CycleOfFee"));
-                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? "0" : attributes.get("FeeBasis"));
+                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? null : FeeBasis.valueOf(attributes.get("FeeBasis")));
                     map.put("FeeRate", (CommonUtils.isNull(attributes.get("FeeRate"))) ? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
                     map.put("FeeAccrued", (CommonUtils.isNull(attributes.get("FeeAccrued"))) ? 0.0 : Double.parseDouble(attributes.get("FeeAccrued")));
                     map.put("CycleAnchorDateOfInterestPayment", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestPayment"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment")));
@@ -229,7 +226,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("DayCountConvention", new DayCountCalculator(attributes.get("DayCountConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
                     map.put("AccruedInterest", (CommonUtils.isNull(attributes.get("AccruedInterest"))) ? 0.0 : Double.parseDouble(attributes.get("AccruedInterest")));
                     map.put("CapitalizationEndDate", (CommonUtils.isNull(attributes.get("CapitalizationEndDate"))) ? null : LocalDateTime.parse(attributes.get("CapitalizationEndDate")));
-                    map.put("CyclePointOfInterestPayment", attributes.get("CyclePointOfInterestPayment"));
+                    map.put("CyclePointOfInterestPayment", CyclePointOfInterestPayment.valueOf(attributes.get("CyclePointOfInterestPayment")));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("InitialExchangeDate", LocalDateTime.parse(attributes.get("InitialExchangeDate")));
                     map.put("PremiumDiscountAtIED", (CommonUtils.isNull(attributes.get("PremiumDiscountAtIED"))) ? 0.0 : Double.parseDouble(attributes.get("PremiumDiscountAtIED")));
@@ -242,7 +239,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("ScalingIndexAtStatusDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate")));
                     map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("CycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex")));
                     map.put("CycleOfScalingIndex", attributes.get("CycleOfScalingIndex"));
-                    map.put("ScalingEffect", attributes.get("ScalingEffect"));
+                    map.put("ScalingEffect", ScalingEffect.valueOf(attributes.get("ScalingEffect")));
                     // TODO: review prepayment mechanism and attributes
                     map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("CycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality")));
                     map.put("CycleOfOptionality", attributes.get("CycleOfOptionality"));
@@ -258,7 +255,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("LifeFloor", (CommonUtils.isNull(attributes.get("LifeFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("LifeFloor")));
                     map.put("PeriodCap", (CommonUtils.isNull(attributes.get("PeriodCap"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodCap")));
                     map.put("PeriodFloor", (CommonUtils.isNull(attributes.get("PeriodFloor"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
-                    map.put("CyclePointOfRateReset", attributes.get("CyclePointOfRateReset"));
+                    map.put("CyclePointOfRateReset", CyclePointOfRateReset.valueOf(attributes.get("CyclePointOfRateReset")));
                     map.put("FixingDays", attributes.get("FixingDays"));
                     map.put("NextResetRate", (CommonUtils.isNull(attributes.get("NextResetRate"))) ? null : Double.parseDouble(attributes.get("NextResetRate")));
                     map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("RateMultiplier"))) ? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
@@ -276,14 +273,14 @@ public class ContractModel implements ContractModelProvider {
                 case ANN: // almost identical with LAM, NAM, ANN
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("CycleAnchorDateOfFee", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee"))) ? ((CommonUtils.isNull(attributes.get("CycleOfFee"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
                     map.put("CycleOfFee", attributes.get("CycleOfFee"));
-                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? "0" : attributes.get("FeeBasis"));
+                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? null : FeeBasis.valueOf(attributes.get("FeeBasis")));
                     map.put("FeeRate", (CommonUtils.isNull(attributes.get("FeeRate"))) ? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
                     map.put("FeeAccrued", (CommonUtils.isNull(attributes.get("FeeAccrued"))) ? 0.0 : Double.parseDouble(attributes.get("FeeAccrued")));
                     map.put("CycleAnchorDateOfInterestPayment", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestPayment"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment")));
@@ -292,7 +289,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("DayCountConvention", new DayCountCalculator(attributes.get("DayCountConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
                     map.put("AccruedInterest", (CommonUtils.isNull(attributes.get("AccruedInterest"))) ? 0.0 : Double.parseDouble(attributes.get("AccruedInterest")));
                     map.put("CapitalizationEndDate", (CommonUtils.isNull(attributes.get("CapitalizationEndDate"))) ? null : LocalDateTime.parse(attributes.get("CapitalizationEndDate")));
-                    map.put("CyclePointOfInterestPayment", attributes.get("CyclePointOfInterestPayment"));
+                    map.put("CyclePointOfInterestPayment", CyclePointOfInterestPayment.valueOf(attributes.get("CyclePointOfInterestPayment")));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("InitialExchangeDate", LocalDateTime.parse(attributes.get("InitialExchangeDate")));
                     map.put("PremiumDiscountAtIED", (CommonUtils.isNull(attributes.get("PremiumDiscountAtIED"))) ? 0.0 : Double.parseDouble(attributes.get("PremiumDiscountAtIED")));
@@ -305,7 +302,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("ScalingIndexAtStatusDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate")));
                     map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("CycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex")));
                     map.put("CycleOfScalingIndex", attributes.get("CycleOfScalingIndex"));
-                    map.put("ScalingEffect", attributes.get("ScalingEffect"));
+                    map.put("ScalingEffect", ScalingEffect.valueOf(attributes.get("ScalingEffect")));
                     // TODO: review prepayment mechanism and attributes
                     map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("CycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfOptionality")));
                     map.put("CycleOfOptionality", attributes.get("CycleOfOptionality"));
@@ -321,7 +318,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("LifeFloor", (CommonUtils.isNull(attributes.get("LifeFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("LifeFloor")));
                     map.put("PeriodCap", (CommonUtils.isNull(attributes.get("PeriodCap"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodCap")));
                     map.put("PeriodFloor", (CommonUtils.isNull(attributes.get("PeriodFloor"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
-                    map.put("CyclePointOfRateReset", attributes.get("CyclePointOfRateReset"));
+                    map.put("CyclePointOfRateReset", CyclePointOfRateReset.valueOf(attributes.get("CyclePointOfRateReset")));
                     map.put("FixingDays", attributes.get("FixingDays"));
                     map.put("NextResetRate", (CommonUtils.isNull(attributes.get("NextResetRate"))) ? null : Double.parseDouble(attributes.get("NextResetRate")));
                     map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("RateMultiplier"))) ? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
@@ -343,14 +340,14 @@ public class ContractModel implements ContractModelProvider {
                 case CLM:
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("CycleAnchorDateOfFee", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee"))) ? ((CommonUtils.isNull(attributes.get("CycleOfFee"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
                     map.put("CycleOfFee", attributes.get("CycleOfFee"));
-                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? "0" : attributes.get("FeeBasis"));
+                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? null : FeeBasis.valueOf(attributes.get("FeeBasis")));
                     map.put("FeeRate", (CommonUtils.isNull(attributes.get("FeeRate"))) ? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
                     map.put("FeeAccrued", (CommonUtils.isNull(attributes.get("FeeAccrued"))) ? 0.0 : Double.parseDouble(attributes.get("FeeAccrued")));
                     map.put("CycleAnchorDateOfInterestPayment", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestPayment"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment")));
@@ -378,14 +375,14 @@ public class ContractModel implements ContractModelProvider {
 
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("CycleAnchorDateOfFee", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee"))) ? ((CommonUtils.isNull(attributes.get("CycleOfFee"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
                     map.put("CycleOfFee", attributes.get("CycleOfFee"));
-                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? "0" : attributes.get("FeeBasis"));
+                    map.put("FeeBasis", (CommonUtils.isNull(attributes.get("FeeBasis"))) ? null : FeeBasis.valueOf(attributes.get("FeeBasis")));
                     map.put("FeeRate", (CommonUtils.isNull(attributes.get("FeeRate"))) ? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
                     map.put("FeeAccrued", (CommonUtils.isNull(attributes.get("FeeAccrued"))) ? 0.0 : Double.parseDouble(attributes.get("FeeAccrued")));
                     map.put("CycleAnchorDateOfInterestPayment", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestPayment"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment")));
@@ -413,18 +410,18 @@ public class ContractModel implements ContractModelProvider {
                     break;
                 case CSH:
 
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("NotionalPrincipal", Double.parseDouble(attributes.get("NotionalPrincipal")));
 
                     break;
                 case COM: // almost identical with STK
 
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("Quantity", (CommonUtils.isNull(attributes.get("Quantity"))) ? 1 : Integer.parseInt(attributes.get("Quantity")));
@@ -437,9 +434,9 @@ public class ContractModel implements ContractModelProvider {
                     break;
                 case STK:
 
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("Quantity", (CommonUtils.isNull(attributes.get("Quantity"))) ? 1 : Integer.parseInt(attributes.get("Quantity")));
@@ -452,7 +449,7 @@ public class ContractModel implements ContractModelProvider {
                     // present for STK but not COM
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
                     map.put("CycleAnchorDateOfDividendPayment", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfDividendPayment"))) ? ((CommonUtils.isNull(attributes.get("CycleOfDividendPayment"))) ? null : LocalDateTime.parse(attributes.get("PurchaseDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfDividendPayment")));
                     map.put("CycleOfDividendPayment", attributes.get("CycleOfDividendPayment"));
                     map.put("MarketObjectCodeOfDividendRate", attributes.get("MarketObjectCodeOfDividendRate"));
@@ -462,10 +459,10 @@ public class ContractModel implements ContractModelProvider {
 
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("Currency2", attributes.get("Currency2"));
@@ -476,17 +473,17 @@ public class ContractModel implements ContractModelProvider {
                     map.put("PriceAtPurchaseDate", (CommonUtils.isNull(attributes.get("PriceAtPurchaseDate"))) ? 0.0 : Double.parseDouble(attributes.get("PriceAtPurchaseDate")));
                     map.put("TerminationDate", (CommonUtils.isNull(attributes.get("TerminationDate"))) ? null : LocalDateTime.parse(attributes.get("TerminationDate")));
                     map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("PriceAtTerminationDate"))) ? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")));
-                    map.put("DeliverySettlement", attributes.get("DeliverySettlement"));
+                    map.put("DeliverySettlement", DeliverySettlement.valueOf(attributes.get("DeliverySettlement")));
                     map.put("SettlementDate", (CommonUtils.isNull(attributes.get("SettlementDate"))) ? null : LocalDateTime.parse(attributes.get("SettlementDate")));
 
                     break;
                 case SWPPV:
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("CycleAnchorDateOfInterestPayment", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestPayment"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestPayment"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestPayment")));
                     map.put("CycleOfInterestPayment", attributes.get("CycleOfInterestPayment"));
@@ -494,7 +491,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("DayCountConvention", new DayCountCalculator(attributes.get("DayCountConvention"), (BusinessDayCalendarProvider) map.get("Calendar")));
                     map.put("AccruedInterest", (CommonUtils.isNull(attributes.get("AccruedInterest"))) ? 0.0 : Double.parseDouble(attributes.get("AccruedInterest")));
                     map.put("CapitalizationEndDate", (CommonUtils.isNull(attributes.get("CapitalizationEndDate"))) ? null : LocalDateTime.parse(attributes.get("CapitalizationEndDate")));
-                    map.put("CyclePointOfInterestPayment", attributes.get("CyclePointOfInterestPayment"));
+                    map.put("CyclePointOfInterestPayment", CyclePointOfInterestPayment.valueOf(attributes.get("CyclePointOfInterestPayment")));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("InitialExchangeDate", LocalDateTime.parse(attributes.get("InitialExchangeDate")));
                     map.put("PremiumDiscountAtIED", (CommonUtils.isNull(attributes.get("PremiumDiscountAtIED"))) ? 0.0 : Double.parseDouble(attributes.get("PremiumDiscountAtIED")));
@@ -507,18 +504,18 @@ public class ContractModel implements ContractModelProvider {
                     map.put("CycleOfRateReset", attributes.get("CycleOfRateReset"));
                     map.put("RateSpread", (CommonUtils.isNull(attributes.get("RateSpread"))) ? 0.0 : Double.parseDouble(attributes.get("RateSpread")));
                     map.put("MarketObjectCodeOfRateReset", attributes.get("MarketObjectCodeOfRateReset"));
-                    map.put("CyclePointOfRateReset", attributes.get("CyclePointOfRateReset"));
+                    map.put("CyclePointOfRateReset", CyclePointOfRateReset.valueOf(attributes.get("CyclePointOfRateReset")));
                     map.put("FixingDays", attributes.get("FixingDays"));
                     map.put("NextResetRate", (CommonUtils.isNull(attributes.get("NextResetRate"))) ? null : Double.parseDouble(attributes.get("NextResetRate")));
                     map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("RateMultiplier"))) ? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
                     map.put("NominalInterestRate2", (CommonUtils.isNull(attributes.get("NominalInterestRate2"))) ? 0.0 : Double.parseDouble(attributes.get("NominalInterestRate2")));
                     map.put("MaturityDate", LocalDateTime.parse(attributes.get("MaturityDate")));
-                    map.put("DeliverySettlement", attributes.get("DeliverySettlement"));
+                    map.put("DeliverySettlement", DeliverySettlement.valueOf(attributes.get("DeliverySettlement")));
                     break;
 
                 case LAX:
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("LegalEntityIDRecordCreator", attributes.get("LegalEntityIDRecordCreator"));
                     map.put("Currency", attributes.get("Currency"));
@@ -539,10 +536,10 @@ public class ContractModel implements ContractModelProvider {
                     map.put("ArrayRate", attributes.get("ArrayRate"));
                     map.put("ArrayFixedVariable", attributes.get("ArrayFixedVariable"));
                     map.put("MarketObjectCodeRateReset", attributes.get("MarketObjectCodeRateReset"));
-                    map.put("ContractType", attributes.get("ContractType"));
+                    map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
                     map.put("FeeRate", (CommonUtils.isNull(attributes.get("FeeRate"))) ? 0.0 : Double.parseDouble(attributes.get("FeeRate")));
-                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? "SD" : attributes.get("EndOfMonthConvention"));
+                    map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
                     map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("RateMultiplier"))) ? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
                     map.put("RateSpread", (CommonUtils.isNull(attributes.get("RateSpread"))) ? 0.0 : Double.parseDouble(attributes.get("RateSpread")));
                     map.put("PeriodFloor", (CommonUtils.isNull(attributes.get("PeriodFloor"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("PeriodFloor")));
@@ -551,7 +548,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                     map.put("CycleAnchorDateOfInterestCalculationBase", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfInterestCalculationBase"))) ? ((CommonUtils.isNull(attributes.get("CycleOfInterestCalculationBase"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfInterestCalculationBase")));
                     map.put("CycleOfInterestCalculationBase", attributes.get("CycleOfInterestCalculationBase"));
-                    map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("InterestCalculationBase"))?null:InterestCalculationBase.valueOf(attributes.get("InterestCalculationBase")));
+                    map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("InterestCalculationBase")) ? null : InterestCalculationBase.valueOf(attributes.get("InterestCalculationBase")));
                     map.put("InterestCalculationBaseAmount", (CommonUtils.isNull(attributes.get("InterestCalculationBaseAmount"))) ? 0.0 : Double.parseDouble(attributes.get("InterestCalculationBaseAmount")));
                     map.put("CycleAnchorDateOfPrincipalRedemption", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfPrincipalRedemption"))) ? LocalDateTime.parse(attributes.get("InitialExchangeDate")) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfPrincipalRedemption")));
                     map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
