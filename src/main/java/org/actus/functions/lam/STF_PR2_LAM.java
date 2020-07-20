@@ -22,7 +22,7 @@ public final class STF_PR2_LAM implements StateTransitionFunction {
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         StateSpace postEventStates = new StateSpace();
-        double redemption = states.nextPrincipalRedemptionPayment - ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole"))) * Math.max(0, Math.abs(states.nextPrincipalRedemptionPayment) - Math.abs(states.notionalPrincipal));
+        double redemption = states.nextPrincipalRedemptionPayment - ContractRoleConvention.roleSign(model.getAs("ContractRole")) * Math.max(0, Math.abs(states.nextPrincipalRedemptionPayment) - Math.abs(states.notionalPrincipal));
 
         // update state space
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));

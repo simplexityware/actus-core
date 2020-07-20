@@ -24,7 +24,7 @@ private Double prPayment;
 	public double eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		
-		double redemption = prPayment - ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))
+		double redemption = prPayment - ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 						* Math.max(0, Math.abs(prPayment) - Math.abs(states.notionalPrincipal));
 
 		return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)

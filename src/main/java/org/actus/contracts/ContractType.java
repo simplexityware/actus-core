@@ -5,11 +5,11 @@
  */
 package org.actus.contracts;
 
-import org.actus.ContractTypeUnknownException;
 import org.actus.AttributeConversionException;
-import org.actus.externals.RiskFactorModelProvider;
+import org.actus.ContractTypeUnknownException;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.events.ContractEvent;
+import org.actus.externals.RiskFactorModelProvider;
 import org.actus.states.StateSpace;
 import org.actus.types.ContractTypeEnum;
 
@@ -60,7 +60,7 @@ public final class ContractType {
      */
     public static ArrayList<ContractEvent> schedule(LocalDateTime to,
                                                     ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
-        switch(ContractTypeEnum.valueOf(model.getAs("ContractType"))) {
+        switch((ContractTypeEnum)model.getAs("ContractType")) {
             case PAM:
                 return PrincipalAtMaturity.schedule(to,model);
             case LAM:

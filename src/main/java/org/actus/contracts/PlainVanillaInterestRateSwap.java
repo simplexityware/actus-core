@@ -56,28 +56,28 @@ public final class PlainVanillaInterestRateSwap {
             Set<LocalDateTime> interestSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     model.getAs("MaturityDate"),
                     model.getAs("CycleOfInterestPayment"),
-                    EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")));
-            // fixed rate events                                                                                                    model.getAs("MaturityDate"),                                                                                                  EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")))
+                    model.getAs("EndOfMonthConvention"));
+            // fixed rate events                                                                                                    model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
             events.addAll(EventFactory.createEvents(interestSchedule, EventType.IP, model.getAs("Currency"), new POF_IPFix_SWPPV(), new STF_IPFix_SWPPV(), model.getAs("BusinessDayConvention")));
-            // floating rate events                                                                                                    model.getAs("MaturityDate"),                                                                                                  EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")))
+            // floating rate events                                                                                                    model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
             events.addAll(EventFactory.createEvents(interestSchedule, EventType.IP, model.getAs("Currency"), new POF_IPFloat_SWPPV(), new STF_IPFloat_SWPPV(), model.getAs("BusinessDayConvention")));
         } else {
             // initial exchange
             events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_SWPPV(), new STF_IED_SWPPV()));
             // principal redemption
             events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.PR, model.getAs("Currency"), new POF_PR_SWPPV(), new STF_PR_SWPPV()));
-            // in case of cash delivery (cash settlement)                                                                                                model.getAs("MaturityDate"),                                                                                                  EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")))
+            // in case of cash delivery (cash settlement)                                                                                                model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     model.getAs("MaturityDate"),
                     model.getAs("CycleOfInterestPayment"),
-                    EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention"))),
+                    model.getAs("EndOfMonthConvention")),
                     EventType.IP, model.getAs("Currency"), new POF_IP_SWPPV(), new STF_IP_SWPPV(), model.getAs("BusinessDayConvention")));
 
         }
 
         // rate reset
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                model.getAs("CycleOfRateReset"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")), false),
+                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"), false),
                 EventType.RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_SWPPV(), model.getAs("BusinessDayConvention")));
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
@@ -130,9 +130,9 @@ public final class PlainVanillaInterestRateSwap {
         states.notionalScalingMultiplier = 1;
         states.statusDate = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.notionalPrincipal = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*model.<Double>getAs("NotionalPrincipal");
+            states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
             states.nominalInterestRate = model.getAs("NominalInterestRate");
-            states.accruedInterest = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*model.<Double>getAs("AccruedInterest");
+            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
         }
         return states;
     }

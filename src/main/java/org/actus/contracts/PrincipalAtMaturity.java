@@ -45,13 +45,20 @@ public final class PrincipalAtMaturity {
         // interest payment related
         if (!CommonUtils.isNull(model.getAs("NominalInterestRate")) && (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")))) {
             // raw interest payment events
-            Set<ContractEvent> interestEvents =
-                                                        EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
-                                                                                                                model.getAs("MaturityDate"),
-                                                                                                                model.getAs("CycleOfInterestPayment"),
-                                                                                                                EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")),
-                                                                                                                true),
-                                                                                EventType.IP, model.getAs("Currency"), new POF_IP_PAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention"));
+            Set<ContractEvent> interestEvents = EventFactory.createEvents(
+                    ScheduleFactory.createSchedule(
+                            model.getAs("CycleAnchorDateOfInterestPayment"),
+                            model.getAs("MaturityDate"),
+                            model.getAs("CycleOfInterestPayment"),
+                            model.getAs("EndOfMonthConvention"),
+                            true
+                    ),
+                    EventType.IP,
+                    model.getAs("Currency"),
+                    new POF_IP_PAM(),
+                    new STF_IP_PAM(),
+                    model.getAs("BusinessDayConvention")
+            );
             // adapt if interest capitalization set
             if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
                 // for all events with time <= IPCED && type == "IP" do
@@ -80,7 +87,7 @@ public final class PrincipalAtMaturity {
         }
         // rate reset
         Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                model.getAs("CycleOfRateReset"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")),false),
+                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
                 EventType.RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention"));
 
         // adapt fixed rate reset event
@@ -97,14 +104,14 @@ public final class PrincipalAtMaturity {
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) { 
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),
-                                                                            model.getAs("CycleOfFee"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")),true),
+                                                                            model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
                                             EventType.FP, model.getAs("Currency"), new POF_FP_PAM(), new STF_FP_PAM(), model.getAs("BusinessDayConvention")));
         }
         // scaling (if specified)
         String scalingEffect=model.getAs("ScalingEffect");
         if (!CommonUtils.isNull(scalingEffect) && (scalingEffect.contains("I") || scalingEffect.contains("N"))) { 
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfScalingIndex"), model.getAs("MaturityDate"),
-                                                                            model.getAs("CycleOfScalingIndex"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")),false),
+                                                                            model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention"),false),
                                             EventType.SC, model.getAs("Currency"), new POF_SC_PAM(), new STF_SC_PAM(), model.getAs("BusinessDayConvention")));
         }
         // termination
@@ -152,9 +159,9 @@ public final class PrincipalAtMaturity {
         // TODO: some attributes can be null
         states.statusDate = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.notionalPrincipal = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*model.<Double>getAs("NotionalPrincipal");
+            states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
             states.nominalInterestRate = model.getAs("NominalInterestRate");
-            states.accruedInterest = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*model.<Double>getAs("AccruedInterest");
+            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
             states.feeAccrued = model.getAs("FeeAccrued");
         }
         

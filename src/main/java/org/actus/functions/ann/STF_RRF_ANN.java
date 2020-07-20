@@ -30,7 +30,7 @@ public final class STF_RRF_ANN implements StateTransitionFunction {
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
         states.nominalInterestRate = model.<Double>getAs("NextResetRate");
         states.statusDate = time;
-        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*AnnuityUtils.annuityPayment(model, states.notionalPrincipal, states.accruedInterest, states.nominalInterestRate);
+        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, states.notionalPrincipal, states.accruedInterest, states.nominalInterestRate);
         
         // copy post-event-states
         postEventStates.notionalPrincipal = states.notionalPrincipal;

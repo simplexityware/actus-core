@@ -29,7 +29,7 @@ public final class STF_PR_NAM implements StateTransitionFunction {
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
         
         double principalRedemption =  states.nextPrincipalRedemptionPayment - states.accruedInterest;
-        principalRedemption = principalRedemption - ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.notionalPrincipal));
+        principalRedemption = principalRedemption - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.notionalPrincipal));
 
         states.notionalPrincipal -= principalRedemption;
         states.statusDate = time;

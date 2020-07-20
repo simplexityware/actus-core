@@ -25,7 +25,7 @@ public final class POF_FP_PAM implements PayOffFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         if(model.<String>getAs("FeeBasis").equals(FeeBasis.A.toString())) {
             return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
-                    * ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))
+                    * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                     * model.<Double>getAs("FeeRate");
         } else { 
             return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)

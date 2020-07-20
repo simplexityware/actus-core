@@ -25,7 +25,7 @@ public final class STF_IED_PAM implements StateTransitionFunction {
         StateSpace postEventStates = new StateSpace();
         
         // update state space
-        states.notionalPrincipal = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole"))) * model.<Double>getAs("NotionalPrincipal");
+        states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
         states.nominalInterestRate = model.getAs("NominalInterestRate");
         states.statusDate = time;
 

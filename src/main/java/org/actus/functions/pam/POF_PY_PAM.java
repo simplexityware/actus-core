@@ -25,16 +25,16 @@ public final class POF_PY_PAM implements PayOffFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         if(model.getAs("PenaltyType").equals(PenaltyType.A)) {
             return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
-                    * ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole"))) * model.<Double>getAs("PenaltyRate");
+                    * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("PenaltyRate");
         } else if(model.getAs("PenaltyType").equals(PenaltyType.N)) {
             return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
-                    * ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))
+                    * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                     * dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
                     * model.<Double>getAs("PenaltyRate")
                     * states.notionalPrincipal;
         } else {
             return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
-                    * ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))
+                    * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                     * dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
                     * states.notionalPrincipal
                     * Math.max(0, states.nominalInterestRate - riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time,states,model));

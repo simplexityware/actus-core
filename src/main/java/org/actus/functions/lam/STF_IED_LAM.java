@@ -28,7 +28,7 @@ public final class STF_IED_LAM implements StateTransitionFunction {
         // update state space
         states.nominalInterestRate = model.<Double>getAs("NominalInterestRate");
         states.statusDate = time;
-        states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*
+        states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*
             ( (CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NT))?
             model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         
