@@ -138,7 +138,11 @@ public final class NegativeAmortizer {
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null)) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null)) == 1);
+        if(CommonUtils.isNull(to)){
+            to = maturity;
+        }
+        ContractEvent postDate = EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null);
+        events.removeIf(e -> e.compareTo(postDate) == 1);
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);
