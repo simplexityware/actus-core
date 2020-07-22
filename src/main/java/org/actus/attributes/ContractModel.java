@@ -15,8 +15,10 @@ import org.actus.AttributeConversionException;
 import org.actus.ContractTypeUnknownException;
 import org.actus.types.*;
 import org.actus.util.CommonUtils;
+import org.actus.util.ContractReference;
 
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -553,7 +555,7 @@ public class ContractModel implements ContractModelProvider {
      * Parse the attributes of combined contracts
      * <p>
      * For the {@link ContractType} indicated in attribute "ContractType" the method goes through the list
-     * of supported attributes on the parent and (various) child level(s) and tries to parse these to their
+     * of supported attributes on the attributes and (various) child level(s) and tries to parse these to their
      * respective data type as indicated in the ACTUS data dictionary
      * ({@linktourl https://www.actusfrf.org/data-dictionary}).
      * <p>
@@ -562,47 +564,35 @@ public class ContractModel implements ContractModelProvider {
      * Thereby, the attributes of the child contracts are expected to come as a list of maps where each map
      * holds the attributes for a specific child.
      *
-     * @param parent an external, raw (String) data representation of the set of parent attributes
-     * @param child  a list of raw (String) data representations of the child attributes
+     * @param attributes an external, raw (String) data representation of the set of attributes attributes
      * @return an instance of ContractModel containing the attributes provided with the method argument
      * @throws AttributeConversionException if an attribute cannot be parsed to its data type
      */
-    public static ContractModel parse(Map<String, String> parent, List<Map<String, String>> child) {
+    public static ContractModel parse(Map<String, Object> attributes, Boolean hasContractStructure) {
         HashMap<String, Object> map = new HashMap<>();
 
         // parse all attributes known to the respective contract type
         try {
-            switch (ContractTypeEnum.valueOf(parent.get("ContractType"))) {
+            switch (ContractTypeEnum.valueOf((String)attributes.get("ContractType"))) {
 
                 case SWAPS:
 
-                    // parse parent (Swap) attributes
+                    // parse attributes (Swap) attributes
                     HashMap<String, Object> parentMap = new HashMap<>();
-                    parentMap.put("StatusDate", LocalDateTime.parse(parent.get("StatusDate")));
-                    parentMap.put("ContractRole", parent.get("ContractRole"));
-                    parentMap.put("LegalEntityIDCounterparty", parent.get("LegalEntityIDCounterparty"));
-                    parentMap.put("Currency", parent.get("Currency"));
-                    parentMap.put("PurchaseDate", (CommonUtils.isNull(parent.get("PurchaseDate"))) ? null : LocalDateTime.parse(parent.get("PurchaseDate")));
-                    parentMap.put("PriceAtPurchaseDate", (CommonUtils.isNull(parent.get("PriceAtPurchaseDate"))) ? 0.0 : Double.parseDouble(parent.get("PriceAtPurchaseDate")));
-                    parentMap.put("TerminationDate", (CommonUtils.isNull(parent.get("TerminationDate"))) ? null : LocalDateTime.parse(parent.get("TerminationDate")));
-                    parentMap.put("PriceAtTerminationDate", (CommonUtils.isNull(parent.get("PriceAtTerminationDate"))) ? 0.0 : Double.parseDouble(parent.get("PriceAtTerminationDate")));
-                    parentMap.put("DeliverySettlement", parent.get("DeliverySettlement"));
-                    map.put("Parent", new ContractModel(parentMap));
+                    map.put("StatusDate", LocalDateTime.parse((String)attributes.get("StatusDate")));
+                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
+                    map.put("Currency", attributes.get("Currency"));
+                    map.put("PurchaseDate", (CommonUtils.isNull(attributes.get("PurchaseDate"))) ? null : LocalDateTime.parse((String)attributes.get("PurchaseDate")));
+                    map.put("PriceAtPurchaseDate", (CommonUtils.isNull(attributes.get("PriceAtPurchaseDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("PriceAtPurchaseDate")));
+                    map.put("TerminationDate", (CommonUtils.isNull(attributes.get("TerminationDate"))) ? null : LocalDateTime.parse((String)attributes.get("TerminationDate")));
+                    map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("PriceAtTerminationDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("PriceAtTerminationDate")));
+                    map.put("DeliverySettlement", attributes.get("DeliverySettlement"));
 
                     // parse child attributes
-                    Map<String, String> child1 = (child.get(0).get("ContractID").contains("_C1")) ? child.get(0) : child.get(1);
-                    Map<String, String> child2 = (child.get(0).get("ContractID").contains("_C2")) ? child.get(0) : child.get(1);
-
-                    // define child contract roles
-                    if (parent.get("ContractRole").equals("RFL")) {
-                        child1.put("ContractRole", "RPA");
-                        child2.put("ContractRole", "RPL");
-                    } else {
-                        child1.put("ContractRole", "RPL");
-                        child2.put("ContractRole", "RPA");
-                    }
-                    map.put("Child1", ContractModel.parse(child1));
-                    map.put("Child2", ContractModel.parse(child2));
+                    List<ContractReference> contractStructure = new ArrayList<>();
+                    ((List<Map<String,Object>>)attributes.get("ContractStructure")).forEach(e->contractStructure.add(new ContractReference((Map<String,Object>)e)));
+                    attributes.put("ContractStructure", contractStructure);
 
                     break;
 
