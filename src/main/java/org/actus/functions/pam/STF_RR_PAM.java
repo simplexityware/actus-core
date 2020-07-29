@@ -28,7 +28,7 @@ public final class STF_RR_PAM implements StateTransitionFunction {
 
         // apply period cap/floor
         deltaRate = Math.min(Math.max(deltaRate,(-1)*model.<Double>getAs("PeriodFloor")),model.<Double>getAs("LifeCap"));
-        rate = states.nominalInterestRate +deltaRate;
+        rate = states.nominalInterestRate + deltaRate;
 
         // apply life cap/floor
         rate = Math.min(Math.max(rate,model.getAs("LifeFloor")),model.getAs("LifeCap"));

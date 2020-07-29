@@ -13,8 +13,6 @@ import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
-import org.actus.types.ContractRole;
-import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
 import org.actus.functions.pam.*;
@@ -37,7 +35,7 @@ public final class PrincipalAtMaturity {
         // initial exchange
         events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_PAM()));
         // principal redemption
-        events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM()));
+        events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_MD_PAM()));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_PAM(), new STF_PRD_PAM()));
@@ -74,21 +72,44 @@ public final class PrincipalAtMaturity {
                     }
                 });
                 // also, remove any IP event exactly at IPCED and replace with an IPCI event
-                interestEvents.remove(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), EventType.IP,
-                                                                            model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("BusinessDayConvention")));
+                interestEvents.remove(EventFactory.createEvent(
+                        model.getAs("CapitalizationEndDate"),
+                        EventType.IP,
+                        model.getAs("Currency"),
+                        new POF_AD_PAM(),
+                        new STF_AD_PAM(),
+                        model.getAs("BusinessDayConvention"))
+                );
                 interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
             
         }else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
             // if no extra interest schedule set but capitalization end date, add single IPCI event
-            events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), EventType.IPCI,
-                    model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_PAM(), model.getAs("BusinessDayConvention")));
+            events.add(EventFactory.createEvent(
+                    model.getAs("CapitalizationEndDate"),
+                    EventType.IPCI,
+                    model.getAs("Currency"),
+                    new POF_IPCI_PAM(),
+                    new STF_IPCI_PAM(),
+                    model.getAs("BusinessDayConvention"))
+            );
         }
         // rate reset
-        Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
-                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                EventType.RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_PAM(), model.getAs("BusinessDayConvention"));
+        Set<ContractEvent> rateResetEvents = EventFactory.createEvents(
+                ScheduleFactory.createSchedule(
+                        model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"),
+                        model.getAs("MaturityDate"),
+                        model.getAs("CycleOfRateReset"),
+                        model.getAs("EndOfMonthConvention"),
+                        false
+                ),
+                EventType.RR,
+                model.getAs("Currency"),
+                new POF_RR_PAM(),
+                new STF_RR_PAM(),
+                model.getAs("BusinessDayConvention")
+        );
 
         // adapt fixed rate reset event
         if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
@@ -103,21 +124,48 @@ public final class PrincipalAtMaturity {
 
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) { 
-        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), model.getAs("MaturityDate"),
-                                                                            model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),true),
-                                            EventType.FP, model.getAs("Currency"), new POF_FP_PAM(), new STF_FP_PAM(), model.getAs("BusinessDayConvention")));
+        events.addAll(EventFactory.createEvents(
+                ScheduleFactory.createSchedule(
+                        model.getAs("CycleAnchorDateOfFee"),
+                        model.getAs("MaturityDate"),
+                        model.getAs("CycleOfFee"),
+                        model.getAs("EndOfMonthConvention"),
+                        true
+                ),
+                EventType.FP,
+                model.getAs("Currency"),
+                new POF_FP_PAM(),
+                new STF_FP_PAM(),
+                model.getAs("BusinessDayConvention"))
+        );
         }
         // scaling (if specified)
         String scalingEffect=model.getAs("ScalingEffect");
         if (!CommonUtils.isNull(scalingEffect) && (scalingEffect.contains("I") || scalingEffect.contains("N"))) { 
-        events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfScalingIndex"), model.getAs("MaturityDate"),
-                                                                            model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention"),false),
-                                            EventType.SC, model.getAs("Currency"), new POF_SC_PAM(), new STF_SC_PAM(), model.getAs("BusinessDayConvention")));
+        events.addAll(EventFactory.createEvents(
+                ScheduleFactory.createSchedule(
+                        model.getAs("CycleAnchorDateOfScalingIndex"),
+                        model.getAs("MaturityDate"),
+                        model.getAs("CycleOfScalingIndex"),
+                        model.getAs("EndOfMonthConvention"),
+                        false
+                ),
+                EventType.SC,
+                model.getAs("Currency"),
+                new POF_SC_PAM(),
+                new STF_SC_PAM(),
+                model.getAs("BusinessDayConvention"))
+        );
         }
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            ContractEvent termination =
-                                        EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_PAM(), new STF_TD_PAM());
+            ContractEvent termination = EventFactory.createEvent(
+                    model.getAs("TerminationDate"),
+                    EventType.TD,
+                    model.getAs("Currency"),
+                    new POF_TD_PAM(),
+                    new STF_TD_PAM()
+            );
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }

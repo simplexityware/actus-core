@@ -26,7 +26,9 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP",
+            "cycleOfInterestPayment": "P1ML0",
+            "cycleAnchorDateOfInterestPayment": "2013-02-01T00:00:00"
         },
         "tMax": "",
         "dataObserved": {
@@ -70,7 +72,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 5000,
+                "notionalPrincipal": 4500,
                 "nominalInterestRate": 0.08,
                 "accruedInterest": 33.972602739726
             },
@@ -88,7 +90,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 4500,
+                "notionalPrincipal": 4000,
                 "nominalInterestRate": 0.08,
                 "accruedInterest": 27.6164383561644
             },
@@ -106,7 +108,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 4000,
+                "notionalPrincipal": 3500,
                 "nominalInterestRate": 0.08,
                 "accruedInterest": 27.1780821917808
             },
@@ -133,7 +135,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 3500,
+                "notionalPrincipal": 3000,
                 "nominalInterestRate": 0.110567901234568,
                 "accruedInterest": 31.8072044647387
             },
@@ -151,7 +153,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 3000,
+                "notionalPrincipal": 2500,
                 "nominalInterestRate": 0.110567901234568,
                 "accruedInterest": 28.1720953830543
             },
@@ -169,7 +171,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 2500,
+                "notionalPrincipal": 2000,
                 "nominalInterestRate": 0.110567901234568,
                 "accruedInterest": 22.7194317605276
             },
@@ -196,7 +198,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 2000,
+                "notionalPrincipal": 1500,
                 "nominalInterestRate": 0.111679012345679,
                 "accruedInterest": 18.9701336039235
             },
@@ -214,7 +216,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 1500,
+                "notionalPrincipal": 1000,
                 "nominalInterestRate": 0.111679012345679,
                 "accruedInterest": 14.2276002029427
             },
@@ -232,7 +234,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 1000,
+                "notionalPrincipal": 500,
                 "nominalInterestRate": 0.111679012345679,
                 "accruedInterest": 9.1790969051243
             },
@@ -259,7 +261,7 @@
                 "eventType": "PR",
                 "payoff": 500,
                 "currency": "USD",
-                "notionalPrincipal": 500,
+                "notionalPrincipal": 0,
                 "nominalInterestRate": 0.11279012345679,
                 "accruedInterest": 4.78971757145273
             },
@@ -304,7 +306,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -486,7 +488,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -760,7 +762,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -1691,7 +1693,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -1979,7 +1981,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -2255,7 +2257,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -2578,7 +2580,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -2853,7 +2855,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -3128,7 +3130,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -3403,7 +3405,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -3679,7 +3681,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -3951,7 +3953,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -4225,7 +4227,7 @@
             "cycleOfInterestCalculationBase": "P2ML1",
             "interestCalculationBase": "NTL",
             "interestCalculationBaseAmount": "6000",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -4495,7 +4497,7 @@
             "cycleOfInterestCalculationBase": "P2ML0",
             "interestCalculationBase": "NTL",
             "interestCalculationBaseAmount": "5000",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -4757,7 +4759,7 @@
             "cycleOfInterestCalculationBase": "P2ML1",
             "interestCalculationBase": "NTIED",
             "interestCalculationBaseAmount": "5000",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -5194,7 +5196,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -5817,7 +5819,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -6733,7 +6735,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -7076,7 +7078,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -7416,7 +7418,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "tMax": "",
         "dataObserved": {
@@ -7768,7 +7770,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP",
+            "marketObjectCodeOfRateReset": "USD.SWP",
             "marketObjectCodeOfScalingIndex": "USA.CPI",
             "scalingIndexAtStatusDate": "100",
             "cycleAnchorDateOfScalingIndex": "2013-05-01T00:00:00",
@@ -8248,7 +8250,7 @@
             "premiumDiscountAtIED": "0",
             "interestCalculationBase": "NT",
             "interestCalculationBaseAmount": "   1",
-            "marketObjectCodeRateReset": "USD.SWP",
+            "marketObjectCodeOfRateReset": "USD.SWP",
             "marketObjectCodeOfScalingIndex": "USA.CPI",
             "scalingIndexAtStatusDate": "100",
             "cycleAnchorDateOfScalingIndex": "2013-05-01T00:00:00",
@@ -8939,7 +8941,7 @@
             "cycleOfInterestCalculationBase": "P2ML1",
             "interestCalculationBase": "NTL",
             "interestCalculationBaseAmount": "5000",
-            "marketObjectCodeRateReset": "USD.SWP",
+            "marketObjectCodeOfRateReset": "USD.SWP",
             "marketObjectCodeOfScalingIndex": "USA.CPI",
             "scalingIndexAtStatusDate": "100",
             "cycleAnchorDateOfScalingIndex": "2013-05-01T00:00:00",

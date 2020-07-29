@@ -37,7 +37,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": 1000,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -138,7 +138,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": -1019.88887159849,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -212,7 +212,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": 1014.53558200696,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -287,7 +287,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": 1014.53558200696,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -314,7 +314,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": 1018.28057229554,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -451,7 +451,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": -1005.34834070389,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -571,7 +571,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": 1004.33217092477,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -890,7 +890,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": -1004.23657211746,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -1232,7 +1232,7 @@
             },
             {
                 "eventDate": "2016-05-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": 1009.55042104238,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -1354,7 +1354,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": -1003.64957705672,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -1456,7 +1456,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": 1014.55249707506,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -1521,7 +1521,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": 1000,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -1579,7 +1579,7 @@
             },
             {
                 "eventDate": "2015-09-24T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": 1000,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -1669,7 +1669,7 @@
             },
             {
                 "eventDate": "2015-09-20T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": -1011.88759816273,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
@@ -1743,7 +1743,7 @@
             },
             {
                 "eventDate": "2015-12-31T00:00",
-                "eventType": "PR",
+                "eventType": "MD",
                 "payoff": -1000,
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0,
