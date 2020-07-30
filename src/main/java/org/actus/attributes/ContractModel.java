@@ -578,7 +578,6 @@ public class ContractModel implements ContractModelProvider {
                 case SWAPS:
 
                     // parse attributes (Swap) attributes
-                    HashMap<String, Object> parentMap = new HashMap<>();
                     map.put("StatusDate", LocalDateTime.parse((String)attributes.get("StatusDate")));
                     map.put("ContractRole", attributes.get("ContractRole"));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
@@ -592,7 +591,7 @@ public class ContractModel implements ContractModelProvider {
                     // parse child attributes
                     List<ContractReference> contractStructure = new ArrayList<>();
                     ((List<Map<String,Object>>)attributes.get("ContractStructure")).forEach(e->contractStructure.add(new ContractReference((Map<String,Object>)e)));
-                    attributes.put("ContractStructure", contractStructure);
+                    map.put("ContractStructure", contractStructure);
 
                     break;
 
