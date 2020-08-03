@@ -16,7 +16,7 @@ public final class StringUtils {
     public final static char ShortStub = '1';
   
     // day count conventions
-    public final static String DayCountConvention_AAISDA = "AA";
+    public final static String DayCountConvention_AAISDA = "A/AISDA";
     public final static String DayCountConvention_A360 = "A360";
     public final static String DayCountConvention_A365 = "A365";
     public final static String DayCountConvention_B252 = "B252";
