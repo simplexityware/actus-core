@@ -18,6 +18,7 @@ import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
 import org.actus.types.ReferenceRole;
 import org.actus.types.ReferenceType;
+import org.actus.util.ContractReference;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -69,7 +70,7 @@ public class SwapTest {
         childObject1.put("MaturityDate", "2017-01-01T00:00:00");
         childObject1.put("NotionalPrincipal", "1000.0");
         childObject1.put("NominalInterestRate","0.01");
-        childObject1.put("CycleOfInterestPayment","1Q-");
+        childObject1.put("CycleOfInterestPayment","P1ML0");
 
         // define child 2 attributes
         Map<String, String> childObject2 = new HashMap<String, String>();
@@ -84,8 +85,8 @@ public class SwapTest {
         childObject2.put("MaturityDate", "2017-01-01T00:00:00");
         childObject2.put("NotionalPrincipal", "1000.0");
         childObject2.put("NominalInterestRate","0.01");
-        childObject2.put("CycleOfInterestPayment","1Q-");
-        childObject2.put("CycleOfRateReset","1Q-");
+        childObject2.put("CycleOfInterestPayment","P1ML0");
+        childObject2.put("CycleOfRateReset","P3ML1");
         childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
@@ -111,10 +112,11 @@ public class SwapTest {
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
 
         // add analysis events
+        ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
+            ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
             EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -149,7 +151,7 @@ public class SwapTest {
         childObject1.put("MaturityDate", "2017-01-01T00:00:00");
         childObject1.put("NotionalPrincipal", "1000.0");
         childObject1.put("NominalInterestRate","0.01");
-        childObject1.put("CycleOfInterestPayment","1Q-");
+        childObject1.put("CycleOfInterestPayment","P1ML0");
 
         // define child 2 attributes
         Map<String, String> childObject2 = new HashMap<String, String>();
@@ -164,8 +166,8 @@ public class SwapTest {
         childObject2.put("MaturityDate", "2017-01-01T00:00:00");
         childObject2.put("NotionalPrincipal", "1000.0");
         childObject2.put("NominalInterestRate","0.01");
-        childObject2.put("CycleOfInterestPayment","1Q-");
-        childObject2.put("CycleOfRateReset","1Q-");
+        childObject2.put("CycleOfInterestPayment","P1ML0");
+        childObject2.put("CycleOfRateReset","P3ML1");
         childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
@@ -191,10 +193,11 @@ public class SwapTest {
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
 
         // add analysis events
+        ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
             EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -229,7 +232,7 @@ public class SwapTest {
         childObject1.put("MaturityDate", "2017-01-01T00:00:00");
         childObject1.put("NotionalPrincipal", "1000.0");
         childObject1.put("NominalInterestRate","0.01");
-        childObject1.put("CycleOfInterestPayment","1Q-");
+        childObject1.put("CycleOfInterestPayment","P1ML0");
 
         // define child 2 attributes
         Map<String, String> childObject2 = new HashMap<String, String>();
@@ -244,8 +247,8 @@ public class SwapTest {
         childObject2.put("MaturityDate", "2017-01-01T00:00:00");
         childObject2.put("NotionalPrincipal", "1000.0");
         childObject2.put("NominalInterestRate","0.01");
-        childObject2.put("CycleOfInterestPayment","1Q-");
-        childObject2.put("CycleOfRateReset","1Q-");
+        childObject2.put("CycleOfInterestPayment","P1ML0");
+        childObject2.put("CycleOfRateReset","P3ML1");
         childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
@@ -271,10 +274,11 @@ public class SwapTest {
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
 
         // add analysis events
+        ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
             EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -311,7 +315,7 @@ public class SwapTest {
         childObject1.put("MaturityDate", "2017-01-01T00:00:00");
         childObject1.put("NotionalPrincipal", "1000.0");
         childObject1.put("NominalInterestRate","0.01");
-        childObject1.put("CycleOfInterestPayment","1Q-");
+        childObject1.put("CycleOfInterestPayment","P1ML0");
 
         // define child 2 attributes
         Map<String, String> childObject2 = new HashMap<String, String>();
@@ -326,8 +330,8 @@ public class SwapTest {
         childObject2.put("MaturityDate", "2017-01-01T00:00:00");
         childObject2.put("NotionalPrincipal", "1000.0");
         childObject2.put("NominalInterestRate","0.01");
-        childObject2.put("CycleOfInterestPayment","1Q-");
-        childObject2.put("CycleOfRateReset","1Q-");
+        childObject2.put("CycleOfInterestPayment","P1ML0");
+        childObject2.put("CycleOfRateReset","P3ML1");
         childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
@@ -353,10 +357,11 @@ public class SwapTest {
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
 
         // add analysis events
+        ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
             EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -393,7 +398,7 @@ public class SwapTest {
         childObject1.put("MaturityDate", "2017-01-01T00:00:00");
         childObject1.put("NotionalPrincipal", "1000.0");
         childObject1.put("NominalInterestRate","0.01");
-        childObject1.put("CycleOfInterestPayment","1Q-");
+        childObject1.put("CycleOfInterestPayment","P1ML0");
 
         // define child 2 attributes
         Map<String, String> childObject2 = new HashMap<String, String>();
@@ -408,8 +413,8 @@ public class SwapTest {
         childObject2.put("MaturityDate", "2017-01-01T00:00:00");
         childObject2.put("NotionalPrincipal", "1000.0");
         childObject2.put("NominalInterestRate","0.01");
-        childObject2.put("CycleOfInterestPayment","1Q-");
-        childObject2.put("CycleOfRateReset","1Q-");
+        childObject2.put("CycleOfInterestPayment","P1ML0");
+        childObject2.put("CycleOfRateReset","P3ML1");
         childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
@@ -435,10 +440,11 @@ public class SwapTest {
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
 
         // add analysis events
+        ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
             EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -477,7 +483,7 @@ public class SwapTest {
         childObject1.put("MaturityDate", "2017-01-01T00:00:00");
         childObject1.put("NotionalPrincipal", "1000.0");
         childObject1.put("NominalInterestRate","0.01");
-        childObject1.put("CycleOfInterestPayment","1Q-");
+        childObject1.put("CycleOfInterestPayment","P1ML0");
 
         // define child 2 attributes
         Map<String, String> childObject2 = new HashMap<String, String>();
@@ -492,8 +498,8 @@ public class SwapTest {
         childObject2.put("MaturityDate", "2017-01-01T00:00:00");
         childObject2.put("NotionalPrincipal", "1000.0");
         childObject2.put("NominalInterestRate","0.01");
-        childObject2.put("CycleOfInterestPayment","1Q-");
-        childObject2.put("CycleOfRateReset","1Q-");
+        childObject2.put("CycleOfInterestPayment","P1ML0");
+        childObject2.put("CycleOfRateReset","P3ML1");
         childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
@@ -519,10 +525,10 @@ public class SwapTest {
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
 
         // add analysis events
+        ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
+                ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
+                EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -561,7 +567,7 @@ public class SwapTest {
         childObject1.put("MaturityDate", "2017-01-01T00:00:00");
         childObject1.put("NotionalPrincipal", "1000.0");
         childObject1.put("NominalInterestRate","0.01");
-        childObject1.put("CycleOfInterestPayment","1Q-");
+        childObject1.put("CycleOfInterestPayment","P1ML0");
 
         // define child 2 attributes
         Map<String, String> childObject2 = new HashMap<String, String>();
@@ -576,8 +582,8 @@ public class SwapTest {
         childObject2.put("MaturityDate", "2017-01-01T00:00:00");
         childObject2.put("NotionalPrincipal", "1000.0");
         childObject2.put("NominalInterestRate","0.01");
-        childObject2.put("CycleOfInterestPayment","1Q-");
-        childObject2.put("CycleOfRateReset","1Q-");
+        childObject2.put("CycleOfInterestPayment","P1ML0");
+        childObject2.put("CycleOfRateReset","P3ML1");
         childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
@@ -603,9 +609,10 @@ public class SwapTest {
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
 
         // add analysis events
+        ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+                ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
+                EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
