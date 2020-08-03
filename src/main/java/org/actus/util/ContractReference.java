@@ -1,6 +1,7 @@
 package org.actus.util;
 
 import org.actus.attributes.ContractModel;
+import org.actus.types.ContractRole;
 import org.actus.types.ReferenceRole;
 import org.actus.types.ReferenceType;
 
@@ -10,11 +11,26 @@ public class ContractReference {
     public ReferenceRole referenceRole;
     public ReferenceType referenceType;
     public Object object;
-    public ContractReference(Map<String, Object> attributes) {
+    public ContractReference(Map<String, Object> attributes, ContractRole contractRole) {
         this.referenceRole = ReferenceRole.valueOf((String)attributes.get("ReferenceRole"));
         this.referenceType = ReferenceType.valueOf((String)attributes.get("ReferenceType"));
         switch (referenceType){
             case CNT:
+                Map<String, String> childModel = (Map<String, String>)attributes.get("Object");
+                if(contractRole.equals(ContractRole.RFL)){
+                    if(childModel.get("ContractID").contains("_C1")){
+                        childModel.put("ContractRole", "RPA");
+                    } else {
+                        childModel.put("ContractRole", "RPL");
+                    }
+                } else{
+                    if(childModel.get("ContractID").contains("_C1")){
+                        childModel.put("ContractRole", "RPL");
+                    } else {
+                        childModel.put("ContractRole", "RPA");
+                    }
+                }
+                attributes.replace("Object", childModel);
                 this.object = ContractModel.parse((Map<String, String>)attributes.get("Object"));
                 break;
             case CID:
@@ -23,7 +39,8 @@ public class ContractReference {
                 this.object = attributes.get("Object");
                 break;
             case CST:
-                this.object = new ContractReference((Map<String, Object>)attributes.get("Object"));
+                //Is ContractRole in this case referenced in paren of parent structure ?
+                //this.object = new ContractReference((Map<String, Object>)attributes.get("Object"));
                 break;
                 default:
                     break;
