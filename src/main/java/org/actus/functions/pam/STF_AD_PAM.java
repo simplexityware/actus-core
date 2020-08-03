@@ -33,6 +33,7 @@ public final class STF_AD_PAM implements StateTransitionFunction {
         postEventStates.accruedInterest = states.accruedInterest;
         postEventStates.nominalInterestRate = states.nominalInterestRate;
         postEventStates.feeAccrued = states.feeAccrued;
+        postEventStates.statusDate = states.statusDate;
         
         // return post-event-states
         return postEventStates;

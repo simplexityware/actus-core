@@ -31,6 +31,7 @@ public final class STF_IP_PAM implements StateTransitionFunction {
         postEventStates.notionalPrincipal = states.notionalPrincipal;
         postEventStates.nominalInterestRate = states.nominalInterestRate;
         postEventStates.feeAccrued = states.feeAccrued;
+        postEventStates.statusDate = states.statusDate;
         
         // return post-event-states
         return postEventStates;

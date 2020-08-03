@@ -32,7 +32,7 @@ public final class STF_NET_SWAPS implements StateTransitionFunction {
         // net post-event-states
         postEventStates.notionalPrincipal = e1.states().notionalPrincipal + e2.states().notionalPrincipal;
         postEventStates.accruedInterest = e1.states().accruedInterest + e2.states().accruedInterest;
-        
+        postEventStates.statusDate = time;
         // return post-event-states
         return postEventStates;
     }
