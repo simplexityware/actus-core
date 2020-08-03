@@ -96,7 +96,7 @@ public class ContractModel implements ContractModelProvider {
                     map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("EndOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("EndOfMonthConvention")));
                     map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("ContractType")));
                     map.put("StatusDate", LocalDateTime.parse(attributes.get("StatusDate")));
-                    map.put("ContractRole", ContractRole.valueOf(attributes.get("ContractRole")));
+                    map.put("ContractRole", (!CommonUtils.isNull(attributes.get("ContractRole"))) ? ContractRole.valueOf(attributes.get("ContractRole")) : null);
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("CycleAnchorDateOfFee", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfFee"))) ? ((CommonUtils.isNull(attributes.get("CycleOfFee"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfFee")));
                     map.put("CycleOfFee", attributes.get("CycleOfFee"));
@@ -579,7 +579,7 @@ public class ContractModel implements ContractModelProvider {
 
                     // parse attributes (Swap) attributes
                     map.put("StatusDate", LocalDateTime.parse((String)attributes.get("StatusDate")));
-                    map.put("ContractRole", attributes.get("ContractRole"));
+                    map.put("ContractRole", ContractRole.valueOf((String)attributes.get("ContractRole")));
                     map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
                     map.put("Currency", attributes.get("Currency"));
                     map.put("PurchaseDate", (CommonUtils.isNull(attributes.get("PurchaseDate"))) ? null : LocalDateTime.parse((String)attributes.get("PurchaseDate")));
@@ -590,7 +590,7 @@ public class ContractModel implements ContractModelProvider {
 
                     // parse child attributes
                     List<ContractReference> contractStructure = new ArrayList<>();
-                    ((List<Map<String,Object>>)attributes.get("ContractStructure")).forEach(e->contractStructure.add(new ContractReference((Map<String,Object>)e)));
+                    ((List<Map<String,Object>>)attributes.get("ContractStructure")).forEach(e->contractStructure.add(new ContractReference((Map<String,Object>)e, (ContractRole)map.get("ContractRole"))));
                     map.put("ContractStructure", contractStructure);
 
                     break;
@@ -608,5 +608,9 @@ public class ContractModel implements ContractModelProvider {
     @Override
     public <T> T getAs(String name) {
         return (T) attributes.get(name);
+    }
+
+    public void addAttribute(String Key, Object value){
+        attributes.put(Key,value);
     }
 }
