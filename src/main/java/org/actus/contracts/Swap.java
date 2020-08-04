@@ -17,6 +17,7 @@ import org.actus.functions.stk.STF_TD_STK;
 import org.actus.functions.swaps.*;
 import org.actus.states.StateSpace;
 import org.actus.types.EventType;
+import org.actus.types.ReferenceRole;
 import org.actus.util.CommonUtils;
 import org.actus.types.ContractReference;
 
@@ -36,14 +37,14 @@ public final class Swap {
                                                     ContractModelProvider model) throws AttributeConversionException {
         ArrayList<ContractEvent> events = new ArrayList<ContractEvent>();
         //create children event schedule
-        ContractModel firstLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").get(0).getObject();
-        ContractModel secondLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").get(1).getObject();
+        ContractModel firstLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.FIL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
+        ContractModel secondLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.SEL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
         ArrayList<ContractEvent> firstLegSchedule = new ArrayList<>();
         ArrayList<ContractEvent> secondLegSchedule = new ArrayList<>();
-        //TODO: what if to(parameter) != MaturityDate
         firstLegSchedule = ContractType.schedule(firstLegModel.getAs("MaturityDate"),firstLegModel);
         secondLegSchedule = ContractType.schedule(secondLegModel.getAs("MaturityDate"), secondLegModel);
-        events.addAll(filterAndNettCongruentEvents(firstLegSchedule,secondLegSchedule));
+        events.addAll(firstLegSchedule);
+        events.addAll(secondLegSchedule);
         // compute parent events
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
