@@ -49,8 +49,8 @@ public class CallMoneyTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = PrincipalAtMaturity.schedule(terms.getAs("MaturityDate"), terms);
-            schedule = PrincipalAtMaturity.apply(schedule, terms, observer);
+            ArrayList<ContractEvent> schedule = CallMoney.schedule(terms.getAs("MaturityDate"), terms);
+            schedule = CallMoney.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
@@ -69,8 +69,8 @@ public class CallMoneyTest {
             List<ResultSet> expectedResults = test.getResults();
             
             // round results to available precision
-            computedResults.forEach(result -> result.roundTo(12));
-            expectedResults.forEach(result -> result.roundTo(12));
+            computedResults.forEach(result -> result.roundTo(11));
+            expectedResults.forEach(result -> result.roundTo(11));
 
             // create dynamic test
             return DynamicTest.dynamicTest("Test: " + testId,

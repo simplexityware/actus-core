@@ -69,7 +69,7 @@ public final class Annuity {
         	events.add(EventFactory.createEvent(ipanx,EventType.IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
         // -> chose right Payoff function depending on maturity
         PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_MD_PAM():new POF_PR_NAM());
-            events.add(EventFactory.createEvent(maturity,EventType.MD,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(maturity,EventType.MD,model.getAs("Currency"),pof,new STF_MD_PAM(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
             events.add(EventFactory.createEvent(maturity,EventType.IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_ANN(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
@@ -152,7 +152,11 @@ public final class Annuity {
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1);
+        if(CommonUtils.isNull(to)){
+            to = maturity;
+        }
+        ContractEvent postDate = EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null,model.getAs("ContractID"));
+        events.removeIf(e -> e.compareTo(postDate) == 1);
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);

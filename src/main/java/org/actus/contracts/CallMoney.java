@@ -9,6 +9,7 @@ import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
+import org.actus.functions.pam.*;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
@@ -16,18 +17,9 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
 import org.actus.functions.clm.POF_IED_CLM;
-import org.actus.functions.pam.STF_IED_PAM;
-import org.actus.functions.pam.POF_MD_PAM;
-import org.actus.functions.pam.STF_PR_PAM;
-import org.actus.functions.pam.STF_RRF_PAM;
 import org.actus.functions.clm.POF_IP_CLM;
 import org.actus.functions.clm.STF_IP_CLM;
-import org.actus.functions.pam.POF_IPCI_PAM;
-import org.actus.functions.pam.STF_IPCI_PAM;
-import org.actus.functions.pam.POF_RR_PAM;
 import org.actus.functions.clm.STF_RR_CLM;
-import org.actus.functions.pam.POF_FP_PAM;
-import org.actus.functions.pam.STF_FP_PAM;
 
 
 import java.time.LocalDateTime;
@@ -50,22 +42,44 @@ public final class CallMoney {
 
         // initial exchange
         events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_CLM(), new STF_IED_PAM(), model.getAs("ContractID")));
-        // principal redemption
-        events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM(), model.getAs("ContractID")));
         // interest payment event
         events.add(EventFactory.createEvent(maturity, EventType.IP, model.getAs("Currency"), new POF_IP_CLM(), new STF_IP_CLM(), model.getAs("ContractID")));
+        // principal redemption
+        events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_MD_PAM(), model.getAs("ContractID")));
         // interest payment capitalization (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment"))) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
-                    maturity,
-                    model.getAs("CycleOfInterestPayment"),
-                    model.getAs("EndOfMonthConvention"),false),
-                    EventType.IPCI, model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_PAM(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            events.addAll(EventFactory.createEvents(
+                    ScheduleFactory.createSchedule(
+                            model.getAs("CycleAnchorDateOfInterestPayment"),
+                            maturity,
+                            model.getAs("CycleOfInterestPayment"),
+                            model.getAs("EndOfMonthConvention"),
+                            false
+                    ),
+                    EventType.IPCI,
+                    model.getAs("Currency"),
+                    new POF_IPCI_PAM(),
+                    new STF_IPCI_PAM(),
+                    model.getAs("BusinessDayConvention"),
+                    model.getAs("ContractID"))
+            );
         }
         // rate reset
-        Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), maturity,
-                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                EventType.RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_CLM(), model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
+        Set<ContractEvent> rateResetEvents = EventFactory.createEvents(
+                ScheduleFactory.createSchedule(
+                        model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"),
+                        maturity,
+                        model.getAs("CycleOfRateReset"),
+                        model.getAs("EndOfMonthConvention"),
+                        false
+                ),
+                EventType.RR,
+                model.getAs("Currency"),
+                new POF_RR_PAM(),
+                new STF_RR_CLM(),
+                model.getAs("BusinessDayConvention"),
+                model.getAs("ContractID")
+        );
         
         // adapt fixed rate reset event
         if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
@@ -79,9 +93,21 @@ public final class CallMoney {
 
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), maturity,
-                    model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention"),false),
-                    EventType.FP, model.getAs("Currency"), new POF_FP_PAM(), new STF_FP_PAM(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            events.addAll(EventFactory.createEvents(
+                    ScheduleFactory.createSchedule(
+                            model.getAs("CycleAnchorDateOfFee"),
+                            maturity,
+                            model.getAs("CycleOfFee"),
+                            model.getAs("EndOfMonthConvention"),
+                            false
+                    ),
+                    EventType.FP,
+                    model.getAs("Currency"),
+                    new POF_FP_PAM(),
+                    new STF_FP_PAM(),
+                    model.getAs("BusinessDayConvention"),
+                    model.getAs("ContractID"))
+            );
         }
         // remove all pre-status date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,

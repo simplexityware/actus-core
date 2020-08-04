@@ -22,8 +22,8 @@ public final class POF_IP_LAM implements PayOffFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
                 * states.interestScalingMultiplier
-                * (states.accruedInterest + dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
+                * (states.accruedInterest + (dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
                 * states.nominalInterestRate
-                * states.interestCalculationBaseAmount);
+                * states.interestCalculationBaseAmount));
         }
 }
