@@ -23,7 +23,7 @@ public final class POF_IED_CLM implements PayOffFunction {
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
-                *ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))
+                *ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                 * (-1)
                 * model.<Double>getAs("NotionalPrincipal");
         }

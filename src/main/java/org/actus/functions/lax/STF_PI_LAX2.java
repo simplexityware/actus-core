@@ -23,7 +23,7 @@ public class STF_PI_LAX2 implements StateTransitionFunction {
 	public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		StateSpace postEventStates = new StateSpace();
-		double role = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")));
+		double role = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
 		double redemption = role * prPayment - role * Math.max(0, Math.abs(prPayment) - Math.abs(states.notionalPrincipal));
 
 		// update state space

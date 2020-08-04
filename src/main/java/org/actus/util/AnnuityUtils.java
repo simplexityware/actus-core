@@ -54,7 +54,7 @@ public class AnnuityUtils {
 			DayCountCalculator dayCounter = model.getAs("DayCountConvention");
 
 			// determine remaining PR schedule
-			Set<LocalDateTime> eventTimes = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity, model.getAs("CycleOfPrincipalRedemption"), EndOfMonthConventionEnum.valueOf(model.getAs("EndOfMonthConvention")));
+			Set<LocalDateTime> eventTimes = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity, model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"));
 			eventTimes.removeIf(d -> d.isBefore(statusDate));
 			eventTimes.remove(statusDate);
 			LocalDateTime[] eventTimesSorted = eventTimes.toArray(new LocalDateTime[eventTimes.size()]);

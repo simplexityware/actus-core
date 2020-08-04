@@ -22,7 +22,7 @@ public final class POF_STD2_FXOUT implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        int contractRoleSign = ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")));
+        int contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
         return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
                 * contractRoleSign
                 * (-1)

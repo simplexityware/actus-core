@@ -31,7 +31,7 @@ public final class STF_PR_UMP implements StateTransitionFunction {
         // update state space
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest += states.nominalInterestRate * states.notionalPrincipal * timeFromLastEvent;
-        states.notionalPrincipal -= ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*payoff;
+        states.notionalPrincipal -= ContractRoleConvention.roleSign(model.getAs("ContractRole"))*payoff;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
         states.statusDate = time;
         

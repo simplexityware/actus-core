@@ -26,6 +26,6 @@ public final class POF_PR_UMP implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractRoleConvention.roleSign(ContractRole.valueOf(model.getAs("ContractRole")))*payoff;
+        return ContractRoleConvention.roleSign(model.getAs("ContractRole"))*payoff;
         }
 }
