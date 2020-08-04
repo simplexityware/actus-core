@@ -18,13 +18,13 @@ public class ContractReference {
             case CNT:
                 Map<String, String> childModel = (Map<String, String>)attributes.get("Object");
                 if(contractRole.equals(ContractRole.RFL)){
-                    if(childModel.get("ContractID").contains("_C1")){
+                    if(ReferenceRole.FIL.equals(referenceRole)){
                         childModel.put("ContractRole", "RPA");
                     } else {
                         childModel.put("ContractRole", "RPL");
                     }
                 } else{
-                    if(childModel.get("ContractID").contains("_C1")){
+                    if(ReferenceRole.FIL.equals(referenceRole)){
                         childModel.put("ContractRole", "RPL");
                     } else {
                         childModel.put("ContractRole", "RPA");
