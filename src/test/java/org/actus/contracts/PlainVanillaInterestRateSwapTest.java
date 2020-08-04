@@ -49,7 +49,7 @@ public class PlainVanillaInterestRateSwapTest {
     public void test_SWPPV_schedule_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -65,14 +65,14 @@ public class PlainVanillaInterestRateSwapTest {
         map.put("MarketObjectCodeOfRateReset", "RefRateXY");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
-
+        model.getAs("hallo");
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(model.getAs("MaturityDate"),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -85,7 +85,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIPCL() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -104,12 +104,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -121,7 +121,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIPCLandIPANX() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -141,12 +141,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -158,7 +158,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIP_withRRANX() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -178,12 +178,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -195,7 +195,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIP_withCNTRLisPF() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "PF");
@@ -215,12 +215,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -232,7 +232,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIP_withSTDwhereD() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -251,12 +251,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -268,7 +268,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIP_withSTDwhereS() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -287,12 +287,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -304,7 +304,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIP_withSTDwhereD_withPRD() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -325,12 +325,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -342,7 +342,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIP_withSTDwhereD_withPRD_withTD() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -365,12 +365,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -382,7 +382,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIP_withSTDwhereS_withPRD_withTD() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -405,12 +405,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -422,7 +422,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIP_withSTDwhereD_withPRD_withMultipleAnalysisTimes() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -443,12 +443,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -460,7 +460,7 @@ public class PlainVanillaInterestRateSwapTest {
     @Test
     public void test_SWPPV_schedule_withIP_withSTDwhereS_withPRD_withMultipleAnalysisTimes() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "SWPPV");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RF");
@@ -481,12 +481,12 @@ public class PlainVanillaInterestRateSwapTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();

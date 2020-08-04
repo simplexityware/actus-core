@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * whether it is a business day or not.
  * <p>
  * The {@code actus-core} library in fact only provides few very basic
- * implementations of this component (see package {@code org.actus.time.calendar}). 
+ * implementations of this component (see package {@code org.actus.time.calendar}).
  * This set of business day calendars can easily be extended externally by 
  * implementing this component (or interface respectively) and passing the 
  * external calendar class to the {@code ContractModel} when parsing the

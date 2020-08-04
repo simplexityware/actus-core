@@ -23,7 +23,7 @@ public class ContractModelTest {
     @Test
     public void test_AttributeConversionException() {
         thrown.expect(AttributeConversionException.class);
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         ContractModel model = ContractModel.parse(map);
     }
@@ -31,7 +31,7 @@ public class ContractModelTest {
     @Test
     public void test_AttributeParser_PAM_MandatoryAttributes() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -48,7 +48,7 @@ public class ContractModelTest {
     @Test
     public void test_AttributeParser_PAM_AllAttributes() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         map.put("Calendar", "org.actus.time.calendar.NoHolidaysCalendar");
         map.put("BusinessDayConvention", "SCF");

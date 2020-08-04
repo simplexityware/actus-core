@@ -12,7 +12,7 @@ import org.actus.util.StringUtils;
 import java.time.LocalDateTime;
 
 /**
- * Component for the calculation of time-periods between two time-instances 
+ * Component for the calculation of time-periods between two time-instances
  * according to a {@link DayCountConventionProvider}
  */
 public class DayCountCalculator {

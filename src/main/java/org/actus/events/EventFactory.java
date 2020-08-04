@@ -40,10 +40,11 @@ public final class EventFactory {
    * @param currency the event currency
    * @param payOff the event pay-off function
    * @param stateTrans the event state-transition function
+   * @param contractID
    * @return
    */
-    public static ContractEvent createEvent(LocalDateTime scheduleTime, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans) {
-        return new ContractEvent(scheduleTime, scheduleTime, eventType, currency, payOff, stateTrans);
+    public static ContractEvent createEvent(LocalDateTime scheduleTime, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans, String contractID) {
+        return new ContractEvent(scheduleTime, scheduleTime, eventType, currency, payOff, stateTrans, contractID);
     }
     
       /**
@@ -55,10 +56,11 @@ public final class EventFactory {
    * @param payOff the event pay-off function
    * @param stateTrans the event state-transition function
    * @param convention the business day convention to be used
-   * @return
+   * @param contractID
+       * @return
    */
-    public static ContractEvent createEvent(LocalDateTime scheduleTime, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans, BusinessDayAdjuster convention) {
-        return new ContractEvent(scheduleTime, convention.shiftEventTime(scheduleTime), eventType, currency, payOff, stateTrans);
+    public static ContractEvent createEvent(LocalDateTime scheduleTime, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans, BusinessDayAdjuster convention, String contractID) {
+        return new ContractEvent(scheduleTime, convention.shiftEventTime(scheduleTime), eventType, currency, payOff, stateTrans, contractID);
     }
     
   /**
@@ -69,16 +71,17 @@ public final class EventFactory {
    * @param currency the event currency
    * @param payOff the event pay-off function
    * @param stateTrans the event state-transition function
+   * @param contractID
    * @return an unordered set of contract events
    */
-    public static Set<ContractEvent> createEvents(Set<LocalDateTime> eventSchedule, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans) {
+    public static Set<ContractEvent> createEvents(Set<LocalDateTime> eventSchedule, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans, String contractID) {
         Set<ContractEvent> events = new HashSet<ContractEvent>(eventSchedule.size());
         Iterator<LocalDateTime> iterator = eventSchedule.iterator();
         LocalDateTime time;
         
         while(iterator.hasNext()) {
             time = iterator.next();
-            events.add(new ContractEvent(time, time, eventType, currency, payOff, stateTrans));
+            events.add(new ContractEvent(time, time, eventType, currency, payOff, stateTrans, contractID));
         }
         
         return events;
@@ -93,16 +96,17 @@ public final class EventFactory {
    * @param payOff the event pay-off function
    * @param stateTrans the event state-transition function
    * @param convention the business day convention to be used
+   * @param contractID
    * @return an unordered set of contract events
    */
-    public static Set<ContractEvent> createEvents(Set<LocalDateTime> eventSchedule, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans, BusinessDayAdjuster convention) {
+    public static Set<ContractEvent> createEvents(Set<LocalDateTime> eventSchedule, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans, BusinessDayAdjuster convention, String contractID) {
         Set<ContractEvent> events = new HashSet<ContractEvent>(eventSchedule.size());
         Iterator<LocalDateTime> iterator = eventSchedule.iterator();
         LocalDateTime time;
         
         while(iterator.hasNext()) {
             time = iterator.next();
-            events.add(new ContractEvent(time, convention.shiftEventTime(time), eventType, currency, payOff, stateTrans));
+            events.add(new ContractEvent(time, convention.shiftEventTime(time), eventType, currency, payOff, stateTrans, contractID));
         }
         
         return events;
