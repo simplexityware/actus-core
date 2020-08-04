@@ -13,7 +13,6 @@ import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.daycount.DayCountCalculator;
-import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
 import org.actus.util.Constants;
@@ -41,7 +40,7 @@ public final class Stock {
 
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_STK()));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_STK(), model.getAs("ContractID")));
         }
         // dividend payment related
         if (!CommonUtils.isNull(model.getAs("CycleOfDividendPayment"))) {
@@ -57,30 +56,31 @@ public final class Stock {
                         model.getAs("Currency"),
                         new POF_DV_STK(),
                         new STF_DV_STK(),
-                        model.getAs("BusinessDayConvention"))
+                        model.getAs("BusinessDayConvention"),
+                        model.getAs("ContractID"))
                 );
             } else {
                 events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfDividendPayment"),
                         model.getAs("TerminationDate"),
                         model.getAs("CycleOfDividendPayment"),
                         model.getAs("EndOfMonthConvention")),
-                        EventType.DV, model.getAs("Currency"), new POF_DV_STK(), new STF_DV_STK(), model.getAs("BusinessDayConvention")));
+                        EventType.DV, model.getAs("Currency"), new POF_DV_STK(), new STF_DV_STK(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
 
             }
         }
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
             ContractEvent termination =
-                    EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_STK(), new STF_TD_STK());
+                    EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_STK(), new STF_TD_STK(), model.getAs("ContractID"));
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
 
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null)) == -1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null, model.getAs("ContractID"))) == -1);
         
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null, model.getAs("ContractID"))) == 1);
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);

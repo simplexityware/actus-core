@@ -55,8 +55,8 @@ public class NegativeAmortizerTest {
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
                 ResultSet results = new ResultSet();
-                results.setEventDate(e.time().toString());
-                results.setEventType(e.type());
+                results.setEventDate(e.eventTime().toString());
+                results.setEventType(e.eventType());
                 results.setPayoff(e.payoff());
                 results.setCurrency(e.currency());
                 results.setNotionalPrincipal(e.states().notionalPrincipal);

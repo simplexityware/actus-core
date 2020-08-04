@@ -78,7 +78,8 @@ public class UndefinedMaturityProfileTest {
                                 model.<LocalDateTime>getAs("StatusDate").plus(periods[i]),
                                 EventType.PR,model.getAs("Currency"),
                                 new POF_PR_UMP(payments[i]),
-                                new STF_PR_UMP(payments[i]));
+                                new STF_PR_UMP(payments[i]),
+                                model.getAs("ContractID"));
                         s.add(ev);
                     }, Set::addAll);
 
@@ -99,7 +100,7 @@ public class UndefinedMaturityProfileTest {
     public void test_UMP_schedule_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPL");
@@ -113,12 +114,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -133,7 +134,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withoutReplication() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -147,12 +148,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel_NoReplication riskFactors = new RiskFactorModel_NoReplication();
@@ -168,7 +169,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIPCL() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -183,12 +184,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -203,7 +204,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIPCLandIPANX() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -219,12 +220,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -239,7 +240,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIP_withRRCL() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -256,12 +257,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -276,7 +277,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIP_withRRCLandRRANX() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -294,12 +295,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -314,7 +315,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIP_withRR_withFPwhereA() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -334,12 +335,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -354,7 +355,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIP_withRR_withFPwhereN() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -374,12 +375,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -394,7 +395,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIP_withRR_withFP_withCalendar() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -415,12 +416,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -435,7 +436,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIP_withRR_withFP_withCalendar_withBDC_whereSCF() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -457,12 +458,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -477,7 +478,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIP_withRR_withFP_withCalendar_withBDC_whereCSP() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -499,12 +500,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -520,7 +521,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withRR_withFP_withCalendar_withBDC_whereCSP() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -543,12 +544,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -563,7 +564,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIP_withRR_withFP_withCalendar_withTD() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -586,12 +587,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -606,7 +607,7 @@ public class UndefinedMaturityProfileTest {
     @Test
     public void test_UMP_schedule_withIP_withRR_withFP_withCalendar_withBDC_withMultipleAnalysisTimes() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "UMP");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -629,12 +630,12 @@ public class UndefinedMaturityProfileTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = UndefinedMaturityProfile.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();

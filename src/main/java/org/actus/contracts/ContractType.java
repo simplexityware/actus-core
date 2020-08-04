@@ -120,7 +120,7 @@ public final class ContractType {
     public static ArrayList<ContractEvent> apply(ArrayList<ContractEvent> events,
                                                  ContractModelProvider model,
                                                  RiskFactorModelProvider observer) throws ContractTypeUnknownException,AttributeConversionException {
-        switch(ContractTypeEnum.valueOf(model.getAs("ContractType"))) {
+        switch((ContractTypeEnum)model.getAs("ContractType")) {
             case PAM:
                 return PrincipalAtMaturity.apply(events,model,observer);
             case LAM:

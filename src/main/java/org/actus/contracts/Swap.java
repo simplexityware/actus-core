@@ -14,16 +14,16 @@ import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.stk.STF_PRD_STK;
 import org.actus.functions.stk.STF_TD_STK;
-import org.actus.functions.swaps.POF_NET_SWAPS;
-import org.actus.functions.swaps.POF_PRD_SWAPS;
-import org.actus.functions.swaps.POF_TD_SWAPS;
-import org.actus.functions.swaps.STF_NET_SWAPS;
+import org.actus.functions.swaps.*;
 import org.actus.states.StateSpace;
 import org.actus.types.EventType;
+import org.actus.types.ReferenceRole;
 import org.actus.util.CommonUtils;
+import org.actus.types.ContractReference;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents the Swap payoff algorithm
@@ -36,34 +36,48 @@ public final class Swap {
     public static ArrayList<ContractEvent> schedule(LocalDateTime to,
                                                     ContractModelProvider model) throws AttributeConversionException {
         ArrayList<ContractEvent> events = new ArrayList<ContractEvent>();
-
-        // extract parent attributes
-        ContractModel parent = model.getAs("Parent");
-
-        // compute child 1 and child 2 events
-        events.addAll(ContractType.schedule(to,model.getAs("Child1")));
-        events.addAll(ContractType.schedule(to,model.getAs("Child2")));
-
+        //create children event schedule
+        ContractModel firstLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.FIL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
+        ContractModel secondLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.SEL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
+        ArrayList<ContractEvent> firstLegSchedule = new ArrayList<>();
+        ArrayList<ContractEvent> secondLegSchedule = new ArrayList<>();
+        firstLegSchedule = ContractType.schedule(firstLegModel.getAs("MaturityDate"),firstLegModel);
+        secondLegSchedule = ContractType.schedule(secondLegModel.getAs("MaturityDate"), secondLegModel);
+        events.addAll(firstLegSchedule);
+        events.addAll(secondLegSchedule);
         // compute parent events
         // purchase
-        if (!CommonUtils.isNull(parent.getAs("PurchaseDate"))) {
-            ContractEvent purchase = EventFactory.createEvent(parent.getAs("PurchaseDate"), EventType.PRD, parent.getAs("Currency"), new POF_PRD_SWAPS(), new STF_PRD_STK());
+        if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            ContractEvent purchase = EventFactory.createEvent(
+                    model.getAs("PurchaseDate"),
+                    EventType.PRD,
+                    model.getAs("Currency"),
+                    new POF_PRD_SWAPS(),
+                    new STF_PRD_STK(),
+                    model.getAs("ContractID")
+            );
             events.removeIf(e -> e.compareTo(purchase) == -1); // remove all pre-purchase events
             events.add(purchase);
         }
         // termination
-        if (!CommonUtils.isNull(parent.getAs("TerminationDate"))) {
-            ContractEvent termination =
-                    EventFactory.createEvent(parent.getAs("TerminationDate"), EventType.TD, parent.getAs("Currency"), new POF_TD_SWAPS(), new STF_TD_STK());
+        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
+            ContractEvent termination = EventFactory.createEvent(
+                    model.getAs("TerminationDate"),
+                    EventType.TD,
+                    model.getAs("Currency"),
+                    new POF_TD_SWAPS(),
+                    new STF_TD_STK(),
+                    model.getAs("ContractID")
+            );
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
 
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(parent.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null)) == -1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1);
 
         // return events
         return events;
@@ -74,67 +88,109 @@ public final class Swap {
                                                  ContractModelProvider model,
                                                  RiskFactorModelProvider observer) throws AttributeConversionException {
 
-        // extract parent attributes
-        ContractModel parent = model.getAs("Parent");
+        //sort first and second leg events and remove from parent schedule
+        ContractModel firstLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.FIL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
+        ContractModel secondLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.SEL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
+        ArrayList<ContractEvent> firstLegSchedule = new ArrayList<>();
+        ArrayList<ContractEvent> secondLegSchedule = new ArrayList<>();
+        firstLegSchedule.addAll(events.stream().filter(event -> firstLegModel.getAs("ContractID").equals(event.getContractID())).collect(Collectors.toList()));
+        secondLegSchedule.addAll(events.stream().filter(event -> secondLegModel.getAs("ContractID").equals(event.getContractID())).collect(Collectors.toList()));
+        events.removeAll(firstLegSchedule);
+        events.removeAll(secondLegSchedule);
 
-        // initialize state space per status date
-        StateSpace states = initStateSpace(model);
+        // apply shedule of children
+        List<ContractEvent> firstLegEvents = ContractType.apply(firstLegSchedule,firstLegModel,observer);
+        List<ContractEvent> secondLegEvents = ContractType.apply(secondLegSchedule,secondLegModel,observer);
 
-        // sort the events according to their time sequence
+        //add netted and unnetted events back to collection
+        events.addAll(filterAndNettCongruentEvents(firstLegEvents,secondLegEvents, model.getAs("ContractID")));
+
         Collections.sort(events);
 
-        // apply events according to their time sequence to current state
-        events.forEach(e -> e.eval(states, model, observer, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
-        
-        /*
-        // apply settlement option, i.e. "delivery" of all events or net "settlement" of events at same time
-        ArrayList<ContractEvent> events = null;
-        if(!CommonUtils.isNull(parent.getAs("DeliverySettlement")) &&
-                parent.getAs("DeliverySettlement").equals(StringUtils.Settlement_Cash)) { // net all events
-            Map<String, ContractEvent> mergedEvents = Stream.concat(child1.stream(), child2.stream())
-                    .collect(Collectors.toMap(
-                            e -> e.time() + e.type(), // event key for merging
-                            e -> e, // event itself
-                            (e1, e2) -> nettingEvent(e1,e2) // "merger" function
-                            )
-                    );
-            events = new ArrayList<>(mergedEvents.values());
-        } else { // "net" only analysis events
-            // step 1: merge all analysis events of child contracts
-            Map<String, ContractEvent> mergedEvents = Stream
-                    .concat(child1.stream(), child2.stream())
-                    .filter(e->e.type().equals(EventType.AD))
-                    .collect(Collectors.toMap(
-                            e -> e.time() + e.type(), // event key for merging
-                            e -> e, // event itself
-                            (e1, e2) -> nettingEvent(e1,e2) // "merger" function
-                            )
-                    );
-            // step 2: concatenate non-analysis events and merged analysis events
-            events = Stream
-                    .concat(Stream
-                            .concat(child1.stream(),child2.stream())
-                            .filter(e->!e.type().equals(EventType.AD)),
-                            mergedEvents.values().stream())
-                    .collect(Collectors.toCollection(ArrayList::new));
-        }*/
-
-        // return evaluated events
+        // initialize state space per status date
+        StateSpace state = initStateSpace(model, events.get(0));
+        events.forEach(event -> event.eval(state, model, observer, firstLegModel.getAs("DayCountConvention"), firstLegModel.getAs("BusinessDayConvention")));
+        //
         return events;
     }
+    private static StateSpace initStateSpace(ContractModelProvider model, ContractEvent eventAtT0) throws AttributeConversionException {
+        ContractModel firstLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.FIL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
+        ContractModel secondLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.SEL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
 
-    private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
-        StateSpace states = new StateSpace();
+        StateSpace states = CommonUtils.isNull(eventAtT0.states().statusDate) ? new StateSpace() : eventAtT0.states();
         states.statusDate = model.getAs("StatusDate");
+        states.contractPerformance = !CommonUtils.isNull(model.getAs("ContractPerformance")) ? model.getAs("ContractPerformance") : null;
+        states.maturityDate = firstLegModel.<LocalDateTime>getAs("MaturityDate").isAfter(secondLegModel.<LocalDateTime>getAs("MaturityDate")) ? firstLegModel.getAs("MaturityDate") : secondLegModel.getAs("MaturityDate");
+        states.accruedInterest = eventAtT0.states().accruedInterest;
 
         // return the initialized state space
         return states;
     }
 
+    // private method that filters all types of Congruents events and creates "netting events,
+    private static List<ContractEvent> filterAndNettCongruentEvents(List<ContractEvent> firstLegEvents, List<ContractEvent> secondLegEvents, String parentContractID){
+        // sort the events according to their time sequence
+        Collections.sort(firstLegEvents);
+        Collections.sort(secondLegEvents);
+
+        List<ContractEvent> events = new ArrayList<>();
+
+        List<ContractEvent> listFirstLegIED = firstLegEvents.stream().filter(event -> event.eventType().equals(EventType.IED)).collect(Collectors.toList());
+        List<ContractEvent> listSecondLegIED = secondLegEvents.stream().filter(event -> event.eventType().equals(EventType.IED)).collect(Collectors.toList());
+        netSingularEvent(parentContractID, events, listFirstLegIED, listSecondLegIED);
+
+        List<ContractEvent> listFirstLegMD = firstLegEvents.stream().filter(event -> event.eventType().equals(EventType.MD)).collect(Collectors.toList());
+        List<ContractEvent> listSecondLegMD = secondLegEvents.stream().filter(event -> event.eventType().equals(EventType.MD)).collect(Collectors.toList());
+        netSingularEvent(parentContractID, events, listFirstLegMD, listSecondLegMD);
+
+        List<ContractEvent> firstLegPR = firstLegEvents.stream().filter(event -> event.eventType().equals(EventType.PR)).collect(Collectors.toList());
+        List<ContractEvent> secondLegPR = secondLegEvents.stream().filter(event -> event.eventType().equals(EventType.PR)).collect(Collectors.toList());
+        events.removeAll(firstLegPR);events.removeAll(secondLegPR);
+        events = netCongruentEvents(firstLegPR,secondLegPR,events, parentContractID);
+
+        List<ContractEvent> firstLegIP = firstLegEvents.stream().filter(event -> event.eventType().equals(EventType.IP)).collect(Collectors.toList());
+        List<ContractEvent> secondLegIP = secondLegEvents.stream().filter(event -> event.eventType().equals(EventType.IP)).collect(Collectors.toList());
+        events.removeAll(firstLegIP);events.removeAll(secondLegIP);
+        events = netCongruentEvents(firstLegIP,secondLegIP,events, parentContractID);
+
+        return events;
+    }
+
+    private static void netSingularEvent(String parentContractID, List<ContractEvent> events, List<ContractEvent> listFirstLeg, List<ContractEvent> listSecondLeg) {
+        if (!listFirstLeg.isEmpty() && !listSecondLeg.isEmpty()) {
+            ContractEvent firstLegEvent = listFirstLeg.get(0);
+            ContractEvent secondLegEvent = listSecondLeg.get(0);
+            if (firstLegEvent.eventTime().isEqual(secondLegEvent.eventTime())) {
+                events.remove(firstLegEvent);
+                events.remove(secondLegEvent);
+                events.add(nettingEvent(firstLegEvent, secondLegEvent, parentContractID));
+            }
+        }
+    }
+
+    //private method that filters congruent events and creates "netting" events of single types
+    private static List<ContractEvent> netCongruentEvents(List<ContractEvent> firstLegEvents, List<ContractEvent> secondLegEvents, List<ContractEvent> events, String parentContractID){
+        Iterator<ContractEvent> firstLegIt = firstLegEvents.iterator();
+        Iterator<ContractEvent> secondLegIt = secondLegEvents.iterator();
+        while(firstLegIt.hasNext() && secondLegIt.hasNext()) {
+            ContractEvent tempFirstLegEvent = firstLegIt.next();
+            while(secondLegIt.hasNext()){
+                ContractEvent tempSecondLegEvent = secondLegIt.next();
+                if(tempFirstLegEvent.eventTime().isEqual(tempSecondLegEvent.eventTime())){
+                    events.add(nettingEvent(tempFirstLegEvent,tempSecondLegEvent, parentContractID));
+                    secondLegIt.remove();
+                    firstLegIt.remove();
+                    break;
+                }
+            }
+            secondLegIt = secondLegEvents.iterator();
+        }
+        events.addAll(firstLegEvents);events.addAll(secondLegEvents);
+        return events;
+    }
     // private method that allows creating a "netting" event from two events to be netted
-    private static ContractEvent nettingEvent(ContractEvent e1, ContractEvent e2) {
-        ContractEvent netting = EventFactory.createEvent(e1.time(), e1.type(), e1.currency(), new POF_NET_SWAPS(e1,e2), new STF_NET_SWAPS(e1,e2));
-        netting.eval(null,null,null,null,null);
+    private static ContractEvent nettingEvent(ContractEvent e1, ContractEvent e2, String parentContractID) {
+        ContractEvent netting = EventFactory.createEvent(e1.eventTime(), e1.eventType(), e1.currency(), new POF_NET_SWAPS(e1,e2), new STF_NET_SWAPS(e1,e2), parentContractID);
         return(netting);
     }
 

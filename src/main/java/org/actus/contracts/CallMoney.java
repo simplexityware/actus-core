@@ -41,11 +41,11 @@ public final class CallMoney {
         LocalDateTime maturity = maturity(model,to);
 
         // initial exchange
-        events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_CLM(), new STF_IED_PAM()));
+        events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_CLM(), new STF_IED_PAM(), model.getAs("ContractID")));
         // interest payment event
-        events.add(EventFactory.createEvent(maturity, EventType.IP, model.getAs("Currency"), new POF_IP_CLM(), new STF_IP_CLM()));
+        events.add(EventFactory.createEvent(maturity, EventType.IP, model.getAs("Currency"), new POF_IP_CLM(), new STF_IP_CLM(), model.getAs("ContractID")));
         // principal redemption
-        events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_MD_PAM()));
+        events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_MD_PAM(), model.getAs("ContractID")));
         // interest payment capitalization (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment"))) {
             events.addAll(EventFactory.createEvents(
@@ -60,7 +60,8 @@ public final class CallMoney {
                     model.getAs("Currency"),
                     new POF_IPCI_PAM(),
                     new STF_IPCI_PAM(),
-                    model.getAs("BusinessDayConvention"))
+                    model.getAs("BusinessDayConvention"),
+                    model.getAs("ContractID"))
             );
         }
         // rate reset
@@ -76,14 +77,15 @@ public final class CallMoney {
                 model.getAs("Currency"),
                 new POF_RR_PAM(),
                 new STF_RR_CLM(),
-                model.getAs("BusinessDayConvention")
+                model.getAs("BusinessDayConvention"),
+                model.getAs("ContractID")
         );
         
         // adapt fixed rate reset event
         if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
-            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null)) == 1).findFirst().get();
+            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1).findFirst().get();
             fixedEvent.fStateTrans(new STF_RRF_PAM());
-            fixedEvent.type(EventType.RRF);
+            fixedEvent.eventType(EventType.RRF);
             rateResetEvents.add(fixedEvent);
         }
 
@@ -103,15 +105,16 @@ public final class CallMoney {
                     model.getAs("Currency"),
                     new POF_FP_PAM(),
                     new STF_FP_PAM(),
-                    model.getAs("BusinessDayConvention"))
+                    model.getAs("BusinessDayConvention"),
+                    model.getAs("ContractID"))
             );
         }
         // remove all pre-status date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,
-                null)) == -1);
+                null, model.getAs("ContractID"))) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1);
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);

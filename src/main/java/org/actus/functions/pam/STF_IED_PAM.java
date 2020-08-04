@@ -39,6 +39,7 @@ public final class STF_IED_PAM implements StateTransitionFunction {
         postEventStates.notionalPrincipal = states.notionalPrincipal;
         postEventStates.accruedInterest = states.accruedInterest;
         postEventStates.nominalInterestRate = states.nominalInterestRate;
+        postEventStates.statusDate = states.statusDate;
         
         // return post-event-states
         return postEventStates;
