@@ -66,7 +66,7 @@ public class StockTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -98,7 +98,7 @@ public class StockTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -132,7 +132,7 @@ public class StockTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -168,7 +168,7 @@ public class StockTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -202,7 +202,7 @@ public class StockTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();

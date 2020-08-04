@@ -78,7 +78,8 @@ public class UndefinedMaturityProfileTest {
                                 model.<LocalDateTime>getAs("StatusDate").plus(periods[i]),
                                 EventType.PR,model.getAs("Currency"),
                                 new POF_PR_UMP(payments[i]),
-                                new STF_PR_UMP(payments[i]), );
+                                new STF_PR_UMP(payments[i]),
+                                model.getAs("ContractID"));
                         s.add(ev);
                     }, Set::addAll);
 
@@ -118,7 +119,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -152,7 +153,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel_NoReplication riskFactors = new RiskFactorModel_NoReplication();
@@ -188,7 +189,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -224,7 +225,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -261,7 +262,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -299,7 +300,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -339,7 +340,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -379,7 +380,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -420,7 +421,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -462,7 +463,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -504,7 +505,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -548,7 +549,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -591,7 +592,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();
@@ -634,7 +635,7 @@ public class UndefinedMaturityProfileTest {
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         RiskFactorModel riskFactors = new RiskFactorModel();

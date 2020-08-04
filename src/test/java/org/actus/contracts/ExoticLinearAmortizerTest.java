@@ -105,7 +105,7 @@ public class ExoticLinearAmortizerTest {
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
 						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
-				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
 		// define risk factor model
 		LocalDateTime[] times = {LocalDateTime.parse("2012-06-01T00:00:00"),
@@ -164,7 +164,7 @@ public class ExoticLinearAmortizerTest {
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
 						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
-				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
 		// define risk factor model
 		LocalDateTime[] times = {LocalDateTime.parse("2012-06-01T00:00:00"),
@@ -229,7 +229,7 @@ public class ExoticLinearAmortizerTest {
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
 						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
-				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
 		// define risk factor model
 		LocalDateTime[] times = {LocalDateTime.parse("2012-06-01T00:00:00"),
@@ -282,7 +282,7 @@ public class ExoticLinearAmortizerTest {
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
 						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
-				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
 		// define risk factor model
 		LocalDateTime[] times = {

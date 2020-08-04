@@ -113,7 +113,7 @@ public class SwapTest {
         ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -194,7 +194,7 @@ public class SwapTest {
         ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -275,7 +275,7 @@ public class SwapTest {
         ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -358,7 +358,7 @@ public class SwapTest {
         ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -441,7 +441,7 @@ public class SwapTest {
         ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
             ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -526,7 +526,7 @@ public class SwapTest {
         ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
                 ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
-                EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+                EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
 
@@ -610,7 +610,7 @@ public class SwapTest {
         ContractModel childModel  = (ContractModel)((List<ContractReference>)model.getAs("ContractStructure")).get(0).<ContractModel>getObject();
         schedule.addAll(EventFactory.createEvents(
                 ScheduleFactory.createSchedule(childModel.getAs("InitialExchangeDate"),childModel.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"P3ML1",EndOfMonthConventionEnum.SD),
-                EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
+                EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();

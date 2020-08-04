@@ -78,7 +78,8 @@ public final class ExoticLinearAmortizer {
 				EventType.IED,
 				model.getAs("Currency"),
 				new POF_IED_PAM(),
-				new STF_IED_LAM(), )
+				new STF_IED_LAM(),
+				model.getAs("ContractID"))
 		);
 		
 		// purchase event
@@ -88,7 +89,8 @@ public final class ExoticLinearAmortizer {
 					EventType.PRD,
 					model.getAs("Currency"),
 					new POF_PRD_LAM(),
-					new STF_PRD_LAM(), )
+					new STF_PRD_LAM(),
+					model.getAs("ContractID"))
 			);
 		}
 
@@ -142,7 +144,8 @@ public final class ExoticLinearAmortizer {
 						model.getAs("Currency"),
 						prPof,
 						prStf,
-						model.getAs("BusinessDayConvention"))
+						model.getAs("BusinessDayConvention"),
+						model.getAs("ContractID"))
 				);
 			}
 		}
@@ -169,7 +172,8 @@ public final class ExoticLinearAmortizer {
 					model.getAs("Currency"),
 					new POF_IP_LAM(),
 					new STF_IP_PAM(),
-					model.getAs("BusinessDayConvention")
+					model.getAs("BusinessDayConvention"),
+					model.getAs("ContractID")
 			);
 			
 			// adapt if interest capitalization set
@@ -187,7 +191,8 @@ public final class ExoticLinearAmortizer {
 						model.getAs("Currency"),
 						new POF_IPCI_PAM(),
 						stf_ipci,
-						model.getAs("BusinessDayConvention")
+						model.getAs("BusinessDayConvention"),
+						model.getAs("ContractID")
 				);
 				interestEvents.forEach(e -> {
 					if (e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
@@ -200,7 +205,7 @@ public final class ExoticLinearAmortizer {
 				// also, remove any IP event exactly at IPCED and replace with an IPCI event
 				interestEvents.remove(EventFactory.createEvent(model.getAs("CapitalizationEndDate"),
 						EventType.IP, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(),
-						model.getAs("BusinessDayConvention")));
+						model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
 			}
 			events.addAll(interestEvents);
 		} else 
@@ -219,7 +224,8 @@ public final class ExoticLinearAmortizer {
 						model.getAs("Currency"),
 						new POF_IPCI_PAM(),
 						stf_ipci,
-						model.getAs("BusinessDayConvention"))
+						model.getAs("BusinessDayConvention"),
+						model.getAs("ContractID"))
 				);
 		}
 		
@@ -267,7 +273,8 @@ public final class ExoticLinearAmortizer {
 						model.getAs("Currency"),
 						new POF_RR_PAM(),
 						rrStf,
-						model.getAs("BusinessDayConvention")
+						model.getAs("BusinessDayConvention"),
+						model.getAs("ContractID")
 				);
 				events.addAll(rateResetEvents);
 			}
@@ -276,7 +283,7 @@ public final class ExoticLinearAmortizer {
 			if (!CommonUtils.isNull(model.getAs("NextResetRate"))) {
 				rateResetEvents.stream().sorted()
 						.filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"),
-								EventType.AD, model.getAs("Currency"), null, null, )) == 1)
+								EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1)
 						.findFirst().get().fStateTrans(new STF_RRY_LAM());
 				events.addAll(rateResetEvents);
 			}	
@@ -295,7 +302,8 @@ public final class ExoticLinearAmortizer {
 					model.getAs("Currency"),
 					new POF_FP_PAM(),
 					new STF_FP_LAM(),
-					model.getAs("BusinessDayConvention"))
+					model.getAs("BusinessDayConvention"),
+					model.getAs("ContractID"))
 			);
 		}
 		
@@ -314,7 +322,8 @@ public final class ExoticLinearAmortizer {
 					model.getAs("Currency"),
 					new POF_SC_PAM(),
 					new STF_SC_LAM(),
-					model.getAs("BusinessDayConvention"))
+					model.getAs("BusinessDayConvention"),
+					model.getAs("ContractID"))
 			);
 		}
 		
@@ -333,7 +342,8 @@ public final class ExoticLinearAmortizer {
 					model.getAs("Currency"),
 					new POF_IPCB_LAM(),
 					new STF_IPCB_LAM(),
-					model.getAs("BusinessDayConvention"))
+					model.getAs("BusinessDayConvention"),
+					model.getAs("ContractID"))
 			);
 		}
 		
@@ -345,16 +355,17 @@ public final class ExoticLinearAmortizer {
 					model.getAs("Currency"),
 					new POF_TD_LAM(),
 					new STF_TD_PAM(),
+					model.getAs("ContractID")
 			);
 			events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
 			events.add(termination);
 		}
 
 		// remove all pre-status date events
-		events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD,model.getAs("Currency"), null, null, )) == -1);
+		events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD,model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
 
 		// remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, )) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1);
 
 		// sort the events in the payoff-list according to their time of occurence
 		Collections.sort(events);
