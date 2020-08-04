@@ -44,19 +44,21 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     private String                  currency;
     private double                  payoff;
     private StateSpace              states;
+    private String                  contractID;
 
   /**
    * Constructor
    * 
    * @param scheduleTime the plain schedule time of this particular event
    * @param eventTime the actual event time of this particular event
-   * @param eventType the event eventType
+   * @param eventType the event type
    * @param currency the event currency
    * @param payOff the event pay-off function
    * @param stateTrans the event state-transition function
+   * @param contractID the id of the contract the ContractEvent belongs to
    * @return
    */
-    public ContractEvent(LocalDateTime scheduleTime, LocalDateTime eventTime, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans) {
+    public ContractEvent(LocalDateTime scheduleTime, LocalDateTime eventTime, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans, String contractID) {
         this.epochOffset = eventTime.toEpochSecond(ZoneOffset.UTC) + EventSequence.timeOffset(eventType);
         this.eventTime = eventTime;
         this.scheduleTime = scheduleTime;
@@ -65,30 +67,37 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         this.fPayOff = payOff;
         this.fStateTrans = stateTrans;
         this.states = new StateSpace();
+        this.contractID = contractID;
     }
 
     /**
+     * Returns contractID of Contract this event belongs toZ
+     */
+    public String getContractID() {
+        return contractID;
+    }
+    /**
      * Returns the time of this event (adjusted for the business-day-convention)
      */
-    public LocalDateTime time() {
+    public LocalDateTime eventTime() {
         return eventTime;    
     }
     
     /**
-     * Returns the eventType of this event
+     * Returns the type of this event
      */
-    public EventType type() {
+    public EventType eventType() {
         return eventType;
     }
     
     /**
-     * Change the eventType of this event
+     * Change the type of this event
      * <p>
      * Note that this does also update the event's natural order
      *
-     * @param eventType the new event eventType
+     * @param eventType the new event type
      */
-    public void type(EventType eventType) {
+    public void eventType(EventType eventType) {
         this.eventType = eventType;
         this.epochOffset = eventTime.toEpochSecond(ZoneOffset.UTC) + EventSequence.timeOffset(eventType);
     }
@@ -112,7 +121,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
      * <p>
      * Note that the length of the returned array may change going forward as new states
      * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
-     * to use the getter-methods for desired states (e.g. {@code time}, {@code eventType}, etc.)
+     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.)
      * individually.
      */
     public StateSpace states() {
@@ -141,8 +150,8 @@ public final class ContractEvent implements Comparable<ContractEvent> {
      * Imposes the natural ordering of events in an instrument's payoff amongst each other
      * <p>
      * The natural ordering of contract events in an instrument's payoff is defined by a combination of
-     * the event's time (cf. {@link time}) and eventType (cf. {@link eventType}). In fact, the sum of event-time
-     * measured as epoch-seconds and an event-eventType specific time-offset according to {@link EventSequence}
+     * the event's time (cf. {@link eventTime}) and type (cf. {@link eventType}). In fact, the sum of event-time
+     * measured as epoch-seconds and an event-type specific time-offset according to {@link EventSequence}
      * give a unique, event-specific index providing the order of events. Hence, their natural ordering
      * imposes a time-consistent sequence of events (or a time-series).
      * <p>
@@ -186,7 +195,7 @@ public final class ContractEvent implements Comparable<ContractEvent> {
      * <p>
      * Note that the number of analytical elements may change going forward as e.g. new states
      * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
-     * to use the getter-methods for desired states (e.g. {@code time}, {@code eventType}, etc.)
+     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.)
      * individually and parse to a String manually.
      *
      * @return a single String containing all analytical elements

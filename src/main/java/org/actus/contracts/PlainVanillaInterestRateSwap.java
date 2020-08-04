@@ -12,9 +12,7 @@ import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
-import org.actus.types.ContractRole;
 import org.actus.types.DeliverySettlement;
-import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.util.CommonUtils;
 import org.actus.time.ScheduleFactory;
 import org.actus.functions.pam.*;
@@ -39,19 +37,19 @@ public final class PlainVanillaInterestRateSwap {
 
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_FXOUT(), new STF_PRD_SWPPV()));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_FXOUT(), new STF_PRD_SWPPV(), ));
         }
         // interest payment events
         if (CommonUtils.isNull(model.getAs("DeliverySettlement")) || model.getAs("DeliverySettlement").equals(DeliverySettlement.D)) {
             // in case of physical delivery (delivery of individual cash flows)
             // fixed initial exchange
-            events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_PAM()));
+            events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_PAM(), ));
             // float initial exchange
-            events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IEDFloat_SWPPV(), new STF_IED_SWPPV()));
+            events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IEDFloat_SWPPV(), new STF_IED_SWPPV(), ));
             // fixed principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_SWPPV()));
+            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_SWPPV(), ));
             // float principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.PR, model.getAs("Currency"), new POF_PRFloat_SWPPV(), new STF_PR_SWPPV()));
+            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.PR, model.getAs("Currency"), new POF_PRFloat_SWPPV(), new STF_PR_SWPPV(), ));
             // interest payment schedule
             Set<LocalDateTime> interestSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     model.getAs("MaturityDate"),
@@ -63,9 +61,9 @@ public final class PlainVanillaInterestRateSwap {
             events.addAll(EventFactory.createEvents(interestSchedule, EventType.IP, model.getAs("Currency"), new POF_IPFloat_SWPPV(), new STF_IPFloat_SWPPV(), model.getAs("BusinessDayConvention")));
         } else {
             // initial exchange
-            events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_SWPPV(), new STF_IED_SWPPV()));
+            events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_SWPPV(), new STF_IED_SWPPV(), ));
             // principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.PR, model.getAs("Currency"), new POF_PR_SWPPV(), new STF_PR_SWPPV()));
+            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.PR, model.getAs("Currency"), new POF_PR_SWPPV(), new STF_PR_SWPPV(), ));
             // in case of cash delivery (cash settlement)                                                                                                model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     model.getAs("MaturityDate"),
@@ -82,23 +80,23 @@ public final class PlainVanillaInterestRateSwap {
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
             ContractEvent termination =
-                                        EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_SWPPV());
+                                        EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_SWPPV(), );
                                         events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
 
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            ContractEvent termination = EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_SWPPV());
+            ContractEvent termination = EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_SWPPV(), );
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
 
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null)) == -1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null, )) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null, )) == 1);
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);

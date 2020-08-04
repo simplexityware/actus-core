@@ -13,8 +13,6 @@ import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
-import org.actus.types.ContractRole;
-import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
 import org.actus.functions.clm.POF_IED_CLM;
@@ -51,11 +49,11 @@ public final class CallMoney {
         LocalDateTime maturity = maturity(model,to);
 
         // initial exchange
-        events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_CLM(), new STF_IED_PAM()));
+        events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_CLM(), new STF_IED_PAM(), ));
         // principal redemption
-        events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM()));
+        events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM(), ));
         // interest payment event
-        events.add(EventFactory.createEvent(maturity, EventType.IP, model.getAs("Currency"), new POF_IP_CLM(), new STF_IP_CLM()));
+        events.add(EventFactory.createEvent(maturity, EventType.IP, model.getAs("Currency"), new POF_IP_CLM(), new STF_IP_CLM(), ));
         // interest payment capitalization (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment"))) {
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
@@ -71,9 +69,9 @@ public final class CallMoney {
         
         // adapt fixed rate reset event
         if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
-            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null)) == 1).findFirst().get();
+            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, )) == 1).findFirst().get();
             fixedEvent.fStateTrans(new STF_RRF_PAM());
-            fixedEvent.type(EventType.RRF);
+            fixedEvent.eventType(EventType.RRF);
             rateResetEvents.add(fixedEvent);
         }
 
@@ -87,10 +85,10 @@ public final class CallMoney {
         }
         // remove all pre-status date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,
-                null)) == -1);
+                null, )) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, )) == 1);
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);

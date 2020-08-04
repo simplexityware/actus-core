@@ -53,7 +53,7 @@ public final class Swap {
                     EventType.PRD,
                     model.getAs("Currency"),
                     new POF_PRD_SWAPS(),
-                    new STF_PRD_STK()
+                    new STF_PRD_STK(),
             );
             events.removeIf(e -> e.compareTo(purchase) == -1); // remove all pre-purchase events
             events.add(purchase);
@@ -65,17 +65,17 @@ public final class Swap {
                     EventType.TD,
                     model.getAs("Currency"),
                     new POF_TD_SWAPS(),
-                    new STF_TD_STK()
+                    new STF_TD_STK(),
             );
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
 
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null)) == -1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, )) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, )) == 1);
 
         // return events
         return events;
@@ -87,7 +87,7 @@ public final class Swap {
                                                  RiskFactorModelProvider observer) throws AttributeConversionException {
 
         //remove all possibly congruent events
-        events.removeAll(events.stream().filter(event -> EventType.IED.equals(event.type()) || EventType.PR.equals(event.type()) || EventType.IP.equals(event.type())).collect(Collectors.toCollection(ArrayList::new)));
+        events.removeAll(events.stream().filter(event -> EventType.IED.equals(event.eventType()) || EventType.PR.equals(event.eventType()) || EventType.IP.equals(event.eventType())).collect(Collectors.toCollection(ArrayList::new)));
 
         //create children event schedule
         ContractModel firstLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").get(0).getObject();
@@ -104,18 +104,18 @@ public final class Swap {
 
         //remove all post termination date events
         if(!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            ContractEvent terminationEvent = events.stream().filter(event -> EventType.TD.equals(event.type())).collect(Collectors.toList()).get(0);
+            ContractEvent terminationEvent = events.stream().filter(event -> EventType.TD.equals(event.eventType())).collect(Collectors.toList()).get(0);
             firstLegEvents.removeIf(e -> e.compareTo(terminationEvent) == 1);
             secondLegEvents.removeIf(e -> e.compareTo(terminationEvent) == 1);
         }
 
         // remove all pre-status date events
-        firstLegEvents.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null)) == -1);
-        secondLegEvents.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null)) == -1);
+        firstLegEvents.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, )) == -1);
+        secondLegEvents.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, )) == -1);
 
         // remove all post to-date events
-        firstLegEvents.removeIf(e -> e.compareTo(EventFactory.createEvent(firstLegModel.getAs("MaturityDate"), EventType.AD, model.getAs("Currency"), null, null)) == 1);
-        secondLegEvents.removeIf(e -> e.compareTo(EventFactory.createEvent(secondLegModel.getAs("MaturityDate"), EventType.AD, model.getAs("Currency"), null, null)) == 1);
+        firstLegEvents.removeIf(e -> e.compareTo(EventFactory.createEvent(firstLegModel.getAs("MaturityDate"), EventType.AD, model.getAs("Currency"), null, null, )) == 1);
+        secondLegEvents.removeIf(e -> e.compareTo(EventFactory.createEvent(secondLegModel.getAs("MaturityDate"), EventType.AD, model.getAs("Currency"), null, null, )) == 1);
 
         events.addAll(filterAndNettCongruentEvents(firstLegEvents,secondLegEvents));
 
@@ -149,21 +149,21 @@ public final class Swap {
         Collections.sort(secondLegEvents);
 
         List<ContractEvent> events = new ArrayList<>();
-        ContractEvent firstLegIED = firstLegEvents.stream().filter(event -> event.type().equals(EventType.IED)).collect(Collectors.toList()).get(0);
-        ContractEvent secondLegIED = secondLegEvents.stream().filter(event -> event.type().equals(EventType.IED)).collect(Collectors.toList()).get(0);
-        if(firstLegIED.time().isEqual(secondLegIED.time())){
+        ContractEvent firstLegIED = firstLegEvents.stream().filter(event -> event.eventType().equals(EventType.IED)).collect(Collectors.toList()).get(0);
+        ContractEvent secondLegIED = secondLegEvents.stream().filter(event -> event.eventType().equals(EventType.IED)).collect(Collectors.toList()).get(0);
+        if(firstLegIED.eventTime().isEqual(secondLegIED.eventTime())){
             events.add(nettingEvent(firstLegIED,secondLegIED));
         } else {
             events.add(firstLegIED);
             events.add(secondLegIED);
         }
 
-        List<ContractEvent> firstLegPR = firstLegEvents.stream().filter(event -> event.type().equals(EventType.PR)).collect(Collectors.toList());
-        List<ContractEvent> secondLegPR = secondLegEvents.stream().filter(event -> event.type().equals(EventType.PR)).collect(Collectors.toList());
+        List<ContractEvent> firstLegPR = firstLegEvents.stream().filter(event -> event.eventType().equals(EventType.PR)).collect(Collectors.toList());
+        List<ContractEvent> secondLegPR = secondLegEvents.stream().filter(event -> event.eventType().equals(EventType.PR)).collect(Collectors.toList());
         events = netCongruentEvents(firstLegPR,secondLegPR,events);
 
-        List<ContractEvent> firstLegIP = firstLegEvents.stream().filter(event -> event.type().equals(EventType.IP)).collect(Collectors.toList());
-        List<ContractEvent> secondLegIP = secondLegEvents.stream().filter(event -> event.type().equals(EventType.IP)).collect(Collectors.toList());
+        List<ContractEvent> firstLegIP = firstLegEvents.stream().filter(event -> event.eventType().equals(EventType.IP)).collect(Collectors.toList());
+        List<ContractEvent> secondLegIP = secondLegEvents.stream().filter(event -> event.eventType().equals(EventType.IP)).collect(Collectors.toList());
         events = netCongruentEvents(firstLegIP,secondLegIP,events);
 
         return events;
@@ -176,7 +176,7 @@ public final class Swap {
             ContractEvent tempFirstLegEvent = firstLegIt.next();
             while(secondLegIt.hasNext()){
                 ContractEvent tempSecondLegEvent = secondLegIt.next();
-                if(tempFirstLegEvent.time().isEqual(tempSecondLegEvent.time())){
+                if(tempFirstLegEvent.eventTime().isEqual(tempSecondLegEvent.eventTime())){
                     events.add(nettingEvent(tempFirstLegEvent,tempSecondLegEvent));
                     secondLegIt.remove();
                     firstLegIt.remove();
@@ -190,7 +190,7 @@ public final class Swap {
     }
     // private method that allows creating a "netting" event from two events to be netted
     private static ContractEvent nettingEvent(ContractEvent e1, ContractEvent e2) {
-        ContractEvent netting = EventFactory.createEvent(e1.time(), e1.type(), e1.currency(), new POF_NET_SWAPS(e1,e2), new STF_NET_SWAPS(e1,e2));
+        ContractEvent netting = EventFactory.createEvent(e1.eventTime(), e1.eventType(), e1.currency(), new POF_NET_SWAPS(e1,e2), new STF_NET_SWAPS(e1,e2), );
         return(netting);
     }
 

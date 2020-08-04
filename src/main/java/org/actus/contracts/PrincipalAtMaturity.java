@@ -13,8 +13,6 @@ import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
-import org.actus.types.ContractRole;
-import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
 import org.actus.functions.pam.*;
@@ -35,12 +33,12 @@ public final class PrincipalAtMaturity {
         ArrayList<ContractEvent> events = new ArrayList<ContractEvent>();
 
         // initial exchange
-        events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_PAM()));
+        events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_PAM(), ));
         // principal redemption
-        events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM()));
+        events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_PAM(), ));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_PAM(), new STF_PRD_PAM()));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_PAM(), new STF_PRD_PAM(), ));
         }
         // interest payment related
         if (!CommonUtils.isNull(model.getAs("NominalInterestRate")) && (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment")) || !CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")))) {
@@ -67,8 +65,8 @@ public final class PrincipalAtMaturity {
                                                 EventFactory.createEvent(model.getAs("CapitalizationEndDate"), EventType.IPCI,
                                                                             model.getAs("Currency"), new POF_IPCI_PAM(), new STF_IPCI_PAM(), model.getAs("BusinessDayConvention"));
                 interestEvents.forEach(e -> {
-                    if (e.type().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
-                        e.type(EventType.IPCI);
+                    if (e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
+                        e.eventType(EventType.IPCI);
                         e.fPayOff(new POF_IPCI_PAM());
                         e.fStateTrans(new STF_IPCI_PAM());
                     }
@@ -92,9 +90,9 @@ public final class PrincipalAtMaturity {
 
         // adapt fixed rate reset event
         if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
-            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null)) == 1).findFirst().get();
+            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, )) == 1).findFirst().get();
             fixedEvent.fStateTrans(new STF_RRF_PAM());
-            fixedEvent.type(EventType.RRF);
+            fixedEvent.eventType(EventType.RRF);
             rateResetEvents.add(fixedEvent);
         }
 
@@ -117,15 +115,15 @@ public final class PrincipalAtMaturity {
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
             ContractEvent termination =
-                                        EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_PAM(), new STF_TD_PAM());
+                                        EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_PAM(), new STF_TD_PAM(), );
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null)) == -1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null, )) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null, )) == 1);
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);

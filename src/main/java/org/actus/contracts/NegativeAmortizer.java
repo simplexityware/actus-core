@@ -14,8 +14,6 @@ import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
-import org.actus.types.ContractRole;
-import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
 import org.actus.types.InterestCalculationBase;
 import org.actus.util.Constants;
@@ -47,7 +45,7 @@ public final class NegativeAmortizer {
         LocalDateTime maturity = maturity(model);
 
         // initial exchange
-        events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_LAM()));
+        events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_LAM(), ));
         // principal redemption schedule
         Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity,
                 model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"), false);
@@ -61,7 +59,7 @@ public final class NegativeAmortizer {
         events.add(EventFactory.createEvent(maturity,EventType.MD,model.getAs("Currency"),pof,new STF_PR_PAM(), model.getAs("BusinessDayConvention")));
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM(), ));
         }
         // -> chose right state transition function for IPCI depending on ipcb attributes
         StateTransitionFunction stf_ipci=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL))? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
@@ -78,8 +76,8 @@ public final class NegativeAmortizer {
                 ContractEvent capitalizationEnd = EventFactory.createEvent(model.getAs("CapitalizationEndDate"), EventType.IPCI,
                         model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci, model.getAs("BusinessDayConvention"));
                 interestEvents.forEach(e -> {
-                    if (e.type().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
-                        e.type(EventType.IPCI);
+                    if (e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
+                        e.eventType(EventType.IPCI);
                         e.fPayOff(new POF_IPCI_PAM());
                         e.fStateTrans(stf_ipci);
                     }
@@ -101,9 +99,9 @@ public final class NegativeAmortizer {
 
         // adapt fixed rate reset event
         if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
-            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null)) == 1).findFirst().get();
+            ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, )) == 1).findFirst().get();
             fixedEvent.fStateTrans(new STF_RRF_LAM());
-            fixedEvent.type(EventType.RRF);
+            fixedEvent.eventType(EventType.RRF);
             rateResetEvents.add(fixedEvent);
         }
 
@@ -129,16 +127,16 @@ public final class NegativeAmortizer {
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
             ContractEvent termination =
-                    EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_LAM(), new STF_TD_PAM());
+                    EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_LAM(), new STF_TD_PAM(), );
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
 
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null)) == -1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null, )) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null, )) == 1);
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);

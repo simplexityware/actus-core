@@ -11,12 +11,12 @@ import org.actus.types.EventType;
  * Component that represents the sequence of {@link ContractEvent}s at a certain time
  * <p>
  * Various {@link ContractEvent}s happen during the lifetime of a {@ContractType}. Some
- * events may happen at exactly the same point in time. In this case, the {@code EventSequence} 
+ * events may happen at exactly the same point in time. In this case, the {@code EventSequence}
  * defines the sequence in which the events are being processed. Therefore, events are ordered
  * according to their time and processing order (i.e. event sequence) represented by a time
  * offset in the {@link EventSeries}. 
  * <p>
- * This component contains all definitions of event sequence time offsets which 
+ * This component contains all definitions of event sequence time offsets which
  * are being used when ordering events in the {@link EventSeries}.
  */
 public final class EventSequence {

@@ -25,7 +25,6 @@ import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
 import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.types.EventType;
-import org.actus.types.InterestCalculationBase;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -106,7 +105,7 @@ public class ExoticLinearAmortizerTest {
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
 						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
-				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
 
 		// define risk factor model
 		LocalDateTime[] times = {LocalDateTime.parse("2012-06-01T00:00:00"),
@@ -165,7 +164,7 @@ public class ExoticLinearAmortizerTest {
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
 						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
-				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
 
 		// define risk factor model
 		LocalDateTime[] times = {LocalDateTime.parse("2012-06-01T00:00:00"),
@@ -230,7 +229,7 @@ public class ExoticLinearAmortizerTest {
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
 						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
-				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
 
 		// define risk factor model
 		LocalDateTime[] times = {LocalDateTime.parse("2012-06-01T00:00:00"),
@@ -283,7 +282,7 @@ public class ExoticLinearAmortizerTest {
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
 						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
-				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), ));
 
 		// define risk factor model
 		LocalDateTime[] times = {
