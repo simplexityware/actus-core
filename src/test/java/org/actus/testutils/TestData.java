@@ -6,7 +6,7 @@ import java.util.List;
 public class TestData {
     String identifier;
     Map<String, Object> terms;
-    String tMax;
+    String to;
     Map<String, ObservedDataSet> dataObserved;
     List<Map<String, Object>> eventsObserved;
     List<ResultSet> results;
@@ -27,12 +27,12 @@ public class TestData {
         this.terms = terms;
     }
 
-    public String gettMax() {
-        return tMax;
+    public String getto() {
+        return to;
     }
 
-    public void settMax(String tMax) {
-        this.tMax = tMax;
+    public void setto(String to) {
+        this.to = to;
     }
 
     public Map<String, ObservedDataSet> getDataObserved() {
