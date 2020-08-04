@@ -28,7 +28,7 @@ import org.junit.jupiter.api.DynamicTest;
 public class ForeignExchangeOutrightTest {
     @TestFactory
     public Stream<DynamicTest> test() {
-        String testFile = "./src/test/resources/actus/actus-tests-FXOUT.json";
+        String testFile = "./src/test/resources/actus/actus-tests-fxout.json";
 
         // read tests from file
         Map<String, TestData> tests = ContractTestUtils.readTests(testFile);

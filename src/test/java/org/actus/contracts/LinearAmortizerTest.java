@@ -28,7 +28,7 @@ import org.junit.jupiter.api.DynamicTest;
 public class LinearAmortizerTest {
     @TestFactory
     public Stream<DynamicTest> test() {
-        String testFile = "./src/test/resources/actus/actus-tests-LAM.json";
+        String testFile = "./src/test/resources/actus/actus-tests-lam.json";
 
         // read tests from file
         Map<String, TestData> tests = ContractTestUtils.readTests(testFile);

@@ -28,7 +28,7 @@ import org.junit.jupiter.api.DynamicTest;
 public class StockTest {
     @TestFactory
     public Stream<DynamicTest> test() {
-        String testFile = "./src/test/resources/actus/actus-tests-STK.json";
+        String testFile = "./src/test/resources/actus/actus-tests-stk.json";
 
         // read tests from file
         Map<String, TestData> tests = ContractTestUtils.readTests(testFile);
