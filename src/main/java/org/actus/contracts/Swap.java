@@ -9,7 +9,6 @@ package org.actus.contracts;
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModel;
 import org.actus.attributes.ContractModelProvider;
-import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.events.ContractEvent;
 import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
@@ -17,10 +16,9 @@ import org.actus.functions.stk.STF_PRD_STK;
 import org.actus.functions.stk.STF_TD_STK;
 import org.actus.functions.swaps.*;
 import org.actus.states.StateSpace;
-import org.actus.types.ContractRole;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
-import org.actus.util.ContractReference;
+import org.actus.types.ContractReference;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -100,7 +98,6 @@ public final class Swap {
         secondLegSchedule = ContractType.schedule(secondLegModel.getAs("MaturityDate"), secondLegModel);
 
         // apply shedule
-        //TODO: what if children events need different RiskmodelProvider than parent events
         List<ContractEvent> firstLegEvents = ContractType.apply(firstLegSchedule,firstLegModel,observer);
         List<ContractEvent> secondLegEvents = ContractType.apply(secondLegSchedule,secondLegModel,observer);
 

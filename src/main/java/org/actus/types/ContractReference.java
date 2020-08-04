@@ -1,4 +1,4 @@
-package org.actus.util;
+package org.actus.types;
 
 import org.actus.attributes.ContractModel;
 import org.actus.types.ContractRole;

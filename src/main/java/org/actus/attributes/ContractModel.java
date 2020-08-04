@@ -15,7 +15,7 @@ import org.actus.AttributeConversionException;
 import org.actus.ContractTypeUnknownException;
 import org.actus.types.*;
 import org.actus.util.CommonUtils;
-import org.actus.util.ContractReference;
+import org.actus.types.ContractReference;
 
 
 import java.util.ArrayList;
