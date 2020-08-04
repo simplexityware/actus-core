@@ -96,6 +96,7 @@ public class ContractModel implements ContractModelProvider {
 
                     case SWAPS:
                         // parse attributes (Swap) attributes
+                        map.put("ContractID", attributes.get("ContractID"));
                         map.put("StatusDate", LocalDateTime.parse((String)attributes.get("StatusDate")));
                         map.put("ContractRole", ContractRole.valueOf((String)attributes.get("ContractRole")));
                         map.put("LegalEntityIDCounterparty", attributes.get("LegalEntityIDCounterparty"));
@@ -123,7 +124,8 @@ public class ContractModel implements ContractModelProvider {
             Map<String,String> attributes = contractAttributes.entrySet().stream().collect(Collectors.toMap(e->e.getKey(),e->e.getValue().toString()));
             // parse all attributes known to the respective contract type
             try {
-                    map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
+                map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("BusinessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("BusinessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
+                map.put("ContractID", attributes.get("ContractID"));
                 switch (ContractTypeEnum.valueOf(attributes.get("ContractType"))) {
                     case PAM:
                         map.put("Calendar", (!CommonUtils.isNull(attributes.get("Calendar")) && attributes.get("Calendar").equals("MondayToFriday")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
