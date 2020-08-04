@@ -51,7 +51,7 @@ public class ContractTypeTest {
     public void test_UnknownCT_exception() {
         thrown.expect(AttributeConversionException.class);
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "IDoNotExist");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -66,7 +66,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -84,7 +84,7 @@ public class ContractTypeTest {
     public void test_PAM_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -99,7 +99,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -116,7 +116,7 @@ public class ContractTypeTest {
     @Test
     public void test_PAM_withIP_withRR_withSC_withOP_withMultipleAnalysisTimes() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -137,7 +137,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -155,7 +155,7 @@ public class ContractTypeTest {
     public void test_LAM_MandatoryAttributes_withMaturity() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "LAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -172,7 +172,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -190,7 +190,7 @@ public class ContractTypeTest {
     public void test_NAM_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "NAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -207,7 +207,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -226,7 +226,7 @@ public class ContractTypeTest {
     public void test_ANN_MandatoryAttributes_withMaturity() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "ANN");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -243,7 +243,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -261,7 +261,7 @@ public class ContractTypeTest {
     public void test_CLM_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "CLM");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -277,7 +277,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -295,7 +295,7 @@ public class ContractTypeTest {
     public void test_CSH_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "CSH");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -305,7 +305,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("StatusDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("StatusDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -323,7 +323,7 @@ public class ContractTypeTest {
     public void test_STK_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "STK");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -334,7 +334,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("StatusDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("StatusDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -352,7 +352,7 @@ public class ContractTypeTest {
     public void test_COM_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "COM");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -361,7 +361,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("StatusDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("StatusDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
@@ -379,7 +379,7 @@ public class ContractTypeTest {
     public void test_FXOUT_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "FXOUT");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -393,7 +393,7 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(

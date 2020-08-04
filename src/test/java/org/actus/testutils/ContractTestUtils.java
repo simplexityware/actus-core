@@ -21,7 +21,7 @@ public class ContractTestUtils {
     
     public static ContractModel createModel(Map<String,Object> data) {
         // convert json terms object to a java map (required input for actus model parsing)
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         for (Map.Entry<String, Object> entry : data.entrySet()) {
 
             //System.out.println(entry.getKey() + ":" + entry.getValue());

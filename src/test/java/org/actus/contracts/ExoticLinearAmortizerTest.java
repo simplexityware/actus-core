@@ -78,7 +78,7 @@ public class ExoticLinearAmortizerTest {
 	public void test_LAX_schedule_MandatoryAttributes() {
 		thrown = ExpectedException.none();
 		// define attributes
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ContractType", "LAX");
 		map.put("Calendar", "NoHolidayCalendar");
 		map.put("StatusDate", "2012-12-30T00:00:00");
@@ -99,7 +99,7 @@ public class ExoticLinearAmortizerTest {
 		ContractModel model = ContractModel.parse(map);
 
 		// compute schedule
-		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(map.get("MaturityDate")),
+		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),
 				model);
 
 		// add analysis events
@@ -123,7 +123,7 @@ public class ExoticLinearAmortizerTest {
 	public void test_LAX_schedule_MandatoryAttributes_withMaturity() {
 		thrown = ExpectedException.none();
 		// define attributes
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ContractType", "LAX");
 		map.put("Calendar", "NoHolidayCalendar");
 		map.put("StatusDate", "2012-12-30T00:00:00");
@@ -158,7 +158,7 @@ public class ExoticLinearAmortizerTest {
 		ContractModel model = ContractModel.parse(map);
 
 		// compute schedule
-		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(map.get("MaturityDate")),
+		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),
 				model);
 
 		// add analysis events
@@ -182,7 +182,7 @@ public class ExoticLinearAmortizerTest {
 	public void test_LAX_schedule_MandatoryAttributes_withMaturity_and_PurchaseDate() {
 		thrown = ExpectedException.none();
 		// define attributes
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ContractType", "LAX");
 		map.put("Calendar", "NoHolidayCalendar");
 		map.put("StatusDate", "2012-12-30T00:00:00");
@@ -223,7 +223,7 @@ public class ExoticLinearAmortizerTest {
 		ContractModel model = ContractModel.parse(map);
 
 		// compute schedule
-		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(map.get("MaturityDate")),
+		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),
 				model);
 
 		// add analysis events
@@ -247,7 +247,7 @@ public class ExoticLinearAmortizerTest {
 	public void test_LAX_schedule_MandatoryAttributes_withMaturity_IPCB() {
 		thrown = ExpectedException.none();
 		// define attributes
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("ContractType", "LAX");
 		map.put("Calendar", "NoHolidayCalendar");
 		map.put("StatusDate", "2019-07-18T00:00:00");
@@ -276,7 +276,7 @@ public class ExoticLinearAmortizerTest {
 		ContractModel model = ContractModel.parse(map);
 
 		// compute schedule
-		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(map.get("MaturityDate")),
+		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),
 				model);
 
 		// add analysis events

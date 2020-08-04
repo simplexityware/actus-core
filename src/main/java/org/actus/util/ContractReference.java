@@ -31,7 +31,7 @@ public class ContractReference {
                     }
                 }
                 attributes.replace("Object", childModel);
-                this.object = ContractModel.parse((Map<String, String>)attributes.get("Object"));
+                this.object = ContractModel.parse((Map<String, Object>)attributes.get("Object"));
                 break;
             case CID:
             case MOC:
@@ -39,8 +39,6 @@ public class ContractReference {
                 this.object = attributes.get("Object");
                 break;
             case CST:
-                //Is ContractRole in this case referenced in paren of parent structure ?
-                //this.object = new ContractReference((Map<String, Object>)attributes.get("Object"));
                 break;
                 default:
                     break;

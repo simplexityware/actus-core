@@ -106,7 +106,7 @@ public class SwapTest {
         map.put("ContractStructure", contractStructure);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(map, true);
+        ContractModel model = ContractModel.parse(map);
 
         // compute schedule
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
@@ -187,7 +187,7 @@ public class SwapTest {
         map.put("ContractStructure", contractStructure);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(map, true);
+        ContractModel model = ContractModel.parse(map);
 
         // compute schedule
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
@@ -268,7 +268,7 @@ public class SwapTest {
         map.put("ContractStructure", contractStructure);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(map, true);
+        ContractModel model = ContractModel.parse(map);
 
         // compute schedule
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
@@ -351,7 +351,7 @@ public class SwapTest {
         map.put("ContractStructure", contractStructure);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(map, true);
+        ContractModel model = ContractModel.parse(map);
 
         // compute schedule
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
@@ -434,7 +434,7 @@ public class SwapTest {
         map.put("ContractStructure", contractStructure);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(map, true);
+        ContractModel model = ContractModel.parse(map);
 
         // compute schedule
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
@@ -519,7 +519,7 @@ public class SwapTest {
         map.put("ContractStructure", contractStructure);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(map, true);
+        ContractModel model = ContractModel.parse(map);
 
         // compute schedule
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
@@ -603,7 +603,7 @@ public class SwapTest {
         map.put("ContractStructure", contractStructure);
 
         // parse attributes
-        ContractModel model = ContractModel.parse(map, true);
+        ContractModel model = ContractModel.parse(map);
 
         // compute schedule
         ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(childObject1.get("MaturityDate")),model);
