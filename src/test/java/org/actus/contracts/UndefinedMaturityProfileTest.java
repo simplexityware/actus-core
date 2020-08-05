@@ -252,7 +252,7 @@ public class UndefinedMaturityProfileTest {
         map.put("NotionalPrincipal", "1000.0");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
 
@@ -289,7 +289,7 @@ public class UndefinedMaturityProfileTest {
         map.put("NotionalPrincipal", "1000.0");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         map.put("CycleAnchorDateOfRateReset","2016-06-01T00:00:00");
         // parse attributes
         ContractModel model = ContractModel.parse(map);
@@ -327,7 +327,7 @@ public class UndefinedMaturityProfileTest {
         map.put("NotionalPrincipal", "1000.0");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","A");
         map.put("FeeRate","100");
@@ -367,7 +367,7 @@ public class UndefinedMaturityProfileTest {
         map.put("NotionalPrincipal", "1000.0");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
@@ -407,7 +407,7 @@ public class UndefinedMaturityProfileTest {
         map.put("NotionalPrincipal", "1000.0");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
@@ -448,7 +448,7 @@ public class UndefinedMaturityProfileTest {
         map.put("NotionalPrincipal", "1000.0");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
@@ -490,7 +490,7 @@ public class UndefinedMaturityProfileTest {
         map.put("NotionalPrincipal", "1000.0");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
@@ -534,7 +534,7 @@ public class UndefinedMaturityProfileTest {
         map.put("XDayNotice", "6M");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
@@ -576,7 +576,7 @@ public class UndefinedMaturityProfileTest {
         map.put("NotionalPrincipal", "1000.0");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");
@@ -620,7 +620,7 @@ public class UndefinedMaturityProfileTest {
         map.put("XDayNotice", "6M");
         map.put("CycleOfInterestPayment","1Q-");
         map.put("CycleOfRateReset","1Q-");
-        map.put("MarketObjectCodeOfRateReset","DummyRate");
+        map.put("MarketObjectCodeRateReset","DummyRate");
         map.put("CycleOfFee","1Q-");
         map.put("FeeBasis","N");
         map.put("FeeRate","0.01");

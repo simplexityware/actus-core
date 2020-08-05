@@ -24,7 +24,7 @@ public final class STF_RR_SWPPV implements StateTransitionFunction {
         states.accruedInterest += (model.<Double>getAs("NominalInterestRate") - states.nominalInterestRate) * states.notionalPrincipal * timeFromLastEvent;
         states.accruedInterest += model.<Double>getAs("NominalInterestRate") * states.notionalPrincipal * timeFromLastEvent;
         states.accruedInterest2 += (-1) * states.nominalInterestRate * states.notionalPrincipal * timeFromLastEvent;
-        states.nominalInterestRate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"),time,states,model) * model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
+        states.nominalInterestRate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeRateReset"),time,states,model) * model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
         states.statusDate = time;
 
         // return post-event-states

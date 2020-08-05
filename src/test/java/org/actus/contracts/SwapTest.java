@@ -85,7 +85,7 @@ public class SwapTest {
         childObject2.put("NominalInterestRate","0.01");
         childObject2.put("CycleOfInterestPayment","P1ML0");
         childObject2.put("CycleOfRateReset","P3ML1");
-        childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
+        childObject2.put("MarketObjectCodeRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
         Map<String,Object> contractReference1 = new HashMap<>();
@@ -166,7 +166,7 @@ public class SwapTest {
         childObject2.put("NominalInterestRate","0.01");
         childObject2.put("CycleOfInterestPayment","P1ML0");
         childObject2.put("CycleOfRateReset","P3ML1");
-        childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
+        childObject2.put("MarketObjectCodeRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
         Map<String,Object> contractReference1 = new HashMap<>();
@@ -247,7 +247,7 @@ public class SwapTest {
         childObject2.put("NominalInterestRate","0.01");
         childObject2.put("CycleOfInterestPayment","P1ML0");
         childObject2.put("CycleOfRateReset","P3ML1");
-        childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
+        childObject2.put("MarketObjectCodeRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
         Map<String,Object> contractReference1 = new HashMap<>();
@@ -330,7 +330,7 @@ public class SwapTest {
         childObject2.put("NominalInterestRate","0.01");
         childObject2.put("CycleOfInterestPayment","P1ML0");
         childObject2.put("CycleOfRateReset","P3ML1");
-        childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
+        childObject2.put("MarketObjectCodeRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
         Map<String,Object> contractReference1 = new HashMap<>();
@@ -413,7 +413,7 @@ public class SwapTest {
         childObject2.put("NominalInterestRate","0.01");
         childObject2.put("CycleOfInterestPayment","P1ML0");
         childObject2.put("CycleOfRateReset","P3ML1");
-        childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
+        childObject2.put("MarketObjectCodeRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
         Map<String,Object> contractReference1 = new HashMap<>();
@@ -498,7 +498,7 @@ public class SwapTest {
         childObject2.put("NominalInterestRate","0.01");
         childObject2.put("CycleOfInterestPayment","P1ML0");
         childObject2.put("CycleOfRateReset","P3ML1");
-        childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
+        childObject2.put("MarketObjectCodeRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
         Map<String,Object> contractReference1 = new HashMap<>();
@@ -582,7 +582,7 @@ public class SwapTest {
         childObject2.put("NominalInterestRate","0.01");
         childObject2.put("CycleOfInterestPayment","P1ML0");
         childObject2.put("CycleOfRateReset","P3ML1");
-        childObject2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
+        childObject2.put("MarketObjectCodeRateReset","LIBOR_3M");
 
         // create attribute ContractRefernce
         Map<String,Object> contractReference1 = new HashMap<>();

@@ -21,7 +21,7 @@ public final class STF_RR_LAX implements StateTransitionFunction {
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 
 		// compute new rate
-		double rate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
+		double rate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeRateReset"), time, states, model)
 				* model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread") + scheduledRate;
 		double deltaRate = rate - states.nominalInterestRate;
 
