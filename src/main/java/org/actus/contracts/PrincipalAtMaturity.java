@@ -80,7 +80,8 @@ public final class PrincipalAtMaturity {
                         new POF_AD_PAM(),
                         new STF_AD_PAM(),
                         model.getAs("BusinessDayConvention"),
-                        model.getAs("ContractID")));
+                        model.getAs("ContractID")
+                ));
                 interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
@@ -94,7 +95,8 @@ public final class PrincipalAtMaturity {
                     new POF_IPCI_PAM(),
                     new STF_IPCI_PAM(),
                     model.getAs("BusinessDayConvention"),
-                    model.getAs("ContractID")));
+                    model.getAs("ContractID")
+            ));
         }
         // rate reset
         Set<ContractEvent> rateResetEvents = EventFactory.createEvents(
@@ -139,7 +141,8 @@ public final class PrincipalAtMaturity {
                 new POF_FP_PAM(),
                 new STF_FP_PAM(),
                 model.getAs("BusinessDayConvention"),
-                model.getAs("ContractID")));
+                model.getAs("ContractID")
+        ));
         }
         // scaling (if specified)
         String scalingEffect=model.getAs("ScalingEffect");
@@ -157,7 +160,8 @@ public final class PrincipalAtMaturity {
                 new POF_SC_PAM(),
                 new STF_SC_PAM(),
                 model.getAs("BusinessDayConvention"),
-                model.getAs("ContractID")));
+                model.getAs("ContractID")
+        ));
         }
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
