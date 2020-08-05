@@ -81,7 +81,7 @@ public final class PrincipalAtMaturity {
                         new STF_AD_PAM(),
                         model.getAs("BusinessDayConvention"),
                         model.getAs("ContractID")
-                );
+                ));
                 interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
@@ -96,7 +96,7 @@ public final class PrincipalAtMaturity {
                     new STF_IPCI_PAM(),
                     model.getAs("BusinessDayConvention"),
                     model.getAs("ContractID")
-            );
+            ));
         }
         // rate reset
         Set<ContractEvent> rateResetEvents = EventFactory.createEvents(
@@ -142,7 +142,7 @@ public final class PrincipalAtMaturity {
                 new STF_FP_PAM(),
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID")
-        );
+        ));
         }
         // scaling (if specified)
         String scalingEffect=model.getAs("ScalingEffect");
@@ -161,7 +161,7 @@ public final class PrincipalAtMaturity {
                 new STF_SC_PAM(),
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID")
-        );
+        ));
         }
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
