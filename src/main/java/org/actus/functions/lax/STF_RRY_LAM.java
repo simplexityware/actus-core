@@ -15,7 +15,8 @@ public class STF_RRY_LAM implements StateTransitionFunction {
 	public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		// TODO Auto-generated method stub
-		return null;
+		// return post-event-states
+		return StateSpace.copyStateSpace(states);
 	}
 
 }

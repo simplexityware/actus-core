@@ -19,8 +19,6 @@ public final class STF_PR_SWPPV implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
-        
         // update state space
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest += (model.<Double>getAs("NominalInterestRate") - states.nominalInterestRate) * states.notionalPrincipal * timeFromLastEvent;
@@ -30,13 +28,8 @@ public final class STF_PR_SWPPV implements StateTransitionFunction {
         states.notionalPrincipal = 0.0;
         states.statusDate = time;
 
-        // copy post-event-states
-        postEventStates.notionalPrincipal = states.notionalPrincipal;
-        postEventStates.accruedInterest = states.accruedInterest2;
-        postEventStates.nominalInterestRate = states.nominalInterestRate;
-        
         // return post-event-states
-        return postEventStates;
-        }
+        return StateSpace.copyStateSpace(states);
+    }
     
 }

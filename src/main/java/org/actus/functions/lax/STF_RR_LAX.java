@@ -19,7 +19,6 @@ public final class STF_RR_LAX implements StateTransitionFunction {
 	@Override
 	public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-		StateSpace postEventStates = new StateSpace();
 
 		// compute new rate
 		double rate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
@@ -42,14 +41,8 @@ public final class STF_RR_LAX implements StateTransitionFunction {
 		states.nominalInterestRate = rate;
 		states.statusDate = time;
 
-		// copy post-event-states
-		postEventStates.notionalPrincipal = states.notionalPrincipal;
-		postEventStates.accruedInterest = states.accruedInterest;
-		postEventStates.nominalInterestRate = states.nominalInterestRate;
-		postEventStates.feeAccrued = states.feeAccrued;
-
 		// return post-event-states
-		return postEventStates;
+		return StateSpace.copyStateSpace(states);
 	}
 
 }
