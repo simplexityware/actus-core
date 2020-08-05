@@ -5,493 +5,76 @@
  */
 package org.actus.contracts;
 
+import org.actus.testutils.ContractTestUtils;
+import org.actus.testutils.TestData;
+import org.actus.testutils.ObservedDataSet;
+import org.actus.testutils.ResultSet;
+import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
-import org.actus.events.ContractEvent;
-import org.actus.events.EventFactory;
-import org.actus.functions.pam.POF_AD_PAM;
-import org.actus.functions.pam.STF_AD_PAM;
-import org.actus.states.StateSpace;
-import org.actus.attributes.ContractModelProvider;
-import org.actus.externals.RiskFactorModelProvider;
+import org. actus.events.ContractEvent;
 
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.Set;
+import java.util.List;
 import java.util.ArrayList;
-import java.time.LocalDateTime;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-import org.actus.time.ScheduleFactory;
-import org.actus.types.EndOfMonthConventionEnum;
-import org.actus.types.EventType;
-import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.DynamicTest;
+
 
 public class PlainVanillaInterestRateSwapTest {
-    
-    class MarketModel implements RiskFactorModelProvider {
-        public Set<String> keys() {
-            Set<String> keys = new HashSet<String>();
-            return keys;
-        }
+    @TestFactory
+    public Stream<DynamicTest> test() {
+        String testFile = "./src/test/resources/actus/actus-tests-swppv.json";
 
-        @Override
-        public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
-            return 0.0;    
-        }
-    }
-    
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    
-    @Test
-    public void test_SWPPV_schedule_MandatoryAttributes() {
-        thrown = ExpectedException.none();
-        // define attributes
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-        model.getAs("hallo");
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(model.getAs("MaturityDate"),model);
+        // read tests from file
+        Map<String, TestData> tests = ContractTestUtils.readTests(testFile);
 
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
+        // get ids of tests
+        Set<String> testIds = tests.keySet();
 
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-    
-    
-    @Test
-    public void test_SWPPV_schedule_withIPCL() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("CycleOfInterestPayment","1Q-");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
+        // go through test-id and perform test
+        return testIds.stream().map(testId -> {
+            // extract test for test ID
+            TestData test = tests.get(testId);
 
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
+            // create market model from data
+            List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
+            DataObserver observer = ContractTestUtils.createObserver(dataObserved);
+          
+            // create contract model from data
+            ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
+            // compute and evaluate schedule
+            ArrayList<ContractEvent> schedule = CallMoney.schedule(terms.getAs("MaturityDate"), terms);
+            schedule = CallMoney.apply(schedule, terms, observer);
+        
+            // transform schedule to event list and return
+            List<ResultSet> computedResults = schedule.stream().map(e -> { 
+                ResultSet results = new ResultSet();
+                results.setEventDate(e.time().toString());
+                results.setEventType(e.type());
+                results.setPayoff(e.payoff());
+                results.setCurrency(e.currency());
+                results.setNotionalPrincipal(e.states().notionalPrincipal);
+                results.setNominalInterestRate(e.states().nominalInterestRate);
+                results.setAccruedInterest(e.states().accruedInterest);
+                return results;
+            }).collect(Collectors.toList());
 
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_SWPPV_schedule_withIPCLandIPANX() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleAnchorDateOfInterestPayment","2016-06-01T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
+            // extract test results
+            List<ResultSet> expectedResults = test.getResults();
+            
+            // round results to available precision
+            computedResults.forEach(result -> result.roundTo(11));
+            expectedResults.forEach(result -> result.roundTo(11));
 
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_SWPPV_schedule_withIP_withRRANX() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleAnchorDateOfRateReset","2016-06-01T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_SWPPV_schedule_withIP_withCNTRLisPF() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "PF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleAnchorDateOfRateReset","2016-06-01T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_SWPPV_schedule_withIP_withSTDwhereD() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("DeliverySettlement","D");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_SWPPV_schedule_withIP_withSTDwhereS() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("DeliverySettlement","S");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_SWPPV_schedule_withIP_withSTDwhereD_withPRD() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2015-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("DeliverySettlement","S");
-        map.put("PurchaseDate", "2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate", "50.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_SWPPV_schedule_withIP_withSTDwhereD_withPRD_withTD() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2015-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("DeliverySettlement","S");
-        map.put("PurchaseDate", "2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate", "50.0");
-        map.put("TerminationDate", "2016-01-03T00:00:00");
-        map.put("PriceAtTerminationDate", "60.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_SWPPV_schedule_withIP_withSTDwhereS_withPRD_withTD() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2015-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("DeliverySettlement","D");
-        map.put("PurchaseDate", "2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate", "50.0");
-        map.put("TerminationDate", "2016-01-03T00:00:00");
-        map.put("PriceAtTerminationDate", "60.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_SWPPV_schedule_withIP_withSTDwhereD_withPRD_withMultipleAnalysisTimes() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2015-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("DeliverySettlement","D");
-        map.put("PurchaseDate", "2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate", "50.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_SWPPV_schedule_withIP_withSTDwhereS_withPRD_withMultipleAnalysisTimes() {
-        thrown = ExpectedException.none();
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "SWPPV");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RF");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("NominalInterestRate2", "0.005");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2015-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("CycleOfRateReset", "1Q-");
-        map.put("MarketObjectCodeOfRateReset", "RefRateXY");
-        map.put("DeliverySettlement","S");
-        map.put("PurchaseDate", "2016-01-02T00:00:00");
-        map.put("PriceAtPurchaseDate", "50.0");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
-            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = PlainVanillaInterestRateSwap.apply(schedule,model,riskFactors);
+            // create dynamic test
+            return DynamicTest.dynamicTest("Test: " + testId,
+                () -> Assertions.assertArrayEquals(expectedResults.toArray(), computedResults.toArray()));
+        });
     }
 }
