@@ -17,7 +17,6 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
 import org.actus.functions.clm.POF_IED_CLM;
-import org.actus.functions.clm.STF_RR_CLM;
 
 import java.time.LocalDateTime;
 import java.util.*;

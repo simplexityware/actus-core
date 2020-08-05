@@ -19,7 +19,6 @@ import org.actus.util.CommonUtils;
 import org.actus.functions.clm.POF_IED_CLM;
 import org.actus.functions.clm.POF_IP_CLM;
 import org.actus.functions.clm.STF_IP_CLM;
-import org.actus.functions.clm.STF_RR_CLM;
 
 
 import java.time.LocalDateTime;
@@ -76,7 +75,7 @@ public final class CallMoney {
                 EventType.RR,
                 model.getAs("Currency"),
                 new POF_RR_PAM(),
-                new STF_RR_CLM(),
+                new STF_RR_PAM(),
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID")
         );
