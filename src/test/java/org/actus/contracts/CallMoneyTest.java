@@ -5,570 +5,76 @@
  */
 package org.actus.contracts;
 
+import org.actus.testutils.ContractTestUtils;
+import org.actus.testutils.TestData;
+import org.actus.testutils.ObservedDataSet;
+import org.actus.testutils.ResultSet;
+import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
-import org.actus.events.ContractEvent;
-import org.actus.events.EventFactory;
-import org.actus.functions.pam.POF_AD_PAM;
-import org.actus.functions.pam.STF_AD_PAM;
-import org.actus.states.StateSpace;
-import org.actus.attributes.ContractModelProvider;
-import org.actus.externals.RiskFactorModelProvider;
+import org. actus.events.ContractEvent;
 
-import java.util.Set;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.HashMap;
+import java.util.Set;
+import java.util.List;
 import java.util.ArrayList;
-import java.time.LocalDateTime;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-import org.actus.time.ScheduleFactory;
-import org.actus.util.StringUtils;
-import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.DynamicTest;
+
 
 public class CallMoneyTest {
-    
-    class MarketModel implements RiskFactorModelProvider {
-        public Set<String> keys() {
-            Set<String> keys = new HashSet<String>();
-            return keys;
-        }
+    @TestFactory
+    public Stream<DynamicTest> test() {
+        String testFile = "./src/test/resources/actus/actus-tests-clm.json";
 
-        @Override
-        public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
-            return 0.0;    
-        }
+        // read tests from file
+        Map<String, TestData> tests = ContractTestUtils.readTests(testFile);
 
-    }
-    
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    
-    @Test
-    public void test_CLM_schedule_MandatoryAttributes() {
-        thrown = ExpectedException.none();
-        // define attributes
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
+        // get ids of tests
+        Set<String> testIds = tests.keySet();
 
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        // go through test-id and perform test
+        return testIds.stream().map(testId -> {
+            // extract test for test ID
+            TestData test = tests.get(testId);
 
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
+            // create market model from data
+            List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
+            DataObserver observer = ContractTestUtils.createObserver(dataObserved);
+          
+            // create contract model from data
+            ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2016-01-15T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
+            // compute and evaluate schedule
+            ArrayList<ContractEvent> schedule = CallMoney.schedule(terms.getAs("MaturityDate"), terms);
+            schedule = CallMoney.apply(schedule, terms, observer);
+        
+            // transform schedule to event list and return
+            List<ResultSet> computedResults = schedule.stream().map(e -> { 
+                ResultSet results = new ResultSet();
+                results.setEventDate(e.eventTime().toString());
+                results.setEventType(e.eventType());
+                results.setPayoff(e.payoff());
+                results.setCurrency(e.currency());
+                results.setNotionalPrincipal(e.states().notionalPrincipal);
+                results.setNominalInterestRate(e.states().nominalInterestRate);
+                results.setAccruedInterest(e.states().accruedInterest);
+                return results;
+            }).collect(Collectors.toList());
 
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+            // extract test results
+            List<ResultSet> expectedResults = test.getResults();
+            
+            // round results to available precision
+            computedResults.forEach(result -> result.roundTo(11));
+            expectedResults.forEach(result -> result.roundTo(11));
 
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD_whereMDgreaterXDN() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD_withIPCL() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        map.put("CycleOfInterestPayment","1Q-");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD_withIPCLandIPANX() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleAnchorDateOfInterestPayment","2016-06-01T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_CLM_schedule_withMD_withIP_withRRCL() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD_withIP_withRRCLandRRANX() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleAnchorDateOfRateReset","2016-06-01T00:00:00");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD_withIP_withRR_withFPwhereA() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","A");
-        map.put("FeeRate","100");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD_withIP_withRR_withFPwhereN() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","N");
-        map.put("FeeRate","0.01");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD_withIP_withRR_withFP_withCalendar() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","N");
-        map.put("FeeRate","0.01");
-        map.put("Calendar","MondayToFriday");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD_withIP_withRR_withFP_withCalendar_withBDC_whereSCF() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","N");
-        map.put("FeeRate","0.01");
-        map.put("Calendar","MondayToFriday");
-        map.put("BusinessDayCalendar","SCF");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    @Test
-    public void test_CLM_schedule_withMD_withIP_withRR_withFP_withCalendar_withBDC_whereCSP() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "1M");
-        map.put("MaturityDate", "2017-01-02T00:00:00");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","N");
-        map.put("FeeRate","0.01");
-        map.put("Calendar","MondayToFriday");
-        map.put("BusinessDayCalendar","CSP");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-    
-    
-    @Test
-    public void test_CLM_schedule_withIP_withRR_withFP_withCalendar_withBDC_whereCSP() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "6M");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","N");
-        map.put("FeeRate","0.01");
-        map.put("Calendar","MondayToFriday");
-        map.put("BusinessDayCalendar","CSP");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_CLM_schedule_withMD_withIP_withRR_withFP_withCalendar_withBDC_withMultipleAnalysisTimes() {
-        thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("ContractType", "CLM");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("XDayNotice", "6M");
-        map.put("CycleOfInterestPayment","1Q-");
-        map.put("CycleOfRateReset","1Q-");
-        map.put("CycleOfFee","1Q-");
-        map.put("FeeBasis","N");
-        map.put("FeeRate","0.01");
-        map.put("Calendar","MondayToFriday");
-        map.put("BusinessDayCalendar","CSP");
-        // parse attributes
-        ContractModel model = ContractModel.parse(map);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = CallMoney.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = CallMoney.apply(schedule,model,riskFactors);
+            // create dynamic test
+            return DynamicTest.dynamicTest("Test: " + testId,
+                () -> Assertions.assertArrayEquals(expectedResults.toArray(), computedResults.toArray()));
+        });
     }
 }

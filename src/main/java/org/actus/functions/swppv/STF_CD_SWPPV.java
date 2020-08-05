@@ -11,7 +11,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.util.StringUtils;
+import org.actus.types.ContractPerformance;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +27,7 @@ public final class STF_CD_SWPPV implements StateTransitionFunction {
         states.accruedInterest += (model.<Double>getAs("NominalInterestRate") - states.nominalInterestRate) * states.notionalPrincipal * timeFromLastEvent;
         states.accruedInterest += model.<Double>getAs("NominalInterestRate") * states.notionalPrincipal * timeFromLastEvent;
         states.accruedInterest2 += (-1) * states.nominalInterestRate * states.notionalPrincipal * timeFromLastEvent;
-        states.contractPerformance = StringUtils.ContractStatus_Default;
+        states.contractPerformance = ContractPerformance.DF;
         states.statusDate = time;
         
         // copy post-event-states

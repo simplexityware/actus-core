@@ -5,17 +5,15 @@
  */
 package org.actus.contracts;
 
-import org.actus.ContractTypeUnknownException;
 import org.actus.AttributeConversionException;
-import org.actus.externals.RiskFactorModelProvider;
+import org.actus.ContractTypeUnknownException;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.events.ContractEvent;
+import org.actus.externals.RiskFactorModelProvider;
 import org.actus.states.StateSpace;
-import org.actus.util.StringUtils;
+import org.actus.types.ContractTypeEnum;
 
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.Set;
 import java.util.ArrayList;
 
 /**
@@ -62,32 +60,32 @@ public final class ContractType {
      */
     public static ArrayList<ContractEvent> schedule(LocalDateTime to,
                                                     ContractModelProvider model) throws ContractTypeUnknownException,AttributeConversionException {
-        switch((String) model.getAs("ContractType")) {
-            case StringUtils.ContractType_PAM:
+        switch((ContractTypeEnum)model.getAs("ContractType")) {
+            case PAM:
                 return PrincipalAtMaturity.schedule(to,model);
-            case StringUtils.ContractType_LAM:
+            case LAM:
                 return LinearAmortizer.schedule(to,model);
-            case StringUtils.ContractType_NAM:
+            case NAM:
                 return NegativeAmortizer.schedule(to,model);
-            case StringUtils.ContractType_ANN:
+            case ANN:
                 return Annuity.schedule(to,model);
-            case StringUtils.ContractType_CLM:
+            case CLM:
                 return CallMoney.schedule(to,model);
-            case StringUtils.ContractType_UMP:
+            case UMP:
                 return UndefinedMaturityProfile.schedule(to,model);
-            case StringUtils.ContractType_CSH:
+            case CSH:
                 return Cash.schedule(to,model);
-            case StringUtils.ContractType_STK:
+            case STK:
                 return Stock.schedule(to,model);
-            case StringUtils.ContractType_COM:
+            case COM:
                 return Commodity.schedule(to,model);
-            case StringUtils.ContractType_FXOUT:
+            case FXOUT:
                 return ForeignExchangeOutright.schedule(to,model);
-            case StringUtils.ContractType_SWPPV:
+            case SWPPV:
                 return PlainVanillaInterestRateSwap.schedule(to,model);
-            case StringUtils.ContractType_SWAPS:
+            case SWAPS:
                 return Swap.schedule(to,model);
-            case StringUtils.ContractType_LAX:
+            case LAX:
             	return ExoticLinearAmortizer.schedule(to, model);
             default:
                 throw new ContractTypeUnknownException();
@@ -122,32 +120,32 @@ public final class ContractType {
     public static ArrayList<ContractEvent> apply(ArrayList<ContractEvent> events,
                                                  ContractModelProvider model,
                                                  RiskFactorModelProvider observer) throws ContractTypeUnknownException,AttributeConversionException {
-        switch((String) model.getAs("ContractType")) {
-            case StringUtils.ContractType_PAM:
+        switch((ContractTypeEnum)model.getAs("ContractType")) {
+            case PAM:
                 return PrincipalAtMaturity.apply(events,model,observer);
-            case StringUtils.ContractType_LAM:
+            case LAM:
                 return LinearAmortizer.apply(events,model,observer);
-            case StringUtils.ContractType_NAM:
+            case NAM:
                 return NegativeAmortizer.apply(events,model,observer);
-            case StringUtils.ContractType_ANN:
+            case ANN:
                 return Annuity.apply(events,model,observer);
-            case StringUtils.ContractType_CLM:
+            case CLM:
                 return CallMoney.apply(events,model,observer);
-            case StringUtils.ContractType_UMP:
+            case UMP:
                 return UndefinedMaturityProfile.apply(events,model,observer);
-            case StringUtils.ContractType_CSH:
+            case CSH:
                 return Cash.apply(events,model,observer);
-            case StringUtils.ContractType_STK:
+            case STK:
                 return Stock.apply(events,model,observer);
-            case StringUtils.ContractType_COM:
+            case COM:
                 return Commodity.apply(events,model,observer);
-            case StringUtils.ContractType_FXOUT:
+            case FXOUT:
                 return ForeignExchangeOutright.apply(events,model,observer);
-            case StringUtils.ContractType_SWPPV:
+            case SWPPV:
                 return PlainVanillaInterestRateSwap.apply(events,model,observer);
-            case StringUtils.ContractType_SWAPS:
+            case SWAPS:
                 // TODO: implement (see also Swap class)
-            case StringUtils.ContractType_LAX:
+            case LAX:
             	return ExoticLinearAmortizer.apply(events, model, observer);
             default:
                 throw new ContractTypeUnknownException();

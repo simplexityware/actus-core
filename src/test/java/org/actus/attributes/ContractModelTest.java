@@ -10,6 +10,7 @@ import org.actus.AttributeConversionException;
 import java.util.Map;
 import java.util.HashMap;
 
+import org.actus.types.EndOfMonthConventionEnum;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -22,7 +23,7 @@ public class ContractModelTest {
     @Test
     public void test_AttributeConversionException() {
         thrown.expect(AttributeConversionException.class);
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         ContractModel model = ContractModel.parse(map);
     }
@@ -30,7 +31,7 @@ public class ContractModelTest {
     @Test
     public void test_AttributeParser_PAM_MandatoryAttributes() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -47,11 +48,11 @@ public class ContractModelTest {
     @Test
     public void test_AttributeParser_PAM_AllAttributes() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         map.put("Calendar", "org.actus.time.calendar.NoHolidaysCalendar");
         map.put("BusinessDayConvention", "SCF");
-        map.put("EndOfMonthConvention", "SD");
+        map.put("EndOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
         map.put("LegalEntityIDCounterparty", "CORP-XY");

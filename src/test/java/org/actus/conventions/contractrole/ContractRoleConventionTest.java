@@ -8,6 +8,7 @@ package org.actus.conventions.contractrole;
 import org.actus.AttributeConversionException;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 
+import org.actus.types.ContractRole;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -21,21 +22,21 @@ public class ContractRoleConventionTest {
     @Test
     public void test_AttributeConversionException() {
         thrown.expect(AttributeConversionException.class);
-        ContractRoleConvention.roleSign("INEXISTENT");
+        ContractRoleConvention.roleSign(null);
     }
 
     @Test
     public void test_RPA() {
         thrown = ExpectedException.none();
         int expectedSign = 1;
-        assertEquals(expectedSign, ContractRoleConvention.roleSign("RPA"));
+        assertEquals(expectedSign, ContractRoleConvention.roleSign(ContractRole.RPA));
     }
     
     @Test
     public void test_RPL() {
         thrown = ExpectedException.none();
         int expectedSign = -1;
-        assertEquals(expectedSign, ContractRoleConvention.roleSign("RPL"));
+        assertEquals(expectedSign, ContractRoleConvention.roleSign(ContractRole.RPL));
     }
     
 }

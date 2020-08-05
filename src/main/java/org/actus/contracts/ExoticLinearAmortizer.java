@@ -53,8 +53,9 @@ import org.actus.functions.pam.STF_TD_PAM;
 
 import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
+import org.actus.types.EventType;
+import org.actus.types.InterestCalculationBase;
 import org.actus.util.CommonUtils;
-import org.actus.util.StringUtils;
 
 /**
  * Represents the Exotic Linear Amortizer payoff algorithm
@@ -72,13 +73,25 @@ public final class ExoticLinearAmortizer {
 		LocalDateTime maturity = maturity(model);
 
 		// initial exchange
-		events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), StringUtils.EventType_IED,
-				model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_LAM()));
+		events.add(EventFactory.createEvent(
+				model.getAs("InitialExchangeDate"),
+				EventType.IED,
+				model.getAs("Currency"),
+				new POF_IED_PAM(),
+				new STF_IED_LAM(),
+				model.getAs("ContractID"))
+		);
 		
 		// purchase event
 		if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-			events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD,
-					model.getAs("Currency"), new POF_PRD_LAM(), new STF_PRD_LAM()));
+			events.add(EventFactory.createEvent(
+					model.getAs("PurchaseDate"),
+					EventType.PRD,
+					model.getAs("Currency"),
+					new POF_PRD_LAM(),
+					new STF_PRD_LAM(),
+					model.getAs("ContractID"))
+			);
 		}
 
 		// create principal redemption schedule
@@ -96,7 +109,7 @@ public final class ExoticLinearAmortizer {
 					.map(d -> d).toArray(String[]::new);
 
 			// create array-type schedule with respective increase/decrease features
-			String prType;
+			EventType prType;
 			StateTransitionFunction prStf;
 			PayOffFunction prPof;
 
@@ -108,22 +121,32 @@ public final class ExoticLinearAmortizer {
 			}
 			for (int i = 0; i < prAnchor.length; i++) {
 				if (prIncDec[i].trim().equalsIgnoreCase("DEC")) {
-					prType = StringUtils.EventType_PR;
+					prType = EventType.PR;
 					prStf = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-							&& model.getAs("InterestCalculationBase").equals("NTL")) ? 
+							&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) ?
 							new STF_PR_LAX(Double.parseDouble(prPayment[i])) : new STF_PR_LAX2(Double.parseDouble(prPayment[i]));
 					prPof = new POF_PR_LAX(Double.parseDouble(prPayment[i]));
 				} else {
-					prType = StringUtils.EventType_PI;
+					prType = EventType.PI;
 					prStf = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-							&& model.getAs("InterestCalculationBase").equals("NTL")) ? 
+							&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) ?
 							new STF_PI_LAX(Double.parseDouble(prPayment[i])) : new STF_PI_LAX2(Double.parseDouble(prPayment[i]));
 					prPof = new POF_PI_LAX(Double.parseDouble(prPayment[i]));
 				}
 				events.addAll(EventFactory.createEvents(
-						ScheduleFactory.createSchedule(prLocalDate[i], prLocalDate[i + 1], prCycle[i],
-								model.getAs("EndOfMonthConvention"), false),
-						prType, model.getAs("Currency"), prPof, prStf, model.getAs("BusinessDayConvention")));
+						ScheduleFactory.createSchedule(
+								prLocalDate[i],
+								prLocalDate[i + 1],
+								prCycle[i],model.getAs("EndOfMonthConvention"),
+								false
+						),
+						prType,
+						model.getAs("Currency"),
+						prPof,
+						prStf,
+						model.getAs("BusinessDayConvention"),
+						model.getAs("ContractID"))
+				);
 			}
 		}
 
@@ -139,26 +162,41 @@ public final class ExoticLinearAmortizer {
 
 			// raw interest payment events
 			Set<ContractEvent> interestEvents = EventFactory.createEvents(
-					ScheduleFactory.createArraySchedule(ipAnchor, model.getAs("MaturityDate"), ipCycle,
-							model.getAs("EndOfMonthConvention")),
-					StringUtils.EventType_IP, model.getAs("Currency"), new POF_IP_LAM(), new STF_IP_PAM(),
-					model.getAs("BusinessDayConvention"));
+					ScheduleFactory.createArraySchedule(
+							ipAnchor,
+							model.getAs("MaturityDate"),
+							ipCycle,
+							model.getAs("EndOfMonthConvention")
+					),
+					EventType.IP,
+					model.getAs("Currency"),
+					new POF_IP_LAM(),
+					new STF_IP_PAM(),
+					model.getAs("BusinessDayConvention"),
+					model.getAs("ContractID")
+			);
 			
 			// adapt if interest capitalization set
 			if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
 				
 				// define ipci state-transition function
 				StateTransitionFunction stf_ipci = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-						&& model.getAs("InterestCalculationBase").equals("NTL")) ? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
+						&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) ? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
 						
 				// for all events with time <= IPCED && type == "IP" do
 				// change type to IPCI and payoff/state-trans functions
-				ContractEvent capitalizationEnd = EventFactory.createEvent(model.getAs("CapitalizationEndDate"),
-						StringUtils.EventType_IPCI, model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci,
-						model.getAs("BusinessDayConvention"));
+				ContractEvent capitalizationEnd = EventFactory.createEvent(
+						model.getAs("CapitalizationEndDate"),
+						EventType.IPCI,
+						model.getAs("Currency"),
+						new POF_IPCI_PAM(),
+						stf_ipci,
+						model.getAs("BusinessDayConvention"),
+						model.getAs("ContractID")
+				);
 				interestEvents.forEach(e -> {
-					if (e.type().equals(StringUtils.EventType_IP) && e.compareTo(capitalizationEnd) == -1) {
-						e.type(StringUtils.EventType_IPCI);
+					if (e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
+						e.eventType(EventType.IPCI);
 						e.fPayOff(new POF_IPCI_PAM());
 						e.fStateTrans(stf_ipci);
 					}
@@ -166,8 +204,8 @@ public final class ExoticLinearAmortizer {
 				
 				// also, remove any IP event exactly at IPCED and replace with an IPCI event
 				interestEvents.remove(EventFactory.createEvent(model.getAs("CapitalizationEndDate"),
-						StringUtils.EventType_IP, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(),
-						model.getAs("BusinessDayConvention")));
+						EventType.IP, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(),
+						model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
 			}
 			events.addAll(interestEvents);
 		} else 
@@ -177,11 +215,18 @@ public final class ExoticLinearAmortizer {
 			
 				// define ipci state-transition function
 				StateTransitionFunction stf_ipci = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-						&& model.getAs("InterestCalculationBase").equals("NTL")) ? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
+						&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) ? new STF_IPCI_LAM() : new STF_IPCI2_LAM();
 						
 				// add single event
-				events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), StringUtils.EventType_IPCI,
-						model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci, model.getAs("BusinessDayConvention")));
+				events.add(EventFactory.createEvent(
+						model.getAs("CapitalizationEndDate"),
+						EventType.IPCI,
+						model.getAs("Currency"),
+						new POF_IPCI_PAM(),
+						stf_ipci,
+						model.getAs("BusinessDayConvention"),
+						model.getAs("ContractID"))
+				);
 		}
 		
 		// create rate reset schedule
@@ -199,7 +244,7 @@ public final class ExoticLinearAmortizer {
 					.map(d -> d).toArray(String[]::new);
 			
 			// create array-type schedule with fix/var features
-			String rrType;
+			EventType rrType;
 			StateTransitionFunction rrStf;
 			Set<ContractEvent> rateResetEvents = null;
 			int rrLen = rrAnchor.length + 1;
@@ -210,16 +255,27 @@ public final class ExoticLinearAmortizer {
 			}
 			for (int i = 0; i < rrAnchor.length; i++) {
 				if (rrFidedVar[i].trim().equalsIgnoreCase("FIX")) {
-					rrType = StringUtils.EventType_RRF;
+					rrType = EventType.RRF;
 					rrStf = new STF_RRF_LAX(Double.parseDouble(rrRate[i]));
 				} else {
-					rrType = StringUtils.EventType_RR;
+					rrType = EventType.RR;
 					rrStf = new STF_RR_LAX(Double.parseDouble(rrRate[i]));
 				}
 				rateResetEvents = EventFactory.createEvents(
-						ScheduleFactory.createSchedule(rrLocalDate[i], rrLocalDate[i + 1], rrCycle[i],
-								model.getAs("EndOfMonthConvention"), false),
-						rrType, model.getAs("Currency"), new POF_RR_PAM(), rrStf, model.getAs("BusinessDayConvention"));
+						ScheduleFactory.createSchedule(
+								rrLocalDate[i],
+								rrLocalDate[i + 1],
+								rrCycle[i],
+								model.getAs("EndOfMonthConvention"),
+								false
+						),
+						rrType,
+						model.getAs("Currency"),
+						new POF_RR_PAM(),
+						rrStf,
+						model.getAs("BusinessDayConvention"),
+						model.getAs("ContractID")
+				);
 				events.addAll(rateResetEvents);
 			}
 			
@@ -227,7 +283,7 @@ public final class ExoticLinearAmortizer {
 			if (!CommonUtils.isNull(model.getAs("NextResetRate"))) {
 				rateResetEvents.stream().sorted()
 						.filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"),
-								StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1)
+								EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1)
 						.findFirst().get().fStateTrans(new STF_RRY_LAM());
 				events.addAll(rateResetEvents);
 			}	
@@ -236,45 +292,80 @@ public final class ExoticLinearAmortizer {
 		// fee schedule
 		if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
 			events.addAll(EventFactory.createEvents(
-					ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfFee"), maturity,
-							model.getAs("CycleOfFee"), model.getAs("EndOfMonthConvention")),
-					StringUtils.EventType_FP, model.getAs("Currency"), new POF_FP_PAM(), new STF_FP_LAM(),
-					model.getAs("BusinessDayConvention")));
+					ScheduleFactory.createSchedule(
+							model.getAs("CycleAnchorDateOfFee"),
+							maturity,
+							model.getAs("CycleOfFee"),
+							model.getAs("EndOfMonthConvention")
+					),
+					EventType.FP,
+					model.getAs("Currency"),
+					new POF_FP_PAM(),
+					new STF_FP_LAM(),
+					model.getAs("BusinessDayConvention"),
+					model.getAs("ContractID"))
+			);
 		}
 		
 		// scaling (if specified)
 		if (!CommonUtils.isNull(model.getAs("ScalingEffect")) && (model.<String>getAs("ScalingEffect").contains("I")
 				|| model.<String>getAs("ScalingEffect").contains("N"))) {
 			events.addAll(EventFactory.createEvents(
-					ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfScalingIndex"), maturity,
-							model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention"), false),
-					StringUtils.EventType_SC, model.getAs("Currency"), new POF_SC_PAM(), new STF_SC_LAM(),
-					model.getAs("BusinessDayConvention")));
+					ScheduleFactory.createSchedule(
+							model.getAs("CycleAnchorDateOfScalingIndex"),
+							maturity,
+							model.getAs("CycleOfScalingIndex"),
+							model.getAs("EndOfMonthConvention"),
+							false
+					),
+					EventType.SC,
+					model.getAs("Currency"),
+					new POF_SC_PAM(),
+					new STF_SC_LAM(),
+					model.getAs("BusinessDayConvention"),
+					model.getAs("ContractID"))
+			);
 		}
 		
 		// interest calculation base (if specified)
 		if (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-				&& model.getAs("InterestCalculationBase").equals("NTL")) {
+				&& model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) {
 			events.addAll(EventFactory.createEvents(
-					ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestCalculationBase"), maturity,
-							model.getAs("CycleOfInterestCalculationBase"), model.getAs("EndOfMonthConvention"), false),
-					StringUtils.EventType_IPCB, model.getAs("Currency"), new POF_IPCB_LAM(), new STF_IPCB_LAM(),
-					model.getAs("BusinessDayConvention")));
+					ScheduleFactory.createSchedule(
+							model.getAs("CycleAnchorDateOfInterestCalculationBase"),
+							maturity,
+							model.getAs("CycleOfInterestCalculationBase"),
+							model.getAs("EndOfMonthConvention"),
+							false
+					),
+					EventType.IPCB,
+					model.getAs("Currency"),
+					new POF_IPCB_LAM(),
+					new STF_IPCB_LAM(),
+					model.getAs("BusinessDayConvention"),
+					model.getAs("ContractID"))
+			);
 		}
 		
 		// termination
 		if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-			ContractEvent termination = EventFactory.createEvent(model.getAs("TerminationDate"),
-					StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_LAM(), new STF_TD_PAM());
+			ContractEvent termination = EventFactory.createEvent(
+					model.getAs("TerminationDate"),
+					EventType.TD,
+					model.getAs("Currency"),
+					new POF_TD_LAM(),
+					new STF_TD_PAM(),
+					model.getAs("ContractID")
+			);
 			events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
 			events.add(termination);
 		}
 
 		// remove all pre-status date events
-		events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD,model.getAs("Currency"), null, null)) == -1);
+		events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD,model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
 
 		// remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, StringUtils.EventType_AD, model.getAs("Currency"), null, null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1);
 
 		// sort the events in the payoff-list according to their time of occurence
 		Collections.sort(events);
@@ -309,8 +400,14 @@ public final class ExoticLinearAmortizer {
 		// determine maturity of the contract
 		LocalDateTime maturity = model.getAs("MaturityDate");
 
-		// TODO: what if maturity is null?
-
+		if(CommonUtils.isNull(maturity)){
+			LocalDateTime calculatedTime;
+			double notionalPrincipal = model.getAs("NotionalPrincipal");
+			LocalDateTime[] prAnchor = Arrays
+					.asList(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption").toString().split(",")).stream()
+					.map(LocalDateTime::parse).toArray(LocalDateTime[]::new);
+			int upperBound;
+		}
 		return maturity;
 	}
 

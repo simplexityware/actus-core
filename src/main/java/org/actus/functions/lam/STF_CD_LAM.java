@@ -11,7 +11,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.util.StringUtils;
+import org.actus.types.ContractPerformance;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +26,7 @@ public final class STF_CD_LAM implements StateTransitionFunction {
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-        states.contractPerformance = StringUtils.ContractStatus_Default;
+        states.contractPerformance = ContractPerformance.DF;
         states.statusDate = time;
         
         // copy post-event-states

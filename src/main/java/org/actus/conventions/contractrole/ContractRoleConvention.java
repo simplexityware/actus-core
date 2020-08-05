@@ -6,7 +6,8 @@
 package org.actus.conventions.contractrole;
 
 import org.actus.AttributeConversionException;
-import org.actus.util.StringUtils;
+import org.actus.types.ContractRole;
+import org.actus.util.CommonUtils;
 
 /**
  * Convention determining the direction of cash flows based on attribute ContractRole
@@ -33,19 +34,22 @@ public final class ContractRoleConvention {
      * @return an integer of +1 (for cash in-flows) and -1 (for cash out-flows)
      * @throws AttributeConversionException if the value of the method argument is invalid
      */
-    public static int roleSign(String role) throws AttributeConversionException {
+    public static int roleSign(ContractRole role) throws AttributeConversionException {
         int sign;
+        if(CommonUtils.isNull(role)){
+            throw new AttributeConversionException();
+        }
         switch(role) {
-            case StringUtils.ContractRole_RPA:
-            case StringUtils.ContractRole_BUY:
-            case StringUtils.ContractRole_RFL:
-            case StringUtils.ContractRole_RF:
+            case RPA:
+            case BUY:
+            case RFL:
+            case RF:
             sign = 1;
             break;
-            case StringUtils.ContractRole_RPL:
-            case StringUtils.ContractRole_SEL:
-            case StringUtils.ContractRole_PFL:
-            case StringUtils.ContractRole_PF:
+            case RPL:
+            case SEL:
+            case PFL:
+            case PF:
             sign = -1;
             break;
             default:

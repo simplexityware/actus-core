@@ -9,6 +9,7 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
+import org.actus.types.ContractRole;
 
 public class STF_PI_LAX2 implements StateTransitionFunction {
 

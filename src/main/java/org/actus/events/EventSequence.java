@@ -5,16 +5,18 @@
  */
 package org.actus.events;
 
+import org.actus.types.EventType;
+
 /**
  * Component that represents the sequence of {@link ContractEvent}s at a certain time
  * <p>
  * Various {@link ContractEvent}s happen during the lifetime of a {@ContractType}. Some
- * events may happen at exactly the same point in time. In this case, the {@code EventSequence} 
+ * events may happen at exactly the same point in time. In this case, the {@code EventSequence}
  * defines the sequence in which the events are being processed. Therefore, events are ordered
  * according to their time and processing order (i.e. event sequence) represented by a time
  * offset in the {@link EventSeries}. 
  * <p>
- * This component contains all definitions of event sequence time offsets which 
+ * This component contains all definitions of event sequence time offsets which
  * are being used when ordering events in the {@link EventSeries}.
  */
 public final class EventSequence {
@@ -37,62 +39,53 @@ public final class EventSequence {
 	 * @param eventType the event type for which to return the time offset
 	 * @return the time offset
 	 */
-  public static int timeOffset(String eventType) {
+  public static int timeOffset(EventType eventType) {
       int offset = 0;
 switch (eventType) {
-    case "IED":
+    case IED:
         offset = 20;
         break;
-    case "PR":
+    case PR:
         offset = 30;
         break;
-    case "IP":
+    case IP:
         offset = 40;
         break;
-    case "IPCI":
+    case IPCI:
         offset = 50;
         break;
-      case "FP":
+      case FP:
         offset = 60;
         break;
-      case "DV":
+      case DV:
         offset = 70;
         break;
-      case "MR":
+      case MR:
         offset = 80;
         break;
-      case "RRY":
-        offset = 90;
-        break;
-      case "RR":
+      case RR:
         offset = 100;
         break;
-      case "SC":
+      case SC:
         offset = 110;
         break;
-      case "IPCB":
+      case IPCB:
         offset = 120;
         break;
-      case "PRD":
+      case PRD:
         offset = 130;
         break;
-      case "TD":
+      case TD:
         offset = 140;
         break;
-      case "STD":
+      case STD:
         offset = 150;
         break;
-      case "MD":
+      case MD:
         offset = 160;
         break;
-    case "SD":
-        offset = 900;
-        break;
-    case "AD":
+    case AD:
         offset = 950;
-        break;
-     case "Child":
-        offset = 10;
         break;
 }
 

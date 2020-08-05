@@ -21,50 +21,28 @@ import static java.util.Locale.forLanguageTag;
 public final class CycleUtils {
     
     /**
-     *
+     * A period-based cycle starts with character 'P'
      */
     public static boolean isPeriod(String cycle) {
-        return cycle.replaceAll("\\P{L}+", "").length()==1;
+        return cycle.charAt(0)=='P';
     }
 
     /**
-     * 
+     * See next method
      */
     public static Period parsePeriod(String cycle, boolean stub) {
-        Period period;
-
-        // parse period from cycle
-        if(stub) {
-            period = parsePeriod(cycle);
-        } else {
-            period = parsePeriod(cycle + '-');       
-        }
-        // return period
-        return period;
+        // parse and return period
+        return parsePeriod(cycle);
     }
     
     /**
-     * 
+     * Period is the character sequence starting with 'P' and ending before the 'L'-character of the stub
      */
     public static Period parsePeriod(String cycle) {
-        Period period;  
-        char unit;
-        int multiplier;
+        Period period;
         // parse period from cycle
         try {
-            multiplier = Integer.parseInt(cycle.substring(0,cycle.length() - 2));
-            unit = cycle.charAt(cycle.length() - 2);
-            if(unit == 'Q') {
-              multiplier *= 3;
-              unit = 'M';
-            } else if(unit == 'H') {
-              multiplier *= 6;
-              unit = 'M';
-            } else if(unit == 'Y') {
-              multiplier *= 12;
-              unit = 'M';
-            }
-            period = Period.parse("P" + multiplier + unit);
+            period = Period.parse(cycle.split("L")[0]);
         } catch (Exception e) {
           throw(new AttributeConversionException());
         }
@@ -72,12 +50,15 @@ public final class CycleUtils {
         return period;
     }
     
+    /*
+     * Position is the integer at the position of the first character in the cycle
+     */
     public static int parsePosition(String cycle) {
         int position;
         
         // parse position from cycle
         try {
-          position = Character.getNumericValue(cycle.charAt(0));
+          position = Integer.parseInt(""+cycle.charAt(0));
         } catch (Exception e) {
           throw(new AttributeConversionException());
         }
@@ -85,12 +66,16 @@ public final class CycleUtils {
         return position; 
     }
 
+    /*
+     * Weekday is the character sequence following a single integer (first character) and up to 
+     * the stub information (starting with an 'L'-character)
+     */
     public static DayOfWeek parseWeekday(String cycle) {
         DayOfWeek weekday;
         // parse weekday from cycle
         try {
           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", forLanguageTag("en"));
-          TemporalAccessor accessor = formatter.parse(cycle.substring(1,cycle.length()-1));
+          TemporalAccessor accessor = formatter.parse(cycle.split("L")[0].substring(1));
           System.out.println(cycle.substring(1,cycle.length()-1));
           weekday= DayOfWeek.from(accessor);
         } catch (Exception e) {
@@ -101,15 +86,18 @@ public final class CycleUtils {
     }
 
     /**
-     * 
+     * Stub is the character sequence following an 'L' in a cycle
      */
     public static char parseStub(String cycle) throws AttributeConversionException {
-        char stub = cycle.charAt(cycle.length() - 1);
-        if(stub=='-' || stub=='+') {
-          return stub; 
-        } else {
+        char stub;
+        try {
+          stub = cycle.split("L")[1].charAt(0);
+          if(!(stub==StringUtils.LongStub || stub==StringUtils.ShortStub)) throw(new AttributeConversionException());
+        } catch (Exception e) {
           throw(new AttributeConversionException());
-        }   
+        }
+        // return stub
+        return stub;
     }
     
 }

@@ -8,6 +8,7 @@ package org.actus.functions.ann;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
+import org.actus.types.ContractRole;
 import org.actus.util.AnnuityUtils;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;

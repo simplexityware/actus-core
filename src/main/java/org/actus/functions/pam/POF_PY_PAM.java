@@ -12,6 +12,8 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.contractrole.ContractRoleConvention;
+import org.actus.types.ContractRole;
+import org.actus.types.PenaltyType;
 import org.actus.util.CommonUtils;
 
 import java.time.LocalDateTime;
@@ -21,10 +23,10 @@ public final class POF_PY_PAM implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        if(model.getAs("PenaltyType").equals("A")) {
+        if(model.getAs("PenaltyType").equals(PenaltyType.A)) {
             return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
                     * ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("PenaltyRate");
-        } else if(model.getAs("PenaltyType").equals("N")) {
+        } else if(model.getAs("PenaltyType").equals(PenaltyType.N)) {
             return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
                     * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                     * dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))

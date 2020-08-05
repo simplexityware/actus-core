@@ -11,7 +11,6 @@ import org.actus.events.ContractEvent;
 import org.actus.events.EventFactory;
 import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
-import org.actus.util.StringUtils;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.pam.POF_AD_PAM;
@@ -24,6 +23,8 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+import org.actus.types.EndOfMonthConventionEnum;
+import org.actus.types.EventType;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -50,7 +51,7 @@ public class ContractTypeTest {
     public void test_UnknownCT_exception() {
         thrown.expect(AttributeConversionException.class);
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "IDoNotExist");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -65,12 +66,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-", EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -83,7 +84,7 @@ public class ContractTypeTest {
     public void test_PAM_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -98,12 +99,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -115,7 +116,7 @@ public class ContractTypeTest {
     @Test
     public void test_PAM_withIP_withRR_withSC_withOP_withMultipleAnalysisTimes() {
         thrown = ExpectedException.none();
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "PAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -136,12 +137,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -154,7 +155,7 @@ public class ContractTypeTest {
     public void test_LAM_MandatoryAttributes_withMaturity() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "LAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -171,12 +172,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -189,7 +190,7 @@ public class ContractTypeTest {
     public void test_NAM_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "NAM");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -206,12 +207,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -225,7 +226,7 @@ public class ContractTypeTest {
     public void test_ANN_MandatoryAttributes_withMaturity() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "ANN");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -242,12 +243,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -260,7 +261,7 @@ public class ContractTypeTest {
     public void test_CLM_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "CLM");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -276,12 +277,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("InitialExchangeDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("InitialExchangeDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -294,7 +295,7 @@ public class ContractTypeTest {
     public void test_CSH_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "CSH");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -304,12 +305,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("StatusDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("StatusDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -322,7 +323,7 @@ public class ContractTypeTest {
     public void test_STK_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "STK");
         map.put("Calendar", "NoHolidayCalendar");
         map.put("StatusDate", "2016-01-01T00:00:00");
@@ -333,12 +334,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("StatusDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("StatusDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -351,7 +352,7 @@ public class ContractTypeTest {
     public void test_COM_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "COM");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -360,12 +361,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("StatusDate")).plusYears(5),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("StatusDate")).plusYears(5),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
@@ -378,7 +379,7 @@ public class ContractTypeTest {
     public void test_FXOUT_MandatoryAttributes() {
         thrown = ExpectedException.none();
         // define attributes
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("ContractType", "FXOUT");
         map.put("StatusDate", "2016-01-01T00:00:00");
         map.put("ContractRole", "RPA");
@@ -392,12 +393,12 @@ public class ContractTypeTest {
         ContractModel model = ContractModel.parse(map);
 
         // compute schedule
-        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(map.get("MaturityDate")),model); 
+        ArrayList<ContractEvent> schedule = ContractType.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),model);
 
         // add analysis events
         schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
+            ScheduleFactory.createSchedule(model.getAs("StatusDate"),model.<LocalDateTime>getAs("StatusDate").plusMonths(6),"1M-",EndOfMonthConventionEnum.SD),
+            EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
     
         // define risk factor model
         MarketModel riskFactors = new MarketModel();
