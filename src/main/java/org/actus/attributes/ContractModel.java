@@ -395,7 +395,10 @@ public class ContractModel implements ContractModelProvider {
                         map.put("FixingDays", attributes.get("FixingDays"));
                         map.put("NextResetRate", (CommonUtils.isNull(attributes.get("NextResetRate"))) ? null : Double.parseDouble(attributes.get("NextResetRate")));
                         map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("RateMultiplier"))) ? 0.0 : Double.parseDouble(attributes.get("RateMultiplier")));
-
+                        map.put("LifeCap", CommonUtils.isNull(attributes.get("LifeCap")) ? null : Double.parseDouble(attributes.get("LifeCap")));
+                        map.put("LifeFloor", CommonUtils.isNull(attributes.get("LifeFloor")) ? null : Double.parseDouble(attributes.get("LifeFloor")));
+                        map.put("PeriodCap", CommonUtils.isNull(attributes.get("PeriodCap")) ? null : Double.parseDouble(attributes.get("PeriodCap")));
+                        map.put("PeriodFloor", CommonUtils.isNull(attributes.get("PeriodFloor")) ? null : Double.parseDouble(attributes.get("PeriodFloor")));
                         break;
                     case UMP:
 
