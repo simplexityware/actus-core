@@ -75,19 +75,19 @@ public class ResultSet {
     public void roundTo(int decimals) {
         // round payoff
         BigDecimal bd = new BigDecimal(Double.toString(this.payoff));
-        this.payoff = bd.setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+        this.payoff = bd.setScale(decimals, RoundingMode.FLOOR).doubleValue();
 
         // round notional principal
         bd = new BigDecimal(Double.toString(this.notionalPrincipal));
-        this.notionalPrincipal = bd.setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+        this.notionalPrincipal = bd.setScale(decimals, RoundingMode.FLOOR).doubleValue();
 
         // round interest rate
         bd = new BigDecimal(Double.toString(this.nominalInterestRate));
-        this.nominalInterestRate = bd.setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+        this.nominalInterestRate = bd.setScale(decimals, RoundingMode.FLOOR).doubleValue();
 
         // round accrued interest
         bd = new BigDecimal(Double.toString(this.accruedInterest));
-        this.accruedInterest = bd.setScale(decimals, RoundingMode.HALF_UP).doubleValue();
+        this.accruedInterest = bd.setScale(decimals, RoundingMode.FLOOR).doubleValue();
     }
 
     public String toString() {
