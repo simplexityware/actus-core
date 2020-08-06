@@ -23,10 +23,10 @@ public final class STF_SC_LAM implements StateTransitionFunction {
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-        if (model.<String>getAs("ScalingEffect").contains("I")) {
+        if (model.getAs("ScalingEffect").toString().contains("I")) {
             states.interestScalingMultiplier = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfScalingIndex"), time, states, model) / model.<Double>getAs("ScalingIndexAtStatusDate");
         }
-        if (model.<String>getAs("ScalingEffect").contains("N")) {
+        if (model.getAs("ScalingEffect").toString().contains("N")) {
             states.notionalScalingMultiplier = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfScalingIndex"), time, states, model) / model.<Double>getAs("ScalingIndexAtStatusDate");
         }
         states.statusDate = time;

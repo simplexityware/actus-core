@@ -53,6 +53,7 @@ public final class LinearAmortizer {
                 new STF_IED_LAM(),
                 model.getAs("ContractID"))
         );
+
         // principal redemption schedule
         Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(
                 model.getAs("CycleAnchorDateOfPrincipalRedemption"),
@@ -122,8 +123,16 @@ public final class LinearAmortizer {
             if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
                 // for all events with time <= IPCED && type == "IP" do
                 // change type to IPCI and payoff/state-trans functions
-                ContractEvent capitalizationEnd = EventFactory.createEvent(model.getAs("CapitalizationEndDate"), EventType.IPCI,
-                                                                            model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci, model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
+                ContractEvent capitalizationEnd = EventFactory.createEvent(
+                        model.getAs("CapitalizationEndDate"),
+                        EventType.IPCI,
+                        model.getAs("Currency"),
+                        new POF_IPCI_PAM(),
+                        stf_ipci,
+                        model.getAs("BusinessDayConvention"),
+                        model.getAs("ContractID")
+                );
+                
                 interestEvents.forEach(e -> {
                     if (e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
                         e.eventType(EventType.IPCI);
@@ -145,13 +154,33 @@ public final class LinearAmortizer {
             events.addAll(interestEvents);
         }else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
             // if no extra interest schedule set but capitalization end date, add single IPCI event
-            events.add(EventFactory.createEvent(model.getAs("CapitalizationEndDate"), EventType.IPCI,
-                    model.getAs("Currency"), new POF_IPCI_PAM(), stf_ipci, model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(
+                    model.getAs("CapitalizationEndDate"),
+                    EventType.IPCI,
+                    model.getAs("Currency"),
+                    new POF_IPCI_PAM(),
+                    stf_ipci,
+                    model.getAs("BusinessDayConvention"),
+                    model.getAs("ContractID"))
+            );
         }
+
         // rate reset
-        Set<ContractEvent> rateResetEvents = EventFactory.createEvents(ScheduleFactory.createSchedule(model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"), maturity,
-                model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"),false),
-                EventType.RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_LAM(), model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
+        Set<ContractEvent> rateResetEvents = EventFactory.createEvents(
+                ScheduleFactory.createSchedule(
+                        model.<LocalDateTime>getAs("CycleAnchorDateOfRateReset"),
+                        maturity,
+                        model.getAs("CycleOfRateReset"),
+                        model.getAs("EndOfMonthConvention"),
+                        false
+                ),
+                EventType.RR,
+                model.getAs("Currency"),
+                new POF_RR_PAM(),
+                new STF_RR_LAM(),
+                model.getAs("BusinessDayConvention"),
+                model.getAs("ContractID")
+        );
 
         // adapt fixed rate reset event
         if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
@@ -180,21 +209,52 @@ public final class LinearAmortizer {
             );
         }
         // scaling (if specified)
-        if (!CommonUtils.isNull(model.getAs("ScalingEffect")) && (model.<String>getAs("ScalingEffect").contains("I") || model.<String>getAs("ScalingEffect").contains("N"))) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfScalingIndex"), maturity,
-                                                                            model.getAs("CycleOfScalingIndex"), model.getAs("EndOfMonthConvention"),false),
-                                            EventType.SC, model.getAs("Currency"), new POF_SC_PAM(), new STF_SC_LAM(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+        if (!CommonUtils.isNull(model.getAs("ScalingEffect")) && (model.getAs("ScalingEffect").toString().contains("I") || model.getAs("ScalingEffect").toString().contains("N"))) {
+            events.addAll(EventFactory.createEvents(
+                    ScheduleFactory.createSchedule(
+                            model.getAs("CycleAnchorDateOfScalingIndex"),
+                            maturity,
+                            model.getAs("CycleOfScalingIndex"),
+                            model.getAs("EndOfMonthConvention"),
+                            false
+                    ),
+                    EventType.SC,
+                    model.getAs("Currency"),
+                    new POF_SC_PAM(),
+                    new STF_SC_LAM(),
+                    model.getAs("BusinessDayConvention"),
+                    model.getAs("ContractID"))
+            );
         }
+
         // interest calculation base (if specified)
         if (!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL)) {
-            events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestCalculationBase"), maturity,
-                                                                            model.getAs("CycleOfInterestCalculationBase"), model.getAs("EndOfMonthConvention"),false),
-                                            EventType.IPCB, model.getAs("Currency"), new POF_IPCB_LAM(), new STF_IPCB_LAM(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            events.addAll(EventFactory.createEvents(
+                    ScheduleFactory.createSchedule(
+                            model.getAs("CycleAnchorDateOfInterestCalculationBase"),
+                            maturity,
+                            model.getAs("CycleOfInterestCalculationBase"),
+                            model.getAs("EndOfMonthConvention"),
+                            false
+                    ),
+                    EventType.IPCB,
+                    model.getAs("Currency"),
+                    new POF_IPCB_LAM(),
+                    new STF_IPCB_LAM(),
+                    model.getAs("BusinessDayConvention"),
+                    model.getAs("ContractID"))
+            );
         }
+
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            ContractEvent termination =
-                                        EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_LAM(), new STF_TD_PAM(), model.getAs("ContractID"));
+            ContractEvent termination = EventFactory.createEvent(
+                    model.getAs("TerminationDate"),
+                    EventType.TD, model.getAs("Currency"),
+                    new POF_TD_LAM(),
+                    new STF_TD_PAM(),
+                    model.getAs("ContractID")
+            );
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
@@ -281,6 +341,7 @@ public final class LinearAmortizer {
             LocalDateTime statusDate = model.getAs("StatusDate");
             String prclString = model.getAs("CycleOfPrincipalRedemption");
             LocalDateTime ied = model.getAs("InitialExchangeDate");
+
             if(!CommonUtils.isNull(pranx) && pranx.isAfter(model.getAs("StatusDate"))){
                 s = model.getAs("CycleAnchorDateOfPrincipalRedemption");
             } else if(CommonUtils.isNull(pranx) && ied.plus(CycleUtils.parsePeriod(prclString)).isAfter(statusDate)){
