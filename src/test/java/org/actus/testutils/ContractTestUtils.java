@@ -6,6 +6,8 @@
 package org.actus.testutils;
 
 import org.actus.attributes.ContractModel;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.actus.types.ContractReference;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -23,11 +26,30 @@ public class ContractTestUtils {
         // convert json terms object to a java map (required input for actus model parsing)
         Map<String, Object> map = new HashMap<String, Object>();
         for (Map.Entry<String, Object> entry : data.entrySet()) {
+            if(entry.getKey().equals("contractStructure")){
+                List<Map<String, Object>> contractStructure = new ArrayList<>();
 
-            //System.out.println(entry.getKey() + ":" + entry.getValue());
+                ((List<Map<String,Object>>)entry.getValue()).forEach(contractReference -> {
+                    HashMap<String, Object> attributes = new HashMap<>();
 
-            // capitalize input json keys as required in contract model parser
-            map.put(entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1), entry.getValue().toString());
+                    contractReference.forEach((key,value) ->{
+                        if(key.equals("object")){
+                            Map<String, String> objectValues = new HashMap<>();
+                            ((Map<String,Object>)value).forEach((childKey,childValue)-> objectValues.put(childKey.substring(0, 1).toUpperCase() + childKey.substring(1), childValue.toString()));
+                            attributes.put("Object", objectValues);
+                        }else{
+                            attributes.put(key.substring(0, 1).toUpperCase() + key.substring(1), value.toString());
+                        }
+                    });
+                    contractStructure.add(attributes);
+                });
+                map.put("ContractStructure", contractStructure);
+            }else{
+                //System.out.println(entry.getKey() + ":" + entry.getValue());
+
+                // capitalize input json keys as required in contract model parser
+                map.put(entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1), entry.getValue().toString());
+            }
         }
 
         // parse attributes
