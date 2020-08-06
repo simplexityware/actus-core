@@ -73,4 +73,28 @@ public final class StateSpace {
 
         return joiner.toString();
     }
+    //creates copy of StateSpace
+    public static StateSpace copyStateSpace(StateSpace original){
+        StateSpace copy = new StateSpace();
+        copy.accruedInterest = original.accruedInterest;
+        copy.accruedInterest2 = original.accruedInterest2;
+        copy.contractPerformance = original.contractPerformance;
+        copy.exerciseAmount = original.exerciseAmount;
+        copy.exerciseDate = original.exerciseDate;
+        copy.feeAccrued = original.feeAccrued;
+        copy.interestCalculationBaseAmount = original.interestCalculationBaseAmount;
+        copy.interestScalingMultiplier = original.interestScalingMultiplier;
+        copy.nextPrincipalRedemptionPayment = original.nextPrincipalRedemptionPayment;
+        copy.nominalInterestRate = original.nominalInterestRate;
+        copy.nominalInterestRate2 = original.nominalInterestRate2;
+        copy.nonPerformingDate = original.nonPerformingDate;
+        copy.notionalPrincipal = original.notionalPrincipal;
+        copy.notionalPrincipal2 = original.notionalPrincipal2;
+        copy.notionalScalingMultiplier = original.notionalScalingMultiplier;
+        copy.statusDate = original.statusDate;
+        copy.maturityDate = original.maturityDate;
+        copy.terminationDate = original.terminationDate;
+        return copy;
+
+    }
 }

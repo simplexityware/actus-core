@@ -19,28 +19,19 @@ public final class STF_SC_LAM implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
-        
         // update state space
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-        if(model.<String>getAs("ScalingEffect").contains("I")) {
-            states.interestScalingMultiplier = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfScalingIndex"),time,states,model)/model.<Double>getAs("ScalingIndexAtStatusDate");
+        if (model.<String>getAs("ScalingEffect").contains("I")) {
+            states.interestScalingMultiplier = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfScalingIndex"), time, states, model) / model.<Double>getAs("ScalingIndexAtStatusDate");
         }
-        if(model.<String>getAs("ScalingEffect").contains("N")) {
-            states.notionalScalingMultiplier = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfScalingIndex"),time,states,model)/model.<Double>getAs("ScalingIndexAtStatusDate");
+        if (model.<String>getAs("ScalingEffect").contains("N")) {
+            states.notionalScalingMultiplier = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfScalingIndex"), time, states, model) / model.<Double>getAs("ScalingIndexAtStatusDate");
         }
         states.statusDate = time;
-        
-        // copy post-event-states
-        postEventStates.notionalPrincipal = states.notionalPrincipal;
-        postEventStates.accruedInterest = states.accruedInterest;
-        postEventStates.nominalInterestRate = states.nominalInterestRate;
-        postEventStates.feeAccrued = states.feeAccrued;
-        
+
         // return post-event-states
-        return postEventStates;
-        }
-    
+        return StateSpace.copyStateSpace(states);
+    }
 }

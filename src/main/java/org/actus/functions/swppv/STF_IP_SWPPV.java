@@ -19,18 +19,12 @@ public final class STF_IP_SWPPV implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
-        
         // update state space
         states.accruedInterest = 0.0;
         states.statusDate = time;
-        
-        // copy post-event-states
-        postEventStates.notionalPrincipal = states.notionalPrincipal;
-        postEventStates.nominalInterestRate = model.<Double>getAs("NominalInterestRate") - states.nominalInterestRate;
-        
+
         // return post-event-states
-        return postEventStates;
-        }
+        return StateSpace.copyStateSpace(states);
+    }
     
 }

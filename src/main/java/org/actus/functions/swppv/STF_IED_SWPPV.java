@@ -21,20 +21,14 @@ public final class STF_IED_SWPPV implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
-        
         // update state space
         states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
         states.notionalPrincipal2 = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * (-1) * model.<Double>getAs("NotionalPrincipal");
         states.nominalInterestRate = model.<Double>getAs("NominalInterestRate2");
         states.statusDate = time;
-        
-        // copy post-event-states
-        postEventStates.notionalPrincipal = states.notionalPrincipal2;
-        postEventStates.nominalInterestRate = states.nominalInterestRate;
-        
+
         // return post-event-states
-        return postEventStates;
+        return StateSpace.copyStateSpace(states);
         }
     
 }

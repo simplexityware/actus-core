@@ -315,7 +315,7 @@
             "notionalPrincipal": "1000",
             "xDayNotice": "P3W",
             "cycleOfRateReset": "P15DL1",
-            "marketObjectCodeOfRateReset": "USD_Treasury"
+            "marketObjectCodeRateReset": "USD_Treasury"
         },
         "to": "",
         "dataObserved": {
@@ -453,7 +453,7 @@
             "xDayNotice": "P1M",
             "cycleAnchorDateOfRateReset": "2015-08-01T00:00:00",
             "cycleOfRateReset": "P15DL1",
-            "marketObjectCodeOfRateReset": "USD_Treasury"
+            "marketObjectCodeRateReset": "USD_Treasury"
         },
         "to": "",
         "dataObserved": {
@@ -572,7 +572,7 @@
             "xDayNotice": "P31D",
             "cycleAnchorDateOfRateReset": "2015-08-01T00:00:00",
             "cycleOfRateReset": "P15DL1",
-            "marketObjectCodeOfRateReset": "USD_Treasury"
+            "marketObjectCodeRateReset": "USD_Treasury"
         },
         "to": "",
         "dataObserved": {
@@ -759,7 +759,7 @@
             "xDayNotice": "P31D",
             "cycleAnchorDateOfRateReset": "2015-08-01T00:00:00",
             "cycleOfRateReset": "P15DL1",
-            "marketObjectCodeOfRateReset": "EUR_Prim"
+            "marketObjectCodeRateReset": "EUR_Prim"
         },
         "to": "",
         "dataObserved": {
@@ -902,7 +902,7 @@
             "xDayNotice": "P0D",
             "cycleAnchorDateOfRateReset": "2015-08-01T00:00:00",
             "cycleOfRateReset": "P15DL1",
-            "marketObjectCodeOfRateReset": "EUR_Prim"
+            "marketObjectCodeRateReset": "EUR_Prim"
         },
         "to": "",
         "dataObserved": {
@@ -1254,7 +1254,7 @@
             "xDayNotice": "P9M",
             "cycleAnchorDateOfRateReset": "2015-08-01T00:00:00",
             "cycleOfRateReset": "P15DL1",
-            "marketObjectCodeOfRateReset": "EUR_Prim"
+            "marketObjectCodeRateReset": "EUR_Prim"
         },
         "to": "",
         "dataObserved": {
@@ -1608,7 +1608,7 @@
             "xDayNotice": "P0D",
             "cycleAnchorDateOfRateReset": "2015-10-01T00:00:00",
             "cycleOfRateReset": "P1WL1",
-            "marketObjectCodeOfRateReset": "USD_Treasury"
+            "marketObjectCodeRateReset": "USD_Treasury"
         },
         "to": "",
         "dataObserved": {
@@ -1705,7 +1705,7 @@
             "notionalPrincipal": "1000",
             "xDayNotice": "P31D",
             "cycleAnchorDateOfRateReset": "2015-09-01T00:00:00",
-            "marketObjectCodeOfRateReset": "USD_Treasury"
+            "marketObjectCodeRateReset": "USD_Treasury"
         },
         "to": "",
         "dataObserved": {

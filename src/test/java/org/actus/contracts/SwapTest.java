@@ -19,11 +19,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
-
 
 public class SwapTest {
     @TestFactory

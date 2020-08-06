@@ -21,8 +21,6 @@ public final class STF_IP_NAM implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
                          ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
-
         // compute interest payment and capitalization
         // Note: for NAM, interest accrued in excess to PRNXT is capitalized
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
@@ -36,13 +34,8 @@ public final class STF_IP_NAM implements StateTransitionFunction {
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
         states.statusDate = time;
 
-        // copy post-event-states
-        postEventStates.notionalPrincipal = states.notionalPrincipal;
-        postEventStates.nominalInterestRate = states.nominalInterestRate;
-        postEventStates.feeAccrued = states.feeAccrued;
-
         // return post-event-states
-        return postEventStates;
+        return StateSpace.copyStateSpace(states);
     }
 
 }
