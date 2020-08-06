@@ -132,7 +132,7 @@ public final class LinearAmortizer {
                         model.getAs("BusinessDayConvention"),
                         model.getAs("ContractID")
                 );
-                
+
                 interestEvents.forEach(e -> {
                     if (e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
                         e.eventType(EventType.IPCI);
