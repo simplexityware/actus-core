@@ -7,6 +7,8 @@ package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
@@ -14,6 +16,7 @@ import org.actus.events.EventFactory;
 import org.actus.time.ScheduleFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.types.EventType;
+import org.actus.types.ScalingEffect;
 import org.actus.util.CommonUtils;
 import org.actus.functions.pam.*;
 
@@ -208,18 +211,58 @@ public final class PrincipalAtMaturity {
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-        states.notionalScalingMultiplier = 1;
-        states.interestScalingMultiplier = 1;
-
-        // TODO: some attributes can be null
-        states.statusDate = model.getAs("StatusDate");
-        if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
+        if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
+            states.notionalPrincipal = 0.0;
+            states.nominalInterestRate = 0.0;
+        }else{
             states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
             states.nominalInterestRate = model.getAs("NominalInterestRate");
-            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
-            states.feeAccrued = model.getAs("FeeAccrued");
         }
-        
+
+        if(CommonUtils.isNull(model.getAs("NominalInterestRate"))){
+            states.accruedInterest = 0.0;
+        } else if(!CommonUtils.isNull(model.getAs("AccruedInterest"))){
+            states.accruedInterest = model.getAs("AccruedInterest");
+        } else{
+            DayCountCalculator dayCountCalculator = model.getAs("DayCountConvention");
+            BusinessDayAdjuster businessDayAdjuster = model.getAs("BusinessDayConvention");
+            //TODO: what is t- in this case ?
+            //states.accruedInterest = dayCountCalculator.dayCountFraction()
+        }
+
+        if(CommonUtils.isNull(model.getAs("FeeRate"))){
+            states.feeAccrued = 0.0;
+        } else if(!CommonUtils.isNull(model.getAs("FeeAccrued"))){
+            states.feeAccrued = model.getAs("FeeAccrued");
+        }//TODO: implement last two possible initialization
+
+        if(!CommonUtils.isNull(model.getAs("ScalingEffect"))){
+            ScalingEffect scalingEffect = model.getAs("ScalingEffect");
+            switch(scalingEffect){
+                case INO:
+                    //TODO: cannot find term SCIXD in dictionary
+                    states.interestScalingMultiplier = model.getAs("SCIXD");
+                    states.notionalScalingMultiplier = model.getAs("SCIXD");
+                    break;
+                case IOO:
+                    states.interestScalingMultiplier = model.getAs("SCIXD");
+                    states.notionalScalingMultiplier = 1.0;
+                    break;
+                case ONO:
+                    states.notionalScalingMultiplier = model.getAs("SCIXD");
+                    states.interestScalingMultiplier = 1.0;
+                    break;
+                case OOO:
+                    states.interestScalingMultiplier = 1.0;
+                    states.notionalScalingMultiplier = 1.0;
+            }
+        }else {
+            states.notionalScalingMultiplier = 1.0;
+            states.interestScalingMultiplier = 1.0;
+        }
+
+        states.contractPerformance = model.getAs("ContractPerformance");
+        states.statusDate = model.getAs("StatusDate");
         // return the initialized state space
         return states;
     }
