@@ -21,7 +21,6 @@ public final class STF_PR2_LAM implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
         double redemption = states.nextPrincipalRedemptionPayment - ContractRoleConvention.roleSign(model.getAs("ContractRole")) * Math.max(0, Math.abs(states.nextPrincipalRedemptionPayment) - Math.abs(states.notionalPrincipal));
 
         // update state space
@@ -31,15 +30,9 @@ public final class STF_PR2_LAM implements StateTransitionFunction {
         states.notionalPrincipal -= redemption;
         states.interestCalculationBaseAmount = states.notionalPrincipal;
         states.statusDate = time;
-        
-        // copy post-event-states
-        postEventStates.notionalPrincipal = states.notionalPrincipal;
-        postEventStates.accruedInterest = states.accruedInterest;
-        postEventStates.nominalInterestRate = states.nominalInterestRate;
-        postEventStates.feeAccrued = states.feeAccrued;
-        
+
         // return post-event-states
-        return postEventStates;
-        }
+        return StateSpace.copyStateSpace(states);
+    }
     
 }

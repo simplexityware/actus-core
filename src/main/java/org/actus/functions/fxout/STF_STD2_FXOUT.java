@@ -19,13 +19,11 @@ public final class STF_STD2_FXOUT implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
-        
         // update state space
         states.statusDate = time;
 
         // return post-event-states
-        return postEventStates;
+        return StateSpace.copyStateSpace(states);
         }
     
 }

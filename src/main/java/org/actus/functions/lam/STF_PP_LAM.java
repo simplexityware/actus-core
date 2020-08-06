@@ -21,7 +21,6 @@ public final class STF_PP_LAM implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
         
         // update state space
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
@@ -32,13 +31,8 @@ public final class STF_PP_LAM implements StateTransitionFunction {
             states.interestCalculationBaseAmount = states.notionalPrincipal;
         }
         states.statusDate = time;
-        
-        // copy post-event-states
-        postEventStates.notionalPrincipal = states.notionalPrincipal;
-        postEventStates.nominalInterestRate = states.nominalInterestRate;
-        postEventStates.feeAccrued = states.feeAccrued;
-        
+
         // return post-event-states
-        return postEventStates;
-        }
+        return StateSpace.copyStateSpace(states);
+    }
 }

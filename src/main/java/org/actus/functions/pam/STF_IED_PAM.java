@@ -22,8 +22,6 @@ public final class STF_IED_PAM implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
-        
         // update state space
         states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
         states.nominalInterestRate = model.getAs("NominalInterestRate");
@@ -35,14 +33,8 @@ public final class STF_IED_PAM implements StateTransitionFunction {
             states.accruedInterest += states.notionalPrincipal *states.nominalInterestRate *dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment")),timeAdjuster.shiftCalcTime(time));
         }
 
-        // copy post-event-states
-        postEventStates.notionalPrincipal = states.notionalPrincipal;
-        postEventStates.accruedInterest = states.accruedInterest;
-        postEventStates.nominalInterestRate = states.nominalInterestRate;
-        postEventStates.statusDate = states.statusDate;
-        
         // return post-event-states
-        return postEventStates;
-        }
+        return StateSpace.copyStateSpace(states);
+    }
     
 }
