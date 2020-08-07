@@ -118,6 +118,7 @@ public final class LinearAmortizer {
                     model.getAs("BusinessDayConvention"),
                     model.getAs("ContractID")
             );
+            Set<ContractEvent> interestEventsRemove = null;
             // adapt if interest capitalization set
             if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
                 // for all events with time <= IPCED && type == "IP" do
@@ -131,7 +132,6 @@ public final class LinearAmortizer {
                         model.getAs("BusinessDayConvention"),
                         model.getAs("ContractID")
                 );
-
                 interestEvents.forEach(e -> {
                     if (e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
                         e.eventType(EventType.IPCI);
@@ -139,18 +139,16 @@ public final class LinearAmortizer {
                         e.fStateTrans(stf_ipci);
                     }
                 });
-                // also, remove any IP event exactly at IPCED and replace with an IPCI event
-                interestEvents.remove(EventFactory.createEvent(
-                        model.getAs("CapitalizationEndDate"),
-                        EventType.IP,
-                        model.getAs("Currency"),
-                        new POF_AD_PAM(),
-                        new STF_AD_PAM(),
-                        model.getAs("BusinessDayConvention"),
-                        model.getAs("ContractID"))
-                );
+//              // also, remove any IP event exactly at IPCED and replace with an IPCI event
+                interestEventsRemove = interestEvents.stream().filter(a -> !a.eventTime().equals(capitalizationEnd.eventTime()))
+                        .collect(Collectors.toSet());
+                interestEventsRemove.add(capitalizationEnd);
             }
-            events.addAll(interestEvents);
+            if(interestEventsRemove != null) {
+                events.addAll(interestEventsRemove);
+            }else {
+                events.addAll(interestEvents);
+            }
         }else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
             // if no extra interest schedule set but capitalization end date, add single IPCI event
             events.add(EventFactory.createEvent(
@@ -268,10 +266,6 @@ public final class LinearAmortizer {
         ContractEvent postDate = EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"));
         events.removeIf(e -> e.compareTo(postDate)== 1);
 
-        // remove pre-purchase events if purchase date set
-        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
-        }
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);
 
@@ -296,7 +290,10 @@ public final class LinearAmortizer {
             ((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
 					model.getAs("BusinessDayConvention"));
 		}
-
+        // remove pre-purchase events if purchase date set
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
+        }
         // return evaluated events
         return events;
     }
