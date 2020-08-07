@@ -76,14 +76,12 @@ public final class LinearAmortizer {
                 model.getAs("ContractID"))
         );
 
-	// -> chose right Payoff function depending on maturity
-        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_MD_PAM():new POF_PR_LAM());
         events.add(EventFactory.createEvent(
 	        maturity,
-            EventType.PR,
+            EventType.MD,
             model.getAs("Currency"),
-            pof,
-            new STF_PR_LAM(),
+            new POF_MD_PAM(),
+            new STF_MD_LAM(),
             model.getAs("BusinessDayConvention"),
             model.getAs("ContractID"))
         );
