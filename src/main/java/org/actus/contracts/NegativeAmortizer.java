@@ -201,8 +201,6 @@ public final class NegativeAmortizer {
 
         // TODO: some attributes can be null
         states.statusDate = model.getAs("StatusDate");
-        states.notionalScalingMultiplier = 1;
-        states.interestScalingMultiplier = 1;
         
         // init next principal redemption payment amount (cannot be null for NAM!)
         states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NextPrincipalRedemptionPayment");
@@ -214,6 +212,9 @@ public final class NegativeAmortizer {
             states.feeAccrued = model.getAs("FeeAccrued");
             states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*( (model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NT))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
+
+        states.notionalScalingMultiplier = model.getAs("NotionalScalingMultiplier");
+        states.interestScalingMultiplier = model.getAs("InterestScalingMultiplier");
         
         // return the initialized state space
         return states;
