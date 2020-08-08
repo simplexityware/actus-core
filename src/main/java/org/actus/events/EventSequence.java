@@ -63,6 +63,9 @@ switch (eventType) {
       case MR:
         offset = 80;
         break;
+      case RRF:
+        offset = 100;
+        break;
       case RR:
         offset = 100;
         break;

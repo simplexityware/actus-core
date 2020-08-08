@@ -218,8 +218,6 @@ public final class Annuity {
     // initialize the contract states
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-        states.notionalScalingMultiplier = 1;
-        states.interestScalingMultiplier = 1;
         states.statusDate = model.getAs("StatusDate");
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
             states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(double)model.getAs("NotionalPrincipal");
@@ -230,6 +228,9 @@ public final class Annuity {
             states.feeAccrued = model.getAs("FeeAccrued");
             states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*( (model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NT))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
         }
+
+        states.notionalScalingMultiplier = model.getAs("NotionalScalingMultiplier");
+        states.interestScalingMultiplier = model.getAs("InterestScalingMultiplier");
         
         // init next principal redemption payment amount (can be null for ANN!)
         states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, model.getAs("NotionalPrincipal"), model.getAs("AccruedInterest"), model.getAs("NominalInterestRate"));

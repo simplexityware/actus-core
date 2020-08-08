@@ -52,7 +52,9 @@ public class LinearAmortizerTest {
             // compute and evaluate schedule
             ArrayList<ContractEvent> schedule = LinearAmortizer.schedule(LocalDateTime.parse(test.getto()), terms);
             schedule = LinearAmortizer.apply(schedule, terms, observer);
-        
+            
+            System.out.println("Case: " + testId);
+
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
                 ResultSet results = new ResultSet();
@@ -63,6 +65,9 @@ public class LinearAmortizerTest {
                 results.setNotionalPrincipal(e.states().notionalPrincipal);
                 results.setNominalInterestRate(e.states().nominalInterestRate);
                 results.setAccruedInterest(e.states().accruedInterest);
+
+                System.out.println(results);
+
                 return results;
             }).collect(Collectors.toList());
 
