@@ -239,30 +239,8 @@ public final class PrincipalAtMaturity {
             states.feeAccrued = model.getAs("FeeAccrued");
         }//TODO: implement last two possible initialization
 
-        if(!CommonUtils.isNull(model.getAs("ScalingEffect"))){
-            ScalingEffect scalingEffect = model.getAs("ScalingEffect");
-            switch(scalingEffect){
-                case INO:
-                    //TODO: cannot find term SCIXD in dictionary
-                    states.interestScalingMultiplier = model.getAs("SCIXD");
-                    states.notionalScalingMultiplier = model.getAs("SCIXD");
-                    break;
-                case IOO:
-                    states.interestScalingMultiplier = model.getAs("SCIXD");
-                    states.notionalScalingMultiplier = 1.0;
-                    break;
-                case ONO:
-                    states.notionalScalingMultiplier = model.getAs("SCIXD");
-                    states.interestScalingMultiplier = 1.0;
-                    break;
-                case OOO:
-                    states.interestScalingMultiplier = 1.0;
-                    states.notionalScalingMultiplier = 1.0;
-            }
-        }else {
-            states.notionalScalingMultiplier = 1.0;
-            states.interestScalingMultiplier = 1.0;
-        }
+        states.notionalScalingMultiplier = model.getAs("NotionalScalingMultiplier");
+        states.interestScalingMultiplier = model.getAs("InterestScalingMultiplier");
 
         states.contractPerformance = model.getAs("ContractPerformance");
         states.statusDate = model.getAs("StatusDate");

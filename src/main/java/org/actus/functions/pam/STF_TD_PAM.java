@@ -19,16 +19,14 @@ public final class STF_TD_PAM implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        StateSpace postEventStates = new StateSpace();
         // update state space
         states.notionalPrincipal = 0.0;
-        states.nominalInterestRate = 0.0;
         states.accruedInterest = 0.0;
         states.feeAccrued = 0.0;
         states.statusDate = time;
 
         // return post-event-states
-        return postEventStates;
+        return StateSpace.copyStateSpace(states);
     }
     
 }

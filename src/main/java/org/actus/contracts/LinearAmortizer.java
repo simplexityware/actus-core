@@ -286,9 +286,9 @@ public final class LinearAmortizer {
         // apply events according to their time sequence to current state
         LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
 		ListIterator eventIterator = events.listIterator();
-        while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal >= 0.0) && eventIterator.hasNext()) {
+        while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
             ((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
-					model.getAs("BusinessDayConvention"));
+                    model.getAs("BusinessDayConvention"));
 		}
         // remove pre-purchase events if purchase date set
         if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
@@ -304,18 +304,23 @@ public final class LinearAmortizer {
         LocalDateTime maturity = model.getAs("MaturityDate");
         if (CommonUtils.isNull(maturity)) {
             LocalDateTime lastEvent;
+            int remainingPeriods;
             if(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").isBefore(model.getAs("StatusDate"))) {
+                // last event not part of remaining periods
                 Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"),model.getAs("StatusDate"),
                         model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"));
                 previousEvents.removeIf( d -> d.isBefore(model.<LocalDateTime>getAs("StatusDate").minus(CycleUtils.parsePeriod(model.getAs("CycleOfInterestPayment")))));
                 previousEvents.remove(model.getAs("StatusDate"));
                 lastEvent = previousEvents.toArray(new LocalDateTime[1])[0];
+                remainingPeriods = (int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/model.<Double>getAs("NextPrincipalRedemptionPayment"));
             } else {
+                // last event also one of remaining periods
                 lastEvent = model.getAs("CycleAnchorDateOfPrincipalRedemption");
+                remainingPeriods = (int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/model.<Double>getAs("NextPrincipalRedemptionPayment"))-1;
             }
             String cycle = model.getAs("CycleOfPrincipalRedemption");
             adjuster = new EndOfMonthAdjuster(model.getAs("EndOfMonthConvention"), lastEvent, cycle);
-            maturity = adjuster.shift(lastEvent.plus(CycleUtils.parsePeriod(cycle).multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/model.<Double>getAs("NextPrincipalRedemptionPayment"))-1)));
+            maturity = adjuster.shift(lastEvent.plus(CycleUtils.parsePeriod(cycle).multipliedBy(remainingPeriods)));
         }
         return maturity;
     }
@@ -334,7 +339,7 @@ public final class LinearAmortizer {
             states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
             states.nominalInterestRate = model.getAs("NominalInterestRate");
             if(InterestCalculationBase.NT.equals(model.getAs("InterestCalculationBase"))){
-                states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * states.notionalPrincipal;
+                states.interestCalculationBaseAmount = states.notionalPrincipal; // contractRole applied at notionalPrincipal init
             }else{
                 states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("InterestCalculationBaseAmount");
             }
@@ -357,30 +362,9 @@ public final class LinearAmortizer {
             states.feeAccrued = model.getAs("FeeAccrued");
         }//TODO: implement last two possible initialization
 
-        if(!CommonUtils.isNull(model.getAs("ScalingEffect"))){
-            ScalingEffect scalingEffect = model.getAs("ScalingEffect");
-            switch(scalingEffect){
-                case INO:
-                    //TODO: cannot find term SCIXD in dictionary
-                    states.interestScalingMultiplier = model.getAs("ScalingIndexAtStatusDate");
-                    states.notionalScalingMultiplier = model.getAs("ScalingIndexAtStatusDate");
-                    break;
-                case IOO:
-                    states.interestScalingMultiplier = model.getAs("ScalingIndexAtStatusDate");
-                    states.notionalScalingMultiplier = 1.0;
-                    break;
-                case ONO:
-                    states.notionalScalingMultiplier = model.getAs("ScalingIndexAtStatusDate");
-                    states.interestScalingMultiplier = 1.0;
-                    break;
-                case OOO:
-                    states.interestScalingMultiplier = 1.0;
-                    states.notionalScalingMultiplier = 1.0;
-            }
-        }else {
-            states.notionalScalingMultiplier = 1.0;
-            states.interestScalingMultiplier = 1.0;
-        }
+        states.notionalScalingMultiplier = model.getAs("NotionalScalingMultiplier");
+        states.interestScalingMultiplier = model.getAs("InterestScalingMultiplier");
+
         states.contractPerformance = model.getAs("ContractPerformance");
         states.statusDate = model.getAs("StatusDate");
 

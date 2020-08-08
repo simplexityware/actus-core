@@ -155,7 +155,9 @@ public class ContractModel implements ContractModelProvider {
                         map.put("TerminationDate", (CommonUtils.isNull(attributes.get("TerminationDate"))) ? null : LocalDateTime.parse(attributes.get("TerminationDate")));
                         map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("PriceAtTerminationDate"))) ? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")));
                         map.put("MarketObjectCodeOfScalingIndex", attributes.get("MarketObjectCodeOfScalingIndex"));
-                        map.put("ScalingIndexAtStatusDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate")));
+                        map.put("ScalingIndexAtContractDealDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtContractDealDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtContractDealDate")));
+                        map.put("NotionalScalingMultiplier", (CommonUtils.isNull(attributes.get("NotionalScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("NotionalScalingMultiplier")));
+                        map.put("InterestScalingMultiplier", (CommonUtils.isNull(attributes.get("InterestScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("InterestScalingMultiplier")));
                         map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("CycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex")));
                         map.put("CycleOfScalingIndex", attributes.get("CycleOfScalingIndex"));
                         map.put("ScalingEffect", CommonUtils.isNull(attributes.get("ScalingEffect")) ? null : ScalingEffect.valueOf(attributes.get("ScalingEffect")));
@@ -209,7 +211,9 @@ public class ContractModel implements ContractModelProvider {
                         map.put("TerminationDate", (CommonUtils.isNull(attributes.get("TerminationDate"))) ? null : LocalDateTime.parse(attributes.get("TerminationDate")));
                         map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("PriceAtTerminationDate"))) ? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")));
                         map.put("MarketObjectCodeOfScalingIndex", attributes.get("MarketObjectCodeOfScalingIndex"));
-                        map.put("ScalingIndexAtStatusDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate")));
+                        map.put("ScalingIndexAtContractDealDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtContractDealDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtContractDealDate")));
+                        map.put("NotionalScalingMultiplier", (CommonUtils.isNull(attributes.get("NotionalScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("NotionalScalingMultiplier")));
+                        map.put("InterestScalingMultiplier", (CommonUtils.isNull(attributes.get("InterestScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("InterestScalingMultiplier")));
                         map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("CycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex")));
                         map.put("CycleOfScalingIndex", attributes.get("CycleOfScalingIndex"));
                         map.put("ScalingEffect", CommonUtils.isNull(attributes.get("ScalingEffect")) ? null : ScalingEffect.valueOf(attributes.get("ScalingEffect")));
@@ -268,7 +272,9 @@ public class ContractModel implements ContractModelProvider {
                         map.put("TerminationDate", (CommonUtils.isNull(attributes.get("TerminationDate"))) ? null : LocalDateTime.parse(attributes.get("TerminationDate")));
                         map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("PriceAtTerminationDate"))) ? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")));
                         map.put("MarketObjectCodeOfScalingIndex", attributes.get("MarketObjectCodeOfScalingIndex"));
-                        map.put("ScalingIndexAtStatusDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate")));
+                        map.put("ScalingIndexAtContractDealDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtContractDealDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtContractDealDate")));
+                        map.put("NotionalScalingMultiplier", (CommonUtils.isNull(attributes.get("NotionalScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("NotionalScalingMultiplier")));
+                        map.put("InterestScalingMultiplier", (CommonUtils.isNull(attributes.get("InterestScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("InterestScalingMultiplier")));
                         map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("CycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex")));
                         map.put("CycleOfScalingIndex", attributes.get("CycleOfScalingIndex"));
                         map.put("ScalingEffect", CommonUtils.isNull(attributes.get("ScalingEffect")) ? null : ScalingEffect.valueOf(attributes.get("ScalingEffect")));
@@ -329,7 +335,9 @@ public class ContractModel implements ContractModelProvider {
                         map.put("TerminationDate", (CommonUtils.isNull(attributes.get("TerminationDate"))) ? null : LocalDateTime.parse(attributes.get("TerminationDate")));
                         map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("PriceAtTerminationDate"))) ? 0.0 : Double.parseDouble(attributes.get("PriceAtTerminationDate")));
                         map.put("MarketObjectCodeOfScalingIndex", attributes.get("MarketObjectCodeOfScalingIndex"));
-                        map.put("ScalingIndexAtStatusDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtStatusDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtStatusDate")));
+                        map.put("ScalingIndexAtContractDealDate", (CommonUtils.isNull(attributes.get("ScalingIndexAtContractDealDate"))) ? 0.0 : Double.parseDouble(attributes.get("ScalingIndexAtContractDealDate")));
+                        map.put("NotionalScalingMultiplier", (CommonUtils.isNull(attributes.get("NotionalScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("NotionalScalingMultiplier")));
+                        map.put("InterestScalingMultiplier", (CommonUtils.isNull(attributes.get("InterestScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("InterestScalingMultiplier")));
                         map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("CycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("CycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("InitialExchangeDate"))) : LocalDateTime.parse(attributes.get("CycleAnchorDateOfScalingIndex")));
                         map.put("CycleOfScalingIndex", attributes.get("CycleOfScalingIndex"));
                         map.put("ScalingEffect", CommonUtils.isNull(attributes.get("ScalingEffect")) ? null : ScalingEffect.valueOf(attributes.get("ScalingEffect")));
