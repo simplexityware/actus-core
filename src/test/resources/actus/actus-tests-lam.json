@@ -4991,7 +4991,7 @@
             "notionalPrincipal": " 5000",
             "cycleAnchorDateOfPrincipalRedemption": "2013-01-31T00:00:00",
             "nextPrincipalRedemptionPayment": " 100",
-            "dayCountConvention": "AAISDA",
+            "dayCountConvention": "AA",
             "nominalInterestRate": " 0.08",
             "currency": "USD",
             "cycleOfPrincipalRedemption": "P2WL1",
@@ -5197,7 +5197,7 @@
             "notionalPrincipal": " 5000",
             "cycleAnchorDateOfPrincipalRedemption": "2013-02-01T00:00:00",
             "nextPrincipalRedemptionPayment": " 100",
-            "dayCountConvention": "AAISDA",
+            "dayCountConvention": "AA",
             "nominalInterestRate": " 0.08",
             "currency": "USD",
             "cycleOfPrincipalRedemption": "P9DL1",
@@ -7794,7 +7794,7 @@
             "scalingIndexAtStatusDate": "100",
             "cycleAnchorDateOfScalingIndex": "2013-05-01T00:00:00",
             "cycleOfScalingIndex": "P2ML1",
-            "scalingEffect": "I00"
+            "scalingEffect": "IOO"
         },
         "to": "2014-01-10T00:00:00",
         "dataObserved": {
@@ -8275,7 +8275,7 @@
             "scalingIndexAtStatusDate": "100",
             "cycleAnchorDateOfScalingIndex": "2013-05-01T00:00:00",
             "cycleOfScalingIndex": "P2ML1",
-            "scalingEffect": "IN0"
+            "scalingEffect": "INO"
         },
         "to": "2014-12-01T00:00:00",
         "dataObserved": {
@@ -8967,7 +8967,7 @@
             "scalingIndexAtStatusDate": "100",
             "cycleAnchorDateOfScalingIndex": "2013-05-01T00:00:00",
             "cycleOfScalingIndex": "P2ML1",
-            "scalingEffect": "IN0"
+            "scalingEffect": "INO"
         },
         "to": "2013-01-01T00:00:00",
         "dataObserved": {

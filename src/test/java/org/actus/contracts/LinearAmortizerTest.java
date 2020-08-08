@@ -13,6 +13,7 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org. actus.events.ContractEvent;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -49,7 +50,7 @@ public class LinearAmortizerTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = LinearAmortizer.schedule(terms.getAs("MaturityDate"), terms);
+            ArrayList<ContractEvent> schedule = LinearAmortizer.schedule(LocalDateTime.parse(test.getto()), terms);
             schedule = LinearAmortizer.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
@@ -69,8 +70,8 @@ public class LinearAmortizerTest {
             List<ResultSet> expectedResults = test.getResults();
             
             // round results to available precision
-            computedResults.forEach(result -> result.roundTo(12));
-            expectedResults.forEach(result -> result.roundTo(12));
+            computedResults.forEach(result -> result.roundTo(10));
+            expectedResults.forEach(result -> result.roundTo(10));
 
             // create dynamic test
             return DynamicTest.dynamicTest("Test: " + testId,

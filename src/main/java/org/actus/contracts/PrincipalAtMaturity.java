@@ -204,7 +204,10 @@ public final class PrincipalAtMaturity {
 
         // apply events according to their time sequence to current state
         events.forEach(e -> e.eval(states, model, observer, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
-
+        // remove pre-purchase events if purchase date set
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
+        }
         // return evaluated events
         return events;
     }

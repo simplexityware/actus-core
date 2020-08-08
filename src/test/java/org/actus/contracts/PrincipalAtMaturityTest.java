@@ -69,8 +69,8 @@ public class PrincipalAtMaturityTest {
             List<ResultSet> expectedResults = test.getResults();
             
             // round results to available precision
-            computedResults.forEach(result -> result.roundTo(12));
-            expectedResults.forEach(result -> result.roundTo(12));
+            computedResults.forEach(result -> result.roundTo(10));
+            expectedResults.forEach(result -> result.roundTo(10));
 
             // create dynamic test
             return DynamicTest.dynamicTest("Test: " + testId,
