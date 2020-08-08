@@ -7550,7 +7550,7 @@
             "fixingDays": "P0D",
             "cycleAnchorDateOfInterestPayment": "2013-03-01T00:00:00",
             "cycleOfInterestPayment": "P1ML0",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "",
         "dataObserved": {
@@ -7872,7 +7872,7 @@
             "fixingDays": "P2D",
             "cycleAnchorDateOfInterestPayment": "2013-03-01T00:00:00",
             "cycleOfInterestPayment": "P1ML0",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "",
         "dataObserved": {
@@ -9653,7 +9653,7 @@
             "fixingDays": "P0D",
             "cycleAnchorDateOfInterestPayment": "2013-03-01T00:00:00",
             "cycleOfInterestPayment": "P1ML0",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "",
         "dataObserved": {
@@ -9947,7 +9947,7 @@
             "fixingDays": "P0D",
             "cycleAnchorDateOfInterestPayment": "2013-03-01T00:00:00",
             "cycleOfInterestPayment": "P1ML0",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "",
         "dataObserved": {

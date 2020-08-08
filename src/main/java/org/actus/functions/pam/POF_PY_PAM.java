@@ -37,7 +37,7 @@ public final class POF_PY_PAM implements PayOffFunction {
                     * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                     * dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
                     * states.notionalPrincipal
-                    * Math.max(0, states.nominalInterestRate - riskFactorModel.stateAt(model.getAs("MarketObjectCodeRateReset"), time,states,model));
+                    * Math.max(0, states.nominalInterestRate - riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time,states,model));
         }
     }
 }
