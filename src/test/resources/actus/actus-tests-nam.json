@@ -333,7 +333,7 @@
             "dayCountConvention": "A365",
             "nominalInterestRate": "0.08",
             "currency": "USD",
-            "maturityDate": "2016-01-01T00:00:00",
+            "maturityDate": "2014-05-01T00:00:00",
             "purchaseDate": "2013-06-01T00:00:00",
             "priceAtPurchaseDate": "5100",
             "cycleAnchorDateOfRateReset": "2013-04-01T00:00:00",
@@ -345,11 +345,15 @@
             "cycleOfInterestPayment": "P1ML0",
             "interestCalculationBase": "NT"
         },
-        "to": "2016-01-01T00:00:00",
+        "to": "",
         "dataObserved": {
             "LIBOR_USD": {
                 "identifier": "LIBOR_USD",
                 "data": [
+                    {
+                        "timestamp": "2013-04-01T00:00:00",
+                        "value": "0.010567901234567900"
+                    },
                     {
                         "timestamp": "2013-07-01T00:00:00",
                         "value": "0.011679012345679000"
