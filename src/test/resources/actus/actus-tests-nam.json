@@ -677,11 +677,15 @@
             "accruedInterest": "200",
             "interestCalculationBase": "NT"
         },
-        "to": "2016-01-01T00:00:00",
+        "to": "",
         "dataObserved": {
             "LIBOR_USD": {
                 "identifier": "LIBOR_USD",
                 "data": [
+                    {
+                        "timestamp": "2013-04-01T00:00:00",
+                        "value": "0.010567901234567900"
+                    },
                     {
                         "timestamp": "2013-07-01T00:00:00",
                         "value": "0.011679012345679000"
