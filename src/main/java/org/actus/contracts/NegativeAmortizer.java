@@ -140,15 +140,7 @@ public final class NegativeAmortizer {
                 });
 
                 // also, remove any IP event exactly at IPCED and replace with an IPCI event
-                interestEvents.remove(EventFactory.createEvent(
-                        model.getAs("CapitalizationEndDate"),
-                        EventType.IP,
-                        model.getAs("Currency"),
-                        new POF_AD_PAM(),
-                        new STF_AD_PAM(),
-                        model.getAs("BusinessDayConvention"),
-                        model.getAs("ContractID"))
-                );
+                interestEvents.removeIf(e -> e.compareTo(capitalizationEnd) == 0);
                 interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
