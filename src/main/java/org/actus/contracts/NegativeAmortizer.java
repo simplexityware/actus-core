@@ -280,7 +280,7 @@ public final class NegativeAmortizer {
         // apply events according to their time sequence to current state
         LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
 		ListIterator eventIterator = events.listIterator();
-		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal >= 0.0) && eventIterator.hasNext()) {
+		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
 			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
 					model.getAs("BusinessDayConvention"));
 		}
@@ -297,23 +297,30 @@ public final class NegativeAmortizer {
     private static LocalDateTime maturity(ContractModelProvider model) {
         LocalDateTime maturity = model.getAs("MaturityDate");
         if (CommonUtils.isNull(maturity)) {
-            if(CommonUtils.isNull(model.getAs("CycleOfRateReset")) || CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NT)) {
-                LocalDateTime lastEvent;
-                if(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").isBefore(model.getAs("StatusDate"))) {
-                    Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"),model.getAs("StatusDate"),
-                            model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"));
-                    previousEvents.removeIf( d -> d.isBefore(model.<LocalDateTime>getAs("StatusDate").minus(CycleUtils.parsePeriod(model.getAs("CycleOfInterestPayment")))));
-                    previousEvents.remove(model.getAs("StatusDate"));
-                    lastEvent = previousEvents.toArray(new LocalDateTime[1])[0];
-                } else {
-                    lastEvent = model.getAs("CycleAnchorDateOfPrincipalRedemption");
-                }
-                Period cyclePeriod = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
-                double coupon = model.<Double>getAs("NotionalPrincipal")*model.<Double>getAs("NominalInterestRate")*model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(model.getAs("CycleAnchorDateOfPrincipalRedemption"), model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").plus(cyclePeriod));
-                maturity = lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/(model.<Double>getAs("NextPrincipalRedemptionPayment")-coupon))));
-            } else {
-                maturity = model.<LocalDateTime>getAs("InitialExchangeDate").plus(Constants.MAX_LIFETIME);
+            LocalDateTime t0 = model.getAs("StatusDate");
+            LocalDateTime pranx = model.getAs("CycleAnchorDateOfPrincipalRedemption");
+            LocalDateTime ied = model.getAs("InitialExchangeDate");
+            Period prcl = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
+            LocalDateTime lastEvent;
+            if(!CommonUtils.isNull(pranx) && (pranx.isEqual(t0) || pranx.isAfter(t0))) {
+                lastEvent = pranx;
+            } else if(ied.plus(prcl).isAfter(t0) || ied.plus(prcl).isEqual(t0)) {
+                lastEvent = ied.plus(prcl);
+            }else{
+                Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(
+                        model.getAs("CycleAnchorDateOfPrincipalRedemption"),
+                        model.getAs("StatusDate"),
+                        model.getAs("CycleOfPrincipalRedemption"),
+                        model.getAs("EndOfMonthConvention")
+                    );
+                previousEvents.removeIf( d -> d.isBefore(t0));
+                previousEvents.remove(t0);
+                List<LocalDateTime> prevEventsList = new ArrayList<>(previousEvents);
+                Collections.sort(prevEventsList);
+                lastEvent = prevEventsList.get(prevEventsList.size()-1);
             }
+            double coupon = model.<Double>getAs("NotionalPrincipal")*model.<Double>getAs("NominalInterestRate")*model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(lastEvent, lastEvent.plus(prcl));
+            maturity = lastEvent.plus(prcl.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/((model.<Double>getAs("NextPrincipalRedemptionPayment")-coupon)))));
         }
         return maturity;
     }
