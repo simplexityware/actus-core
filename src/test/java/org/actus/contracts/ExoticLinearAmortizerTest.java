@@ -151,7 +151,7 @@ public class ExoticLinearAmortizerTest {
 		map.put("ArrayCycleOfRateReset", "2M-,NULL,2M-");
 		map.put("ArrayRate", "0.01,0.2,-0.05");
 		map.put("ArrayFixedVariable", "VAR,FIX,VAR");
-		map.put("MarketObjectCodeRateReset", "USD.SWP");
+		map.put("MarketObjectCodeOfRateReset", "USD.SWP");
 
 		// parse attributes
 		ContractModel model = ContractModel.parse(map);
@@ -216,7 +216,7 @@ public class ExoticLinearAmortizerTest {
 		map.put("ArrayCycleOfRateReset", "2M-,NULL,2M-");
 		map.put("ArrayRate", "0.01,0.2,-0.05");
 		map.put("ArrayFixedVariable", "VAR,FIX,VAR");
-		map.put("MarketObjectCodeRateReset", "USD.SWP");
+		map.put("MarketObjectCodeOfRateReset", "USD.SWP");
 
 		// parse attributes
 		ContractModel model = ContractModel.parse(map);
@@ -266,7 +266,7 @@ public class ExoticLinearAmortizerTest {
 		map.put("ArrayNextPrincipalRedemptionPayment", "700,800");
 		map.put("ArrayIncreaseDecrease", "DEC,DEC");
 		map.put("RateMultiplier", "1");
-		map.put("MarketObjectCodeRateReset", "USD.SWP");
+		map.put("MarketObjectCodeOfRateReset", "USD.SWP");
 		map.put("AccruedInterest", "0");
 		map.put("InterestCalculationBase", "NTL");
 		map.put("InterestCalculationBaseAmount", "10000.0");

@@ -24,7 +24,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-01T00:00:00",
         "dataObserved": {
@@ -300,7 +300,7 @@
             "accruedInterest": "-200",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-01T00:00:00",
         "dataObserved": {
@@ -472,7 +472,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "EOM",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2014-02-28T00:00:00",
         "dataObserved": {
@@ -746,7 +746,7 @@
             "accruedInterest": "100",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-12-15T00:00:00",
         "dataObserved": {
@@ -1649,7 +1649,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "EOM",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2014-01-31T00:00:00",
         "dataObserved": {
@@ -1935,7 +1935,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-01T00:00:00",
         "dataObserved": {
@@ -2209,7 +2209,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-15T00:00:00",
         "dataObserved": {
@@ -2530,7 +2530,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-01T00:00:00",
         "dataObserved": {
@@ -2803,7 +2803,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-01T00:00:00",
         "dataObserved": {
@@ -3076,7 +3076,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-01T00:00:00",
         "dataObserved": {
@@ -3349,7 +3349,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-01T00:00:00",
         "dataObserved": {
@@ -3623,7 +3623,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-01T00:00:00",
         "dataObserved": {
@@ -3893,7 +3893,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-11-15T00:00:00",
         "dataObserved": {
@@ -4166,7 +4166,7 @@
             "cycleOfInterestCalculationBase": "P2ML1",
             "interestCalculationBase": "NTL",
             "interestCalculationBaseAmount": "6000",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-09-15T00:00:00",
         "dataObserved": {
@@ -4435,7 +4435,7 @@
             "cycleOfInterestCalculationBase": "P2ML0",
             "interestCalculationBase": "NTL",
             "interestCalculationBaseAmount": "5000",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-09-15T00:00:00",
         "dataObserved": {
@@ -4698,7 +4698,7 @@
             "cycleOfInterestCalculationBase": "P2ML1",
             "interestCalculationBase": "NTIED",
             "interestCalculationBaseAmount": "5000",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-09-14T23:59:59",
         "dataObserved": {
@@ -5131,7 +5131,7 @@
             "cycleOfInterestPayment": "P9DL1",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2013-10-16T00:00:00",
         "dataObserved": {
@@ -5753,7 +5753,7 @@
             "cycleOfInterestPayment": "P1ML1",
             "endOfMonthConvention": "EOM",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2016-01-01T00:00:00",
         "dataObserved": {
@@ -6667,7 +6667,7 @@
             "capitalizationEndDate": "2013-07-01T00:00:00",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2014-08-01T00:00:00",
         "dataObserved": {
@@ -6979,7 +6979,7 @@
             "cycleOfInterestPayment": "P2ML1",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2014-07-01T00:00:00",
         "dataObserved": {
@@ -7270,7 +7270,7 @@
             "capitalizationEndDate": "2013-09-01T00:00:00",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP"
+            "marketObjectCodeOfRateReset": "USD.SWP"
         },
         "to": "2014-08-01T00:00:00",
         "dataObserved": {
@@ -7557,7 +7557,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP",
+            "marketObjectCodeOfRateReset": "USD.SWP",
             "marketObjectCodeOfScalingIndex": "USA.CPI",
             "scalingIndexAtContractDealDate": "100",
             "notionalScalingMultiplier": "1",
@@ -8037,7 +8037,7 @@
             "cycleOfInterestPayment": "P1ML0",
             "endOfMonthConvention": "SD",
             "interestCalculationBase": "NT",
-            "marketObjectCodeRateReset": "USD.SWP",
+            "marketObjectCodeOfRateReset": "USD.SWP",
             "marketObjectCodeOfScalingIndex": "USA.CPI",
             "scalingIndexAtContractDealDate": "100",
             "notionalScalingMultiplier": "1",

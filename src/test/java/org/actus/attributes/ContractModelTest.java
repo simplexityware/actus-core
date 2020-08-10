@@ -85,7 +85,7 @@ public class ContractModelTest {
         map.put("CycleAnchorDateOfRateReset", "2016-04-02T00:00:00");
         map.put("CycleOfRateReset", "2M-");
         map.put("RateSpread", "0.05");
-        map.put("MarketObjectCodeRateReset", "ReferenceRate-XY");
+        map.put("MarketObjectCodeOfRateReset", "ReferenceRate-XY");
         map.put("CyclePointOfRateReset", "BEG");
         map.put("FixingDays", "2D");
         map.put("NextResetRate", "0.08");
