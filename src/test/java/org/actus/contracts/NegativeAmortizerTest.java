@@ -13,6 +13,7 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org. actus.events.ContractEvent;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
+import org.actus.util.CommonUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
@@ -49,7 +51,8 @@ public class NegativeAmortizerTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = NegativeAmortizer.schedule(terms.getAs("MaturityDate"), terms);
+            LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
+            ArrayList<ContractEvent> schedule = NegativeAmortizer.schedule(to, terms);
             schedule = NegativeAmortizer.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
@@ -69,8 +72,8 @@ public class NegativeAmortizerTest {
             List<ResultSet> expectedResults = test.getResults();
             
             // round results to available precision
-            computedResults.forEach(result -> result.roundTo(12));
-            expectedResults.forEach(result -> result.roundTo(12));
+            computedResults.forEach(result -> result.roundTo(10));
+            expectedResults.forEach(result -> result.roundTo(10));
 
             // create dynamic test
             return DynamicTest.dynamicTest("Test: " + testId,
