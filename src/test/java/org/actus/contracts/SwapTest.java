@@ -5,530 +5,76 @@
  */
 package org.actus.contracts;
 
+import org.actus.testutils.ContractTestUtils;
+import org.actus.testutils.TestData;
+import org.actus.testutils.ObservedDataSet;
+import org.actus.testutils.ResultSet;
+import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
-import org.actus.attributes.ContractModelProvider;
-import org.actus.events.ContractEvent;
-import org.actus.events.EventFactory;
-import org.actus.externals.RiskFactorModelProvider;
-import org.actus.functions.pam.POF_AD_PAM;
-import org.actus.functions.pam.STF_AD_PAM;
-import org.actus.states.StateSpace;
-import org.actus.time.ScheduleFactory;
-import org.actus.util.StringUtils;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org. actus.events.ContractEvent;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Stream;
+import java.util.stream.Collectors;
 import java.time.LocalDateTime;
-import java.util.*;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.DynamicTest;
 
 public class SwapTest {
-    
-    class MarketModel implements RiskFactorModelProvider {
-        public Set<String> keys() {
-            Set<String> keys = new HashSet<String>();
-            return keys;
-        }
+    @TestFactory
+    public Stream<DynamicTest> test() {
+        String testFile = "./src/test/resources/actus/actus-tests-swaps.json";
+
+        // read tests from file
+        Map<String, TestData> tests = ContractTestUtils.readTests(testFile);
+
+        // get ids of tests
+        Set<String> testIds = tests.keySet();
+
+        // go through test-id and perform test
+        return testIds.stream().map(testId -> {
+            // extract test for test ID
+            TestData test = tests.get(testId);
+
+            // create market model from data
+            List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
+            DataObserver observer = ContractTestUtils.createObserver(dataObserved);
+          
+            // create contract model from data
+            ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
+
+            // compute and evaluate schedule
+            ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(test.getto()), terms);
+            schedule = Swap.apply(schedule, terms, observer);
         
-        public double stateAt(String id,LocalDateTime time,StateSpace contractStates,ContractModelProvider contractAttributes) {
-            return 0.0;    
-        }
-    }
-    
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+            // transform schedule to event list and return
+            List<ResultSet> computedResults = schedule.stream().map(e -> { 
+                ResultSet results = new ResultSet();
+                results.setEventDate(e.eventTime().toString());
+                results.setEventType(e.eventType());
+                results.setPayoff(e.payoff());
+                results.setCurrency(e.currency());
+                results.setNotionalPrincipal(e.states().notionalPrincipal);
+                results.setNominalInterestRate(e.states().nominalInterestRate);
+                results.setAccruedInterest(e.states().accruedInterest);
+                return results;
+            }).collect(Collectors.toList());
 
-    @Test
-    public void test_SWAPS_schedule_MandatoryAttributes() {
-        thrown = ExpectedException.none();
+            // extract test results
+            List<ResultSet> expectedResults = test.getResults();
+            
+            // round results to available precision
+            computedResults.forEach(result -> result.roundTo(11));
+            expectedResults.forEach(result -> result.roundTo(11));
 
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-
-        // define child 1 attributes
-        Map<String, String> child1 = new HashMap<String, String>();
-        child1.put("ContractType", "PAM");
-        child1.put("ContractID", "XYZ_C1");
-        child1.put("Calendar", "NoHolidayCalendar");
-        child1.put("StatusDate", "2016-01-01T00:00:00");
-        child1.put("LegalEntityIDCounterparty", "CORP-XY");
-        child1.put("DayCountConvention", "A/AISDA");
-        child1.put("Currency", "USD");
-        child1.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child1.put("MaturityDate", "2017-01-01T00:00:00");
-        child1.put("NotionalPrincipal", "1000.0");
-        child1.put("NominalInterestRate","0.01");
-        child1.put("CycleOfInterestPayment","1Q-");
-
-        // define child 2 attributes
-        Map<String, String> child2 = new HashMap<String, String>();
-        child2.put("ContractType", "PAM");
-        child2.put("ContractID", "XYZ_C2");
-        child2.put("Calendar", "NoHolidayCalendar");
-        child2.put("StatusDate", "2016-01-01T00:00:00");
-        child2.put("LegalEntityIDCounterparty", "CORP-XY");
-        child2.put("DayCountConvention", "A/AISDA");
-        child2.put("Currency", "USD");
-        child2.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child2.put("MaturityDate", "2017-01-01T00:00:00");
-        child2.put("NotionalPrincipal", "1000.0");
-        child2.put("NominalInterestRate","0.01");
-        child2.put("CycleOfInterestPayment","1Q-");
-        child2.put("CycleOfRateReset","1Q-");
-        child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
-
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
-
-        // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(child1.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = Swap.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_SWAPS_schedule_withDelivery() {
-        thrown = ExpectedException.none();
-
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "D");
-
-        // define child 1 attributes
-        Map<String, String> child1 = new HashMap<String, String>();
-        child1.put("ContractType", "PAM");
-        child1.put("ContractID", "XYZ_C1");
-        child1.put("Calendar", "NoHolidayCalendar");
-        child1.put("StatusDate", "2016-01-01T00:00:00");
-        child1.put("LegalEntityIDCounterparty", "CORP-XY");
-        child1.put("DayCountConvention", "A/AISDA");
-        child1.put("Currency", "USD");
-        child1.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child1.put("MaturityDate", "2017-01-01T00:00:00");
-        child1.put("NotionalPrincipal", "1000.0");
-        child1.put("NominalInterestRate","0.01");
-        child1.put("CycleOfInterestPayment","1Q-");
-
-        // define child 2 attributes
-        Map<String, String> child2 = new HashMap<String, String>();
-        child2.put("ContractType", "PAM");
-        child2.put("ContractID", "XYZ_C2");
-        child2.put("Calendar", "NoHolidayCalendar");
-        child2.put("StatusDate", "2016-01-01T00:00:00");
-        child2.put("LegalEntityIDCounterparty", "CORP-XY");
-        child2.put("DayCountConvention", "A/AISDA");
-        child2.put("Currency", "USD");
-        child2.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child2.put("MaturityDate", "2017-01-01T00:00:00");
-        child2.put("NotionalPrincipal", "1000.0");
-        child2.put("NominalInterestRate","0.01");
-        child2.put("CycleOfInterestPayment","1Q-");
-        child2.put("CycleOfRateReset","1Q-");
-        child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
-
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
-
-        // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(child1.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = Swap.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_SWAPS_schedule_withSettlement() {
-        thrown = ExpectedException.none();
-
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-
-        // define child 1 attributes
-        Map<String, String> child1 = new HashMap<String, String>();
-        child1.put("ContractType", "PAM");
-        child1.put("ContractID", "XYZ_C1");
-        child1.put("Calendar", "NoHolidayCalendar");
-        child1.put("StatusDate", "2016-01-01T00:00:00");
-        child1.put("LegalEntityIDCounterparty", "CORP-XY");
-        child1.put("DayCountConvention", "A/AISDA");
-        child1.put("Currency", "USD");
-        child1.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child1.put("MaturityDate", "2017-01-01T00:00:00");
-        child1.put("NotionalPrincipal", "1000.0");
-        child1.put("NominalInterestRate","0.01");
-        child1.put("CycleOfInterestPayment","1Q-");
-
-        // define child 2 attributes
-        Map<String, String> child2 = new HashMap<String, String>();
-        child2.put("ContractType", "PAM");
-        child2.put("ContractID", "XYZ_C2");
-        child2.put("Calendar", "NoHolidayCalendar");
-        child2.put("StatusDate", "2016-01-01T00:00:00");
-        child2.put("LegalEntityIDCounterparty", "CORP-XY");
-        child2.put("DayCountConvention", "A/AISDA");
-        child2.put("Currency", "USD");
-        child2.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child2.put("MaturityDate", "2017-01-01T00:00:00");
-        child2.put("NotionalPrincipal", "1000.0");
-        child2.put("NominalInterestRate","0.01");
-        child2.put("CycleOfInterestPayment","1Q-");
-        child2.put("CycleOfRateReset","1Q-");
-        child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
-
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
-
-        // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(child1.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = Swap.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_SWAPS_schedule_withSettlement_withPurchase() {
-        thrown = ExpectedException.none();
-
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-        parent.put("PurchaseDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtPurchaseDate", "-95");
-
-        // define child 1 attributes
-        Map<String, String> child1 = new HashMap<String, String>();
-        child1.put("ContractType", "PAM");
-        child1.put("ContractID", "XYZ_C1");
-        child1.put("Calendar", "NoHolidayCalendar");
-        child1.put("StatusDate", "2016-01-01T00:00:00");
-        child1.put("LegalEntityIDCounterparty", "CORP-XY");
-        child1.put("DayCountConvention", "A/AISDA");
-        child1.put("Currency", "USD");
-        child1.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child1.put("MaturityDate", "2017-01-01T00:00:00");
-        child1.put("NotionalPrincipal", "1000.0");
-        child1.put("NominalInterestRate","0.01");
-        child1.put("CycleOfInterestPayment","1Q-");
-
-        // define child 2 attributes
-        Map<String, String> child2 = new HashMap<String, String>();
-        child2.put("ContractType", "PAM");
-        child2.put("ContractID", "XYZ_C2");
-        child2.put("Calendar", "NoHolidayCalendar");
-        child2.put("StatusDate", "2016-01-01T00:00:00");
-        child2.put("LegalEntityIDCounterparty", "CORP-XY");
-        child2.put("DayCountConvention", "A/AISDA");
-        child2.put("Currency", "USD");
-        child2.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child2.put("MaturityDate", "2017-01-01T00:00:00");
-        child2.put("NotionalPrincipal", "1000.0");
-        child2.put("NominalInterestRate","0.01");
-        child2.put("CycleOfInterestPayment","1Q-");
-        child2.put("CycleOfRateReset","1Q-");
-        child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
-
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
-
-        // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(child1.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = Swap.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_SWAPS_schedule_withSettlement_withTermination() {
-        thrown = ExpectedException.none();
-
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-        parent.put("TerminationDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtTerminationDate", "105");
-
-        // define child 1 attributes
-        Map<String, String> child1 = new HashMap<String, String>();
-        child1.put("ContractType", "PAM");
-        child1.put("ContractID", "XYZ_C1");
-        child1.put("Calendar", "NoHolidayCalendar");
-        child1.put("StatusDate", "2016-01-01T00:00:00");
-        child1.put("LegalEntityIDCounterparty", "CORP-XY");
-        child1.put("DayCountConvention", "A/AISDA");
-        child1.put("Currency", "USD");
-        child1.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child1.put("MaturityDate", "2017-01-01T00:00:00");
-        child1.put("NotionalPrincipal", "1000.0");
-        child1.put("NominalInterestRate","0.01");
-        child1.put("CycleOfInterestPayment","1Q-");
-
-        // define child 2 attributes
-        Map<String, String> child2 = new HashMap<String, String>();
-        child2.put("ContractType", "PAM");
-        child2.put("ContractID", "XYZ_C2");
-        child2.put("Calendar", "NoHolidayCalendar");
-        child2.put("StatusDate", "2016-01-01T00:00:00");
-        child2.put("LegalEntityIDCounterparty", "CORP-XY");
-        child2.put("DayCountConvention", "A/AISDA");
-        child2.put("Currency", "USD");
-        child2.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child2.put("MaturityDate", "2017-01-01T00:00:00");
-        child2.put("NotionalPrincipal", "1000.0");
-        child2.put("NominalInterestRate","0.01");
-        child2.put("CycleOfInterestPayment","1Q-");
-        child2.put("CycleOfRateReset","1Q-");
-        child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
-
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
-
-        // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(child1.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = Swap.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_SWAPS_schedule_withSettlement_withPurchaseAndTermination() {
-        thrown = ExpectedException.none();
-
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "S");
-        parent.put("PurchaseDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtPurchaseDate", "-95");
-        parent.put("TerminationDate", "2016-11-01T00:00:00");
-        parent.put("PriceAtTerminationDate", "105");
-
-        // define child 1 attributes
-        Map<String, String> child1 = new HashMap<String, String>();
-        child1.put("ContractType", "PAM");
-        child1.put("ContractID", "XYZ_C1");
-        child1.put("Calendar", "NoHolidayCalendar");
-        child1.put("StatusDate", "2016-01-01T00:00:00");
-        child1.put("LegalEntityIDCounterparty", "CORP-XY");
-        child1.put("DayCountConvention", "A/AISDA");
-        child1.put("Currency", "USD");
-        child1.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child1.put("MaturityDate", "2017-01-01T00:00:00");
-        child1.put("NotionalPrincipal", "1000.0");
-        child1.put("NominalInterestRate","0.01");
-        child1.put("CycleOfInterestPayment","1Q-");
-
-        // define child 2 attributes
-        Map<String, String> child2 = new HashMap<String, String>();
-        child2.put("ContractType", "PAM");
-        child2.put("ContractID", "XYZ_C2");
-        child2.put("Calendar", "NoHolidayCalendar");
-        child2.put("StatusDate", "2016-01-01T00:00:00");
-        child2.put("LegalEntityIDCounterparty", "CORP-XY");
-        child2.put("DayCountConvention", "A/AISDA");
-        child2.put("Currency", "USD");
-        child2.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child2.put("MaturityDate", "2017-01-01T00:00:00");
-        child2.put("NotionalPrincipal", "1000.0");
-        child2.put("NominalInterestRate","0.01");
-        child2.put("CycleOfInterestPayment","1Q-");
-        child2.put("CycleOfRateReset","1Q-");
-        child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
-
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
-
-        // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(child1.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = Swap.apply(schedule,model,riskFactors);
-    }
-
-    @Test
-    public void test_SWAPS_schedule_withDelivery_withPurchaseAndTermination() {
-        thrown = ExpectedException.none();
-
-        // define parent attributes
-        Map<String, String> parent = new HashMap<String, String>();
-        parent.put("ContractType", "SWAPS");
-        parent.put("ContractID", "XYZ");
-        parent.put("StatusDate", "2016-01-01T00:00:00");
-        parent.put("ContractRole", "RFL");
-        parent.put("LegalEntityIDCounterparty", "CORP-XY");
-        parent.put("Currency", "USD");
-        parent.put("DeliverySettlement", "D");
-        parent.put("PurchaseDate", "2016-05-01T00:00:00");
-        parent.put("PriceAtPurchaseDate", "-95");
-        parent.put("TerminationDate", "2016-11-01T00:00:00");
-        parent.put("PriceAtTerminationDate", "105");
-
-        // define child 1 attributes
-        Map<String, String> child1 = new HashMap<String, String>();
-        child1.put("ContractType", "PAM");
-        child1.put("ContractID", "XYZ_C1");
-        child1.put("Calendar", "NoHolidayCalendar");
-        child1.put("StatusDate", "2016-01-01T00:00:00");
-        child1.put("LegalEntityIDCounterparty", "CORP-XY");
-        child1.put("DayCountConvention", "A/AISDA");
-        child1.put("Currency", "USD");
-        child1.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child1.put("MaturityDate", "2017-01-01T00:00:00");
-        child1.put("NotionalPrincipal", "1000.0");
-        child1.put("NominalInterestRate","0.01");
-        child1.put("CycleOfInterestPayment","1Q-");
-
-        // define child 2 attributes
-        Map<String, String> child2 = new HashMap<String, String>();
-        child2.put("ContractType", "PAM");
-        child2.put("ContractID", "XYZ_C2");
-        child2.put("Calendar", "NoHolidayCalendar");
-        child2.put("StatusDate", "2016-01-01T00:00:00");
-        child2.put("LegalEntityIDCounterparty", "CORP-XY");
-        child2.put("DayCountConvention", "A/AISDA");
-        child2.put("Currency", "USD");
-        child2.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        child2.put("MaturityDate", "2017-01-01T00:00:00");
-        child2.put("NotionalPrincipal", "1000.0");
-        child2.put("NominalInterestRate","0.01");
-        child2.put("CycleOfInterestPayment","1Q-");
-        child2.put("CycleOfRateReset","1Q-");
-        child2.put("MarketObjectCodeOfRateReset","LIBOR_3M");
-
-        // combine child attributes in list
-        ArrayList child = new ArrayList();
-        child.add(child1);
-        child.add(child2);
-
-        // parse attributes
-        ContractModel model = ContractModel.parse(parent, child);
-
-        // compute schedule
-        ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(child1.get("MaturityDate")),model); 
-
-        // add analysis events
-        schedule.addAll(EventFactory.createEvents(
-            ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(6),"1M-","SD"),
-            StringUtils.EventType_AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM()));
-    
-        // define risk factor model
-        MarketModel riskFactors = new MarketModel();
-
-        // apply events
-        ArrayList<ContractEvent> events = Swap.apply(schedule,model,riskFactors);
+            // create dynamic test
+            return DynamicTest.dynamicTest("Test: " + testId,
+                () -> Assertions.assertArrayEquals(expectedResults.toArray(), computedResults.toArray()));
+        });
     }
 }

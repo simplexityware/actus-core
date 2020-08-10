@@ -6,6 +6,7 @@
 package org.actus.time;
 
 import org.actus.AttributeConversionException;
+import org.actus.types.EndOfMonthConventionEnum;
 import org.actus.util.CommonUtils;
 import org.actus.util.StringUtils;
 import org.actus.util.CycleUtils;
@@ -56,7 +57,7 @@ public final class ScheduleFactory {
 	 * @return an unordered set of schedule times
 	 * 
 	 */
-	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention) throws AttributeConversionException {
+	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, EndOfMonthConventionEnum endOfMonthConvention) throws AttributeConversionException {
 		return ScheduleFactory.createSchedule(startTime,endTime,cycle,endOfMonthConvention,true);
 	}
 
@@ -80,12 +81,11 @@ public final class ScheduleFactory {
 	 * @return an unordered set of schedule times
 	 *
 	 */
-	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, String endOfMonthConvention, boolean addEndTime) throws AttributeConversionException {
+	public static Set<LocalDateTime> createSchedule(LocalDateTime startTime, LocalDateTime endTime, String cycle, EndOfMonthConventionEnum endOfMonthConvention, boolean addEndTime) throws AttributeConversionException {
 		EndOfMonthAdjuster shifter;
-		CycleAdjuster adjuster;
 		Set<LocalDateTime> timesSet = new HashSet<LocalDateTime>();
         char stub;
-        
+
 		// if no cycle then only start (if specified) and end dates
 		if (CommonUtils.isNull(cycle)) {
 		    if (!CommonUtils.isNull(startTime)) {
@@ -98,24 +98,27 @@ public final class ScheduleFactory {
 			return timesSet;
 		}
 
+		Period period;
+		Period increment;
         // parse stub
         stub = CycleUtils.parseStub(cycle);
         
         // parse end of month convention
         shifter = new EndOfMonthAdjuster(endOfMonthConvention, startTime, cycle);
 		
-		// parse cycle adjuster
-		adjuster = new CycleAdjuster(cycle);
+		// parse cycle
+		period = CycleUtils.parsePeriod(cycle);
 
 		// init helpers for schedule creation
-		LocalDateTime scheduledTime = LocalDateTime.from(startTime);
-		LocalDateTime shiftedTime = LocalDateTime.from(startTime); // note, first time not shifted
-		
+		LocalDateTime newTime = LocalDateTime.from(startTime);
+
 		// create schedule based on end-of-month-convention
-		while (shiftedTime.isBefore(endTime)) {
-		   	timesSet.add(shiftedTime);
-			scheduledTime = adjuster.plusCycle(scheduledTime);
-			shiftedTime = shifter.shift(scheduledTime);
+		int counter = 1;
+		while (newTime.isBefore(endTime)) {
+			timesSet.add(newTime);
+			increment = period.multipliedBy(counter);
+			newTime = shifter.shift(startTime.plus(increment));
+			counter++;
 		}
 
 		// add (or not) additional time at endTime
@@ -124,9 +127,8 @@ public final class ScheduleFactory {
 		}
 
         // now adjust for the last stub
-		if (stub == StringUtils.LongStub && timesSet.size() > 2 && !endTime.equals(shiftedTime)) {
-		    //System.out.println("In method with par " + period + " " + multiplier + " " + newTime.minus(period.multipliedBy(multiplier)));
-			timesSet.remove(shifter.shift(adjuster.minusCycle(scheduledTime)));
+		if (stub == StringUtils.LongStub && timesSet.size() > 2 && !endTime.equals(newTime)) {
+			timesSet.remove(shifter.shift(startTime.plus(period.multipliedBy((counter - 2)))));
 		}
 		
 		// return schedule
@@ -151,7 +153,7 @@ public final class ScheduleFactory {
 	 * @return an unordered set of schedule times
 	 */
 	public static Set<LocalDateTime> createArraySchedule(LocalDateTime[] startTimes,
-			LocalDateTime endTime, String[] cycles, String endOfMonthConvention) {
+			LocalDateTime endTime, String[] cycles, EndOfMonthConventionEnum endOfMonthConvention) {
         Set<LocalDateTime> timesSet = new HashSet<LocalDateTime>();
         
         // add schedules 1 to N-1

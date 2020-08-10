@@ -11,7 +11,7 @@ package org.actus.attributes;
  * This is an internal representation of the various contract attributes used when 
  * evaluating the contract pay-off function. Hence, as opposed to an external, 
  * representation, e.g. a file, database, etc., this component carries the values of
- * attributes in their respective Java-data type which is required when evaluating 
+ * attributes in their respective Java-data type which is required when evaluating
  * the {@code ContractType.lifecycle} method.
  * 
  * @see <a href="http://www.projectactus.org/projectactus/?page_id=356">ACTUS Data Dictionary</a>

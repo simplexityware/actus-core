@@ -5,9 +5,11 @@
  */
 package org.actus.states;
 
-import org.actus.util.StringUtils;
+import org.actus.types.ContractPerformance;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * A data structure representing various states of a {@link ContractType}
@@ -19,21 +21,80 @@ import java.time.LocalDateTime;
  * in the various {@link ContractEvent}s.
  */
 public final class StateSpace {
-    public LocalDateTime lastEventTime;
-    public String contractStatus = StringUtils.ContractStatus_Performant; // TODO: initialize together with other states
-    public double timeFromLastEvent; // analytical result
-    public double nominalValue; // analytical result
-    public double nominalAccrued; // analytical result
-    public double feeAccrued; // analytical result
-    public double nominalRate; // analytical result
-    public double interestCalculationBase;
-    public double interestScalingMultiplier;
-    public double nominalScalingMultiplier;
-    public double nextPrincipalRedemptionPayment;
-    public double secondaryNominalValue; // analytical result
-    public double payoffAtSettlement;
-    public double variationMargin; // analytical result
-    public int contractRoleSign;
-    public double nominalAccruedFix;
-    public double nominalAccruedFloat;
+    public double               accruedInterest; // analytical result
+    public double               accruedInterest2;
+    public ContractPerformance  contractPerformance = ContractPerformance.PF; // TODO: initialize together with other states
+    public double               exerciseAmount;
+    public LocalDateTime        exerciseDate;
+    public double               feeAccrued; // analytical result
+    public double               interestCalculationBaseAmount;
+    public double               interestScalingMultiplier;
+    public double               nextPrincipalRedemptionPayment;
+    public double               nominalInterestRate; // analytical result
+    public double               nominalInterestRate2;
+    public LocalDateTime        nonPerformingDate;
+    public double               notionalPrincipal; // analytical result
+    public double               notionalPrincipal2; // analytical result
+    public double               notionalScalingMultiplier;
+    public LocalDateTime        statusDate;
+    public LocalDateTime        maturityDate;
+    public LocalDateTime        terminationDate;
+
+    /**
+     * Returns a String-representation of all analytical elements
+     * @return a single String containing all analytical elements
+     */
+    @Override
+    public String toString(){
+        StringJoiner joiner = new StringJoiner(" ");
+
+        joiner.add(Double.toString(accruedInterest))
+                .add(Double.toString(accruedInterest2))
+                .add(contractPerformance.toString())
+                .add(Double.toString(exerciseAmount))
+                //add empty string if not set
+                .add(Objects.isNull(exerciseDate) ? "" : exerciseDate.toString())
+                .add(Double.toString(feeAccrued))
+                .add(Double.toString(interestCalculationBaseAmount))
+                .add(Double.toString(interestScalingMultiplier))
+                .add(Double.toString(nextPrincipalRedemptionPayment))
+                .add(Double.toString(nominalInterestRate))
+                .add(Double.toString(nominalInterestRate2))
+                //add empty string if not set
+                .add(Objects.isNull(nonPerformingDate) ? "" : nonPerformingDate.toString())
+                .add(Double.toString(notionalPrincipal))
+                .add(Double.toString(notionalPrincipal2))
+                .add(Double.toString(notionalScalingMultiplier))
+                //add empty string if not set
+                .add(Objects.isNull(statusDate) ? "" : statusDate.toString())
+                .add(Objects.isNull(terminationDate) ? "" : terminationDate.toString())
+                .add(Objects.isNull(maturityDate) ? "" : maturityDate.toString())
+        ;
+
+        return joiner.toString();
+    }
+    //creates copy of StateSpace
+    public static StateSpace copyStateSpace(StateSpace original){
+        StateSpace copy = new StateSpace();
+        copy.accruedInterest = original.accruedInterest;
+        copy.accruedInterest2 = original.accruedInterest2;
+        copy.contractPerformance = original.contractPerformance;
+        copy.exerciseAmount = original.exerciseAmount;
+        copy.exerciseDate = original.exerciseDate;
+        copy.feeAccrued = original.feeAccrued;
+        copy.interestCalculationBaseAmount = original.interestCalculationBaseAmount;
+        copy.interestScalingMultiplier = original.interestScalingMultiplier;
+        copy.nextPrincipalRedemptionPayment = original.nextPrincipalRedemptionPayment;
+        copy.nominalInterestRate = original.nominalInterestRate;
+        copy.nominalInterestRate2 = original.nominalInterestRate2;
+        copy.nonPerformingDate = original.nonPerformingDate;
+        copy.notionalPrincipal = original.notionalPrincipal;
+        copy.notionalPrincipal2 = original.notionalPrincipal2;
+        copy.notionalScalingMultiplier = original.notionalScalingMultiplier;
+        copy.statusDate = original.statusDate;
+        copy.maturityDate = original.maturityDate;
+        copy.terminationDate = original.terminationDate;
+        return copy;
+
+    }
 }

@@ -12,12 +12,9 @@ import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
-import org.actus.util.StringUtils;
+import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
-import org.actus.functions.pam.POF_AD_PAM;
-import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.stk.POF_PRD_STK;
 import org.actus.functions.stk.STF_PRD_STK;
 import org.actus.functions.stk.POF_TD_STK;
@@ -25,7 +22,6 @@ import org.actus.functions.stk.STF_TD_STK;
 
 
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.*;
 
 /**
@@ -42,18 +38,18 @@ public final class Commodity {
 
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_STK()));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_STK(), model.getAs("ContractID")));
         }
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("TerminationDate"), StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_STK(), new STF_TD_STK()));
+            events.add(EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_STK(), new STF_TD_STK(), model.getAs("ContractID")));
         }
 
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == -1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
         
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null, null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1);
 
         return events;
     }
@@ -65,8 +61,7 @@ public final class Commodity {
 
         // initialize state space per status date
         StateSpace states = new StateSpace();
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
-        states.lastEventTime = model.getAs("StatusDate");
+        states.statusDate = model.getAs("StatusDate");
 
         // sort the events according to their time sequence
         Collections.sort(events);

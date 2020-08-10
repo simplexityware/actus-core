@@ -17,22 +17,14 @@ import java.time.LocalDateTime;
 public final class STF_IPFloat_SWPPV implements StateTransitionFunction {
     
     @Override
-    public double[] eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[8];
-        
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.nominalAccruedFloat = 0.0;
-        states.lastEventTime = time;
-        
-        // copy post-event-states
-        postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[1] = states.secondaryNominalValue;
-        postEventStates[3] = states.nominalRate;
-        
+        states.accruedInterest2 = 0.0;
+        states.statusDate = time;
+
         // return post-event-states
-        return postEventStates;
-        }
+        return StateSpace.copyStateSpace(states);
+    }
     
 }

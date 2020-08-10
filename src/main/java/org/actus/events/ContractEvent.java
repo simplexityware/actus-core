@@ -5,6 +5,7 @@
  */
 package org.actus.events;
 
+import org.actus.contracts.ContractType;
 import org.actus.functions.StateTransitionFunction;
 import org.actus.functions.PayOffFunction;
 import org.actus.attributes.ContractModelProvider;
@@ -12,10 +13,11 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.states.StateSpace;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
+import org.actus.types.EventType;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Arrays;
+import java.util.StringJoiner;
 
 /**
  * Component that provides a data structure for a single event generated during the lifetime of a
@@ -33,62 +35,71 @@ import java.util.Arrays;
  * <p>
  */
 public final class ContractEvent implements Comparable<ContractEvent> {
-    protected long epochOffset;
+    protected long                  epochOffset;
     private StateTransitionFunction fStateTrans;
     private PayOffFunction          fPayOff;
     private LocalDateTime           eventTime;
     private LocalDateTime           scheduleTime;
-    private String                  type;
+    private EventType               eventType;
     private String                  currency;
     private double                  payoff;
-    private double[]                states;
+    private StateSpace              states;
+    private String                  contractID;
 
   /**
    * Constructor
    * 
    * @param scheduleTime the plain schedule time of this particular event
    * @param eventTime the actual event time of this particular event
-   * @param type the event type
+   * @param eventType the event type
    * @param currency the event currency
    * @param payOff the event pay-off function
    * @param stateTrans the event state-transition function
+   * @param contractID the id of the contract the ContractEvent belongs to
    * @return
    */
-    public ContractEvent(LocalDateTime scheduleTime, LocalDateTime eventTime, String type, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans) {
-        this.epochOffset = eventTime.toEpochSecond(ZoneOffset.UTC) + EventSequence.timeOffset(type);
+    public ContractEvent(LocalDateTime scheduleTime, LocalDateTime eventTime, EventType eventType, String currency, PayOffFunction payOff, StateTransitionFunction stateTrans, String contractID) {
+        this.epochOffset = eventTime.toEpochSecond(ZoneOffset.UTC) + EventSequence.timeOffset(eventType);
         this.eventTime = eventTime;
         this.scheduleTime = scheduleTime;
-        this.type = type;
+        this.eventType = eventType;
         this.currency = currency;
         this.fPayOff = payOff;
         this.fStateTrans = stateTrans;
-        this.states = new double[8];
+        this.states = new StateSpace();
+        this.contractID = contractID;
     }
-    
+
+    /**
+     * Returns contractID of Contract this event belongs toZ
+     */
+    public String getContractID() {
+        return contractID;
+    }
     /**
      * Returns the time of this event (adjusted for the business-day-convention)
      */
-    public LocalDateTime time() {
+    public LocalDateTime eventTime() {
         return eventTime;    
     }
     
     /**
      * Returns the type of this event
      */
-    public String type() {
-        return type;    
+    public EventType eventType() {
+        return eventType;
     }
     
     /**
      * Change the type of this event
      * <p>
      * Note that this does also update the event's natural order
-     * 
-     * @param type the new event type
+     *
+     * @param eventType the new event type
      */
-    public void type(String type) {
-        this.type = type;  
-        this.epochOffset = eventTime.toEpochSecond(ZoneOffset.UTC) + EventSequence.timeOffset(type);
+    public void eventType(EventType eventType) {
+        this.eventType = eventType;
+        this.epochOffset = eventTime.toEpochSecond(ZoneOffset.UTC) + EventSequence.timeOffset(eventType);
     }
     
     /**
@@ -104,73 +115,16 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     public double payoff() {
         return payoff;    
     }
-    
-    /**
-     * Returns the day count fraction according to the day-count-convention from the last event
-     */
-    public double timeFromLastEvent() {
-        return states[0];    
-    }
-    
-    /**
-     * Returns the post-event nominal value state-variable
-     */
-    public double nominalValue() {
-        return states[1];    
-    }
-    
-    /**
-     * Returns the post-event nominal accrued state-variable
-     */    
-    public double nominalAccrued() {
-        return states[2];    
-    }
-    
-    /**
-     * Returns the post-event nominal rate state-variable
-     */
-    public double nominalRate() {
-        return states[3];    
-    }
-    
-    /**
-     * Returns the post-event secondary nominal value state-variable
-     */
-    public double secondaryNominalValue() {
-        return states[4];    
-    }
-
-    
-    /**
-     * Returns the post-event variation margin state-variable
-     */
-    public double variationMargin() {
-        return states[5];    
-    }
-    
-    /**
-     * Returns the post-event probability of default state-variable
-     */
-    public double probabilityOfDefault() {
-        return states[6];    
-    }
-    
-    /**
-     * Returns the post-event fee accrued state-variable
-     */
-    public double feeAccrued() {
-        return states[7];    
-    }
 
     /**
      * Returns the post-event state-variables
      * <p>
      * Note that the length of the returned array may change going forward as new states
      * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
-     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
+     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.)
      * individually.
      */
-    public double[] states() {
+    public StateSpace states() {
         return states;    
     }
        
@@ -191,12 +145,12 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     public void fStateTrans(StateTransitionFunction function) {
         this.fStateTrans = function;
     }
-    
+
     /**
      * Imposes the natural ordering of events in an instrument's payoff amongst each other
      * <p>
      * The natural ordering of contract events in an instrument's payoff is defined by a combination of
-     * the event's time (cf. {@link time}) and type (cf. {@link type}). In fact, the sum of event-time
+     * the event's time (cf. {@link eventTime}) and type (cf. {@link eventType}). In fact, the sum of event-time
      * measured as epoch-seconds and an event-type specific time-offset according to {@link EventSequence}
      * give a unique, event-specific index providing the order of events. Hence, their natural ordering
      * imposes a time-consistent sequence of events (or a time-series).
@@ -235,43 +189,30 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         this.payoff = fPayOff.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
         this.states = fStateTrans.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
     }
-    
-    /**
-     * Returns an array of Strings representing all analytical elements
-     * <p>
-     * Note that the length of the returned array may change going forward as new states
-     * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
-     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
-     * individually and parse to a String manually.
-     * 
-     * @return an array of Strings with analytical elements
-     */
-    public String[] toArray() {
-        return new String[] {
-            eventTime.toString(),
-            type,
-            currency,
-            Double.toString(payoff),
-            Double.toString(states[0]),
-            Double.toString(states[1]),
-            Double.toString(states[2]),
-            Double.toString(states[3])
-            };
-    }
-    
+
     /**
      * Returns a String-representation of all analytical elements
      * <p>
      * Note that the number of analytical elements may change going forward as e.g. new states
      * may be added with the addition of new {@link ContractType}s. Thus, it is recommended
-     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.) 
+     * to use the getter-methods for desired states (e.g. {@code time}, {@code type}, etc.)
      * individually and parse to a String manually.
-     * 
+     *
      * @return a single String containing all analytical elements
      */
     @Override
     public String toString() {
-        return Arrays.toString(toArray());    
-    }
+        StringJoiner joiner = new StringJoiner(" ");
 
+        joiner.add(Long.toString(epochOffset))
+                .add(eventTime.toString())
+                .add(scheduleTime.toString())
+                .add(eventType.toString())
+                .add(currency)
+                .add(Double.toString(payoff))
+                .add(states.toString())
+        ;
+
+        return joiner.toString();
+    }
 }

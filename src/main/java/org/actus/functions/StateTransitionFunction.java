@@ -35,6 +35,6 @@ public abstract interface StateTransitionFunction {
      * @param timeAdjuster the business day convention used to shift the schedule time
      * @return an array of post-event states of numerical contract states
      */
-    public double[] eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster);
 }

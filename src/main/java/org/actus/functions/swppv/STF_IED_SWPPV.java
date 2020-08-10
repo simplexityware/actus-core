@@ -12,30 +12,23 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.contractrole.ContractRoleConvention;
+import org.actus.types.ContractRole;
 
 import java.time.LocalDateTime;
 
 public final class STF_IED_SWPPV implements StateTransitionFunction {
     
     @Override
-    public double[] eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[8];
-        
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
-        states.secondaryNominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * (-1) * model.<Double>getAs("NotionalPrincipal");
-        states.nominalRate = model.<Double>getAs("NominalInterestRate2");
-        states.lastEventTime = time;
-        
-        // copy post-event-states
-        postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[1] = states.secondaryNominalValue;
-        postEventStates[3] = states.nominalRate;
-        
+        states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
+        states.notionalPrincipal2 = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * (-1) * model.<Double>getAs("NotionalPrincipal");
+        states.nominalInterestRate = model.<Double>getAs("NominalInterestRate2");
+        states.statusDate = time;
+
         // return post-event-states
-        return postEventStates;
+        return StateSpace.copyStateSpace(states);
         }
     
 }
