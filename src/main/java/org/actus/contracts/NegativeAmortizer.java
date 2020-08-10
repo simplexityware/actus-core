@@ -149,6 +149,7 @@ public final class NegativeAmortizer {
                         model.getAs("BusinessDayConvention"),
                         model.getAs("ContractID"))
                 );
+                interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
         }else if(!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
@@ -320,7 +321,7 @@ public final class NegativeAmortizer {
                 lastEvent = prevEventsList.get(prevEventsList.size()-1);
             }
             double coupon = model.<Double>getAs("NotionalPrincipal")*model.<Double>getAs("NominalInterestRate")*model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(lastEvent, lastEvent.plus(prcl));
-            maturity = lastEvent.plus(prcl.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/((model.<Double>getAs("NextPrincipalRedemptionPayment")-coupon)))));
+            maturity = lastEvent.plus(prcl.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/(model.<Double>getAs("NextPrincipalRedemptionPayment")-coupon))));
         }
         return maturity;
     }
