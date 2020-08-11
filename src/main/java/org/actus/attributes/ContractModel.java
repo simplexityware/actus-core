@@ -98,7 +98,7 @@ public class ContractModel implements ContractModelProvider {
                         // parse attributes (Swap) attributes
                         map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse((String)attributes.get("statusDate")));
-                        map.put("ContractRole", ContractRole.valueOf((String)attributes.get("sontractRole")));
+                        map.put("ContractRole", ContractRole.valueOf((String)attributes.get("contractRole")));
                         map.put("LegalEntityIDCounterparty", attributes.get("legalEntityIDCounterparty"));
                         map.put("Currency", attributes.get("currency"));
                         map.put("PurchaseDate", (CommonUtils.isNull(attributes.get("purchaseDate"))) ? null : LocalDateTime.parse((String)attributes.get("purchaseDate")));
