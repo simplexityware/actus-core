@@ -5382,7 +5382,7 @@
                 "payoff": 56.4786820192984,
                 "currency": "USD",
                 "notionalPrincipal": 5023.65222736102,
-                "nominalInterestRate": 5061.451046827,
+                "nominalInterestRate": 0.137234567901235,
                 "accruedInterest": 0
             },
             {
@@ -5561,7 +5561,7 @@
                 "eventType": "PR",
                 "payoff": -21.7719642028825,
                 "currency": "USD",
-                "notionalPrincipal": 5174.11909832171,
+                "notionalPrincipal": 5195.89106252459,
                 "nominalInterestRate": 0.140567901234568,
                 "accruedInterest": 61.7719642028825
             },
@@ -5606,7 +5606,7 @@
                 "eventType": "PR",
                 "payoff": -22.763251161562,
                 "currency": "USD",
-                "notionalPrincipal": 5215.92192567822,
+                "notionalPrincipal": 5238.68517683979,
                 "nominalInterestRate": 0.141679012345679,
                 "accruedInterest": 62.763251161562
             },
@@ -6636,7 +6636,7 @@
             "dayCountConvention": "A365",
             "nominalInterestRate": "0.08",
             "currency": "USD",
-            "maturityDate": "2016-01-01T00:00:00",
+            "maturityDate": "2014-08-01T00:00:00",
             "cycleAnchorDateOfRateReset": "2013-04-01T00:00:00",
             "cycleOfRateReset": "P3ML1",
             "marketObjectCodeOfRateReset": "LIBOR_USD",
@@ -6646,7 +6646,7 @@
             "cycleOfInterestPayment": "P2ML1",
             "interestCalculationBase": "NT"
         },
-        "to": "2016-01-01T00:00:00",
+        "to": "2014-08-01T00:00:00",
         "dataObserved": {
             "LIBOR_USD": {
                 "identifier": "LIBOR_USD",
