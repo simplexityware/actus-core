@@ -19,9 +19,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
-import org.actus.types.ContractReference;
-import org.actus.types.ReferenceRole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
@@ -50,8 +49,7 @@ public class SwapTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ContractModel firstLegModel = (ContractModel)terms.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.FIL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
-            ArrayList<ContractEvent> schedule = Swap.schedule(firstLegModel.getAs("MaturityDate"), terms);
+            ArrayList<ContractEvent> schedule = Swap.schedule(LocalDateTime.parse(test.getto()), terms);
             schedule = Swap.apply(schedule, terms, observer);
         
             // transform schedule to event list and return

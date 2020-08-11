@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.actus.types.ContractReference;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -35,20 +34,20 @@ public class ContractTestUtils {
                     contractReference.forEach((key,value) ->{
                         if(key.equals("object")){
                             Map<String, String> objectValues = new HashMap<>();
-                            ((Map<String,Object>)value).forEach((childKey,childValue)-> objectValues.put(childKey.substring(0, 1).toUpperCase() + childKey.substring(1), childValue.toString()));
+                            ((Map<String,Object>)value).forEach((childKey,childValue)-> objectValues.put(childKey, childValue.toString()));
                             attributes.put("Object", objectValues);
                         }else{
-                            attributes.put(key.substring(0, 1).toUpperCase() + key.substring(1), value.toString());
+                            attributes.put(key, value.toString());
                         }
                     });
                     contractStructure.add(attributes);
                 });
-                map.put("ContractStructure", contractStructure);
+                map.put("contractStructure", contractStructure);
             }else{
                 //System.out.println(entry.getKey() + ":" + entry.getValue());
 
                 // capitalize input json keys as required in contract model parser
-                map.put(entry.getKey().substring(0, 1).toUpperCase() + entry.getKey().substring(1), entry.getValue().toString());
+                map.put(entry.getKey(), entry.getValue().toString());
             }
         }
 
