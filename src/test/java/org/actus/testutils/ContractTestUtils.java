@@ -35,7 +35,7 @@ public class ContractTestUtils {
                         if(key.equals("object")){
                             Map<String, String> objectValues = new HashMap<>();
                             ((Map<String,Object>)value).forEach((childKey,childValue)-> objectValues.put(childKey, childValue.toString()));
-                            attributes.put("Object", objectValues);
+                            attributes.put("object", objectValues);
                         }else{
                             attributes.put(key, value.toString());
                         }

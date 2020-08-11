@@ -12,22 +12,22 @@ public class ContractReference {
     public ReferenceType referenceType;
     public Object object;
     public ContractReference(Map<String, Object> attributes, ContractRole contractRole) {
-        this.referenceRole = ReferenceRole.valueOf((String)attributes.get("ReferenceRole"));
-        this.referenceType = ReferenceType.valueOf((String)attributes.get("ReferenceType"));
+        this.referenceRole = ReferenceRole.valueOf((String)attributes.get("referenceRole"));
+        this.referenceType = ReferenceType.valueOf((String)attributes.get("referenceType"));
         switch (referenceType){
             case CNT:
-                Map<String, Object> childModel = (Map<String, Object>)attributes.get("Object");
+                Map<String, Object> childModel = (Map<String, Object>)attributes.get("object");
                 if(contractRole.equals(ContractRole.RFL)){
                     if(ReferenceRole.FIL.equals(referenceRole)){
-                        childModel.put("ContractRole", "RPA");
+                        childModel.put("contractRole", "RPA");
                     } else {
-                        childModel.put("ContractRole", "RPL");
+                        childModel.put("contractRole", "RPL");
                     }
                 } else{
                     if(ReferenceRole.FIL.equals(referenceRole)){
-                        childModel.put("ContractRole", "RPL");
+                        childModel.put("contractRole", "RPL");
                     } else {
-                        childModel.put("ContractRole", "RPA");
+                        childModel.put("contractRole", "RPA");
                     }
                 }
                 this.object = ContractModel.parse(childModel);
