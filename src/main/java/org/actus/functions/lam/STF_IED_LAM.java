@@ -7,6 +7,8 @@ package org.actus.functions.lam;
 
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.StateTransitionFunction;
+import org.actus.types.ContractRole;
+import org.actus.types.InterestCalculationBase;
 import org.actus.util.CommonUtils;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
@@ -19,33 +21,33 @@ import java.time.LocalDateTime;
 public final class STF_IED_LAM implements StateTransitionFunction {
     
     @Override
-    public double[] eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[8];
-        
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.nominalValue = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
-        states.nominalRate = model.<Double>getAs("NominalInterestRate");
-        states.lastEventTime = time;
-        states.interestCalculationBase = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*
-            ( (CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals("NT"))? 
-            model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
-        
+        states.statusDate = time;
+        states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))* model.<Double>getAs("NotionalPrincipal");
+        states.nominalInterestRate = model.<Double>getAs("NominalInterestRate");
 
-        // if cycle anchor date of interest payment prior to IED, then update nominal accrued accordingly
-        if(!CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) &&
-            model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment").isBefore(model.getAs("InitialExchangeDate"))) {
-            states.nominalAccrued += states.interestCalculationBase*states.nominalRate*dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment")),timeAdjuster.shiftCalcTime(time));
+
+        if(InterestCalculationBase.NT.equals(model.<InterestCalculationBase>getAs("InterestCalculationBase"))){
+            states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
+        }else {
+            states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("InterestCalculationBaseAmount");
         }
 
-        // copy post-event-states
-        postEventStates[0] = states.timeFromLastEvent;
-        postEventStates[1] = states.nominalValue;
-        postEventStates[3] = states.nominalRate;
-        
+        if(!CommonUtils.isNull(model.getAs("AccruedInterest"))){
+            states.accruedInterest = model.<Double>getAs("AccruedInterest");
+        }else if(!CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) &&
+                model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment").isBefore(time)) {
+            states.accruedInterest = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment")),timeAdjuster.shiftCalcTime(time))
+                    * states.notionalPrincipal
+                    * states.interestCalculationBaseAmount;
+        } else{
+            states.accruedInterest = 0.0;
+        }
+
         // return post-event-states
-        return postEventStates;
-        }
+        return StateSpace.copyStateSpace(states);
+    }
     
 }

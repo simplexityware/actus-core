@@ -5,8 +5,7 @@
  */
 package org.actus.functions.pam;
 
-import org.actus.conventions.contractdefault.ContractDefaultConvention;
-import org.actus.functions.PayOffFunction;
+import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
@@ -15,11 +14,19 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class POF_PR_PAM implements PayOffFunction {
+public final class STF_MD_PAM implements StateTransitionFunction {
     
     @Override
-        public double eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return ContractDefaultConvention.performanceIndicator(states.contractStatus) * states.nominalScalingMultiplier * states.nominalValue;
-        }
+        // update state space
+        states.notionalPrincipal = 0.0;
+        states.accruedInterest = 0.0;
+        states.feeAccrued = 0.0;
+        states.statusDate = time;
+
+        // copy post-event-states
+        return StateSpace.copyStateSpace(states);
+    }
+    
 }

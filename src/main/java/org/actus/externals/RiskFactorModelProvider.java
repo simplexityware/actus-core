@@ -51,7 +51,7 @@ public abstract interface RiskFactorModelProvider {
    */
   default public Set<ContractEvent> events(ContractModelProvider attributes) {
     return new HashSet<ContractEvent>();
-  };
+  }
   
   /**
    * Returns the state of a particular risk factor at a future time
@@ -63,4 +63,5 @@ public abstract interface RiskFactorModelProvider {
    * @return double the state of the risk factor
    */
   public double stateAt(String id, LocalDateTime time, StateSpace states, ContractModelProvider attributes);
+
 }

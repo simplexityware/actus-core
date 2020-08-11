@@ -11,27 +11,21 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
-import org.actus.util.StringUtils;
-
+import org.actus.types.ContractPerformance;
 import java.time.LocalDateTime;
 
 public final class STF_CD_STK implements StateTransitionFunction {
     
     @Override
-    public double[] eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double[] postEventStates = new double[8];
         
         // update state space
-        states.timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.lastEventTime), timeAdjuster.shiftCalcTime(time));
-        states.contractStatus = StringUtils.ContractStatus_Default;
-        states.lastEventTime = time;
-        
-        // copy post-event-states
-        postEventStates[0] = states.timeFromLastEvent;
-        
+        states.contractPerformance = ContractPerformance.DF;
+        states.statusDate = time;
+
         // return post-event-states
-        return postEventStates;
-        }
+        return StateSpace.copyStateSpace(states);
+    }
     
 }

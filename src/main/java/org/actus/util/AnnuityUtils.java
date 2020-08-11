@@ -8,6 +8,7 @@ package org.actus.util;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.time.ScheduleFactory;
+import org.actus.types.EndOfMonthConventionEnum;
 
 import java.util.Set;
 import java.util.Arrays;

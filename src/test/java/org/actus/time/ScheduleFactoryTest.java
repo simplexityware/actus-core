@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.ArrayList;
 
+import org.actus.types.EndOfMonthConventionEnum;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
@@ -27,7 +28,7 @@ public class ScheduleFactoryTest {
         thrown.expect(AttributeConversionException.class);
         ScheduleFactory.createSchedule(LocalDateTime.parse("2016-01-01T00:00:00"), 
                                        LocalDateTime.parse("2017-01-01T00:00:00"), 
-                                       "1M", "SD");
+                                       "1M", EndOfMonthConventionEnum.SD);
     }
     
     @Test
@@ -35,15 +36,7 @@ public class ScheduleFactoryTest {
         thrown.expect(AttributeConversionException.class);
         ScheduleFactory.createSchedule(LocalDateTime.parse("2016-01-01T00:00:00"), 
                                        LocalDateTime.parse("2017-01-01T00:00:00"), 
-                                       "1X-", "SD");
-    }
-    
-    @Test
-    public void test_AttributeConversionException_eomconv() {
-        thrown.expect(AttributeConversionException.class);
-        ScheduleFactory.createSchedule(LocalDateTime.parse("2016-01-01T00:00:00"), 
-                                       LocalDateTime.parse("2017-01-01T00:00:00"), 
-                                       "1M-", "XX");
+                                       "1X-", EndOfMonthConventionEnum.SD);
     }
 
     @Test
@@ -55,7 +48,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1D-", "SD"));
+                "1D-", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -77,7 +70,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1D-", "EOM"));
+                "1D-", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -99,7 +92,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1D+", "SD"));
+                "1D+", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -121,7 +114,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T23:59:59"), 
-                "1D-", "SD"));
+                "1D-", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -144,7 +137,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T23:59:59"), 
-                "1D+", "SD"));
+                "1D+", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -168,7 +161,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "2D-", "SD"));
+                "2D-", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -190,7 +183,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "31D-", "EOM"));
+                "31D-", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -198,7 +191,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "31D-", "SD"));
+                "31D-", EndOfMonthConventionEnum.SD));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -214,7 +207,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1W-", "SD"));
+                "1W-", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -222,7 +215,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "7D-", "SD"));
+                "7D-", EndOfMonthConventionEnum.SD));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -238,7 +231,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1W+", "SD"));
+                "1W+", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -246,7 +239,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "7D+", "SD"));
+                "7D+", EndOfMonthConventionEnum.SD));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -263,7 +256,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-15T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1W-", "EOM"));
+                "1W-", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -271,7 +264,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-15T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "7D-", "EOM"));
+                "7D-", EndOfMonthConventionEnum.EOM));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -287,7 +280,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1W-", "EOM"));
+                "1W-", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -295,7 +288,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "7D-", "EOM"));
+                "7D-", EndOfMonthConventionEnum.EOM));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -311,7 +304,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "4W-", "SD"));
+                "4W-", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -319,7 +312,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "28D-", "SD"));
+                "28D-", EndOfMonthConventionEnum.SD));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -335,7 +328,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "4W-", "EOM"));
+                "4W-", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -343,7 +336,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "28D-", "SD"));
+                "28D-", EndOfMonthConventionEnum.SD));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -359,7 +352,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1M-", "SD"));
+                "1M-", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -381,7 +374,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1M+", "SD"));
+                "1M+", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -403,7 +396,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-15T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1M-", "SD"));
+                "1M-", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -426,7 +419,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-15T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1M+", "SD"));
+                "1M+", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -449,7 +442,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "2M+", "SD"));
+                "2M+", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -471,7 +464,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-01-15T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "2M+", "SD"));
+                "2M+", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -494,7 +487,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-15T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1M-", "EOM"));
+                "1M-", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -517,7 +510,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1M-", "EOM"));
+                "1M-", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -549,7 +542,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1M+", "EOM"));
+                "1M+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -580,7 +573,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-03-31T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1M+", "EOM"));
+                "1M+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -610,7 +603,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-04-30T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "1M+", "EOM"));
+                "1M+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -639,7 +632,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "2M+", "EOM"));
+                "2M+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -666,7 +659,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-11-01T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "2M-", "SD"));
+                "2M-", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -688,7 +681,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-11-30T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "2M-", "EOM"));
+                "2M-", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -710,7 +703,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-11-30T00:00:00"), 
                 LocalDateTime.parse("2017-01-01T00:00:00"), 
-                "2M+", "EOM"));
+                "2M+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -732,7 +725,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "1Q-", "SD"));
+                "1Q-", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -740,7 +733,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "3M-", "SD"));
+                "3M-", EndOfMonthConventionEnum.SD));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -756,7 +749,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "1Q+", "SD"));
+                "1Q+", EndOfMonthConventionEnum.SD));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -764,7 +757,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "3M+", "SD"));
+                "3M+", EndOfMonthConventionEnum.SD));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -780,7 +773,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "1Q+", "EOM"));
+                "1Q+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -788,7 +781,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "3M+", "EOM"));
+                "3M+", EndOfMonthConventionEnum.EOM));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -804,7 +797,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "2Q+", "EOM"));
+                "2Q+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -812,7 +805,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "6M+", "EOM"));
+                "6M+", EndOfMonthConventionEnum.EOM));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -828,7 +821,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "1H+", "EOM"));
+                "1H+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -836,7 +829,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "2Q+", "EOM"));
+                "2Q+", EndOfMonthConventionEnum.EOM));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -852,7 +845,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "1Y+", "EOM"));
+                "1Y+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -860,7 +853,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "2H+", "EOM"));
+                "2H+", EndOfMonthConventionEnum.EOM));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times
@@ -876,7 +869,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "2Y+", "EOM"));
+                "2Y+", EndOfMonthConventionEnum.EOM));
         Collections.sort(generatedTimes);
         
         // list of expected times
@@ -884,7 +877,7 @@ public class ScheduleFactoryTest {
         ScheduleFactory.createSchedule(
                 LocalDateTime.parse("2016-02-29T00:00:00"), 
                 LocalDateTime.parse("2026-01-01T00:00:00"), 
-                "4H+", "EOM"));
+                "4H+", EndOfMonthConventionEnum.EOM));
         Collections.sort(expectedTimes);
         
         // finally compare expected and generated times

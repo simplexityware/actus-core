@@ -12,10 +12,10 @@ import org.actus.events.ContractEvent;
 import org.actus.functions.stk.*;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
-import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
+import org.actus.types.DeliverySettlement;
+import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
-import org.actus.util.StringUtils;
 import org.actus.functions.fxout.POF_PRD_FXOUT;
 import org.actus.functions.fxout.POF_TD_FXOUT;
 import org.actus.functions.fxout.POF_STD_FXOUT;
@@ -47,25 +47,25 @@ public final class ForeignExchangeOutright {
         }
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), StringUtils.EventType_PRD, model.getAs("Currency"), new POF_PRD_FXOUT(), new STF_PRD_STK()));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_FXOUT(), new STF_PRD_STK(), model.getAs("ContractID")));
         }
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("TerminationDate"), StringUtils.EventType_TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_STK()));
+            events.add(EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_STK(), model.getAs("ContractID")));
         }
         // settlement
-        if (CommonUtils.isNull(model.getAs("DeliverySettlement")) || model.getAs("DeliverySettlement").equals(StringUtils.Settlement_Physical)) {
-            events.add(EventFactory.createEvent(settlement, StringUtils.EventType_STD, model.getAs("Currency"), new POF_STD1_FXOUT(), new STF_STD1_FXOUT(), model.getAs("BusinessDayConvention")));
-            events.add(EventFactory.createEvent(settlement, StringUtils.EventType_STD, model.getAs("Currency2"), new POF_STD2_FXOUT(), new STF_STD2_FXOUT(), model.getAs("BusinessDayConvention")));
+        if (CommonUtils.isNull(model.getAs("DeliverySettlement")) || model.getAs("DeliverySettlement").equals(DeliverySettlement.D)) {
+            events.add(EventFactory.createEvent(settlement, EventType.STD, model.getAs("Currency"), new POF_STD1_FXOUT(), new STF_STD1_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(settlement, EventType.STD, model.getAs("Currency2"), new POF_STD2_FXOUT(), new STF_STD2_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
         } else {
-            events.add(EventFactory.createEvent(settlement, StringUtils.EventType_STD, model.getAs("Currency"), new POF_STD_FXOUT(), new STF_STD_FXOUT(), model.getAs("BusinessDayConvention")));
+            events.add(EventFactory.createEvent(settlement, EventType.STD, model.getAs("Currency"), new POF_STD_FXOUT(), new STF_STD_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
         }
 
         // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), StringUtils.EventType_SD, model.getAs("Currency"), null,null)) == -1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null,null, model.getAs("ContractID"))) == -1);
 
         // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, StringUtils.EventType_AD, model.getAs("Currency"), null,null)) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null, model.getAs("ContractID"))) == 1);
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);
@@ -94,8 +94,7 @@ public final class ForeignExchangeOutright {
     // initialize state space per status date
     private static StateSpace initStateSpace(ContractModelProvider model) {
         StateSpace states = new StateSpace();
-        states.contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
-        states.lastEventTime = model.getAs("StatusDate");
+        states.statusDate = model.getAs("StatusDate");
         return states;
     }
 }
