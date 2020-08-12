@@ -22,14 +22,13 @@ public final class STF_PR2_NAM implements StateTransitionFunction {
 	public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		// update state space
-		double timeFromLastEvent = dayCounter.dayCountFraction(states.statusDate, time);
+		double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
 		states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
+
 		states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-		
-		double principalRedemption =  states.nextPrincipalRedemptionPayment - states.accruedInterest;
-		principalRedemption = principalRedemption - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.notionalPrincipal));
-		
-		states.notionalPrincipal -= principalRedemption;
+		//states.accruedInterest is IPACt+
+		states.notionalPrincipal -= (states.nextPrincipalRedemptionPayment - states.accruedInterest);
+		//states.notionalPrincipal == NTt+
 		states.interestCalculationBaseAmount = states.notionalPrincipal;
 		states.statusDate = time;
 
