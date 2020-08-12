@@ -13,6 +13,7 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.types.ContractRole;
+import org.actus.types.InterestCalculationBase;
 
 import java.time.LocalDateTime;
 
@@ -24,16 +25,15 @@ public final class STF_PR_NAM implements StateTransitionFunction {
         // update state space
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
-        states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-        
-        double principalRedemption =  states.nextPrincipalRedemptionPayment - states.accruedInterest;
-        principalRedemption = principalRedemption - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(principalRedemption) - Math.abs(states.notionalPrincipal));
 
-        states.notionalPrincipal -= principalRedemption;
+        states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
+        //states.accruedInterest is IPACt+
+        states.notionalPrincipal -= (states.nextPrincipalRedemptionPayment - states.accruedInterest);
+        //IPCBAt+ is IPCBAt-
         states.statusDate = time;
 
         // return post-event-states
         return StateSpace.copyStateSpace(states);
-        }
+    }
     
 }

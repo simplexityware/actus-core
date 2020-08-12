@@ -61,7 +61,7 @@ public final class NegativeAmortizer {
         );
 
         // -> chose right state transition function depending on ipcb attributes
-        StateTransitionFunction stf=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL))? new STF_PR_NAM() : new STF_PR2_NAM();
+        StateTransitionFunction stf= !(InterestCalculationBase.NT.equals(model.<InterestCalculationBase>getAs("InterestCalculationBase")))? new STF_PR_NAM() : new STF_PR2_NAM();
 
         // regular principal redemption events
         events.addAll(EventFactory.createEvents(
@@ -112,8 +112,8 @@ public final class NegativeAmortizer {
                     ),
                     EventType.IP,
                     model.getAs("Currency"),
-                    new POF_IP_NAM(),
-                    new STF_IP_NAM(),
+                    new POF_IP_LAM(),
+                    new STF_IP_PAM(),
                     model.getAs("BusinessDayConvention"),
                     model.getAs("ContractID")
             );
@@ -180,8 +180,8 @@ public final class NegativeAmortizer {
             fixedEvent.eventType(EventType.RRF);
             rateResetEvents.add(fixedEvent);
         }
-
         events.addAll(rateResetEvents);
+
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
             events.addAll(EventFactory.createEvents(
@@ -237,8 +237,14 @@ public final class NegativeAmortizer {
         }
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            ContractEvent termination =
-                    EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_LAM(), new STF_TD_PAM(), model.getAs("ContractID"));
+            ContractEvent termination = EventFactory.createEvent(
+                            model.getAs("TerminationDate"),
+                            EventType.TD,
+                            model.getAs("Currency"),
+                            new POF_TD_LAM(),
+                            new STF_TD_PAM(),
+                            model.getAs("ContractID")
+            );
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
