@@ -56,6 +56,7 @@ public final class Annuity {
                 new STF_IED_LAM(),
                 model.getAs("ContractID"))
         );
+
         // principal redemption schedule
         Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(
                 model.getAs("CycleAnchorDateOfPrincipalRedemption"),
@@ -64,6 +65,7 @@ public final class Annuity {
                 model.getAs("EndOfMonthConvention"),
                 false
         );
+
         // interest payment schedule
         Set<LocalDateTime> ipSchedule = ScheduleFactory.createSchedule(
                 model.getAs("CycleAnchorDateOfInterestPayment"),
@@ -72,8 +74,9 @@ public final class Annuity {
                 model.getAs("EndOfMonthConvention"),
                 false
         );
+
         // -> chose right state transition function depending on ipcb attributes
-        StateTransitionFunction stf=(!CommonUtils.isNull(model.getAs("InterestCalculationBase")) && model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NTL))? new STF_PR_NAM() : new STF_PR2_NAM();
+        StateTransitionFunction stf= !(InterestCalculationBase.NT.equals(model.<InterestCalculationBase>getAs("InterestCalculationBase")))? new STF_PR_NAM() : new STF_PR2_NAM();
         // regular principal redemption events
         events.addAll(EventFactory.createEvents(
                 prSchedule,
@@ -84,13 +87,14 @@ public final class Annuity {
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID"))
         );
+
         // regular interest payments aligned with principal redemption schedule
         events.addAll(EventFactory.createEvents(
                 ipSchedule,
                 EventType.IP,
                 model.getAs("Currency"),
                 new POF_IP_LAM(),
-                new STF_IP_ANN(),
+                new STF_IP_PAM(),
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID"))
         );
@@ -111,7 +115,8 @@ public final class Annuity {
                     maturity,
                     EventType.MD,
                     model.getAs("Currency"),
-                    pof,new STF_MD_PAM(),
+                    pof,
+                    new STF_MD_PAM(),
                     model.getAs("BusinessDayConvention"),
                     model.getAs("ContractID"))
             );
@@ -120,7 +125,7 @@ public final class Annuity {
                     EventType.IP,
                     model.getAs("Currency"),
                     new POF_IP_LAM(),
-                    new STF_IP_ANN(),
+                    new STF_IP_PAM(),
                     model.getAs("BusinessDayConvention"),
                     model.getAs("ContractID"))
             );
@@ -131,7 +136,7 @@ public final class Annuity {
                     EventType.PRD,
                     model.getAs("Currency"),
                     new POF_PRD_LAM(),
-                    new STF_PRD_ANN(),
+                    new STF_PRD_LAM(),
                     model.getAs("ContractID"))
             );
         }
@@ -152,7 +157,7 @@ public final class Annuity {
                             EventType.IP,
                             model.getAs("Currency"),
                             new POF_IP_LAM(),
-                            new STF_IP_ANN(),
+                            new STF_IP_PAM(),
                             model.getAs("BusinessDayConvention"),
                             model.getAs("ContractID")
                     );
