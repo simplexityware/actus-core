@@ -22,28 +22,24 @@ public final class STF_RR_ANN implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        // compute new rate
-        double rate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
-                * model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
-        double deltaRate = rate - states.nominalInterestRate;
-
-        // apply period cap/floor
-        deltaRate = Math.min(Math.max(deltaRate,(-1)*model.<Double>getAs("PeriodFloor")),model.<Double>getAs("LifeCap"));
-        rate = states.nominalInterestRate +deltaRate;
-
-        // apply life cap/floor
-        rate = Math.min(Math.max(rate,model.getAs("LifeFloor")),model.getAs("LifeCap"));
-
-        // update state space
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-        states.nominalInterestRate = rate;
+
+        // compute new rate
+        double rate =
+                (riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model) * model.<Double>getAs("RateMultiplier"))
+                + model.<Double>getAs("RateSpread")
+                - states.nominalInterestRate;
+        double deltaRate = Math.min(Math.max(rate,model.getAs("PeriodFloor")),model.getAs("PeriodCap"));
+        states.nominalInterestRate = Math.min(Math.max(states.nominalInterestRate + deltaRate, model.getAs("LifeFloor")),model.getAs("LifeCap"));
+
+        states.nextPrincipalRedemptionPayment = AnnuityUtils.annuityPayment(model, states.notionalPrincipal, states.accruedInterest, states.nominalInterestRate);
+
         states.statusDate = time;
-        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, states.notionalPrincipal, states.accruedInterest, states.nominalInterestRate);
 
         // return post-event-states
         return StateSpace.copyStateSpace(states);
-        }
+    }
     
 }
