@@ -403,10 +403,10 @@ public class ContractModel implements ContractModelProvider {
                         map.put("FixingDays", attributes.get("fixingDays"));
                         map.put("NextResetRate", (CommonUtils.isNull(attributes.get("nextResetRate"))) ? null : Double.parseDouble(attributes.get("nextResetRate")));
                         map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("rateMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("rateMultiplier")));
-                        map.put("LifeCap", CommonUtils.isNull(attributes.get("lifeCap")) ? null : Double.parseDouble(attributes.get("lifeCap")));
-                        map.put("LifeFloor", CommonUtils.isNull(attributes.get("lifeFloor")) ? null : Double.parseDouble(attributes.get("lifeFloor")));
-                        map.put("PeriodCap", CommonUtils.isNull(attributes.get("periodCap")) ? null : Double.parseDouble(attributes.get("periodCap")));
-                        map.put("PeriodFloor", CommonUtils.isNull(attributes.get("periodFloor")) ? null : Double.parseDouble(attributes.get("periodFloor")));
+                        map.put("LifeCap", (CommonUtils.isNull(attributes.get("lifeCap"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("lifeCap")));
+                        map.put("LifeFloor", (CommonUtils.isNull(attributes.get("lifeFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("lifeFloor")));
+                        map.put("PeriodCap", (CommonUtils.isNull(attributes.get("periodCap"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("periodCap")));
+                        map.put("PeriodFloor", (CommonUtils.isNull(attributes.get("periodFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("periodFloor")));
                         break;
                     case UMP:
 
