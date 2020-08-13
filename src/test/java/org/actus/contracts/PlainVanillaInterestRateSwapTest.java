@@ -50,7 +50,7 @@ public class PlainVanillaInterestRateSwapTest {
 
             // compute and evaluate schedule
             ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(terms.getAs("MaturityDate"), terms);
-            //schedule = PlainVanillaInterestRateSwap.apply(schedule, terms, observer);
+            schedule = PlainVanillaInterestRateSwap.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
