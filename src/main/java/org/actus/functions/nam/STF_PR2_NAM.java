@@ -28,7 +28,7 @@ public final class STF_PR2_NAM implements StateTransitionFunction {
 		states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
 		//states.accruedInterest is IPACt+
 		states.notionalPrincipal -= (states.nextPrincipalRedemptionPayment - states.accruedInterest);
-		//states.notionalPrincipal == NTt+
+		//states.notionalPrincipal is NTt+
 		states.interestCalculationBaseAmount = states.notionalPrincipal;
 		states.statusDate = time;
 
