@@ -5900,19 +5900,19 @@
             },
             {
                 "eventDate": "2013-01-01T00:00",
-                "eventType": "IP",
-                "payoff": "0.0",
+                "eventType": "PR",
+                "payoff": "400.071084163282",
                 "currency": "USD",
-                "notionalPrincipal": "5000.0",
+                "notionalPrincipal": "4599.92891583672",
                 "nominalInterestRate": "0.08",
                 "accruedInterest": "0.0"
             },
             {
                 "eventDate": "2013-01-01T00:00",
-                "eventType": "PR",
-                "payoff": "400.071084163282",
+                "eventType": "IP",
+                "payoff": "0.0",
                 "currency": "USD",
-                "notionalPrincipal": "4599.92891583672",
+                "notionalPrincipal": "5000.0",
                 "nominalInterestRate": "0.08",
                 "accruedInterest": "0.0"
             },
