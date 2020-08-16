@@ -13,6 +13,7 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org. actus.events.ContractEvent;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -48,8 +49,10 @@ public class AnnuityTest {
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
+
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = Annuity.schedule(terms.getAs("MaturityDate"), terms);
+            LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
+            ArrayList<ContractEvent> schedule = Annuity.schedule(to, terms);
             schedule = Annuity.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
@@ -69,8 +72,8 @@ public class AnnuityTest {
             List<ResultSet> expectedResults = test.getResults();
             
             // round results to available precision
-            computedResults.forEach(result -> result.roundTo(12));
-            expectedResults.forEach(result -> result.roundTo(12));
+            computedResults.forEach(result -> result.roundTo(10));
+            expectedResults.forEach(result -> result.roundTo(10));
 
             // create dynamic test
             return DynamicTest.dynamicTest("Test: " + testId,

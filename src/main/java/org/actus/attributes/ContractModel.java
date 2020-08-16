@@ -300,7 +300,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("MaturityDate", (CommonUtils.isNull(attributes.get("maturityDate")) ? null : LocalDateTime.parse(attributes.get("maturityDate"))));
                         map.put("CycleAnchorDateOfInterestCalculationBase", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfInterestCalculationBase"))) ? ((CommonUtils.isNull(attributes.get("cycleOfInterestCalculationBase"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfInterestCalculationBase")));
                         map.put("CycleOfInterestCalculationBase", attributes.get("cycleOfInterestCalculationBase"));
-                        map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("interestCalculationBase"))?null:InterestCalculationBase.valueOf(attributes.get("interestCalculationBase")));
+                        map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("interestCalculationBase")) ? InterestCalculationBase.NT : InterestCalculationBase.valueOf(attributes.get("interestCalculationBase")));
                         map.put("InterestCalculationBaseAmount", (CommonUtils.isNull(attributes.get("interestCalculationBaseAmount"))) ? 0.0 : Double.parseDouble(attributes.get("interestCalculationBaseAmount")));
                         map.put("CycleAnchorDateOfPrincipalRedemption", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfPrincipalRedemption"))) ? LocalDateTime.parse(attributes.get("initialExchangeDate")) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfPrincipalRedemption")));
                         map.put("CycleOfPrincipalRedemption", attributes.get("cycleOfPrincipalRedemption"));
@@ -363,7 +363,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("MaturityDate", (CommonUtils.isNull(attributes.get("maturityDate")) ? null : LocalDateTime.parse(attributes.get("maturityDate"))));
                         map.put("CycleAnchorDateOfInterestCalculationBase", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfInterestCalculationBase"))) ? ((CommonUtils.isNull(attributes.get("cycleOfInterestCalculationBase"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfInterestCalculationBase")));
                         map.put("CycleOfInterestCalculationBase", attributes.get("cycleOfInterestCalculationBase"));
-                        map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("interestCalculationBase"))?null:InterestCalculationBase.valueOf(attributes.get("interestCalculationBase")));
+                        map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("interestCalculationBase")) ? InterestCalculationBase.NT : InterestCalculationBase.valueOf(attributes.get("interestCalculationBase")));
                         map.put("InterestCalculationBaseAmount", (CommonUtils.isNull(attributes.get("interestCalculationBaseAmount"))) ? 0.0 : Double.parseDouble(attributes.get("interestCalculationBaseAmount")));
                         map.put("CycleAnchorDateOfPrincipalRedemption", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfPrincipalRedemption"))) ? LocalDateTime.parse(attributes.get("initialExchangeDate")) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfPrincipalRedemption")));
                         map.put("CycleOfPrincipalRedemption", attributes.get("cycleOfPrincipalRedemption"));
