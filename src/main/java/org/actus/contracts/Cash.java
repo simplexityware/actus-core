@@ -39,7 +39,7 @@ public final class Cash {
         // initialize state space per status date
         StateSpace states = new StateSpace();
         states.statusDate = model.getAs("StatusDate");
-        states.notionalPrincipal = model.getAs("NotionalPrincipal");
+        states.notionalPrincipal = model.<Double>getAs("NotionalPrincipal") * ContractRoleConvention.roleSign(model.getAs("ContractRole"));
 
         // sort the events according to their time sequence
         Collections.sort(events);

@@ -5,6 +5,9 @@
  */
 package org.actus.contracts;
 
+import org.actus.events.EventFactory;
+import org.actus.functions.csh.STF_AD_CSH;
+import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.testutils.ContractTestUtils;
 import org.actus.testutils.TestData;
 import org.actus.testutils.ObservedDataSet;
@@ -13,6 +16,7 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org. actus.events.ContractEvent;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -20,6 +24,9 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
+import org.actus.time.ScheduleFactory;
+import org.actus.types.EndOfMonthConventionEnum;
+import org.actus.types.EventType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
@@ -44,14 +51,24 @@ public class CashTest {
             // create market model from data
             List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
             DataObserver observer = ContractTestUtils.createObserver(dataObserved);
-          
+
+            List<Map<String,Object>> eventsObserved = test.getEventsObserved();
+
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
             ArrayList<ContractEvent> schedule = Cash.schedule(terms.getAs("MaturityDate"), terms);
+            schedule.add(EventFactory.createEvent(
+                    LocalDateTime.parse((String)eventsObserved.get(0).get("time")),
+                    EventType.AD,
+                    terms.getAs("Currency"),
+                    new POF_AD_PAM(),
+                    new STF_AD_CSH(),
+                    terms.getAs("ContractID"))
+            );
             schedule = Cash.apply(schedule, terms, observer);
-        
+
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
                 ResultSet results = new ResultSet();
