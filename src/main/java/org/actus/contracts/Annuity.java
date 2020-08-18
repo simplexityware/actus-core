@@ -216,19 +216,33 @@ public final class Annuity {
                 EventType.RR,
                 model.getAs("Currency"),
                 new POF_RR_PAM(),
-                new STF_RR_ANN(),
+                new STF_RR_LAM(),
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID")
         );
         // adapt fixed rate reset event
         if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
             ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1).findFirst().get();
-            fixedEvent.fStateTrans(new STF_RRF_ANN());
+            fixedEvent.fStateTrans(new STF_RRF_LAM());
             fixedEvent.eventType(EventType.RRF);
             rateResetEvents.add(fixedEvent);
         }
         // add all rate reset events
         events.addAll(rateResetEvents);
+        Set<LocalDateTime> prfSchedule = new HashSet<>();
+        rateResetEvents.forEach(event -> prfSchedule.add(event.eventTime()));
+        if(!prfSchedule.isEmpty()){
+            events.addAll(EventFactory.createEvents(
+                    prfSchedule,
+                    EventType.PRF,
+                    model.getAs("Currency"),
+                    new POF_RR_PAM(),
+                    new STF_PRF_ANN(),
+                    model.getAs("BusinessDayConvention"),
+                    model.getAs("ContractID")
+            ));
+        }
+
         // scaling (if specified)
         String scalingEffect=model.getAs("ScalingEffect");
         if (!CommonUtils.isNull(scalingEffect) && (scalingEffect.contains("I") || scalingEffect.contains("N"))) {
@@ -309,7 +323,8 @@ public final class Annuity {
     // determine maturity of the contract
     private static LocalDateTime maturity(ContractModelProvider model) {
         LocalDateTime maturity = model.getAs("MaturityDate");
-        if (CommonUtils.isNull(maturity)) {
+        LocalDateTime amortizationDate = model.getAs("AmortizationDate");
+        if (CommonUtils.isNull(maturity) && CommonUtils.isNull(amortizationDate)) {
             LocalDateTime t0 = model.getAs("StatusDate");
             LocalDateTime pranx = model.getAs("CycleAnchorDateOfPrincipalRedemption");
             LocalDateTime ied = model.getAs("InitialExchangeDate");
@@ -336,6 +351,8 @@ public final class Annuity {
             double redemptionPerCycle = model.<Double>getAs("NextPrincipalRedemptionPayment") - (timeFromLastEventPlusOneCycle * model.<Double>getAs("NominalInterestRate"));
             int n = (int)Math.ceil(model.<Double>getAs("NotionalPrincipal") / redemptionPerCycle);
             maturity = lastEvent.plus(prcl.multipliedBy(n));
+        } else if (CommonUtils.isNull(maturity)){
+            maturity = amortizationDate;
         }
         return maturity;
     }

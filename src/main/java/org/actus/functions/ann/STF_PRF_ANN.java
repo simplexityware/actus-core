@@ -17,22 +17,19 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_RRF_ANN implements StateTransitionFunction {
-    
+public final class STF_PRF_ANN implements StateTransitionFunction {
+
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
-    ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+                           ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         // update state space
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
-
-        states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
-        states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-        states.nominalInterestRate = model.<Double>getAs("NextResetRate");
+        states.accruedInterest += timeFromLastEvent * states.nominalInterestRate * states.interestCalculationBaseAmount;
+        states.feeAccrued += timeFromLastEvent * states.notionalPrincipal * model.<Double>getAs("FeeRate");
+        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * AnnuityUtils.annuityPayment(model, states.notionalPrincipal, states.accruedInterest, states.nominalInterestRate);
         states.statusDate = time;
-        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, states.notionalPrincipal, states.accruedInterest, states.nominalInterestRate);
-
         // return post-event-states
         return StateSpace.copyStateSpace(states);
-        }
-    
+    }
+
 }
