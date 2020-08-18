@@ -14,7 +14,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class POF_PR_SWPPV implements PayOffFunction {
+public final class POF_MD_SWPPV implements PayOffFunction {
     
     @Override
         public double eval(LocalDateTime time, StateSpace states, 

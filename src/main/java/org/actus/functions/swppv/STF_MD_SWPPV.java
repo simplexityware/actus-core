@@ -14,18 +14,14 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_PR_SWPPV implements StateTransitionFunction {
+public final class STF_MD_SWPPV implements StateTransitionFunction {
     
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         // update state space
-        double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
-        states.accruedInterest += (model.<Double>getAs("NominalInterestRate") - states.nominalInterestRate) * states.notionalPrincipal * timeFromLastEvent;
-        states.accruedInterest += model.<Double>getAs("NominalInterestRate") * states.notionalPrincipal * timeFromLastEvent;
-        states.accruedInterest2 += (-1) * states.nominalInterestRate * states.notionalPrincipal * timeFromLastEvent;
-        states.nominalInterestRate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"),time,states,model) * model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
         states.notionalPrincipal = 0.0;
+        states.nominalInterestRate = 0.0;
         states.statusDate = time;
 
         // return post-event-states

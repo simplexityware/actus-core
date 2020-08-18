@@ -47,9 +47,7 @@ public final class PlainVanillaInterestRateSwap {
             // float initial exchange
             events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IEDFloat_SWPPV(), new STF_IED_SWPPV(), model.getAs("ContractID")));
             // fixed principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_SWPPV(), model.getAs("ContractID")));
-            // float principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.PR, model.getAs("Currency"), new POF_PRFloat_SWPPV(), new STF_PR_SWPPV(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_MD_SWPPV(), model.getAs("ContractID")));
             // interest payment schedule
             Set<LocalDateTime> interestSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     model.getAs("MaturityDate"),
@@ -63,7 +61,7 @@ public final class PlainVanillaInterestRateSwap {
             // initial exchange
             events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_SWPPV(), new STF_IED_SWPPV(), model.getAs("ContractID")));
             // principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.PR, model.getAs("Currency"), new POF_PR_SWPPV(), new STF_PR_SWPPV(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_SWPPV(), new STF_MD_SWPPV(), model.getAs("ContractID")));
             // in case of cash delivery (cash settlement)                                                                                                model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     model.getAs("MaturityDate"),
