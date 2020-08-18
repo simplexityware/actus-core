@@ -13,6 +13,7 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org. actus.events.ContractEvent;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -47,9 +48,10 @@ public class StockTest {
           
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
+            LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = Stock.schedule(terms.getAs("MaturityDate"), terms);
+            ArrayList<ContractEvent> schedule = Stock.schedule(to, terms);
             schedule = Stock.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
@@ -69,8 +71,8 @@ public class StockTest {
             List<ResultSet> expectedResults = test.getResults();
             
             // round results to available precision
-            computedResults.forEach(result -> result.roundTo(11));
-            expectedResults.forEach(result -> result.roundTo(11));
+            computedResults.forEach(result -> result.roundTo(10));
+            expectedResults.forEach(result -> result.roundTo(10));
 
             // create dynamic test
             return DynamicTest.dynamicTest("Test: " + testId,
