@@ -49,8 +49,8 @@ public class StockTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = CallMoney.schedule(terms.getAs("MaturityDate"), terms);
-            schedule = CallMoney.apply(schedule, terms, observer);
+            ArrayList<ContractEvent> schedule = Stock.schedule(terms.getAs("MaturityDate"), terms);
+            schedule = Stock.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 

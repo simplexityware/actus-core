@@ -49,8 +49,8 @@ public class CommodityTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = PrincipalAtMaturity.schedule(terms.getAs("MaturityDate"), terms);
-            schedule = PrincipalAtMaturity.apply(schedule, terms, observer);
+            ArrayList<ContractEvent> schedule = Commodity.schedule(terms.getAs("MaturityDate"), terms);
+            schedule = Commodity.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
