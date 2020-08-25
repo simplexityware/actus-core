@@ -39,32 +39,27 @@ public final class PlainVanillaInterestRateSwap {
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_FXOUT(), new STF_PRD_SWPPV(), model.getAs("ContractID")));
         }
+
+        // initial exchange
+        events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_SWPPV(), new STF_IED_SWPPV(), model.getAs("ContractID")));
+        
+        // principal redemption
+        events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_SWPPV(), new STF_MD_SWPPV(), model.getAs("ContractID")));
+        
         // interest payment events
         if (CommonUtils.isNull(model.getAs("DeliverySettlement")) || model.getAs("DeliverySettlement").equals(DeliverySettlement.D)) {
             // in case of physical delivery (delivery of individual cash flows)
-            // fixed initial exchange
-            events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_PAM(), new STF_IED_PAM(), model.getAs("ContractID")));
-            // float initial exchange
-            events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IEDFloat_SWPPV(), new STF_IED_SWPPV(), model.getAs("ContractID")));
-            // fixed principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_PAM(), new STF_PR_SWPPV(), model.getAs("ContractID")));
-            // float principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.PR, model.getAs("Currency"), new POF_PRFloat_SWPPV(), new STF_PR_SWPPV(), model.getAs("ContractID")));
             // interest payment schedule
             Set<LocalDateTime> interestSchedule = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     model.getAs("MaturityDate"),
                     model.getAs("CycleOfInterestPayment"),
                     model.getAs("EndOfMonthConvention"));
-            // fixed rate events                                                                                                    model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
-            events.addAll(EventFactory.createEvents(interestSchedule, EventType.IP, model.getAs("Currency"), new POF_IPFix_SWPPV(), new STF_IPFix_SWPPV(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
-            // floating rate events                                                                                                    model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
-            events.addAll(EventFactory.createEvents(interestSchedule, EventType.IP, model.getAs("Currency"), new POF_IPFloat_SWPPV(), new STF_IPFloat_SWPPV(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            // fixed rate events
+            events.addAll(EventFactory.createEvents(interestSchedule, EventType.IPFX, model.getAs("Currency"), new POF_IPFix_SWPPV(), new STF_IPFix_SWPPV(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            // floating rate events
+            events.addAll(EventFactory.createEvents(interestSchedule, EventType.IPFL, model.getAs("Currency"), new POF_IPFloat_SWPPV(), new STF_IPFloat_SWPPV(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
         } else {
-            // initial exchange
-            events.add(EventFactory.createEvent(model.getAs("InitialExchangeDate"), EventType.IED, model.getAs("Currency"), new POF_IED_SWPPV(), new STF_IED_SWPPV(), model.getAs("ContractID")));
-            // principal redemption
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.PR, model.getAs("Currency"), new POF_PR_SWPPV(), new STF_PR_SWPPV(), model.getAs("ContractID")));
-            // in case of cash delivery (cash settlement)                                                                                                model.getAs("MaturityDate"),                                                                                                  model.getAs("EndOfMonthConvention"))
+            // in case of cash delivery (cash settlement)
             events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfInterestPayment"),
                     model.getAs("MaturityDate"),
                     model.getAs("CycleOfInterestPayment"),
@@ -130,7 +125,10 @@ public final class PlainVanillaInterestRateSwap {
         if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
             states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
             states.nominalInterestRate = model.getAs("NominalInterestRate");
+            states.nominalInterestRate2 = model.getAs("NominalInterestRate2");
             states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
+            states.accruedInterest2 = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest2");
+            states.lastInterestPeriod = 0.0;
         }
         return states;
     }

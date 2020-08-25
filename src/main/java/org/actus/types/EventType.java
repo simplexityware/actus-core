@@ -23,5 +23,7 @@ public enum EventType {
     MD,
     XD,
     STD,
-    PI
+    PI,
+    IPFX,
+    IPFL
 }

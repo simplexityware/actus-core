@@ -51,6 +51,12 @@ switch (eventType) {
     case IP:
         offset = 40;
         break;
+    case IPFX:
+        offset = 40;
+        break;
+    case IPFL:
+        offset = 45;
+        break;
     case IPCI:
         offset = 40;
         break;
