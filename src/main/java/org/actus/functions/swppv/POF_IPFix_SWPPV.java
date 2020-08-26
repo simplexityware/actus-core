@@ -20,9 +20,8 @@ public final class POF_IPFix_SWPPV implements PayOffFunction {
     @Override
         public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
+        double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
-                * (states.accruedInterest + dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
-                * model.<Double>getAs("NominalInterestRate")
-                * states.notionalPrincipal);
+                * (states.accruedInterest + timeFromLastEvent * model.<Double>getAs("NominalInterestRate") * states.notionalPrincipal);
         }
 }

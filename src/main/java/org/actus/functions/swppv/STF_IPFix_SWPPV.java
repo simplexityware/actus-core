@@ -20,6 +20,7 @@ public final class STF_IPFix_SWPPV implements StateTransitionFunction {
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         // update state space
+        states.lastInterestPeriod = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest = 0.0;
         states.statusDate = time;
 

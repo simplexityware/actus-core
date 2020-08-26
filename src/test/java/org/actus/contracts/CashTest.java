@@ -14,7 +14,7 @@ import org.actus.testutils.ObservedDataSet;
 import org.actus.testutils.ResultSet;
 import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
-import org. actus.events.ContractEvent;
+import org.actus.events.ContractEvent;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 import org.actus.time.ScheduleFactory;
 import org.actus.types.EndOfMonthConventionEnum;
@@ -58,15 +59,8 @@ public class CashTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = Cash.schedule(terms.getAs("MaturityDate"), terms);
-            schedule.add(EventFactory.createEvent(
-                    LocalDateTime.parse((String)eventsObserved.get(0).get("time")),
-                    EventType.AD,
-                    terms.getAs("Currency"),
-                    new POF_AD_PAM(),
-                    new STF_AD_CSH(),
-                    terms.getAs("ContractID"))
-            );
+            ArrayList<ContractEvent> schedule = Cash.schedule(LocalDateTime.parse(tests.get(testId).getto()), terms);
+            schedule.addAll(ContractTestUtils.readObservedEvents(tests.get(testId).getEventsObserved(),terms));
             schedule = Cash.apply(schedule, terms, observer);
 
             // transform schedule to event list and return

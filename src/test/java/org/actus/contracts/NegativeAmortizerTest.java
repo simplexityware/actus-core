@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
-import org.actus.util.CommonUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
@@ -65,7 +64,7 @@ public class NegativeAmortizerTest {
                 results.setNotionalPrincipal(e.states().notionalPrincipal);
                 results.setNominalInterestRate(e.states().nominalInterestRate);
                 results.setAccruedInterest(e.states().accruedInterest);
-                //if(testId.equals("nam20")) System.out.println(results);
+                if(testId.equals("nam14")) System.out.println(results);
                 return results;
             }).collect(Collectors.toList());
 

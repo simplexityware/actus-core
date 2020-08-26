@@ -20,8 +20,9 @@ public final class STF_MD_SWPPV implements StateTransitionFunction {
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         // update state space
+        states.accruedInterest = 0;
+        states.accruedInterest2 = 0;
         states.notionalPrincipal = 0.0;
-        states.nominalInterestRate = 0.0;
         states.statusDate = time;
 
         // return post-event-states

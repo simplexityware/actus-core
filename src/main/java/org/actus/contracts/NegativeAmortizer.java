@@ -75,7 +75,7 @@ public final class NegativeAmortizer {
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID"))
         );
-
+System.out.println(maturity);
         // -> chose right Payoff function depending on maturity
         PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_MD_PAM():new POF_PR_NAM());
         events.add(EventFactory.createEvent(
