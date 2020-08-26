@@ -11,7 +11,7 @@ import org.actus.testutils.ObservedDataSet;
 import org.actus.testutils.ResultSet;
 import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
-import org. actus.events.ContractEvent;
+import org.actus.events.ContractEvent;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
@@ -49,7 +50,8 @@ public class CashTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = Cash.schedule(terms.getAs("MaturityDate"), terms);
+            ArrayList<ContractEvent> schedule = Cash.schedule(LocalDateTime.parse(tests.get(testId).getto()), terms);
+            schedule.addAll(ContractTestUtils.readObservedEvents(tests.get(testId).getEventsObserved(),terms));
             schedule = Cash.apply(schedule, terms, observer);
         
             // transform schedule to event list and return

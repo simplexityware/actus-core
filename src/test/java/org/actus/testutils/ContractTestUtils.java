@@ -6,11 +6,17 @@
 package org.actus.testutils;
 
 import org.actus.attributes.ContractModel;
+import org.actus.events.ContractEvent;
+import org.actus.events.EventFactory;
+import org.actus.types.EventType;
+import org.actus.functions.pam.POF_AD_PAM;
+import org.actus.functions.csh.STF_AD_CSH;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -84,5 +90,16 @@ public class ContractTestUtils {
 
         return tests;
     }
-    
+
+    public static List<ContractEvent> readObservedEvents(List<ObservedEvent> eventsObserved, ContractModel terms) {
+        List<ContractEvent> observedEvents = eventsObserved.stream().map(e -> EventFactory.createEvent(
+            LocalDateTime.parse(e.getTime()),
+            EventType.valueOf(e.getType()),
+            terms.getAs("Currency"),
+            new POF_AD_PAM(),
+            new STF_AD_CSH(),
+            terms.getAs("ContractID"))
+        ).collect(Collectors.toList());
+        return observedEvents;
+    }
 }

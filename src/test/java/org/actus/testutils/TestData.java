@@ -8,7 +8,7 @@ public class TestData {
     Map<String, Object> terms;
     String to;
     Map<String, ObservedDataSet> dataObserved;
-    List<Map<String, Object>> eventsObserved;
+    List<ObservedEvent> eventsObserved;
     List<ResultSet> results;
 
     public String getIdentifier() {
@@ -43,11 +43,11 @@ public class TestData {
         this.dataObserved = dataObserved;
     }
 
-    public List<Map<String,Object>> getEventsObserved() {
+    public List<ObservedEvent> getEventsObserved() {
         return eventsObserved;
     }
 
-    public void setEventsObserved(List<Map<String,Object>> eventsObserved) {
+    public void setEventsObserved(List<ObservedEvent> eventsObserved) {
         this.eventsObserved = eventsObserved;
     }
 
