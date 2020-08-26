@@ -216,19 +216,33 @@ public final class Annuity {
                 EventType.RR,
                 model.getAs("Currency"),
                 new POF_RR_PAM(),
-                new STF_RR_ANN(),
+                new STF_RR_LAM(),
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID")
         );
         // adapt fixed rate reset event
         if(!CommonUtils.isNull(model.getAs("NextResetRate"))) {
             ContractEvent fixedEvent = rateResetEvents.stream().sorted().filter(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1).findFirst().get();
-            fixedEvent.fStateTrans(new STF_RRF_ANN());
+            fixedEvent.fStateTrans(new STF_RRF_LAM());
             fixedEvent.eventType(EventType.RRF);
             rateResetEvents.add(fixedEvent);
         }
         // add all rate reset events
         events.addAll(rateResetEvents);
+        Set<LocalDateTime> prfSchedule = new HashSet<>();
+        rateResetEvents.forEach(event -> prfSchedule.add(event.eventTime()));
+        if(!prfSchedule.isEmpty()){
+            events.addAll(EventFactory.createEvents(
+                    prfSchedule,
+                    EventType.PRF,
+                    model.getAs("Currency"),
+                    new POF_RR_PAM(),
+                    new STF_PRF_ANN(),
+                    model.getAs("BusinessDayConvention"),
+                    model.getAs("ContractID")
+            ));
+        }
+
         // scaling (if specified)
         String scalingEffect=model.getAs("ScalingEffect");
         if (!CommonUtils.isNull(scalingEffect) && (scalingEffect.contains("I") || scalingEffect.contains("N"))) {
@@ -292,7 +306,7 @@ public final class Annuity {
         // apply events according to their time sequence to current state
         LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
 		ListIterator eventIterator = events.listIterator();
-		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal > 0.0) && eventIterator.hasNext()) {
+		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
 			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
 					model.getAs("BusinessDayConvention"));
 		}
@@ -308,28 +322,37 @@ public final class Annuity {
 
     // determine maturity of the contract
     private static LocalDateTime maturity(ContractModelProvider model) {
-        // determine maturity of the contract
-        LocalDateTime maturity = null;
-        if(!CommonUtils.isNull(model.getAs("MaturityDate"))) {
-            maturity = model.getAs("MaturityDate");
-        } else if(!CommonUtils.isNull(model.getAs("AmortizationDate"))) {
-            maturity = model.getAs("AmortizationDate");
-        } else if(CommonUtils.isNull(model.getAs("CycleOfRateReset")) || CommonUtils.isNull(model.getAs("InterestCalculationBase")) || model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NT)) {
-                LocalDateTime lastEvent;
-                if(model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").isBefore(model.getAs("StatusDate"))) {
-                    Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"),model.getAs("StatusDate"),
-                            model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"));
-                    previousEvents.removeIf( d -> d.isBefore(model.<LocalDateTime>getAs("StatusDate").minus(CycleUtils.parsePeriod(model.getAs("CycleOfInterestPayment")))));
-                    previousEvents.remove(model.getAs("StatusDate"));
-                    lastEvent = previousEvents.toArray(new LocalDateTime[1])[0];
-                } else {
-                    lastEvent = model.getAs("CycleAnchorDateOfPrincipalRedemption");
-                }
-                Period cyclePeriod = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
-                double coupon = model.<Double>getAs("NotionalPrincipal")*model.<Double>getAs("NominalInterestRate")*model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(model.getAs("CycleAnchorDateOfPrincipalRedemption"), model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").plus(cyclePeriod));
-                maturity = lastEvent.plus(cyclePeriod.multipliedBy((int) Math.ceil(model.<Double>getAs("NotionalPrincipal")/(model.<Double>getAs("NextPrincipalRedemptionPayment")-coupon))));
-        } else {
-                maturity = model.<LocalDateTime>getAs("InitialExchangeDate").plus(Constants.MAX_LIFETIME);
+        LocalDateTime maturity = model.getAs("MaturityDate");
+        LocalDateTime amortizationDate = model.getAs("AmortizationDate");
+        if (CommonUtils.isNull(maturity) && CommonUtils.isNull(amortizationDate)) {
+            LocalDateTime t0 = model.getAs("StatusDate");
+            LocalDateTime pranx = model.getAs("CycleAnchorDateOfPrincipalRedemption");
+            LocalDateTime ied = model.getAs("InitialExchangeDate");
+            Period prcl = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
+            LocalDateTime lastEvent;
+            if(!CommonUtils.isNull(pranx) && (pranx.isEqual(t0) || pranx.isAfter(t0))) {
+                lastEvent = pranx;
+            } else if(ied.plus(prcl).isAfter(t0) || ied.plus(prcl).isEqual(t0)) {
+                lastEvent = ied.plus(prcl);
+            }else{
+                Set<LocalDateTime> previousEvents = ScheduleFactory.createSchedule(
+                        model.getAs("CycleAnchorDateOfPrincipalRedemption"),
+                        model.getAs("StatusDate"),
+                        model.getAs("CycleOfPrincipalRedemption"),
+                        model.getAs("EndOfMonthConvention")
+                );
+                previousEvents.removeIf( d -> d.isBefore(t0));
+                previousEvents.remove(t0);
+                List<LocalDateTime> prevEventsList = new ArrayList<>(previousEvents);
+                Collections.sort(prevEventsList);
+                lastEvent = prevEventsList.get(prevEventsList.size()-1);
+            }
+            double timeFromLastEventPlusOneCycle = model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(lastEvent, lastEvent.plus(prcl));
+            double redemptionPerCycle = model.<Double>getAs("NextPrincipalRedemptionPayment") - (timeFromLastEventPlusOneCycle * model.<Double>getAs("NominalInterestRate"));
+            int n = (int)Math.ceil(model.<Double>getAs("NotionalPrincipal") / redemptionPerCycle);
+            maturity = lastEvent.plus(prcl.multipliedBy(n));
+        } else if (CommonUtils.isNull(maturity)){
+            maturity = amortizationDate;
         }
         return maturity;
     }

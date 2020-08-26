@@ -48,7 +48,6 @@ public final class Commodity {
         if (!CommonUtils.isNull(terminationDate) && terminationDate.isAfter(statusDate) && to.isAfter(terminationDate)) {
             events.add(EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_STK(), new STF_TD_STK(), model.getAs("ContractID")));
         }
-
         return events;
     }
 

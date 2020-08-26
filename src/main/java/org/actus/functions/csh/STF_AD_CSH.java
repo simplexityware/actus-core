@@ -25,5 +25,4 @@ public final class STF_AD_CSH implements StateTransitionFunction {
         // return post-event-states
         return StateSpace.copyStateSpace(states);
     }
-    
 }

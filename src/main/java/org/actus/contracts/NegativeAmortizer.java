@@ -7,6 +7,7 @@ package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.states.StateSpace;
@@ -28,6 +29,7 @@ import org.actus.functions.StateTransitionFunction;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents the Negative Amortizer payoff algorithm
@@ -258,7 +260,11 @@ System.out.println(maturity);
         }
         ContractEvent postDate = EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"));
         events.removeIf(e -> e.compareTo(postDate) == 1);
-      
+
+        // remove pre-purchase events if purchase date set
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
+        }
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);
 
@@ -283,10 +289,6 @@ System.out.println(maturity);
 			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
 					model.getAs("BusinessDayConvention"));
 		}
-        // remove pre-purchase events if purchase date set
-        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
-        }
 
         // return evaluated events
         return events;
@@ -329,23 +331,56 @@ System.out.println(maturity);
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
 
-        // TODO: some attributes can be null
-        states.statusDate = model.getAs("StatusDate");
-        
-        // init next principal redemption payment amount (cannot be null for NAM!)
-        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NextPrincipalRedemptionPayment");
-        
-        if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
-            states.nominalInterestRate = model.getAs("NominalInterestRate");
-            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("AccruedInterest");
-            states.feeAccrued = model.getAs("FeeAccrued");
-            states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*( (model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NT))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
-        }
-
         states.notionalScalingMultiplier = model.getAs("NotionalScalingMultiplier");
         states.interestScalingMultiplier = model.getAs("InterestScalingMultiplier");
-        
+
+        states.contractPerformance = model.getAs("ContractPerformance");
+        states.statusDate = model.getAs("StatusDate");
+        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NextPrincipalRedemptionPayment");
+
+        if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
+            states.notionalPrincipal = 0.0;
+            states.nominalInterestRate = 0.0;
+            states.interestCalculationBaseAmount = 0.0;
+        }else{
+            states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
+            states.nominalInterestRate = model.getAs("NominalInterestRate");
+            if(InterestCalculationBase.NT.equals(model.getAs("InterestCalculationBase"))){
+                states.interestCalculationBaseAmount = states.notionalPrincipal; // contractRole applied at notionalPrincipal initialization
+            }else{
+                states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("InterestCalculationBaseAmount");
+            }
+
+        }
+
+        if(CommonUtils.isNull(model.getAs("NominalInterestRate"))){
+            states.accruedInterest = 0.0;
+        } else if(!CommonUtils.isNull(model.getAs("AccruedInterest"))){
+            states.accruedInterest = model.getAs("AccruedInterest");
+        } else{
+            DayCountCalculator dayCounter = model.getAs("DayCountConvention");
+            BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
+            List<LocalDateTime> ipSchedule = new ArrayList<>(ScheduleFactory.createSchedule(
+                    model.getAs("CycleAnchorDateOfInterestPayment"),
+                    model.getAs("MaturityDate"),
+                    model.getAs("CycleOfInterestPayment"),
+                    model.getAs("EndOfMonthConvention"),
+                    true
+            ));
+            Collections.sort(ipSchedule);
+            List<LocalDateTime> dateEarlierThanT0 = ipSchedule.stream().filter(time -> time.isBefore(states.statusDate)).collect(Collectors.toList());
+            LocalDateTime tMinus = dateEarlierThanT0.get(dateEarlierThanT0.size() -1);
+            states.accruedInterest = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(tMinus), timeAdjuster.shiftCalcTime(states.statusDate))
+                    * states.notionalPrincipal
+                    * states.nominalInterestRate;
+        }
+
+        if(CommonUtils.isNull(model.getAs("FeeRate"))){
+            states.feeAccrued = 0.0;
+        } else if(!CommonUtils.isNull(model.getAs("FeeAccrued"))){
+            states.feeAccrued = model.getAs("FeeAccrued");
+        }//TODO: implement last two possible initialization
+
         // return the initialized state space
         return states;
     }

@@ -51,7 +51,7 @@ public class CommodityTest {
             // compute and evaluate schedule
             ArrayList<ContractEvent> schedule = Commodity.schedule(LocalDateTime.parse(tests.get(testId).getto()), terms);
             schedule = Commodity.apply(schedule, terms, observer);
-     
+          
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
                 ResultSet results = new ResultSet();

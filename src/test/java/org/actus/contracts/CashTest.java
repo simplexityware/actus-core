@@ -5,6 +5,9 @@
  */
 package org.actus.contracts;
 
+import org.actus.events.EventFactory;
+import org.actus.functions.csh.STF_AD_CSH;
+import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.testutils.ContractTestUtils;
 import org.actus.testutils.TestData;
 import org.actus.testutils.ObservedDataSet;
@@ -13,6 +16,7 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -21,6 +25,9 @@ import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
+import org.actus.time.ScheduleFactory;
+import org.actus.types.EndOfMonthConventionEnum;
+import org.actus.types.EventType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
@@ -45,7 +52,9 @@ public class CashTest {
             // create market model from data
             List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
             DataObserver observer = ContractTestUtils.createObserver(dataObserved);
-          
+
+            List<Map<String,Object>> eventsObserved = test.getEventsObserved();
+
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
@@ -53,7 +62,7 @@ public class CashTest {
             ArrayList<ContractEvent> schedule = Cash.schedule(LocalDateTime.parse(tests.get(testId).getto()), terms);
             schedule.addAll(ContractTestUtils.readObservedEvents(tests.get(testId).getEventsObserved(),terms));
             schedule = Cash.apply(schedule, terms, observer);
-        
+
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
                 ResultSet results = new ResultSet();
