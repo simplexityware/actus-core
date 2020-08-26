@@ -53,7 +53,6 @@ public class CashTest {
             List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
             DataObserver observer = ContractTestUtils.createObserver(dataObserved);
 
-            List<Map<String,Object>> eventsObserved = test.getEventsObserved();
 
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
