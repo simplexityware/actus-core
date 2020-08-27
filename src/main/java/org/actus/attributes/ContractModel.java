@@ -487,7 +487,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("endOfMonthConvention")));
                         map.put("CycleAnchorDateOfDividendPayment", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfDividendPayment"))) ? ((CommonUtils.isNull(attributes.get("cycleOfDividendPayment"))) ? null : LocalDateTime.parse(attributes.get("purchaseDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfDividendPayment")));
                         map.put("CycleOfDividendPayment", attributes.get("cycleOfDividendPayment"));
-                        map.put("MarketObjectCodeOfDividendRate", attributes.get("marketObjectCodeOfDividendRate"));
+                        map.put("MarketObjectCodeOfDividends", attributes.get("marketObjectCodeOfDividends"));
 
                         break;
                     case FXOUT:

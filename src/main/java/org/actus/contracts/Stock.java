@@ -100,7 +100,7 @@ public final class Stock {
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("30E/360", null), model.getAs("BusinessDayConvention")));
+        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("30E360", null), model.getAs("BusinessDayConvention")));
 
         // return post events states
         return events;
