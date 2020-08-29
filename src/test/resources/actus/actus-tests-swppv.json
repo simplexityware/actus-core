@@ -1260,6 +1260,7 @@
                 "eventDate": "2015-01-01T00:00:00",
                 "eventType": "IED",
                 "payoff": 0,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.08,
                 "accruedInterest": 0
@@ -1268,6 +1269,7 @@
                 "eventDate": "2015-07-01T00:00:00",
                 "eventType": "IPFX",
                 "payoff": -24.7945205479452,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.08,
                 "accruedInterest": 0
@@ -1276,6 +1278,7 @@
                 "eventDate": "2015-07-01T00:00:00",
                 "eventType": "IPFL",
                 "payoff": 39.6712328767123,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.08,
                 "accruedInterest": 0
@@ -1284,6 +1287,7 @@
                 "eventDate": "2015-07-01T00:00:00",
                 "eventType": "RR",
                 "payoff": 0,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.085,
                 "accruedInterest": 0
@@ -1292,6 +1296,7 @@
                 "eventDate": "2016-01-01T00:00:00",
                 "eventType": "IPFX",
                 "payoff": -25.2054794520548,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.085,
                 "accruedInterest": 0
@@ -1300,6 +1305,7 @@
                 "eventDate": "2016-01-01T00:00:00",
                 "eventType": "IPFL",
                 "payoff": 42.8493150684931,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.085,
                 "accruedInterest": 0
@@ -1308,6 +1314,7 @@
                 "eventDate": "2016-01-01T00:00:00",
                 "eventType": "RR",
                 "payoff": 0,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1316,6 +1323,7 @@
                 "eventDate": "2016-07-01T00:00:00",
                 "eventType": "IPFX",
                 "payoff": -24.9315068493151,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1324,6 +1332,7 @@
                 "eventDate": "2016-07-01T00:00:00",
                 "eventType": "IPFL",
                 "payoff": 72.3013698630137,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1332,6 +1341,7 @@
                 "eventDate": "2016-07-01T00:00:00",
                 "eventType": "RR",
                 "payoff": 0,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1340,6 +1350,7 @@
                 "eventDate": "2017-01-01T00:00:00",
                 "eventType": "IPFX",
                 "payoff": -25.2054794520548,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1348,6 +1359,7 @@
                 "eventDate": "2017-01-01T00:00:00",
                 "eventType": "IPFL",
                 "payoff": 73.0958904109589,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1356,6 +1368,7 @@
                 "eventDate": "2017-01-01T00:00:00",
                 "eventType": "RR",
                 "payoff": 0,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1364,6 +1377,7 @@
                 "eventDate": "2017-07-01T00:00:00",
                 "eventType": "IPFX",
                 "payoff": -24.7945205479452,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1372,6 +1386,7 @@
                 "eventDate": "2017-07-01T00:00:00",
                 "eventType": "IPFL",
                 "payoff": 71.9041095890411,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1380,6 +1395,7 @@
                 "eventDate": "2017-07-01T00:00:00",
                 "eventType": "RR",
                 "payoff": 0,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1388,6 +1404,7 @@
                 "eventDate": "2018-01-01T00:00:00",
                 "eventType": "IPFX",
                 "payoff": -25.2054794520548,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1396,6 +1413,7 @@
                 "eventDate": "2018-01-01T00:00:00",
                 "eventType": "IPFL",
                 "payoff": 73.0958904109589,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
@@ -1405,6 +1423,7 @@
                 "eventType": "MD",
                 "payoff": 0,
                 "notionalPrincipal": 0,
+                "currency": "USD",
                 "nominalInterestRate": 0.145,
                 "accruedInterest": 0
             }
@@ -2515,6 +2534,7 @@
                 "eventDate": "2015-03-15T23:59:59",
                 "eventType": "PRD",
                 "payoff": -50,
+                "currency": "USD",
                 "notionalPrincipal": 1000,
                 "nominalInterestRate": 0.08,
                 "accruedInterest": -6.08219178082192
@@ -2523,6 +2543,7 @@
                 "eventDate": "2015-07-01T00:00:00",
                 "eventType": "IPFX",
                 "payoff": 24.7945205479452,
+                "currency": "USD",
                 "notionalPrincipal": 1000,
                 "nominalInterestRate": 0.05,
                 "accruedInterest": 0
@@ -2531,6 +2552,7 @@
                 "eventDate": "2015-07-01T00:00:00",
                 "eventType": "IPFL",
                 "payoff": -39.6712328767123,
+                "currency": "USD",
                 "notionalPrincipal": -1000,
                 "nominalInterestRate": 0.08,
                 "accruedInterest": 0
@@ -2539,6 +2561,7 @@
                 "eventDate": "2015-07-01T00:00:00",
                 "eventType": "RR",
                 "payoff": 0,
+                "currency": "USD",
                 "notionalPrincipal": 1000,
                 "nominalInterestRate": 0.06,
                 "accruedInterest": 0
@@ -2547,6 +2570,7 @@
                 "eventDate": "2015-07-01T00:00:00",
                 "eventType": "TD",
                 "payoff": 600,
+                "currency": "USD",
                 "notionalPrincipal": 0,
                 "nominalInterestRate": 0.06,
                 "accruedInterest": 0
