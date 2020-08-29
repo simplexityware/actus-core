@@ -14,7 +14,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_STD1_FXOUT implements StateTransitionFunction {
+public final class STF_MD1_FXOUT implements StateTransitionFunction {
     
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,

@@ -22,11 +22,10 @@ public final class POF_STD_FXOUT implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        int contractRoleSign = ContractRoleConvention.roleSign(model.getAs("ContractRole"));
-        return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
-                * contractRoleSign
-                * (model.<Double>getAs("NotionalPrincipal") - 1
-                        / riskFactorModel.stateAt(model.getAs("Currency2")+"/"+model.getAs("Currency"), model.getAs("MaturityDate"), states, model)
-                        * model.<Double>getAs("NotionalPrincipal2"));
+        double payoff = CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
+        * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+        * (model.<Double>getAs("NotionalPrincipal")-riskFactorModel.stateAt(model.getAs("Currency2")+"/"+model.getAs("Currency"), model.getAs("MaturityDate"), states, model)
+                * model.<Double>getAs("NotionalPrincipal2"));
+        return payoff;
     }
 }

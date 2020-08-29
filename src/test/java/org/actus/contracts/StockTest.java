@@ -69,7 +69,7 @@ public class StockTest {
 
             // extract test results
             List<ResultSet> expectedResults = test.getResults();
-            
+
             // round results to available precision
             computedResults.forEach(result -> result.roundTo(10));
             expectedResults.forEach(result -> result.roundTo(10));
