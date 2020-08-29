@@ -38,7 +38,7 @@ public final class PlainVanillaInterestRateSwap {
 
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_SWPPV(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_FXOUT(), new STF_PRD_SWPPV(), model.getAs("ContractID")));
         }
 
         // initial exchange
