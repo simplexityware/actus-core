@@ -7,6 +7,7 @@ package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.functions.nam.POF_PR_NAM;
@@ -18,7 +19,6 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.types.EventType;
 import org.actus.types.InterestCalculationBase;
-import org.actus.util.Constants;
 import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 import org.actus.util.AnnuityUtils;
@@ -26,12 +26,12 @@ import org.actus.functions.pam.*;
 import org.actus.functions.lam.*;
 import org.actus.functions.nam.*;
 import org.actus.functions.ann.*;
-import org.actus.functions.PayOffFunction;
 import org.actus.functions.StateTransitionFunction;
 
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents the Annuity contract algorithm
@@ -360,22 +360,72 @@ public final class Annuity {
     // initialize the contract states
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-        states.statusDate = model.getAs("StatusDate");
-        if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
-            states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(double)model.getAs("NotionalPrincipal");
-            states.nominalInterestRate = model.getAs("NominalInterestRate");
-            // TODO: IPAC can be NULL
-            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*(double)model.getAs("AccruedInterest");
-            // TODO: FEAC can be NULL
-            states.feeAccrued = model.getAs("FeeAccrued");
-            states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*( (model.getAs("InterestCalculationBase").equals(InterestCalculationBase.NT))? model.<Double>getAs("NotionalPrincipal") : model.<Double>getAs("InterestCalculationBaseAmount") );
-        }
 
         states.notionalScalingMultiplier = model.getAs("NotionalScalingMultiplier");
         states.interestScalingMultiplier = model.getAs("InterestScalingMultiplier");
-        
-        // init next principal redemption payment amount (can be null for ANN!)
-        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, model.getAs("NotionalPrincipal"), model.getAs("AccruedInterest"), model.getAs("NominalInterestRate"));
+
+        states.contractPerformance = model.getAs("ContractPerformance");
+        states.statusDate = model.getAs("StatusDate");
+        states.maturityDate = maturity(model);
+
+        if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
+            states.notionalPrincipal = 0.0;
+            states.nominalInterestRate = 0.0;
+            states.interestCalculationBaseAmount = 0.0;
+        }else{
+            states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
+            states.nominalInterestRate = model.getAs("NominalInterestRate");
+            if(InterestCalculationBase.NT.equals(model.getAs("InterestCalculationBase"))){
+                states.interestCalculationBaseAmount = states.notionalPrincipal; // contractRole applied at notionalPrincipal initialization
+            }else{
+                states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("InterestCalculationBaseAmount");
+            }
+
+        }
+
+        if(CommonUtils.isNull(model.getAs("NominalInterestRate"))){
+            states.accruedInterest = 0.0;
+        } else if(!CommonUtils.isNull(model.getAs("AccruedInterest"))){
+            states.accruedInterest = model.getAs("AccruedInterest");
+        } else{
+            DayCountCalculator dayCounter = model.getAs("DayCountConvention");
+            BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
+            List<LocalDateTime> ipSchedule = new ArrayList<>(ScheduleFactory.createSchedule(
+                    model.getAs("CycleAnchorDateOfInterestPayment"),
+                    model.getAs("MaturityDate"),
+                    model.getAs("CycleOfInterestPayment"),
+                    model.getAs("EndOfMonthConvention"),
+                    true
+            ));
+            Collections.sort(ipSchedule);
+            List<LocalDateTime> dateEarlierThanT0 = ipSchedule.stream().filter(time -> time.isBefore(states.statusDate)).collect(Collectors.toList());
+            LocalDateTime tMinus = dateEarlierThanT0.get(dateEarlierThanT0.size() -1);
+            states.accruedInterest = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(tMinus), timeAdjuster.shiftCalcTime(states.statusDate))
+                    * states.notionalPrincipal
+                    * states.nominalInterestRate;
+        }
+
+        if(CommonUtils.isNull(model.getAs("FeeRate"))){
+            states.feeAccrued = 0.0;
+        } else if(!CommonUtils.isNull(model.getAs("FeeAccrued"))){
+            states.feeAccrued = model.getAs("FeeAccrued");
+        }//TODO: implement last two possible initialization
+
+        if(CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))){
+            //check if NT and IPNR are initialized, create dummy StateSpace if not
+            if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
+                StateSpace dummyState = StateSpace.copyStateSpace(states);
+                dummyState.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
+                dummyState.nominalInterestRate = model.getAs("NominalInterestRate");
+                states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, dummyState);
+            }else{
+                states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, states);
+            }
+
+        }else {
+            states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NextPrincipalRedemptionPayment");
+        }
+
         
         // return the initialized state space
         return states;
