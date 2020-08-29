@@ -16,7 +16,6 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.types.DeliverySettlement;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
-import org.actus.functions.fxout.POF_PRD_FXOUT;
 import org.actus.functions.fxout.POF_TD_FXOUT;
 import org.actus.functions.fxout.POF_STD_FXOUT;
 import org.actus.functions.fxout.STF_STD_FXOUT;
@@ -43,7 +42,7 @@ public final class ForeignExchangeOutright {
         
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_FXOUT(), new STF_PRD_STK(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_STK(), model.getAs("ContractID")));
         }
 
         // termination

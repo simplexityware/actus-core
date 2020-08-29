@@ -25,7 +25,6 @@ public final class POF_PRD_STK implements PayOffFunction {
         return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
                 * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                 * (-1)
-                * model.<Integer>getAs("Quantity")
                 * model.<Double>getAs("PriceAtPurchaseDate");
     }
 }
