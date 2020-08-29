@@ -22,6 +22,7 @@ import org.actus.functions.pam.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents the Principal At Maturity payoff algorithm
@@ -214,6 +215,12 @@ public final class PrincipalAtMaturity {
 
     private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
         StateSpace states = new StateSpace();
+        states.notionalScalingMultiplier = model.getAs("NotionalScalingMultiplier");
+        states.interestScalingMultiplier = model.getAs("InterestScalingMultiplier");
+
+        states.contractPerformance = model.getAs("ContractPerformance");
+        states.statusDate = model.getAs("StatusDate");
+
         if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
             states.notionalPrincipal = 0.0;
             states.nominalInterestRate = 0.0;
@@ -227,10 +234,21 @@ public final class PrincipalAtMaturity {
         } else if(!CommonUtils.isNull(model.getAs("AccruedInterest"))){
             states.accruedInterest = model.getAs("AccruedInterest");
         } else{
-            DayCountCalculator dayCountCalculator = model.getAs("DayCountConvention");
-            BusinessDayAdjuster businessDayAdjuster = model.getAs("BusinessDayConvention");
-            //TODO: what is t- in this case ?
-            //states.accruedInterest = dayCountCalculator.dayCountFraction()
+            DayCountCalculator dayCounter = model.getAs("DayCountConvention");
+            BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
+            List<LocalDateTime> ipSchedule = new ArrayList<>(ScheduleFactory.createSchedule(
+                    model.getAs("CycleAnchorDateOfInterestPayment"),
+                    model.getAs("MaturityDate"),
+                    model.getAs("CycleOfInterestPayment"),
+                    model.getAs("EndOfMonthConvention"),
+                    true
+            ));
+            Collections.sort(ipSchedule);
+            List<LocalDateTime> dateEarlierThanT0 = ipSchedule.stream().filter(time -> time.isBefore(states.statusDate)).collect(Collectors.toList());
+            LocalDateTime tMinus = dateEarlierThanT0.get(dateEarlierThanT0.size() -1);
+            states.accruedInterest = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(tMinus), timeAdjuster.shiftCalcTime(states.statusDate))
+                    * states.notionalPrincipal
+                    * states.nominalInterestRate;
         }
 
         if(CommonUtils.isNull(model.getAs("FeeRate"))){
@@ -239,11 +257,7 @@ public final class PrincipalAtMaturity {
             states.feeAccrued = model.getAs("FeeAccrued");
         }//TODO: implement last two possible initialization
 
-        states.notionalScalingMultiplier = model.getAs("NotionalScalingMultiplier");
-        states.interestScalingMultiplier = model.getAs("InterestScalingMultiplier");
 
-        states.contractPerformance = model.getAs("ContractPerformance");
-        states.statusDate = model.getAs("StatusDate");
         // return the initialized state space
         return states;
     }

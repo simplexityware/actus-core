@@ -434,7 +434,7 @@
             "statusDate": "2013-12-30T00:00:00",
             "contractDealDate": "2013-12-20T00:00:00",
             "purchaseDate": "2014-04-01T00:00:00",
-            "priceAtPurchaseDate": "50",
+            "priceAtPurchaseDate": "-50",
             "terminationDate": "2014-09-30T23:59:59",
             "priceAtTerminationDate": "100"
         },
@@ -482,7 +482,7 @@
             "statusDate": "2013-12-30T00:00:00",
             "contractDealDate": "2013-12-20T00:00:00",
             "purchaseDate": "2014-04-01T00:00:00",
-            "priceAtPurchaseDate": "50",
+            "priceAtPurchaseDate": "-50",
             "deliverySettlement": "S",
             "settlementPeriod": "P5D"
         },

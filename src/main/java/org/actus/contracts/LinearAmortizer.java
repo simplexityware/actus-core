@@ -27,6 +27,7 @@ import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -373,13 +374,13 @@ public final class LinearAmortizer {
             LocalDateTime s ;
             LocalDateTime pranx = model.getAs("CycleAnchorDateOfPrincipalRedemption");
             LocalDateTime statusDate = model.getAs("StatusDate");
-            String prclString = model.getAs("CycleOfPrincipalRedemption");
+            Period prcl = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
             LocalDateTime ied = model.getAs("InitialExchangeDate");
 
-            if(!CommonUtils.isNull(pranx) && pranx.isAfter(model.getAs("StatusDate"))){
-                s = model.getAs("CycleAnchorDateOfPrincipalRedemption");
-            } else if(CommonUtils.isNull(pranx) && ied.plus(CycleUtils.parsePeriod(prclString)).isAfter(statusDate)){
-                s = ied.plus(CycleUtils.parsePeriod(prclString));
+            if(!CommonUtils.isNull(pranx) && pranx.isAfter(statusDate)){
+                s = pranx;
+            } else if(CommonUtils.isNull(pranx) && ied.plus(prcl).isAfter(statusDate)){
+                s = ied.plus(prcl);
             } else{
                 Set<LocalDateTime> tPR = ScheduleFactory.createSchedule(
                         model.getAs("CycleAnchorDateOfPrincipalRedemption"),
@@ -394,15 +395,18 @@ public final class LinearAmortizer {
                 int lastIndex = tPRlist.size();
                 s = tPRlist.get(lastIndex-1);
             }
+
             DayCountCalculator dayCounter  = model.getAs("DayCountConvention");
             BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
             states.nextPrincipalRedemptionPayment =
                     model.<Double>getAs("NotionalPrincipal")
-                    * Math.ceil(
-                            dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(s), timeAdjuster.shiftCalcTime(states.maturityDate))
-                            / dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(s), timeAdjuster.shiftCalcTime(s.plus(CycleUtils.parsePeriod(prclString))))
-                    )
-                    *(-1);
+                    * Math.pow(
+                            Math.ceil(
+                                    dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(s), timeAdjuster.shiftCalcTime(states.maturityDate))
+                                    / dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(s), timeAdjuster.shiftCalcTime(s.plus(prcl)))
+                            )
+                    , -1.0)
+            ;
         } else {
             states.nextPrincipalRedemptionPayment = model.<Double>getAs("NextPrincipalRedemptionPayment");
         }

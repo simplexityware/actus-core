@@ -25,8 +25,10 @@ public final class POF_PRD_LAM implements PayOffFunction {
         return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
                 * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                 *(-1)
-                * (model.<Double>getAs("PriceAtPurchaseDate") + states.accruedInterest + dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
-                * states.nominalInterestRate
-                * states.interestCalculationBaseAmount);
+                * (model.<Double>getAs("PriceAtPurchaseDate") + states.accruedInterest
+                + (dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time))
+                    * states.nominalInterestRate
+                    * states.interestCalculationBaseAmount)
+        );
         }
 }

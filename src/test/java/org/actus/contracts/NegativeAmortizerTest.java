@@ -64,7 +64,6 @@ public class NegativeAmortizerTest {
                 results.setNotionalPrincipal(e.states().notionalPrincipal);
                 results.setNominalInterestRate(e.states().nominalInterestRate);
                 results.setAccruedInterest(e.states().accruedInterest);
-                if(testId.equals("nam14")) System.out.println(results);
                 return results;
             }).collect(Collectors.toList());
 

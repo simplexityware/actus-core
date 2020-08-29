@@ -9,6 +9,7 @@ import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
+import org.actus.functions.stk.POF_PRD_STK;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
 import org.actus.conventions.contractrole.ContractRoleConvention;
@@ -72,17 +73,17 @@ public final class PlainVanillaInterestRateSwap {
         events.addAll(EventFactory.createEvents(ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfRateReset"), model.getAs("MaturityDate"),
                 model.getAs("CycleOfRateReset"), model.getAs("EndOfMonthConvention"), false),
                 EventType.RR, model.getAs("Currency"), new POF_RR_PAM(), new STF_RR_SWPPV(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
-        // termination
-        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            ContractEvent termination =
-                                        EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_SWPPV(), model.getAs("ContractID"));
-                                        events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
-            events.add(termination);
-        }
 
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
-            ContractEvent termination = EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_SWPPV(), model.getAs("ContractID"));
+            ContractEvent termination = EventFactory.createEvent(
+                    model.getAs("TerminationDate"),
+                    EventType.TD,
+                    model.getAs("Currency"),
+                    new POF_TD_FXOUT(),
+                    new STF_TD_SWPPV(),
+                    model.getAs("ContractID")
+            );
             events.removeIf(e -> e.compareTo(termination) == 1); // remove all post-termination events
             events.add(termination);
         }
@@ -92,6 +93,11 @@ public final class PlainVanillaInterestRateSwap {
 
         // remove all post to-date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null, model.getAs("ContractID"))) == 1);
+
+        // remove pre-purchase events if purchase date set
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
+        }
 
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);
