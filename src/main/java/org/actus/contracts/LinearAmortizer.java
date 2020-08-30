@@ -140,7 +140,7 @@ public final class LinearAmortizer {
                         e.fStateTrans(stf_ipci);
                     }
                 });
-//              // also, remove any IP event exactly at IPCED and replace with an IPCI event
+                // also, remove any IP event exactly at IPCED and replace with an IPCI event
                 interestEventsRemove = interestEvents.stream().filter(a -> !a.eventTime().equals(capitalizationEnd.eventTime()))
                         .collect(Collectors.toSet());
                 interestEventsRemove.add(capitalizationEnd);
@@ -287,14 +287,17 @@ public final class LinearAmortizer {
         // apply events according to their time sequence to current state
         LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
 		ListIterator eventIterator = events.listIterator();
-        while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
-            ((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
+        //while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
+        while (eventIterator.hasNext()) {
+                ((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
                     model.getAs("BusinessDayConvention"));
-		}
+        }
+        
         // remove pre-purchase events if purchase date set
         if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
         }
+
         // return evaluated events
         return events;
     }
