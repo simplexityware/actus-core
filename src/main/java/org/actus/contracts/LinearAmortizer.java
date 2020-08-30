@@ -12,7 +12,6 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.functions.StateTransitionFunction;
-import org.actus.functions.PayOffFunction;
 import org.actus.functions.lam.*;
 import org.actus.functions.pam.*;
 import org.actus.states.StateSpace;
@@ -22,7 +21,6 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.endofmonth.EndOfMonthAdjuster;
 import org.actus.types.EventType;
 import org.actus.types.InterestCalculationBase;
-import org.actus.types.ScalingEffect;
 import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 

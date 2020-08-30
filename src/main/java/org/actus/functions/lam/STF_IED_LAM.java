@@ -30,13 +30,13 @@ public final class STF_IED_LAM implements StateTransitionFunction {
 
 
         if(InterestCalculationBase.NT.equals(model.<InterestCalculationBase>getAs("InterestCalculationBase"))){
-            states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
+            states.interestCalculationBaseAmount = states.notionalPrincipal;
         }else {
             states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("InterestCalculationBaseAmount");
         }
 
         if(!CommonUtils.isNull(model.getAs("AccruedInterest"))){
-            states.accruedInterest = model.<Double>getAs("AccruedInterest");
+            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("AccruedInterest");
         }else if(!CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) &&
                 model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment").isBefore(time)) {
             states.accruedInterest = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(model.<LocalDateTime>getAs("CycleAnchorDateOfInterestPayment")),timeAdjuster.shiftCalcTime(time))
