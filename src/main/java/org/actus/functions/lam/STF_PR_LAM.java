@@ -24,7 +24,9 @@ public final class STF_PR_LAM implements StateTransitionFunction {
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-        states.notionalPrincipal -= ContractRoleConvention.roleSign(model.getAs("ContractRole"))*states.nextPrincipalRedemptionPayment;
+        
+        double redemption = states.nextPrincipalRedemptionPayment - ContractRoleConvention.roleSign(model.getAs("ContractRole"))*Math.max(0, Math.abs(states.nextPrincipalRedemptionPayment) - Math.abs(states.notionalPrincipal));
+        states.notionalPrincipal -= ContractRoleConvention.roleSign(model.getAs("ContractRole")) * redemption;
         states.statusDate = time;
 
         // return post-event-states

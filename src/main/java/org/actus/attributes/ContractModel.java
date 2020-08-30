@@ -131,6 +131,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("businessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("businessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("endOfMonthConvention")));
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", (!CommonUtils.isNull(attributes.get("contractRole"))) ? ContractRole.valueOf(attributes.get("contractRole")) : null);
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
@@ -187,6 +188,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("businessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("businessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("endOfMonthConvention")));
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
@@ -248,6 +250,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("businessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("businessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("endOfMonthConvention")));
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
@@ -311,6 +314,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("businessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("businessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("endOfMonthConvention")));
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
@@ -378,6 +382,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("businessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("businessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("endOfMonthConvention")));
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
@@ -414,6 +419,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("businessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("businessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("endOfMonthConvention")));
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
@@ -446,6 +452,7 @@ public class ContractModel implements ContractModelProvider {
                     case CSH:
 
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("Currency", attributes.get("currency"));
@@ -455,6 +462,7 @@ public class ContractModel implements ContractModelProvider {
                     case COM: // almost identical with STK
 
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
@@ -470,6 +478,7 @@ public class ContractModel implements ContractModelProvider {
                     case STK:
 
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
@@ -496,6 +505,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("businessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("businessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("endOfMonthConvention")));
                         map.put("ContractType", ContractTypeEnum.valueOf(attributes.get("contractType")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
@@ -551,6 +561,7 @@ public class ContractModel implements ContractModelProvider {
                     case LAX:
                         map.put("Calendar", (!CommonUtils.isNull(attributes.get("calendar")) && attributes.get("calendar").equals("MF")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                         map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("businessDayConvention")) ? null : BusinessDayConventionEnum.valueOf(attributes.get("businessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
+                        map.put("ContractID", attributes.get("contractID"));
                         map.put("StatusDate", LocalDateTime.parse(attributes.get("statusDate")));
                         map.put("ContractRole", ContractRole.valueOf(attributes.get("contractRole")));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
