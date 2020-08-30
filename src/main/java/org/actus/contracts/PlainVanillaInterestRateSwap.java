@@ -94,11 +94,6 @@ public final class PlainVanillaInterestRateSwap {
         // remove all post to-date events
         events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null,null, model.getAs("ContractID"))) == 1);
 
-        // remove pre-purchase events if purchase date set
-        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
-        }
-
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);
 
@@ -119,6 +114,10 @@ public final class PlainVanillaInterestRateSwap {
         // apply events according to their time sequence to current state
         events.forEach(e -> e.eval(states, model, observer, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
 
+        // remove pre-purchase events if purchase date set
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
+        }
         // return evaluated events
         return events;
     }
