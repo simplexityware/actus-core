@@ -13,6 +13,7 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org. actus.events.ContractEvent;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
+import org.actus.util.CommonUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
@@ -49,7 +51,8 @@ public class CallMoneyTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = CallMoney.schedule(terms.getAs("MaturityDate"), terms);
+            LocalDateTime to = CommonUtils.isNull(terms.getAs("MaturityDate")) ? LocalDateTime.parse(test.getto()) : terms.getAs("MaturityDate");
+            ArrayList<ContractEvent> schedule = CallMoney.schedule(to, terms);
             schedule = CallMoney.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
