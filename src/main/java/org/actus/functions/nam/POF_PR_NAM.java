@@ -5,6 +5,7 @@
  */
 package org.actus.functions.nam;
 
+import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
