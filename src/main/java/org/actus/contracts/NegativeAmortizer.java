@@ -17,7 +17,6 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.types.EventType;
 import org.actus.types.InterestCalculationBase;
-import org.actus.util.Constants;
 import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 import org.actus.functions.pam.*;
@@ -75,14 +74,12 @@ public final class NegativeAmortizer {
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID"))
         );
-System.out.println(maturity);
-        // -> chose right Payoff function depending on maturity
-        PayOffFunction pof = (!CommonUtils.isNull(model.getAs("MaturityDate"))? new POF_MD_PAM():new POF_PR_NAM());
+
         events.add(EventFactory.createEvent(
                 maturity,
                 EventType.MD,
                 model.getAs("Currency"),
-                pof,new STF_MD_PAM(),
+                new POF_MD_PAM(),new STF_MD_LAM(),
                 model.getAs("BusinessDayConvention"),
                 model.getAs("ContractID"))
         );
@@ -261,10 +258,6 @@ System.out.println(maturity);
         ContractEvent postDate = EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"));
         events.removeIf(e -> e.compareTo(postDate) == 1);
 
-        // remove pre-purchase events if purchase date set
-        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
-        }
         // sort the events in the payoff-list according to their time of occurence
         Collections.sort(events);
 
@@ -283,12 +276,16 @@ System.out.println(maturity);
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
-		ListIterator eventIterator = events.listIterator();
-		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
+        ListIterator eventIterator = events.listIterator();
+		while (eventIterator.hasNext()) {
 			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
 					model.getAs("BusinessDayConvention"));
-		}
+        }
+        
+        // remove pre-purchase events if purchase date set
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
+        }
 
         // return evaluated events
         return events;
@@ -321,9 +318,9 @@ System.out.println(maturity);
                 lastEvent = prevEventsList.get(prevEventsList.size()-1);
             }
             double timeFromLastEventPlusOneCycle = model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(lastEvent, lastEvent.plus(prcl));
-            double redemptionPerCycle = model.<Double>getAs("NextPrincipalRedemptionPayment") - (timeFromLastEventPlusOneCycle * model.<Double>getAs("NominalInterestRate"));
-            int n = (int)Math.ceil(model.<Double>getAs("NotionalPrincipal") / redemptionPerCycle);
-            maturity = lastEvent.plus(prcl.multipliedBy(n));
+            double redemptionPerCycle = model.<Double>getAs("NextPrincipalRedemptionPayment") - (timeFromLastEventPlusOneCycle * model.<Double>getAs("NominalInterestRate") * model.<Double>getAs("NotionalPrincipal"));
+            int remainingPeriods = (int) Math.ceil(model.<Double>getAs("NotionalPrincipal") / redemptionPerCycle)-1;
+            maturity = lastEvent.plus(prcl.multipliedBy(remainingPeriods));
         }
         return maturity;
     }
@@ -336,7 +333,7 @@ System.out.println(maturity);
 
         states.contractPerformance = model.getAs("ContractPerformance");
         states.statusDate = model.getAs("StatusDate");
-        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NextPrincipalRedemptionPayment");
+        states.nextPrincipalRedemptionPayment = model.<Double>getAs("NextPrincipalRedemptionPayment");
 
         if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
             states.notionalPrincipal = 0.0;
@@ -356,7 +353,7 @@ System.out.println(maturity);
         if(CommonUtils.isNull(model.getAs("NominalInterestRate"))){
             states.accruedInterest = 0.0;
         } else if(!CommonUtils.isNull(model.getAs("AccruedInterest"))){
-            states.accruedInterest = model.getAs("AccruedInterest");
+            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("AccruedInterest");
         } else{
             DayCountCalculator dayCounter = model.getAs("DayCountConvention");
             BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
