@@ -348,9 +348,9 @@ public final class Annuity {
                 lastEvent = prevEventsList.get(prevEventsList.size()-1);
             }
             double timeFromLastEventPlusOneCycle = model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(lastEvent, lastEvent.plus(prcl));
-            double redemptionPerCycle = model.<Double>getAs("NextPrincipalRedemptionPayment") - (timeFromLastEventPlusOneCycle * model.<Double>getAs("NominalInterestRate"));
-            int n = (int)Math.ceil(model.<Double>getAs("NotionalPrincipal") / redemptionPerCycle);
-            maturity = lastEvent.plus(prcl.multipliedBy(n));
+            double redemptionPerCycle = model.<Double>getAs("NextPrincipalRedemptionPayment") - (timeFromLastEventPlusOneCycle * model.<Double>getAs("NominalInterestRate") * model.<Double>getAs("NotionalPrincipal"));
+            int remainingPeriods = (int) Math.ceil(model.<Double>getAs("NotionalPrincipal") / redemptionPerCycle)-1;
+            maturity = lastEvent.plus(prcl.multipliedBy(remainingPeriods));
         } else if (CommonUtils.isNull(maturity)){
             maturity = amortizationDate;
         }
