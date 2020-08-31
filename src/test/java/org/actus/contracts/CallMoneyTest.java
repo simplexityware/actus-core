@@ -51,7 +51,7 @@ public class CallMoneyTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            LocalDateTime to = CommonUtils.isNull(terms.getAs("MaturityDate")) ? LocalDateTime.parse(test.getto()) : terms.getAs("MaturityDate");
+            LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
             ArrayList<ContractEvent> schedule = CallMoney.schedule(to, terms);
             schedule = CallMoney.apply(schedule, terms, observer);
         
