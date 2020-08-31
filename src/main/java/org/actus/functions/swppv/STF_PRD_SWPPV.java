@@ -7,6 +7,7 @@ package org.actus.functions.swppv;
 
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
+import org.actus.types.DeliverySettlement;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
@@ -21,8 +22,7 @@ public final class STF_PRD_SWPPV implements StateTransitionFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         // update state space
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
-        states.accruedInterest += (model.<Double>getAs("NominalInterestRate") - states.nominalInterestRate) * states.notionalPrincipal * timeFromLastEvent;
-        states.accruedInterest += model.<Double>getAs("NominalInterestRate") * states.notionalPrincipal * timeFromLastEvent;
+        states.accruedInterest += ((model.getAs("DeliverySettlement")==DeliverySettlement.D)? model.<Double>getAs("NominalInterestRate") : (model.<Double>getAs("NominalInterestRate") - states.nominalInterestRate)) * states.notionalPrincipal * timeFromLastEvent;
         states.accruedInterest2 += (-1) * states.nominalInterestRate * states.notionalPrincipal * timeFromLastEvent;
         states.statusDate = time;
 
