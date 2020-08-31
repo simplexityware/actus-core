@@ -803,7 +803,7 @@
                 "payoff": 89820.2025273646,
                 "currency": "USD",
                 "notionalPrincipal": 0,
-                "nominalInterestRate": 0,
+                "nominalInterestRate": -0.005,
                 "accruedInterest": 0
             }
         ]

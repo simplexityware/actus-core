@@ -21,8 +21,6 @@ public final class STF_TD_SWPPV implements StateTransitionFunction {
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         // update state space
         states.notionalPrincipal = 0.0;
-        states.nominalInterestRate = 0.0;
-        states.accruedInterest = 0.0;
         states.accruedInterest = 0.0;
         states.accruedInterest2 = 0.0;
         states.feeAccrued = 0.0;

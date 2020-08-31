@@ -62,7 +62,6 @@ public class PlainVanillaInterestRateSwapTest {
                 results.setNotionalPrincipal(e.states().notionalPrincipal);
                 results.setNominalInterestRate(e.states().nominalInterestRate);
                 results.setAccruedInterest(e.states().accruedInterest);
-                
                 return results;
             }).collect(Collectors.toList());
 
