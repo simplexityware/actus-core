@@ -105,7 +105,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("PriceAtPurchaseDate", (CommonUtils.isNull(attributes.get("priceAtPurchaseDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("priceAtPurchaseDate")));
                         map.put("TerminationDate", (CommonUtils.isNull(attributes.get("terminationDate"))) ? null : LocalDateTime.parse((String)attributes.get("terminationDate")));
                         map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("priceAtTerminationDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("priceAtTerminationDate")));
-                        map.put("DeliverySettlement", attributes.get("deliverySettlement"));
+                        map.put("DeliverySettlement", DeliverySettlement.valueOf((String)attributes.get("deliverySettlement")));
 
                         // parse child attributes
                         List<ContractReference> contractStructure = new ArrayList<>();

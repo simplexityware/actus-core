@@ -21,6 +21,7 @@ public final class POF_TD_SWAPS implements PayOffFunction {
     public double eval(LocalDateTime time, StateSpace states, 
                         ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return CommonUtils.settlementCurrencyFxRate(riskFactorModel, model, time, states)
-                * model.<Double>getAs("PriceAtTerminationDate");
+                * model.<Double>getAs("PriceAtTerminationDate")
+                + states.accruedInterest;
     }
 }

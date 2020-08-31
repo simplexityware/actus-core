@@ -16,8 +16,6 @@ public class STF_PRD_SWAPS implements StateTransitionFunction {
                            ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 
         // update state space
-        double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
-        states.accruedInterest += states.nominalInterestRate * states.notionalPrincipal * timeFromLastEvent;
         states.statusDate = time;
 
         // return post-event-states
