@@ -320,7 +320,7 @@ public final class NegativeAmortizer {
             double timeFromLastEventPlusOneCycle = model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(lastEvent, lastEvent.plus(prcl));
             double redemptionPerCycle = model.<Double>getAs("NextPrincipalRedemptionPayment") - (timeFromLastEventPlusOneCycle * model.<Double>getAs("NominalInterestRate") * model.<Double>getAs("NotionalPrincipal"));
             int remainingPeriods = (int) Math.ceil(model.<Double>getAs("NotionalPrincipal") / redemptionPerCycle)-1;
-            maturity = lastEvent.plus(prcl.multipliedBy(remainingPeriods));
+            maturity = model.<BusinessDayAdjuster>getAs("BusinessDayConvention").shiftEventTime(lastEvent.plus(prcl.multipliedBy(remainingPeriods)));;
         }
         return maturity;
     }
