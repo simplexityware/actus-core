@@ -144,7 +144,7 @@ public final class ContractType {
             case SWPPV:
                 return PlainVanillaInterestRateSwap.apply(events,model,observer);
             case SWAPS:
-                // TODO: implement (see also Swap class)
+                return Swap.apply(events,model,observer);
             case LAX:
             	return ExoticLinearAmortizer.apply(events, model, observer);
             default:
