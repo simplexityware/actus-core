@@ -65,6 +65,7 @@ public class AnnuityTest {
                 results.setNotionalPrincipal(e.states().notionalPrincipal);
                 results.setNominalInterestRate(e.states().nominalInterestRate);
                 results.setAccruedInterest(e.states().accruedInterest);
+                if(testId.equals("ann07")) System.out.println(results);
                 return results;
             }).collect(Collectors.toList());
 

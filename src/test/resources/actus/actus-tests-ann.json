@@ -3125,13 +3125,13 @@
             "dayCountConvention": "A365",
             "nominalInterestRate": "0.08",
             "currency": "USD",
-            "cycleOfPrincipalRedemption": "P1ML0",
+            "cycleOfPrincipalRedemption": "P1ML1",
             "amortizationDate": "2014-01-01T00:00:00",
             "rateMultiplier": "1.0",
             "rateSpread": "0.0",
             "fixingDays": "P0D",
             "cycleAnchorDateOfInterestPayment": "2013-02-01T00:00:00",
-            "cycleOfInterestPayment": "P1ML0"
+            "cycleOfInterestPayment": "P1ML1"
         },
         "to": "",
         "dataObserved": {
@@ -7958,7 +7958,6 @@
             "currency": "USD",
             "cycleOfPrincipalRedemption": "P1ML0",
             "amortizationDate": "2014-01-01T00:00:00",
-            "terminationDate": "2013-07-01T23:59:59",
             "priceAtTerminationDate": "2600",
             "rateMultiplier": "1.0",
             "rateSpread": "0.0",
