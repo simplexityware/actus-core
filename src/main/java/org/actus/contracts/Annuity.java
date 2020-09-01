@@ -350,7 +350,7 @@ public final class Annuity {
             double timeFromLastEventPlusOneCycle = model.<DayCountCalculator>getAs("DayCountConvention").dayCountFraction(lastEvent, lastEvent.plus(prcl));
             double redemptionPerCycle = model.<Double>getAs("NextPrincipalRedemptionPayment") - (timeFromLastEventPlusOneCycle * model.<Double>getAs("NominalInterestRate") * model.<Double>getAs("NotionalPrincipal"));
             int remainingPeriods = (int) Math.ceil(model.<Double>getAs("NotionalPrincipal") / redemptionPerCycle)-1;
-            maturity = lastEvent.plus(prcl.multipliedBy(remainingPeriods));
+            maturity = model.<BusinessDayAdjuster>getAs("BusinessDayConvention").shiftEventTime(lastEvent.plus(prcl.multipliedBy(remainingPeriods)));
         } else if (CommonUtils.isNull(maturity)){
             maturity = amortizationDate;
         }
@@ -386,7 +386,7 @@ public final class Annuity {
         if(CommonUtils.isNull(model.getAs("NominalInterestRate"))){
             states.accruedInterest = 0.0;
         } else if(!CommonUtils.isNull(model.getAs("AccruedInterest"))){
-            states.accruedInterest = model.getAs("AccruedInterest");
+            states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("AccruedInterest");
         } else{
             DayCountCalculator dayCounter = model.getAs("DayCountConvention");
             BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
@@ -400,7 +400,8 @@ public final class Annuity {
             Collections.sort(ipSchedule);
             List<LocalDateTime> dateEarlierThanT0 = ipSchedule.stream().filter(time -> time.isBefore(states.statusDate)).collect(Collectors.toList());
             LocalDateTime tMinus = dateEarlierThanT0.get(dateEarlierThanT0.size() -1);
-            states.accruedInterest = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(tMinus), timeAdjuster.shiftCalcTime(states.statusDate))
+            states.accruedInterest =
+                    dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(tMinus), timeAdjuster.shiftCalcTime(states.statusDate))
                     * states.notionalPrincipal
                     * states.nominalInterestRate;
         }
@@ -419,11 +420,11 @@ public final class Annuity {
                 dummyState.nominalInterestRate = model.getAs("NominalInterestRate");
                 states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, dummyState);
             }else{
-                states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, states);
+                states.nextPrincipalRedemptionPayment = AnnuityUtils.annuityPayment(model, states);
             }
 
         }else {
-            states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NextPrincipalRedemptionPayment");
+            states.nextPrincipalRedemptionPayment = model.<Double>getAs("NextPrincipalRedemptionPayment");
         }
 
         
