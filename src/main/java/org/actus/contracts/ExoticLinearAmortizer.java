@@ -308,8 +308,8 @@ public final class ExoticLinearAmortizer {
 		}
 		
 		// scaling (if specified)
-		if (!CommonUtils.isNull(model.getAs("ScalingEffect")) && (model.<String>getAs("ScalingEffect").contains("I")
-				|| model.<String>getAs("ScalingEffect").contains("N"))) {
+		if (!CommonUtils.isNull(model.getAs("ScalingEffect")) && (model.getAs("ScalingEffect").toString().contains("I")
+				|| model.getAs("ScalingEffect").toString().contains("N"))) {
 			events.addAll(EventFactory.createEvents(
 					ScheduleFactory.createSchedule(
 							model.getAs("CycleAnchorDateOfScalingIndex"),

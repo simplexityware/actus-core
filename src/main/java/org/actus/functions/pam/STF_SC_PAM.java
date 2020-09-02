@@ -25,10 +25,10 @@ public final class STF_SC_PAM implements StateTransitionFunction {
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
         double scalingMultiplier = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfScalingIndex"),time,states,model) / model.<Double>getAs("ScalingIndexAtContractDealDate");
                         
-        if(model.<String>getAs("ScalingEffect").contains("I")) {
+        if(model.getAs("ScalingEffect").toString().contains("I")) {
             states.interestScalingMultiplier = scalingMultiplier;
         }
-        if(model.<String>getAs("ScalingEffect").contains("N")) {
+        if(model.getAs("ScalingEffect").toString().contains("N")) {
             states.notionalScalingMultiplier = scalingMultiplier;
         }
         states.statusDate = time;

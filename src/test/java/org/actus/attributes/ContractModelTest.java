@@ -24,7 +24,7 @@ public class ContractModelTest {
     public void test_AttributeConversionException() {
         thrown.expect(AttributeConversionException.class);
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "PAM");
+        map.put("contractType", "PAM");
         ContractModel model = ContractModel.parse(map);
     }
 
@@ -32,16 +32,16 @@ public class ContractModelTest {
     public void test_AttributeParser_PAM_MandatoryAttributes() {
         thrown = ExpectedException.none();
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "PAM");
-        map.put("Calendar", "NoHolidayCalendar");
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
+        map.put("contractType", "PAM");
+        map.put("calendar", "NoHolidayCalendar");
+        map.put("statusDate", "2016-01-01T00:00:00");
+        map.put("contractRole", "RPA");
+        map.put("legalEntityIDCounterparty", "CORP-XY");
+        map.put("dayCountConvention", "AA");
+        map.put("currency", "USD");
+        map.put("initialExchangeDate", "2016-01-02T00:00:00");
+        map.put("maturityDate", "2017-01-01T00:00:00");
+        map.put("notionalPrincipal", "1000.0");
         ContractModel model = ContractModel.parse(map);
     }
 
@@ -49,48 +49,47 @@ public class ContractModelTest {
     public void test_AttributeParser_PAM_AllAttributes() {
         thrown = ExpectedException.none();
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("ContractType", "PAM");
-        map.put("Calendar", "org.actus.time.calendar.NoHolidaysCalendar");
-        map.put("BusinessDayConvention", "SCF");
-        map.put("EndOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
-        map.put("StatusDate", "2016-01-01T00:00:00");
-        map.put("ContractRole", "RPA");
-        map.put("LegalEntityIDCounterparty", "CORP-XY");
-        map.put("CycleAnchorDateOfFee", "2016-01-02T00:00:00");
-        map.put("CycleOfFee", "1Q-");
-        map.put("FeeBasis", "1000.0");
-        map.put("FeeRate", "0.05");
-        map.put("FeeAccrued", "0.0");
-        map.put("CycleAnchorDateOfInterestPayment", "2016-01-02T00:00:00");
-        map.put("CycleOfInterestPayment", "1M+");
-        map.put("NominalInterestRate", "0.01");
-        map.put("DayCountConvention", "A/AISDA");
-        map.put("AccruedInterest", "0.0");
-        map.put("CapitalizationEndDate", "2016-04-02T00:00:00");
-        map.put("CyclePointOfInterestPayment", "END");
-        map.put("Currency", "USD");
-        map.put("InitialExchangeDate", "2016-01-02T00:00:00");
-        map.put("PremiumDiscountAtIED", "-100.0");
-        map.put("MaturityDate", "2017-01-01T00:00:00");
-        map.put("NotionalPrincipal", "1000.0");
-        map.put("PurchaseDate", "2016-05-01T00:00:00");
-        map.put("PriceAtPurchaseDate", "800.0");
-        map.put("TerminationDate", "2016-07-01T00:00:00");
-        map.put("PriceAtTerminationDate", "900.0");
-        map.put("MarketObjectCodeOfScalingIndex", "Index-XY");
-        map.put("ScalingIndexAtStatusDate", "1000.0");
-        map.put("CycleAnchorDateOfScalingIndex", "2016-01-02T00:00:00");
-        map.put("CycleOfScalingIndex", "6M-");
-        map.put("ScalingEffect", "INM");
-        map.put("CycleAnchorDateOfRateReset", "2016-04-02T00:00:00");
-        map.put("CycleOfRateReset", "2M-");
-        map.put("RateSpread", "0.05");
-        map.put("MarketObjectCodeOfRateReset", "ReferenceRate-XY");
-        map.put("CyclePointOfRateReset", "BEG");
-        map.put("FixingDays", "2D");
-        map.put("NextResetRate", "0.08");
-        map.put("RateMultiplier", "1.1");
-        map.put("RateTerm", "4M");
+        map.put("contractType", "PAM");
+        map.put("calendar", "NC");
+        map.put("businessDayConvention", "SCF");
+        map.put("endOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
+        map.put("statusDate", "2016-01-01T00:00:00");
+        map.put("contractRole", "RPA");
+        map.put("legalEntityIDCounterparty", "CORP-XY");
+        map.put("cycleAnchorDateOfFee", "2016-01-02T00:00:00");
+        map.put("cycleOfFee", "P3ML1");
+        map.put("feeBasis", "A");
+        map.put("feeRate", "0.05");
+        map.put("feeAccrued", "0.0");
+        map.put("cycleAnchorDateOfInterestPayment", "2016-01-02T00:00:00");
+        map.put("cycleOfInterestPayment", "P1ML0");
+        map.put("nominalInterestRate", "0.01");
+        map.put("dayCountConvention", "AA");
+        map.put("accruedInterest", "0.0");
+        map.put("capitalizationEndDate", "2016-04-02T00:00:00");
+        map.put("cyclePointOfInterestPayment", "E");
+        map.put("currency", "USD");
+        map.put("initialExchangeDate", "2016-01-02T00:00:00");
+        map.put("premiumDiscountAtIED", "-100.0");
+        map.put("maturityDate", "2017-01-01T00:00:00");
+        map.put("notionalPrincipal", "1000.0");
+        map.put("purchaseDate", "2016-05-01T00:00:00");
+        map.put("priceAtPurchaseDate", "800.0");
+        map.put("terminationDate", "2016-07-01T00:00:00");
+        map.put("priceAtTerminationDate", "900.0");
+        map.put("marketObjectCodeOfScalingIndex", "Index-XY");
+        map.put("scalingIndexAtStatusDate", "1000.0");
+        map.put("cycleAnchorDateOfScalingIndex", "2016-01-02T00:00:00");
+        map.put("cycleOfScalingIndex", "P6ML1");
+        map.put("scalingEffect", "INO");
+        map.put("cycleAnchorDateOfRateReset", "2016-04-02T00:00:00");
+        map.put("cycleOfRateReset", "P2ML1");
+        map.put("rateSpread", "0.05");
+        map.put("marketObjectCodeOfRateReset", "ReferenceRate-XY");
+        map.put("cyclePointOfRateReset", "B");
+        map.put("fixingDays", "P2D");
+        map.put("nextResetRate", "0.08");
+        map.put("rateMultiplier", "1.1");
         ContractModel model = ContractModel.parse(map);
     }
 

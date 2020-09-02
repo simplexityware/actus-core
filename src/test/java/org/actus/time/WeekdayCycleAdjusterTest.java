@@ -36,7 +36,7 @@ public class WeekdayCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("1Mon-");
+        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("1MonL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2019-01-01T00:00:00");
@@ -51,7 +51,7 @@ public class WeekdayCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("1Mon-");
+        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("1MonL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2019-01-01T00:00:00");
@@ -66,7 +66,7 @@ public class WeekdayCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("1Fri-");
+        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("1FriL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2019-07-01T00:00:00");
@@ -81,7 +81,7 @@ public class WeekdayCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("1Fri-");
+        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("1FriL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2019-07-01T00:00:00");
@@ -96,7 +96,7 @@ public class WeekdayCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("3Sat-");
+        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("3SatL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2019-10-01T00:00:00");
@@ -111,7 +111,7 @@ public class WeekdayCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("3Sat-");
+        WeekdayCycleAdjuster adjuster = new WeekdayCycleAdjuster("3SatL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2019-10-01T00:00:00");

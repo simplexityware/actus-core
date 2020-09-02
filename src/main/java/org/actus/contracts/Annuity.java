@@ -253,7 +253,7 @@ public final class Annuity {
         }
 
         // scaling (if specified)
-        String scalingEffect=model.getAs("ScalingEffect");
+        String scalingEffect=model.getAs("ScalingEffect").toString();
         if (!CommonUtils.isNull(scalingEffect) && (scalingEffect.contains("I") || scalingEffect.contains("N"))) {
             events.addAll(EventFactory.createEvents(
                     ScheduleFactory.createSchedule(

@@ -78,33 +78,33 @@ public class ExoticLinearAmortizerTest {
 		thrown = ExpectedException.none();
 		// define attributes
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ContractType", "LAX");
-		map.put("Calendar", "NoHolidayCalendar");
-		map.put("StatusDate", "2012-12-30T00:00:00");
-		map.put("ContractRole", "RPL");
-		map.put("DayCountConvention", "A/AISDA");
-		map.put("Currency", "USD");
-		map.put("InitialExchangeDate", "2013-01-01T00:00:00");
-		map.put("MaturityDate", "2015-06-01T00:00:00");
-		map.put("NotionalPrincipal", "2000.0");
-		map.put("NominalInterestRate", "0.08");
-		map.put("ArrayCycleAnchorDateOfPrincipalRedemption",
+		map.put("contractType", "LAX");
+		map.put("calendar", "NoHolidayCalendar");
+		map.put("statusDate", "2012-12-30T00:00:00");
+		map.put("contractRole", "RPL");
+		map.put("dayCountConvention", "AA");
+		map.put("currency", "USD");
+		map.put("initialExchangeDate", "2013-01-01T00:00:00");
+		map.put("maturityDate", "2015-06-01T00:00:00");
+		map.put("notionalPrincipal", "2000.0");
+		map.put("nominalInterestRate", "0.08");
+		map.put("arrayCycleAnchorDateOfPrincipalRedemption",
 				"2013-02-01T00:00:00,2013-09-01T00:00:00,2014-04-01T00:00:00");
-		map.put("ArrayCycleOfPrincipalRedemption", "2M-,1M-,1M+");
-		map.put("ArrayNextPrincipalRedemptionPayment", "250.0,100.0,200.0");
-		map.put("ArrayIncreaseDecrease", "DEC,INC,DEC");
+		map.put("arrayCycleOfPrincipalRedemption", "P2ML1,P1ML1,P1ML0");
+		map.put("arrayNextPrincipalRedemptionPayment", "250.0,100.0,200.0");
+		map.put("arrayIncreaseDecrease", "DEC,INC,DEC");
 
 		// parse attributes
 		ContractModel model = ContractModel.parse(map);
 
 		// compute schedule
-		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),
+		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(model.getAs("MaturityDate"),
 				model);
 
 		// add analysis events
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
-						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
+						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "P1ML1", EndOfMonthConventionEnum.SD),
 				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
 		// define risk factor model
@@ -123,47 +123,47 @@ public class ExoticLinearAmortizerTest {
 		thrown = ExpectedException.none();
 		// define attributes
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ContractType", "LAX");
-		map.put("Calendar", "NoHolidayCalendar");
-		map.put("StatusDate", "2012-12-30T00:00:00");
-		map.put("ContractRole", "RPL");
-		map.put("LegalEntityIDCounterparty", "CORP-XY");
-		map.put("DayCountConvention", "A/AISDA");
-		map.put("Currency", "USD");
-		map.put("InitialExchangeDate", "2013-01-01T00:00:00");
-		map.put("CycleOfPrincipalRedemption", "1Q-");
-		map.put("MaturityDate", "2015-06-01T00:00:00");
-		map.put("NotionalPrincipal", "2000.0");
-		map.put("NominalInterestRate", "0.08");
-		map.put("EndOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
-		map.put("ContractID", "100021");
-		map.put("ArrayCycleAnchorDateOfInterestPayment", "2013-01-01T00:00:00");
-		map.put("ArrayCycleOfInterestPayment", "1M-");
-		map.put("AccruedInterest", "0");
-		map.put("CapitalizationEndDate", "NULL");
-		map.put("CycleAnchorDateOfInterestCalculationBase", "NULL");
-		map.put("CycleOfInterestCalculationBase", "1M+");
-		map.put("ContractDealDate", "2012-12-15T00:00:00");
-		map.put("ArrayIncreaseDecrease", "DEC,INC,DEC");
-		map.put("ScalingIndexAtStatusDate", "1");
-		map.put("RateMultiplier", "1");
-		map.put("ArrayCycleAnchorDateOfRateReset", "2013-03-01T00:00:00,2013-10-01T00:00:00,2014-06-01T00:00:00");
-		map.put("ArrayCycleOfRateReset", "2M-,NULL,2M-");
-		map.put("ArrayRate", "0.01,0.2,-0.05");
-		map.put("ArrayFixedVariable", "VAR,FIX,VAR");
-		map.put("MarketObjectCodeOfRateReset", "USD.SWP");
+		map.put("contractType", "LAX");
+		map.put("calendar", "NoHolidayCalendar");
+		map.put("statusDate", "2012-12-30T00:00:00");
+		map.put("contractRole", "RPL");
+		map.put("legalEntityIDCounterparty", "CORP-XY");
+		map.put("dayCountConvention", "AA");
+		map.put("currency", "USD");
+		map.put("initialExchangeDate", "2013-01-01T00:00:00");
+		 map.put("cycleOfPrincipalRedemption", "P3ML1");
+		map.put("maturityDate", "2015-06-01T00:00:00");
+		map.put("notionalPrincipal", "2000.0");
+		map.put("nominalInterestRate", "0.08");
+		map.put("endOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
+		map.put("contractID", "100021");
+		map.put("arrayCycleAnchorDateOfInterestPayment", "2013-01-01T00:00:00");
+		map.put("arrayCycleOfInterestPayment", "P1ML1");
+		map.put("accruedInterest", "0");
+		map.put("capitalizationEndDate", "NULL");
+		map.put("cycleAnchorDateOfInterestCalculationBase", "NULL");
+		map.put("cycleOfInterestCalculationBase", "P1ML0");
+		map.put("contractDealDate", "2012-12-15T00:00:00");
+		map.put("arrayIncreaseDecrease", "DEC,INC,DEC");
+		map.put("scalingIndexAtStatusDate", "1");
+		map.put("rateMultiplier", "1");
+		map.put("arrayCycleAnchorDateOfRateReset", "2013-03-01T00:00:00,2013-10-01T00:00:00,2014-06-01T00:00:00");
+		map.put("arrayCycleOfRateReset", "P2ML1,NULL,P2ML1");
+		map.put("arrayRate", "0.01,0.2,-0.05");
+		map.put("arrayFixedVariable", "VAR,FIX,VAR");
+		map.put("marketObjectCodeOfRateReset", "USD.SWP");
 
 		// parse attributes
 		ContractModel model = ContractModel.parse(map);
 
 		// compute schedule
-		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),
+		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(model.getAs("MaturityDate"),
 				model);
 
 		// add analysis events
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
-						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
+						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "P1ML1", EndOfMonthConventionEnum.SD),
 				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
 		// define risk factor model
@@ -182,53 +182,53 @@ public class ExoticLinearAmortizerTest {
 		thrown = ExpectedException.none();
 		// define attributes
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ContractType", "LAX");
-		map.put("Calendar", "NoHolidayCalendar");
-		map.put("StatusDate", "2012-12-30T00:00:00");
-		map.put("ContractRole", "RPL");
-		map.put("LegalEntityIDCounterparty", "CORP-XY");
-		map.put("DayCountConvention", "A/AISDA");
-		map.put("Currency", "USD");
-		map.put("InitialExchangeDate", "2013-01-01T00:00:00");
-		map.put("CycleOfPrincipalRedemption", "1Q-");
-		map.put("MaturityDate", "2015-06-01T00:00:00");
-		map.put("NotionalPrincipal", "2000.0");
-		map.put("NominalInterestRate", "0.08");
-		map.put("EndOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
-		map.put("PurchaseDate", "2013-08-17T00:00:00");
-		map.put("PriceAtPurchaseDate", "2100.0");
-		map.put("ContractID", "100021");
-		map.put("ArrayCycleAnchorDateOfInterestPayment", "2013-01-01T00:00:00");
-		map.put("ArrayCycleOfInterestPayment", "1M-");
-		map.put("AccruedInterest", "0");
-		map.put("CapitalizationEndDate", "NULL");
-		map.put("CycleAnchorDateOfInterestCalculationBase", "NULL");
-		map.put("CycleOfInterestCalculationBase", "1M+");
-		map.put("ContractDealDate", "2012-12-15T00:00:00");
-		map.put("ArrayCycleAnchorDateOfPrincipalRedemption",
+		map.put("contractType", "LAX");
+		map.put("calendar", "NoHolidayCalendar");
+		map.put("statusDate", "2012-12-30T00:00:00");
+		map.put("contractRole", "RPL");
+		map.put("legalEntityIDCounterparty", "CORP-XY");
+		map.put("dayCountConvention", "AA");
+		map.put("currency", "USD");
+		map.put("initialExchangeDate", "2013-01-01T00:00:00");
+		 map.put("cycleOfPrincipalRedemption", "P3ML1");
+		map.put("maturityDate", "2015-06-01T00:00:00");
+		map.put("notionalPrincipal", "2000.0");
+		map.put("nominalInterestRate", "0.08");
+		map.put("endOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
+		map.put("purchaseDate", "2013-08-17T00:00:00");
+		map.put("priceAtPurchaseDate", "2100.0");
+		map.put("contractID", "100021");
+		map.put("arrayCycleAnchorDateOfInterestPayment", "2013-01-01T00:00:00");
+		map.put("arrayCycleOfInterestPayment", "P1ML1");
+		map.put("accruedInterest", "0");
+		map.put("capitalizationEndDate", "NULL");
+		map.put("cycleAnchorDateOfInterestCalculationBase", "NULL");
+		map.put("cycleOfInterestCalculationBase", "P1ML0");
+		map.put("contractDealDate", "2012-12-15T00:00:00");
+		map.put("arrayCycleAnchorDateOfPrincipalRedemption",
 				"2013-02-01T00:00:00,2013-09-01T00:00:00,2014-04-01T00:00:00");
-		map.put("ArrayCycleOfPrincipalRedemption", "2M-,1M-,1M+");
-		map.put("ArrayNextPrincipalRedemptionPayment", "250.0,100.0,200.0");
-		map.put("ArrayIncreaseDecrease", "DEC,INC,DEC");
-		map.put("ScalingIndexAtStatusDate", "1");
-		map.put("RateMultiplier", "1");
-		map.put("ArrayCycleAnchorDateOfRateReset", "2013-03-01T00:00:00,2013-10-01T00:00:00,2014-06-01T00:00:00");
-		map.put("ArrayCycleOfRateReset", "2M-,NULL,2M-");
-		map.put("ArrayRate", "0.01,0.2,-0.05");
-		map.put("ArrayFixedVariable", "VAR,FIX,VAR");
-		map.put("MarketObjectCodeOfRateReset", "USD.SWP");
+		map.put("arrayCycleOfPrincipalRedemption", "P2ML1,P1ML1,P1ML0");
+		map.put("arrayNextPrincipalRedemptionPayment", "250.0,100.0,200.0");
+		map.put("arrayIncreaseDecrease", "DEC,INC,DEC");
+		map.put("scalingIndexAtStatusDate", "1");
+		map.put("rateMultiplier", "1");
+		map.put("arrayCycleAnchorDateOfRateReset", "2013-03-01T00:00:00,2013-10-01T00:00:00,2014-06-01T00:00:00");
+		map.put("arrayCycleOfRateReset", "P2ML1,NULL,P2ML1");
+		map.put("arrayRate", "0.01,0.2,-0.05");
+		map.put("arrayFixedVariable", "VAR,FIX,VAR");
+		map.put("marketObjectCodeOfRateReset", "USD.SWP");
 
 		// parse attributes
 		ContractModel model = ContractModel.parse(map);
 
 		// compute schedule
-		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),
+		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(model.getAs("MaturityDate"),
 				model);
 
 		// add analysis events
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
-						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
+						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "P1ML1", EndOfMonthConventionEnum.SD),
 				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
 		// define risk factor model
@@ -247,41 +247,41 @@ public class ExoticLinearAmortizerTest {
 		thrown = ExpectedException.none();
 		// define attributes
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("ContractType", "LAX");
-		map.put("Calendar", "NoHolidayCalendar");
-		map.put("StatusDate", "2019-07-18T00:00:00");
-		map.put("ContractRole", "RPA");
-		map.put("LegalEntityIDCounterparty", "CORP-XY");
-		map.put("DayCountConvention", "A/365");
-		map.put("Currency", "INR");
-		map.put("InitialExchangeDate", "2019-08-11T00:00:00");
-		map.put("MaturityDate", "2019-12-31T00:00:00");
-		map.put("NotionalPrincipal", "10000.0");
-		map.put("NominalInterestRate", "0.18");
-		map.put("EndOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
-		map.put("ArrayCycleAnchorDateOfInterestPayment", "2019-08-18T00:00:00,2019-11-10T00:00:00");
-		map.put("ArrayCycleOfInterestPayment", "1W+,1W+");
-		map.put("ArrayCycleAnchorDateOfPrincipalRedemption", "2019-08-18T00:00:00,2019-09-15T00:00:00");
-		map.put("ArrayCycleOfPrincipalRedemption", "1W+,1W+");
-		map.put("ArrayNextPrincipalRedemptionPayment", "700,800");
-		map.put("ArrayIncreaseDecrease", "DEC,DEC");
-		map.put("RateMultiplier", "1");
-		map.put("MarketObjectCodeOfRateReset", "USD.SWP");
-		map.put("AccruedInterest", "0");
-		map.put("InterestCalculationBase", "NTL");
-		map.put("InterestCalculationBaseAmount", "10000.0");
+		map.put("contractType", "LAX");
+		map.put("calendar", "NoHolidayCalendar");
+		map.put("statusDate", "2019-07-18T00:00:00");
+		map.put("contractRole", "RPA");
+		map.put("legalEntityIDCounterparty", "CORP-XY");
+		map.put("dayCountConvention", "A365");
+		map.put("currency", "INR");
+		map.put("initialExchangeDate", "2019-08-11T00:00:00");
+		map.put("maturityDate", "2019-12-31T00:00:00");
+		map.put("notionalPrincipal", "10000.0");
+		map.put("nominalInterestRate", "0.18");
+		map.put("endOfMonthConvention", EndOfMonthConventionEnum.SD.toString());
+		map.put("arrayCycleAnchorDateOfInterestPayment", "2019-08-18T00:00:00,2019-11-10T00:00:00");
+		map.put("arrayCycleOfInterestPayment", "P1WL0,P1WL0");
+		map.put("arrayCycleAnchorDateOfPrincipalRedemption", "2019-08-18T00:00:00,2019-09-15T00:00:00");
+		map.put("arrayCycleOfPrincipalRedemption", "P1WL0,P1WL0");
+		map.put("arrayNextPrincipalRedemptionPayment", "700,800");
+		map.put("arrayIncreaseDecrease", "DEC,DEC");
+		map.put("rateMultiplier", "1");
+		map.put("marketObjectCodeOfRateReset", "USD.SWP");
+		map.put("accruedInterest", "0");
+		map.put("interestCalculationBase", "NTL");
+		map.put("interestCalculationBaseAmount", "10000.0");
 
 		// parse attributes
 		ContractModel model = ContractModel.parse(map);
 
 		// compute schedule
-		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(model.getAs("MaturityDate")),
+		ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(model.getAs("MaturityDate"),
 				model);
 
 		// add analysis events
 		schedule.addAll(EventFactory.createEvents(
 				ScheduleFactory.createSchedule(model.getAs("InitialExchangeDate"),
-						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "1M-", EndOfMonthConventionEnum.SD),
+						model.<LocalDateTime>getAs("InitialExchangeDate").plusMonths(0), "P1ML1", EndOfMonthConventionEnum.SD),
 				EventType.AD, model.getAs("Currency"), new POF_AD_PAM(), new STF_AD_PAM(), model.getAs("ContractID")));
 
 		// define risk factor model
