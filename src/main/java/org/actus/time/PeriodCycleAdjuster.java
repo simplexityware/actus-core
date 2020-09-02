@@ -19,7 +19,7 @@ import org.actus.util.CycleUtils;
  */
 public final class PeriodCycleAdjuster implements CycleAdjusterProvider {
     private Period period;
-
+    private char stub;
     /**
      * Public constructor
      * 
@@ -27,6 +27,7 @@ public final class PeriodCycleAdjuster implements CycleAdjusterProvider {
      */
     public PeriodCycleAdjuster(String cycle) {
         this.period=CycleUtils.parsePeriod(cycle);
+        this.stub=CycleUtils.parseStub(cycle);
     }
 
     /**

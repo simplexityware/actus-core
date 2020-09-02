@@ -64,7 +64,7 @@ public final class Commodity {
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("A/AISDA", null), new BusinessDayAdjuster(null, null)));
+        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("AA", null), new BusinessDayAdjuster(null, null)));
 
         // return evaluated events
         return events;

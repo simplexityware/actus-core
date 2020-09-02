@@ -22,13 +22,13 @@ public class PeriodCycleAdjusterTest {
     @Test
     public void test_AttributeConversionException_cycle_1M() {
         thrown.expect(AttributeConversionException.class);
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("1M");
+        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1M");
     }
     
     @Test
     public void test_AttributeConversionException_cycle_1Xshort() {
         thrown.expect(AttributeConversionException.class);
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("1X-");
+        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1XL1");
     }
 
     @Test
@@ -36,7 +36,7 @@ public class PeriodCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("1M-");
+        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1ML1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2016-01-01T00:00:00");
@@ -51,7 +51,7 @@ public class PeriodCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("1M-");
+        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1ML1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2016-01-01T00:00:00");
@@ -66,7 +66,7 @@ public class PeriodCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("1W-");
+        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1WL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2016-01-01T00:00:00");
@@ -81,7 +81,7 @@ public class PeriodCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("1W-");
+        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1WL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2016-01-01T00:00:00");
@@ -96,7 +96,7 @@ public class PeriodCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("1Y-");
+        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1YL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2016-01-01T00:00:00");
@@ -111,7 +111,7 @@ public class PeriodCycleAdjusterTest {
         thrown = ExpectedException.none();
         
         // instantiate adjuster
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("1Y-");
+        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1YL1");
 
         // original and expected shifted time
         LocalDateTime t0 = LocalDateTime.parse("2016-01-01T00:00:00");

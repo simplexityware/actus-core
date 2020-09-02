@@ -87,7 +87,13 @@ public class ContractModel implements ContractModelProvider {
      */
     public static ContractModel parse(Map<String, Object> contractAttributes) {
         HashMap<String, Object> map = new HashMap<>();
-        ContractTypeEnum contractType  = ContractTypeEnum.valueOf((String)contractAttributes.get("contractType"));
+        ContractTypeEnum contractType;
+        try{
+            contractType  = ContractTypeEnum.valueOf((String)contractAttributes.get("contractType"));
+        } catch (Exception e) {
+        throw new AttributeConversionException();
+        }
+
         if(ContractTypeEnum.SWAPS.equals(contractType)){
             Map<String, Object> attributes = contractAttributes;
             // parse all attributes known to the respective contract type
@@ -161,7 +167,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("InterestScalingMultiplier", (CommonUtils.isNull(attributes.get("interestScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("interestScalingMultiplier")));
                         map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("cycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfScalingIndex")));
                         map.put("CycleOfScalingIndex", attributes.get("cycleOfScalingIndex"));
-                        map.put("ScalingEffect", CommonUtils.isNull(attributes.get("scalingEffect")) ? null : ScalingEffect.valueOf(attributes.get("scalingEffect")));
+                        map.put("ScalingEffect", CommonUtils.isNull(attributes.get("scalingEffect")) ? ScalingEffect.OOO : ScalingEffect.valueOf(attributes.get("scalingEffect")));
                         // TODO: review prepayment mechanism and attributes
                         map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("cycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfOptionality")));
                         map.put("CycleOfOptionality", attributes.get("cycleOfOptionality"));
@@ -218,7 +224,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("InterestScalingMultiplier", (CommonUtils.isNull(attributes.get("interestScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("interestScalingMultiplier")));
                         map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("cycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfScalingIndex")));
                         map.put("CycleOfScalingIndex", attributes.get("cycleOfScalingIndex"));
-                        map.put("ScalingEffect", CommonUtils.isNull(attributes.get("scalingEffect")) ? null : ScalingEffect.valueOf(attributes.get("scalingEffect")));
+                        map.put("ScalingEffect", CommonUtils.isNull(attributes.get("scalingEffect")) ? ScalingEffect.OOO : ScalingEffect.valueOf(attributes.get("scalingEffect")));
                         // TODO: review prepayment mechanism and attributes
                         map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("cycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfOptionality")));
                         map.put("CycleOfOptionality", attributes.get("cycleOfOptionality"));
@@ -280,7 +286,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("InterestScalingMultiplier", (CommonUtils.isNull(attributes.get("interestScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("interestScalingMultiplier")));
                         map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("cycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfScalingIndex")));
                         map.put("CycleOfScalingIndex", attributes.get("cycleOfScalingIndex"));
-                        map.put("ScalingEffect", CommonUtils.isNull(attributes.get("scalingEffect")) ? null : ScalingEffect.valueOf(attributes.get("scalingEffect")));
+                        map.put("ScalingEffect", CommonUtils.isNull(attributes.get("scalingEffect")) ? ScalingEffect.OOO : ScalingEffect.valueOf(attributes.get("scalingEffect")));
                         // TODO: review prepayment mechanism and attributes
                         map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("cycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfOptionality")));
                         map.put("CycleOfOptionality", attributes.get("cycleOfOptionality"));
@@ -344,7 +350,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("InterestScalingMultiplier", (CommonUtils.isNull(attributes.get("interestScalingMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("interestScalingMultiplier")));
                         map.put("CycleAnchorDateOfScalingIndex", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfScalingIndex"))) ? ((CommonUtils.isNull(attributes.get("cycleOfScalingIndex"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfScalingIndex")));
                         map.put("CycleOfScalingIndex", attributes.get("cycleOfScalingIndex"));
-                        map.put("ScalingEffect", CommonUtils.isNull(attributes.get("scalingEffect")) ? null : ScalingEffect.valueOf(attributes.get("scalingEffect")));
+                        map.put("ScalingEffect", CommonUtils.isNull(attributes.get("scalingEffect")) ? ScalingEffect.OOO : ScalingEffect.valueOf(attributes.get("scalingEffect")));
                         // TODO: review prepayment mechanism and attributes
                         map.put("CycleAnchorDateOfOptionality", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfOptionality"))) ? ((CommonUtils.isNull(attributes.get("cycleOfOptionality"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfOptionality")));
                         map.put("CycleOfOptionality", attributes.get("cycleOfOptionality"));
