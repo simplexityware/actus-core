@@ -38,7 +38,7 @@ public class AnnuityUtils {
 
 
 		LocalDateTime statusDate = state.statusDate;
-		LocalDateTime maturity = state.maturityDate;
+		LocalDateTime maturity = (model.getAs("AmortizationDate")==null)? state.maturityDate : model.getAs("AmortizationDate");
 		double accruedInterest = state.accruedInterest;
 		double outstandingNotional = state.notionalPrincipal;
 		double interestRate = state.nominalInterestRate;
@@ -56,7 +56,7 @@ public class AnnuityUtils {
 		// compute annuityPayment
 		int lb = 1;
 		int ub = eventTimesSorted.length;
-		double scale = outstandingNotional + accruedInterest;
+		double scale = outstandingNotional + accruedInterest + dayCounter.dayCountFraction(state.statusDate, eventTimesSorted[0])*interestRate*outstandingNotional;
 		double sum = sum(lb, ub, eventTimesSorted, interestRate, dayCounter);
 		double frac = product(lb, ub, eventTimesSorted, interestRate, dayCounter) / (1.0 + sum);
 		annuityPayment = scale * frac;
