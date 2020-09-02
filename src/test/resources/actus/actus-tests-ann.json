@@ -2468,7 +2468,7 @@
             "contractDealDate": "2012-12-28T00:00:00",
             "initialExchangeDate": "2013-01-01T00:00:00",
             "statusDate": "2012-12-30T00:00:00",
-            "notionalPrincipal": "6000",
+            "notionalPrincipal": "  6000",
             "cycleAnchorDateOfPrincipalRedemption": "2013-02-01T00:00:00",
             "nextPrincipalRedemptionPayment": "567.558791709355",
             "dayCountConvention": "A365",
@@ -6184,285 +6184,285 @@
         ],
         "results": [
             {
-              "eventDate": "2013-01-01T00:00:00",
-              "eventType": "IED",
-              "payoff": -5000,
-              "currency": "USD",
-              "notionalPrincipal": 5000,
-              "nominalInterestRate": 0.08,
-              "accruedInterest": 0
+                "eventDate": "2013-01-01T00:00:00",
+                "eventType": "IED",
+                "payoff": -5000,
+                "currency": "USD",
+                "notionalPrincipal": 5000,
+                "nominalInterestRate": 0.08,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-02-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 33.97260273972603,
-              "currency": "USD",
-              "notionalPrincipal": 5000,
-              "nominalInterestRate": 0.08,
-              "accruedInterest": 0
+                "eventDate": "2013-02-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 33.97260273972603,
+                "currency": "USD",
+                "notionalPrincipal": 5000,
+                "nominalInterestRate": 0.08,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-02-28T00:00:00",
-              "eventType": "PRF",
-              "payoff": 0,
-              "currency": "USD",
-              "notionalPrincipal": 5000,
-              "nominalInterestRate": 0.08,
-              "accruedInterest": 29.58904109589041
+                "eventDate": "2013-02-28T00:00:00",
+                "eventType": "PRF",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 5000,
+                "nominalInterestRate": 0.08,
+                "accruedInterest": 29.58904109589041
             },
             {
-              "eventDate": "2013-03-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 442.08803056790487,
-              "currency": "USD",
-              "notionalPrincipal": 4557.911969432095,
-              "nominalInterestRate": 0.08,
-              "accruedInterest": 30.684931506849313
+                "eventDate": "2013-03-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 442.08803056790487,
+                "currency": "USD",
+                "notionalPrincipal": 4557.911969432095,
+                "nominalInterestRate": 0.08,
+                "accruedInterest": 30.684931506849313
             },
             {
-              "eventDate": "2013-03-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 30.684931506849313,
-              "currency": "USD",
-              "notionalPrincipal": 4557.911969432095,
-              "nominalInterestRate": 0.08,
-              "accruedInterest": 0
+                "eventDate": "2013-03-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 30.684931506849313,
+                "currency": "USD",
+                "notionalPrincipal": 4557.911969432095,
+                "nominalInterestRate": 0.08,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-04-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 441.8041355427224,
-              "currency": "USD",
-              "notionalPrincipal": 4116.107833889373,
-              "nominalInterestRate": 0.08,
-              "accruedInterest": 30.96882653203177
+                "eventDate": "2013-04-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 441.8041355427224,
+                "currency": "USD",
+                "notionalPrincipal": 4116.107833889373,
+                "nominalInterestRate": 0.08,
+                "accruedInterest": 30.96882653203177
             },
             {
-              "eventDate": "2013-04-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 30.96882653203177,
-              "currency": "USD",
-              "notionalPrincipal": 4116.107833889373,
-              "nominalInterestRate": 0.08,
-              "accruedInterest": 0
+                "eventDate": "2013-04-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 30.96882653203177,
+                "currency": "USD",
+                "notionalPrincipal": 4116.107833889373,
+                "nominalInterestRate": 0.08,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-04-01T00:00:00",
-              "eventType": "RR",
-              "payoff": 0,
-              "currency": "USD",
-              "notionalPrincipal": 4116.107833889373,
-              "nominalInterestRate": 0.1105679012345679,
-              "accruedInterest": 0
+                "eventDate": "2013-04-01T00:00:00",
+                "eventType": "RR",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 4116.107833889373,
+                "nominalInterestRate": 0.1105679012345679,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-04-01T00:00:00",
-              "eventType": "PRF",
-              "payoff": 0,
-              "currency": "USD",
-              "notionalPrincipal": 4116.107833889373,
-              "nominalInterestRate": 0.1105679012345679,
-              "accruedInterest": 0
+                "eventDate": "2013-04-01T00:00:00",
+                "eventType": "PRF",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 4116.107833889373,
+                "nominalInterestRate": 0.1105679012345679,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-05-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 441.3327838664801,
-              "currency": "USD",
-              "notionalPrincipal": 3674.775050022893,
-              "nominalInterestRate": 0.1105679012345679,
-              "accruedInterest": 37.40625242040915
+                "eventDate": "2013-05-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 441.3327838664801,
+                "currency": "USD",
+                "notionalPrincipal": 3674.775050022893,
+                "nominalInterestRate": 0.1105679012345679,
+                "accruedInterest": 37.40625242040915
             },
             {
-              "eventDate": "2013-05-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 37.40625242040915,
-              "currency": "USD",
-              "notionalPrincipal": 3674.775050022893,
-              "nominalInterestRate": 0.1105679012345679,
-              "accruedInterest": 0
+                "eventDate": "2013-05-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 37.40625242040915,
+                "currency": "USD",
+                "notionalPrincipal": 3674.775050022893,
+                "nominalInterestRate": 0.1105679012345679,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-06-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 444.23033188005155,
-              "currency": "USD",
-              "notionalPrincipal": 3230.5447181428417,
-              "nominalInterestRate": 0.1105679012345679,
-              "accruedInterest": 34.50870440683768
+                "eventDate": "2013-06-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 444.23033188005155,
+                "currency": "USD",
+                "notionalPrincipal": 3230.5447181428417,
+                "nominalInterestRate": 0.1105679012345679,
+                "accruedInterest": 34.50870440683768
             },
             {
-              "eventDate": "2013-06-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 34.50870440683768,
-              "currency": "USD",
-              "notionalPrincipal": 3230.5447181428417,
-              "nominalInterestRate": 0.1105679012345679,
-              "accruedInterest": 0
+                "eventDate": "2013-06-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 34.50870440683768,
+                "currency": "USD",
+                "notionalPrincipal": 3230.5447181428417,
+                "nominalInterestRate": 0.1105679012345679,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-07-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 449.3805801776175,
-              "currency": "USD",
-              "notionalPrincipal": 2781.164137965224,
-              "nominalInterestRate": 0.1105679012345679,
-              "accruedInterest": 29.35845610927173
+                "eventDate": "2013-07-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 449.3805801776175,
+                "currency": "USD",
+                "notionalPrincipal": 2781.164137965224,
+                "nominalInterestRate": 0.1105679012345679,
+                "accruedInterest": 29.35845610927173
             },
             {
-              "eventDate": "2013-07-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 29.35845610927173,
-              "currency": "USD",
-              "notionalPrincipal": 2781.164137965224,
-              "nominalInterestRate": 0.1105679012345679,
-              "accruedInterest": 0
+                "eventDate": "2013-07-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 29.35845610927173,
+                "currency": "USD",
+                "notionalPrincipal": 2781.164137965224,
+                "nominalInterestRate": 0.1105679012345679,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-07-01T00:00:00",
-              "eventType": "RR",
-              "payoff": 0,
-              "currency": "USD",
-              "notionalPrincipal": 2781.164137965224,
-              "nominalInterestRate": 0.11167901234567902,
-              "accruedInterest": 0
+                "eventDate": "2013-07-01T00:00:00",
+                "eventType": "RR",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 2781.164137965224,
+                "nominalInterestRate": 0.11167901234567902,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-07-01T00:00:00",
-              "eventType": "PRF",
-              "payoff": 0,
-              "currency": "USD",
-              "notionalPrincipal": 2781.164137965224,
-              "nominalInterestRate": 0.11167901234567902,
-              "accruedInterest": 0
+                "eventDate": "2013-07-01T00:00:00",
+                "eventType": "PRF",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 2781.164137965224,
+                "nominalInterestRate": 0.11167901234567902,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-08-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 452.5135561994389,
-              "currency": "USD",
-              "notionalPrincipal": 2328.6505817657853,
-              "nominalInterestRate": 0.11167901234567902,
-              "accruedInterest": 26.379527635820597
+                "eventDate": "2013-08-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 452.5135561994389,
+                "currency": "USD",
+                "notionalPrincipal": 2328.6505817657853,
+                "nominalInterestRate": 0.11167901234567902,
+                "accruedInterest": 26.379527635820597
             },
             {
-              "eventDate": "2013-08-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 26.379527635820597,
-              "currency": "USD",
-              "notionalPrincipal": 2328.6505817657853,
-              "nominalInterestRate": 0.11167901234567902,
-              "accruedInterest": 0
+                "eventDate": "2013-08-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 26.379527635820597,
+                "currency": "USD",
+                "notionalPrincipal": 2328.6505817657853,
+                "nominalInterestRate": 0.11167901234567902,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-09-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 456.80567750878384,
-              "currency": "USD",
-              "notionalPrincipal": 1871.8449042570014,
-              "nominalInterestRate": 0.11167901234567902,
-              "accruedInterest": 22.087406326475634
+                "eventDate": "2013-09-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 456.80567750878384,
+                "currency": "USD",
+                "notionalPrincipal": 1871.8449042570014,
+                "nominalInterestRate": 0.11167901234567902,
+                "accruedInterest": 22.087406326475634
             },
             {
-              "eventDate": "2013-09-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 22.087406326475634,
-              "currency": "USD",
-              "notionalPrincipal": 1871.8449042570014,
-              "nominalInterestRate": 0.11167901234567902,
-              "accruedInterest": 0
+                "eventDate": "2013-09-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 22.087406326475634,
+                "currency": "USD",
+                "notionalPrincipal": 1871.8449042570014,
+                "nominalInterestRate": 0.11167901234567902,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-10-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 461.7112380677213,
-              "currency": "USD",
-              "notionalPrincipal": 1410.1336661892801,
-              "nominalInterestRate": 0.11167901234567902,
-              "accruedInterest": 17.18184576753814
+                "eventDate": "2013-10-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 461.7112380677213,
+                "currency": "USD",
+                "notionalPrincipal": 1410.1336661892801,
+                "nominalInterestRate": 0.11167901234567902,
+                "accruedInterest": 17.18184576753814
             },
             {
-              "eventDate": "2013-10-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 17.18184576753814,
-              "currency": "USD",
-              "notionalPrincipal": 1410.1336661892801,
-              "nominalInterestRate": 0.11167901234567902,
-              "accruedInterest": 0
+                "eventDate": "2013-10-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 17.18184576753814,
+                "currency": "USD",
+                "notionalPrincipal": 1410.1336661892801,
+                "nominalInterestRate": 0.11167901234567902,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-10-01T00:00:00",
-              "eventType": "RR",
-              "payoff": 0,
-              "currency": "USD",
-              "notionalPrincipal": 1410.1336661892801,
-              "nominalInterestRate": 0.11279012345679013,
-              "accruedInterest": 0
+                "eventDate": "2013-10-01T00:00:00",
+                "eventType": "RR",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 1410.1336661892801,
+                "nominalInterestRate": 0.11279012345679013,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-10-01T00:00:00",
-              "eventType": "PRF",
-              "payoff": 0,
-              "currency": "USD",
-              "notionalPrincipal": 1410.1336661892801,
-              "nominalInterestRate": 0.11279012345679013,
-              "accruedInterest": 0
+                "eventDate": "2013-10-01T00:00:00",
+                "eventType": "PRF",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 1410.1336661892801,
+                "nominalInterestRate": 0.11279012345679013,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-11-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 465.47311120166717,
-              "currency": "USD",
-              "notionalPrincipal": 944.660554987613,
-              "nominalInterestRate": 0.11279012345679013,
-              "accruedInterest": 13.50828399808771
+                "eventDate": "2013-11-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 465.47311120166717,
+                "currency": "USD",
+                "notionalPrincipal": 944.660554987613,
+                "nominalInterestRate": 0.11279012345679013,
+                "accruedInterest": 13.50828399808771
             },
             {
-              "eventDate": "2013-11-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 13.50828399808771,
-              "currency": "USD",
-              "notionalPrincipal": 944.660554987613,
-              "nominalInterestRate": 0.11279012345679013,
-              "accruedInterest": 0
+                "eventDate": "2013-11-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 13.50828399808771,
+                "currency": "USD",
+                "notionalPrincipal": 944.660554987613,
+                "nominalInterestRate": 0.11279012345679013,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2013-12-01T00:00:00",
-              "eventType": "PR",
-              "payoff": 470.2239940527566,
-              "currency": "USD",
-              "notionalPrincipal": 474.43656093485635,
-              "nominalInterestRate": 0.11279012345679013,
-              "accruedInterest": 8.757401146998307
+                "eventDate": "2013-12-01T00:00:00",
+                "eventType": "PR",
+                "payoff": 470.2239940527566,
+                "currency": "USD",
+                "notionalPrincipal": 474.43656093485635,
+                "nominalInterestRate": 0.11279012345679013,
+                "accruedInterest": 8.757401146998307
             },
             {
-              "eventDate": "2013-12-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 8.757401146998307,
-              "currency": "USD",
-              "notionalPrincipal": 474.43656093485635,
-              "nominalInterestRate": 0.11279012345679013,
-              "accruedInterest": 0
+                "eventDate": "2013-12-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 8.757401146998307,
+                "currency": "USD",
+                "notionalPrincipal": 474.43656093485635,
+                "nominalInterestRate": 0.11279012345679013,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2014-01-01T00:00:00",
-              "eventType": "IP",
-              "payoff": 4.544834264898571,
-              "currency": "USD",
-              "notionalPrincipal": 474.43656093485635,
-              "nominalInterestRate": 0.11279012345679013,
-              "accruedInterest": 0
+                "eventDate": "2014-01-01T00:00:00",
+                "eventType": "IP",
+                "payoff": 4.544834264898571,
+                "currency": "USD",
+                "notionalPrincipal": 474.43656093485635,
+                "nominalInterestRate": 0.11279012345679013,
+                "accruedInterest": 0
             },
             {
-              "eventDate": "2014-01-01T00:00:00",
-              "eventType": "MD",
-              "payoff": 474.43656093485635,
-              "currency": "USD",
-              "notionalPrincipal": 0,
-              "nominalInterestRate": 0.11279012345679013,
-              "accruedInterest": 0
+                "eventDate": "2014-01-01T00:00:00",
+                "eventType": "MD",
+                "payoff": 474.43656093485635,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "nominalInterestRate": 0.11279012345679013,
+                "accruedInterest": 0
             }
-          ]
+        ]
     },
     "ann16": {
         "identifier": "ann16",
@@ -6535,7 +6535,7 @@
                 "notionalPrincipal": 5000,
                 "nominalInterestRate": 0.08,
                 "accruedInterest": 29.58904109589041
-              },
+            },
             {
                 "eventDate": "2013-03-01T00:00",
                 "eventType": "PR",
@@ -7012,115 +7012,159 @@
         },
         "eventsObserved": [
         ],
-        "results":        [
+        "results": [
             {
-                "notionalPrincipal": "-1623.8885459234002",
-                "payoff":            "4.9828908807003245",
-                "accruedInterest":   "-4.982890880700001",
-                "eventIndex":        "0",
-                "eventType":         "PRD"
+                "eventDate":           "2013-05-15T00:00",
+                "eventType":           "PRD",
+                "payoff":              "-3010.3595748728",
+                "currency":            "USD",
+                "notionalPrincipal":   "3376.1114540766",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "10.3595748727"
             },
             {
-                "notionalPrincipal": "-1425.7539713687001",
-                "payoff":            "-198.13457455469995",
-                "accruedInterest":   "-11.033544092900001",
-                "eventIndex":        "1",
-                "eventType":         "PR"
+                "eventDate":           "2013-06-01T00:00",
+                "eventType":           "PR",
+                "payoff":              "411.9275354714",
+                "currency":            "USD",
+                "notionalPrincipal":   "2964.1839186051",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "22.9390586468"
             },
             {
-                "notionalPrincipal": "-1425.7539713687001",
-                "payoff":            "-11.033544092900001",
-                "eventIndex":        "2",
-                "eventType":         "IP"
+                "eventDate":           "2013-06-01T00:00",
+                "eventType":           "IP",
+                "payoff":              "22.9390586468",
+                "currency":            "USD",
+                "notionalPrincipal":   "2964.1839186051",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "0.0"
             },
             {
-                "notionalPrincipal": "-1225.9606733548999",
-                "payoff":            "-199.79329801380004",
-                "accruedInterest":   "-9.374820633599999",
-                "eventIndex":        "3",
-                "eventType":         "PR"
+                "eventDate":           "2013-07-01T00:00",
+                "eventType":           "PR",
+                "payoff":              "415.376069722",
+                "currency":            "USD",
+                "notionalPrincipal":   "2548.8078488831",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "19.4905243963"
             },
             {
-                "notionalPrincipal": "-1225.9606733548999",
-                "payoff":            "-9.374820633599999",
-                "eventIndex":        "4",
-                "eventType":         "IP"
+                "eventDate":           "2013-07-01T00:00",
+                "eventType":           "IP",
+                "payoff":              "19.4905243963",
+                "currency":            "USD",
+                "notionalPrincipal":   "2548.8078488831",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "0.0"
             },
             {
-                "notionalPrincipal": "-1025.1223696934003",
-                "payoff":            "-200.83830366139995",
-                "accruedInterest":   "-8.329814985999999",
-                "eventIndex":        "5",
-                "eventType":         "PR"
+                "eventDate":           "2013-08-01T00:00",
+                "eventType":           "PR",
+                "payoff":              "417.5486668163",
+                "currency":            "USD",
+                "notionalPrincipal":   "2131.2591820668",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "17.317927302"
             },
             {
-                "notionalPrincipal": "-1025.1223696934003",
-                "payoff":            "-8.329814985999999",
-                "eventIndex":        "6",
-                "eventType":         "IP"
+                "eventDate":           "2013-08-01T00:00",
+                "eventType":           "IP",
+                "payoff":              "17.317927302",
+                "currency":            "USD",
+                "notionalPrincipal":   "2131.2591820668",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "0.0"
             },
             {
-                "notionalPrincipal": "-822.919466051",
-                "payoff":            "-202.20290364249996",
-                "accruedInterest":   "-6.965215004999999",
-                "eventIndex":        "7",
-                "eventType":         "PR"
+                "eventDate":           "2013-09-01T00:00",
+                "eventType":           "PR",
+                "payoff":              "420.3857098127",
+                "currency":            "USD",
+                "notionalPrincipal":   "1710.873472254",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "14.4808843055"
             },
             {
-                "notionalPrincipal": "-822.919466051",
-                "payoff":            "-6.965215004999999",
-                "eventIndex":        "8",
-                "eventType":         "IP"
+                "eventDate":           "2013-09-01T00:00",
+                "eventType":           "IP",
+                "payoff":              "14.4808843055",
+                "currency":            "USD",
+                "notionalPrincipal":   "1710.873472254",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "0.0"
             },
             {
-                "notionalPrincipal": "-619.1623247144998",
-                "payoff":            "-203.75714133640003",
-                "accruedInterest":   "-5.410977311",
-                "eventIndex":        "9",
-                "eventType":         "PR"
+                "eventDate":           "2013-10-01T00:00",
+                "eventType":           "PR",
+                "payoff":              "423.6170151227",
+                "currency":            "USD",
+                "notionalPrincipal":   "1287.2564571313",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "11.2495789956"
             },
             {
-                "notionalPrincipal": "-619.1623247144998",
-                "payoff":            "-5.410977311",
-                "eventIndex":        "10",
-                "eventType":         "IP"
+                "eventDate":           "2013-10-01T00:00",
+                "eventType":           "IP",
+                "payoff":              "11.2495789956",
+                "currency":            "USD",
+                "notionalPrincipal":   "1287.2564571313",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "0.0"
             },
             {
-                "notionalPrincipal": "-414.2011172048001",
-                "payoff":            "-204.96120750980003",
-                "accruedInterest":   "-4.206911137800001",
-                "eventIndex":        "11",
-                "eventType":         "PR"
+                "eventDate":           "2013-11-01T00:00",
+                "eventType":           "PR",
+                "payoff":              "426.1203036698",
+                "currency":            "USD",
+                "notionalPrincipal":   "861.1361534614",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "8.7462904484"
             },
             {
-                "notionalPrincipal": "-414.2011172048001",
-                "payoff":            "-4.206911137800001",
-                "eventIndex":        "12",
-                "eventType":         "IP"
+                "eventDate":           "2013-11-01T00:00",
+                "eventType":           "IP",
+                "payoff":              "8.7462904484",
+                "currency":            "USD",
+                "notionalPrincipal":   "861.1361534614",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "0.0"
             },
             {
-                "notionalPrincipal": "-207.75651275259997",
-                "payoff":            "-206.44460445219994",
-                "accruedInterest":   "-2.723514195300001",
-                "eventIndex":        "13",
-                "eventType":         "PR"
+                "eventDate":           "2013-12-01T00:00",
+                "eventType":           "PR",
+                "payoff":              "429.2043289996",
+                "currency":            "USD",
+                "notionalPrincipal":   "431.9318244617",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "5.6622651186"
             },
             {
-                "notionalPrincipal": "-207.75651275259997",
-                "payoff":            "-2.723514195300001",
-                "eventIndex":        "14",
-                "eventType":         "IP"
+                "eventDate":           "2013-12-01T00:00",
+                "eventType":           "IP",
+                "payoff":              "5.6622651186",
+                "currency":            "USD",
+                "notionalPrincipal":   "431.9318244617",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "0.0"
             },
             {
-                "notionalPrincipal": "-207.75651275259997",
-                "payoff":            "-1.4116058948000005",
-                "eventIndex":        "15",
-                "eventType":         "IP"
+                "eventDate":           "2014-01-01T00:00",
+                "eventType":           "IP",
+                "payoff":              "2.9347696566",
+                "currency":            "USD",
+                "notionalPrincipal":   "431.9318244617",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "0.0"
             },
             {
-                "payoff":     "-207.75651275259997",
-                "eventIndex": "16",
-                "eventType":  "MD"
+                "eventDate":           "2014-01-01T00:00",
+                "eventType":           "MD",
+                "payoff":              "431.9318244617",
+                "currency":            "USD",
+                "notionalPrincipal":   "0.0",
+                "nominalInterestRate": "0.08",
+                "accruedInterest":     "0.0"
             }
         ]
     },
@@ -10228,4 +10272,3 @@
         ]
     }
 }
-
