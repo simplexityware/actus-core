@@ -67,25 +67,34 @@ public final class Annuity {
         );
 
         // principal redemption schedule
-        Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(
+        // -> chose right state transition function depending on ipcb attributes
+        StateTransitionFunction stf= !(InterestCalculationBase.NT.equals(model.<InterestCalculationBase>getAs("InterestCalculationBase")))? new STF_PR_NAM() : new STF_PR2_NAM();
+        events.addAll(EventFactory.createEvents(
+            ScheduleFactory.createSchedule(
                 model.getAs("CycleAnchorDateOfPrincipalRedemption"),
                 maturity,
                 model.getAs("CycleOfPrincipalRedemption"),
                 model.getAs("EndOfMonthConvention"),
-                false
+                false),
+            EventType.PR,
+            model.getAs("Currency"),
+            new POF_PR_NAM(),
+            stf,
+            model.getAs("BusinessDayConvention"),
+            model.getAs("ContractID"))
         );
-        // -> chose right state transition function depending on ipcb attributes
-        StateTransitionFunction stf= !(InterestCalculationBase.NT.equals(model.<InterestCalculationBase>getAs("InterestCalculationBase")))? new STF_PR_NAM() : new STF_PR2_NAM();
-        // regular principal redemption events
-        events.addAll(EventFactory.createEvents(
-                prSchedule,
-                EventType.PR,
-                model.getAs("Currency"),
-                new POF_PR_NAM(),
-                stf,
-                model.getAs("BusinessDayConvention"),
-                model.getAs("ContractID"))
-        );
+
+        // initial principal redemption fixing event (if not already fixed)
+        if(model.getAs("NextPrincipalRedemptionPayment")==null) {
+            events.add(EventFactory.createEvent(
+                model.<LocalDateTime>getAs("CycleAnchorDateOfPrincipalRedemption").minusDays(1), 
+                EventType.PRF, 
+                model.getAs("Currency"), 
+                new POF_RR_PAM(),
+                new STF_PRF_ANN(),
+                model.getAs("BusinessDayConvention"), 
+                model.getAs("ContractID")));
+        }
 
         // fees (if specified)
         if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
@@ -304,9 +313,8 @@ public final class Annuity {
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
 		ListIterator eventIterator = events.listIterator();
-		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
+		while (eventIterator.hasNext()) {
 			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
 					model.getAs("BusinessDayConvention"));
 		}
@@ -410,15 +418,12 @@ public final class Annuity {
             states.feeAccrued = 0.0;
         } else if(!CommonUtils.isNull(model.getAs("FeeAccrued"))){
             states.feeAccrued = model.getAs("FeeAccrued");
-        }//TODO: implement last two possible initialization
+        }
 
         if(CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))){
             //check if NT and IPNR are initialized, create dummy StateSpace if not
             if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
-                StateSpace dummyState = StateSpace.copyStateSpace(states);
-                dummyState.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*model.<Double>getAs("NotionalPrincipal");
-                dummyState.nominalInterestRate = model.getAs("NominalInterestRate");
-                states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole"))*AnnuityUtils.annuityPayment(model, dummyState);
+                // fixed at initial PRF event
             }else{
                 states.nextPrincipalRedemptionPayment = AnnuityUtils.annuityPayment(model, states);
             }
@@ -426,7 +431,6 @@ public final class Annuity {
         }else {
             states.nextPrincipalRedemptionPayment = model.<Double>getAs("NextPrincipalRedemptionPayment");
         }
-
         
         // return the initialized state space
         return states;

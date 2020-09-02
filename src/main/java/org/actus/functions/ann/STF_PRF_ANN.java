@@ -25,8 +25,8 @@ public final class STF_PRF_ANN implements StateTransitionFunction {
         double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate), timeAdjuster.shiftCalcTime(time));
         states.accruedInterest += timeFromLastEvent * states.nominalInterestRate * states.interestCalculationBaseAmount;
         states.feeAccrued += timeFromLastEvent * states.notionalPrincipal * model.<Double>getAs("FeeRate");
-        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * AnnuityUtils.annuityPayment(model, states);
         states.statusDate = time;
+        states.nextPrincipalRedemptionPayment = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * AnnuityUtils.annuityPayment(model, states);
         // return post-event-states
         return StateSpace.copyStateSpace(states);
     }
