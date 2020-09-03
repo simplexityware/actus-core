@@ -3,9 +3,9 @@
  *
  * Please see distribution for license.
  */
-package org.actus.functions.swppv;
+package org.actus.functions.fxout;
 
-import org.actus.functions.PayOffFunction;
+import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
@@ -14,12 +14,16 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class POF_PR_SWPPV implements PayOffFunction {
+public final class STF_MD1_FXOUT implements StateTransitionFunction {
     
     @Override
-        public double eval(LocalDateTime time, StateSpace states, 
+    public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return 0.0;
-    }
+        // update state space
+        states.statusDate = time;
 
+        // return post-event-states
+        return StateSpace.copyStateSpace(states);
+        }
+    
 }

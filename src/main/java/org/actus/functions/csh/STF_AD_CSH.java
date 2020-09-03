@@ -3,7 +3,7 @@
  *
  * Please see distribution for license.
  */
-package org.actus.functions.fxout;
+package org.actus.functions.csh;
 
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
@@ -14,7 +14,7 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_STD1_FXOUT implements StateTransitionFunction {
+public final class STF_AD_CSH implements StateTransitionFunction {
     
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
@@ -24,6 +24,5 @@ public final class STF_STD1_FXOUT implements StateTransitionFunction {
 
         // return post-event-states
         return StateSpace.copyStateSpace(states);
-        }
-    
+    }
 }

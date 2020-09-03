@@ -19,6 +19,7 @@ import org.actus.util.CommonUtils;
 import org.actus.functions.clm.POF_IED_CLM;
 import org.actus.functions.clm.POF_IP_CLM;
 import org.actus.functions.clm.STF_IP_CLM;
+import org.actus.util.CycleUtils;
 
 
 import java.time.LocalDateTime;
@@ -49,7 +50,7 @@ public final class CallMoney {
         if (!CommonUtils.isNull(model.getAs("CycleOfInterestPayment"))) {
             events.addAll(EventFactory.createEvents(
                     ScheduleFactory.createSchedule(
-                            model.getAs("CycleAnchorDateOfInterestPayment"),
+                            CommonUtils.isNull(model.getAs("CycleAnchorDateOfInterestPayment")) ? model.<LocalDateTime>getAs("InitialExchangeDate").plus(CycleUtils.parsePeriod(model.getAs("CycleOfInterestPayment"))) : model.getAs("CycleAnchorDateOfInterestPayment"),
                             maturity,
                             model.getAs("CycleOfInterestPayment"),
                             model.getAs("EndOfMonthConvention"),

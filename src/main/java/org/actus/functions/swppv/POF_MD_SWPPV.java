@@ -5,7 +5,7 @@
  */
 package org.actus.functions.swppv;
 
-import org.actus.functions.StateTransitionFunction;
+import org.actus.functions.PayOffFunction;
 import org.actus.states.StateSpace;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
@@ -14,20 +14,12 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_TD_SWPPV implements StateTransitionFunction {
+public final class POF_MD_SWPPV implements PayOffFunction {
     
     @Override
-    public StateSpace eval(LocalDateTime time, StateSpace states,
+        public double eval(LocalDateTime time, StateSpace states, 
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        // update state space
-        states.notionalPrincipal = 0.0;
-        states.accruedInterest = 0.0;
-        states.accruedInterest2 = 0.0;
-        states.feeAccrued = 0.0;
-        states.statusDate = time;
-
-        // return post-event-states
-        return StateSpace.copyStateSpace(states);
+        return 0.0;
     }
-    
+
 }

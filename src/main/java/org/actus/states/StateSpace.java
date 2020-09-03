@@ -21,24 +21,25 @@ import java.util.StringJoiner;
  * in the various {@link ContractEvent}s.
  */
 public final class StateSpace {
-    public double               accruedInterest; // analytical result
+    public double               accruedInterest;
     public double               accruedInterest2;
-    public ContractPerformance  contractPerformance = ContractPerformance.PF; // TODO: initialize together with other states
+    public ContractPerformance  contractPerformance = ContractPerformance.PF;
     public double               exerciseAmount;
     public LocalDateTime        exerciseDate;
-    public double               feeAccrued; // analytical result
+    public double               feeAccrued;
     public double               interestCalculationBaseAmount;
     public double               interestScalingMultiplier;
     public double               nextPrincipalRedemptionPayment;
-    public double               nominalInterestRate; // analytical result
+    public double               nominalInterestRate;
     public double               nominalInterestRate2;
     public LocalDateTime        nonPerformingDate;
-    public double               notionalPrincipal; // analytical result
-    public double               notionalPrincipal2; // analytical result
+    public double               notionalPrincipal;
+    public double               notionalPrincipal2;
     public double               notionalScalingMultiplier;
     public LocalDateTime        statusDate;
     public LocalDateTime        maturityDate;
     public LocalDateTime        terminationDate;
+    public double               lastInterestPeriod;
 
     /**
      * Returns a String-representation of all analytical elements

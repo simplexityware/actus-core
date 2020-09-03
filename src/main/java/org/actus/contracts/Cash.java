@@ -39,13 +39,13 @@ public final class Cash {
         // initialize state space per status date
         StateSpace states = new StateSpace();
         states.statusDate = model.getAs("StatusDate");
-        states.notionalPrincipal = model.getAs("NotionalPrincipal");
+        states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("NotionalPrincipal");
 
         // sort the events according to their time sequence
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("A/AISDA", null), new BusinessDayAdjuster(null, null)));
+        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("AA", null), new BusinessDayAdjuster(null, null)));
 
         // return evaluated events
         return events;

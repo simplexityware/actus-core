@@ -76,7 +76,6 @@ public final class CycleUtils {
         try {
           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E", forLanguageTag("en"));
           TemporalAccessor accessor = formatter.parse(cycle.split("L")[0].substring(1));
-          System.out.println(cycle.substring(1,cycle.length()-1));
           weekday= DayOfWeek.from(accessor);
         } catch (Exception e) {
           throw(new AttributeConversionException());

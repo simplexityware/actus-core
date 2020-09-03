@@ -31,26 +31,23 @@ import java.util.*;
  */
 public final class Commodity {
 
-    // compute next n non-contingent events
+    // compute contract schedule
     public static ArrayList<ContractEvent> schedule(LocalDateTime to,
                                                 ContractModelProvider model) throws AttributeConversionException {
         ArrayList<ContractEvent> events = new ArrayList<ContractEvent>();
 
+        LocalDateTime statusDate = model.getAs("StatusDate");
+        LocalDateTime purchaseDate = model.getAs("PurchaseDate");
+        LocalDateTime terminationDate = model.getAs("TerminationDate");
+        
         // purchase
-        if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+        if (!CommonUtils.isNull(purchaseDate) && purchaseDate.isAfter(statusDate) && to.isAfter(purchaseDate)) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_STK(), model.getAs("ContractID")));
         }
         // termination
-        if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
+        if (!CommonUtils.isNull(terminationDate) && terminationDate.isAfter(statusDate) && to.isAfter(terminationDate)) {
             events.add(EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_STK(), new STF_TD_STK(), model.getAs("ContractID")));
         }
-
-        // remove all pre-status date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
-        
-        // remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1);
-
         return events;
     }
 
@@ -67,7 +64,7 @@ public final class Commodity {
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("A/AISDA", null), new BusinessDayAdjuster(null, null)));
+        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("AA", null), new BusinessDayAdjuster(null, null)));
 
         // return evaluated events
         return events;

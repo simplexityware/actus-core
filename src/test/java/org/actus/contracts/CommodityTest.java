@@ -11,7 +11,7 @@ import org.actus.testutils.ObservedDataSet;
 import org.actus.testutils.ResultSet;
 import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
-import org. actus.events.ContractEvent;
+import org.actus.events.ContractEvent;
 
 import java.util.Map;
 import java.util.Set;
@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
-
 
 public class CommodityTest {
     @TestFactory
@@ -44,14 +44,14 @@ public class CommodityTest {
             // create market model from data
             List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
             DataObserver observer = ContractTestUtils.createObserver(dataObserved);
-          
+
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = PrincipalAtMaturity.schedule(terms.getAs("MaturityDate"), terms);
-            schedule = PrincipalAtMaturity.apply(schedule, terms, observer);
-        
+            ArrayList<ContractEvent> schedule = Commodity.schedule(LocalDateTime.parse(tests.get(testId).getto()), terms);
+            schedule = Commodity.apply(schedule, terms, observer);
+          
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
                 ResultSet results = new ResultSet();

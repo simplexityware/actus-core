@@ -33,7 +33,7 @@ public final class CommonUtils {
         String settlementCurrency = model.getAs("SettlementCurrency");
         String currency = model.getAs("Currency");
         if(isNull(settlementCurrency)  || currency.equals(settlementCurrency)){
-            return 1;
+            return 1.0;
         }else {
             return riskFactorModel.stateAt(currency + "/" + settlementCurrency, time, state, model);
         }

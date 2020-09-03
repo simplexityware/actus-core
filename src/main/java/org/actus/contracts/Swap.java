@@ -12,10 +12,13 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
+import org.actus.functions.pam.POF_PRD_PAM;
+import org.actus.functions.pam.STF_PRD_PAM;
 import org.actus.functions.stk.STF_PRD_STK;
 import org.actus.functions.stk.STF_TD_STK;
 import org.actus.functions.swaps.*;
 import org.actus.states.StateSpace;
+import org.actus.types.DeliverySettlement;
 import org.actus.types.EventType;
 import org.actus.types.ReferenceRole;
 import org.actus.util.CommonUtils;
@@ -45,19 +48,10 @@ public final class Swap {
         secondLegSchedule = ContractType.schedule(secondLegModel.getAs("MaturityDate"), secondLegModel);
         events.addAll(firstLegSchedule);
         events.addAll(secondLegSchedule);
-        // compute parent events
+
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            ContractEvent purchase = EventFactory.createEvent(
-                    model.getAs("PurchaseDate"),
-                    EventType.PRD,
-                    model.getAs("Currency"),
-                    new POF_PRD_SWAPS(),
-                    new STF_PRD_STK(),
-                    model.getAs("ContractID")
-            );
-            events.removeIf(e -> e.compareTo(purchase) == -1); // remove all pre-purchase events
-            events.add(purchase);
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_SWAPS(), new STF_PRD_SWAPS(), model.getAs("ContractID")));
         }
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
@@ -91,10 +85,8 @@ public final class Swap {
         //sort first and second leg events and remove from parent schedule
         ContractModel firstLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.FIL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
         ContractModel secondLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.SEL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
-        ArrayList<ContractEvent> firstLegSchedule = new ArrayList<>();
-        ArrayList<ContractEvent> secondLegSchedule = new ArrayList<>();
-        firstLegSchedule.addAll(events.stream().filter(event -> firstLegModel.getAs("ContractID").equals(event.getContractID())).collect(Collectors.toList()));
-        secondLegSchedule.addAll(events.stream().filter(event -> secondLegModel.getAs("ContractID").equals(event.getContractID())).collect(Collectors.toList()));
+        ArrayList<ContractEvent> firstLegSchedule = events.stream().filter(event -> firstLegModel.getAs("ContractID").equals(event.getContractID())).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<ContractEvent> secondLegSchedule = events.stream().filter(event -> secondLegModel.getAs("ContractID").equals(event.getContractID())).collect(Collectors.toCollection(ArrayList::new));
         events.removeAll(firstLegSchedule);
         events.removeAll(secondLegSchedule);
 
@@ -103,16 +95,56 @@ public final class Swap {
         List<ContractEvent> secondLegEvents = ContractType.apply(secondLegSchedule,secondLegModel,observer);
 
         //add netted and unnetted events back to collection
-        events.addAll(filterAndNettCongruentEvents(firstLegEvents,secondLegEvents, model.getAs("ContractID")));
+        if(DeliverySettlement.S.equals(model.getAs("DeliverySettlement"))){
+            events.addAll(filterAndNettCongruentEvents(firstLegEvents,secondLegEvents, model.getAs("ContractID")));
+        }else{
+            events.addAll(firstLegEvents);
+            events.addAll(secondLegEvents);
+        }
 
+        // evaluate parent-events and netting-events
+        events.forEach(event -> {
+            if(event.getContractID().equals(model.getAs("ContractID"))){
+                if(event.eventType().equals(EventType.PRD) || event.eventType().equals(EventType.TD)){
+                    StateSpace parentState = new StateSpace();
+                    ArrayList<ContractEvent> fLEventsAtTimepoint = firstLegEvents.stream().filter(e -> e.eventTime().isEqual(event.eventTime())).collect(Collectors.toCollection(ArrayList::new));
+                    ArrayList<ContractEvent> sLEventsAtTimepoint = secondLegEvents.stream().filter(e -> e.eventTime().isEqual(event.eventTime())).collect(Collectors.toCollection(ArrayList::new));
+                    double flIpac;
+                    double slIpac;
+                    if(fLEventsAtTimepoint.isEmpty()){
+                        flIpac = 0.0;
+                    }else{
+                        flIpac = fLEventsAtTimepoint.stream().anyMatch(e -> EventType.IP.equals(e.eventType())) ? 0.0 : fLEventsAtTimepoint.stream().filter(e -> EventType.PR.equals(e.eventType())).collect(Collectors.toList()).get(0).states().accruedInterest;
+                    }
+                    if(sLEventsAtTimepoint.isEmpty()){
+                        slIpac = 0.0;
+                    } else{
+                        slIpac = sLEventsAtTimepoint.stream().anyMatch(e -> EventType.IP.equals(e.eventType())) ? 0.0 : sLEventsAtTimepoint.stream().filter(e -> EventType.PR.equals(e.eventType())).collect(Collectors.toList()).get(0).states().accruedInterest;
+                    }
+                    parentState.accruedInterest = flIpac + slIpac;
+                    event.eval(parentState, model, observer, null, null);
+                }else{
+                    event.eval(null, null, null, null, null);
+                }
+            }
+        });
+
+        if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            ContractEvent purchase = EventFactory.createEvent(
+                    model.getAs("PurchaseDate"),
+                    EventType.PRD,
+                    model.getAs("Currency"),
+                    new POF_PRD_SWAPS(),
+                    new STF_PRD_STK(),
+                    model.getAs("ContractID")
+            );
+            events.removeIf(e -> e.compareTo(purchase) == -1); // remove all pre-purchase events
+        }
         Collections.sort(events);
-
-        // initialize state space per status date
-        StateSpace state = initStateSpace(model, events.get(0));
-        events.forEach(event -> event.eval(state, model, observer, firstLegModel.getAs("DayCountConvention"), firstLegModel.getAs("BusinessDayConvention")));
         //
         return events;
     }
+
     private static StateSpace initStateSpace(ContractModelProvider model, ContractEvent eventAtT0) throws AttributeConversionException {
         ContractModel firstLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.FIL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
         ContractModel secondLegModel = (ContractModel)model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.SEL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();

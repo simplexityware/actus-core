@@ -51,6 +51,12 @@ switch (eventType) {
     case IP:
         offset = 40;
         break;
+    case IPFX:
+        offset = 40;
+        break;
+    case IPFL:
+        offset = 45;
+        break;
     case IPCI:
         offset = 40;
         break;
@@ -68,6 +74,9 @@ switch (eventType) {
         break;
       case RR:
         offset = 100;
+        break;
+     case PRF:
+        offset = 105;
         break;
       case SC:
         offset = 110;
@@ -91,8 +100,7 @@ switch (eventType) {
         offset = 950;
         break;
 }
+    return offset;
+    }
 
-return offset;
-  }
-  
 }

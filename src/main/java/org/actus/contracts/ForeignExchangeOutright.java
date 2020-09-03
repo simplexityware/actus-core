@@ -9,6 +9,7 @@ import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
+import org.actus.functions.fxout.*;
 import org.actus.functions.stk.*;
 import org.actus.states.StateSpace;
 import org.actus.events.EventFactory;
@@ -16,16 +17,9 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.types.DeliverySettlement;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
-import org.actus.functions.fxout.POF_PRD_FXOUT;
-import org.actus.functions.fxout.POF_TD_FXOUT;
-import org.actus.functions.fxout.POF_STD_FXOUT;
-import org.actus.functions.fxout.STF_STD_FXOUT;
-import org.actus.functions.fxout.POF_STD1_FXOUT;
-import org.actus.functions.fxout.STF_STD1_FXOUT;
-import org.actus.functions.fxout.POF_STD2_FXOUT;
-import org.actus.functions.fxout.STF_STD2_FXOUT;
 
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 
 /**
@@ -39,26 +33,23 @@ public final class ForeignExchangeOutright {
     public static ArrayList<ContractEvent> schedule(LocalDateTime to,
                                                     ContractModelProvider model) throws AttributeConversionException {
         ArrayList<ContractEvent> events = new ArrayList<ContractEvent>();
-
-        // determine settlement date (maturity) of the contract
-        LocalDateTime settlement = model.getAs("SettlementDate");
-        if (CommonUtils.isNull(settlement)) {
-            settlement = model.getAs("MaturityDate");
-        }
+        
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_FXOUT(), new STF_PRD_STK(), model.getAs("ContractID")));
         }
+
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
             events.add(EventFactory.createEvent(model.getAs("TerminationDate"), EventType.TD, model.getAs("Currency"), new POF_TD_FXOUT(), new STF_TD_STK(), model.getAs("ContractID")));
-        }
-        // settlement
-        if (CommonUtils.isNull(model.getAs("DeliverySettlement")) || model.getAs("DeliverySettlement").equals(DeliverySettlement.D)) {
-            events.add(EventFactory.createEvent(settlement, EventType.STD, model.getAs("Currency"), new POF_STD1_FXOUT(), new STF_STD1_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
-            events.add(EventFactory.createEvent(settlement, EventType.STD, model.getAs("Currency2"), new POF_STD2_FXOUT(), new STF_STD2_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
         } else {
-            events.add(EventFactory.createEvent(settlement, EventType.STD, model.getAs("Currency"), new POF_STD_FXOUT(), new STF_STD_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            // settlement
+            if (CommonUtils.isNull(model.getAs("DeliverySettlement")) || model.getAs("DeliverySettlement").equals(DeliverySettlement.D)) {
+                events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD1_FXOUT(), new STF_MD1_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+                events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency2"), new POF_MD2_FXOUT(), new STF_MD2_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            } else {
+                events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("MaturityDate").plus(Period.parse(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_FXOUT(), new STF_STD_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            }
         }
 
         // remove all pre-status date events
@@ -85,7 +76,7 @@ public final class ForeignExchangeOutright {
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("A/AISDA", model.getAs("Calendar")), model.getAs("BusinessDayConvention")));
+        events.forEach(e -> e.eval(states, model, observer, new DayCountCalculator("AA", model.getAs("Calendar")), model.getAs("BusinessDayConvention")));
 
         // return evaluated events
         return events;

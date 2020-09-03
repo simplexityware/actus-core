@@ -21,6 +21,7 @@ import org.actus.util.CycleUtils;
 public final class WeekdayCycleAdjuster implements CycleAdjusterProvider{
     private DayOfWeek weekday;
     private int position;
+    private char stub;
 
     /**
      * Public constructor
@@ -30,6 +31,7 @@ public final class WeekdayCycleAdjuster implements CycleAdjusterProvider{
     public WeekdayCycleAdjuster(String cycle) {
         this.weekday=CycleUtils.parseWeekday(cycle);
         this.position=CycleUtils.parsePosition(cycle);
+        this.stub = CycleUtils.parseStub(cycle);
     }
 
     /**

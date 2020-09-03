@@ -49,8 +49,8 @@ public class PlainVanillaInterestRateSwapTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = CallMoney.schedule(terms.getAs("MaturityDate"), terms);
-            schedule = CallMoney.apply(schedule, terms, observer);
+            ArrayList<ContractEvent> schedule = PlainVanillaInterestRateSwap.schedule(terms.getAs("MaturityDate"), terms);
+            schedule = PlainVanillaInterestRateSwap.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
@@ -69,8 +69,8 @@ public class PlainVanillaInterestRateSwapTest {
             List<ResultSet> expectedResults = test.getResults();
             
             // round results to available precision
-            computedResults.forEach(result -> result.roundTo(11));
-            expectedResults.forEach(result -> result.roundTo(11));
+            computedResults.forEach(result -> result.roundTo(10));
+            expectedResults.forEach(result -> result.roundTo(10));
 
             // create dynamic test
             return DynamicTest.dynamicTest("Test: " + testId,

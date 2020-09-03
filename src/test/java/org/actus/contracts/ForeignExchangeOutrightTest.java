@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
@@ -47,11 +48,11 @@ public class ForeignExchangeOutrightTest {
           
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
-
+            
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = PrincipalAtMaturity.schedule(terms.getAs("MaturityDate"), terms);
-            schedule = PrincipalAtMaturity.apply(schedule, terms, observer);
-        
+            ArrayList<ContractEvent> schedule = ForeignExchangeOutright.schedule(LocalDateTime.parse(tests.get(testId).getto()), terms);
+            schedule = ForeignExchangeOutright.apply(schedule, terms, observer);
+
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 
                 ResultSet results = new ResultSet();

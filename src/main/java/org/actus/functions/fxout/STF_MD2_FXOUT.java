@@ -3,7 +3,7 @@
  *
  * Please see distribution for license.
  */
-package org.actus.functions.swppv;
+package org.actus.functions.fxout;
 
 import org.actus.functions.StateTransitionFunction;
 import org.actus.states.StateSpace;
@@ -14,20 +14,16 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 
 import java.time.LocalDateTime;
 
-public final class STF_TD_SWPPV implements StateTransitionFunction {
+public final class STF_MD2_FXOUT implements StateTransitionFunction {
     
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states,
     ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         // update state space
-        states.notionalPrincipal = 0.0;
-        states.accruedInterest = 0.0;
-        states.accruedInterest2 = 0.0;
-        states.feeAccrued = 0.0;
         states.statusDate = time;
 
         // return post-event-states
         return StateSpace.copyStateSpace(states);
-    }
+        }
     
 }
