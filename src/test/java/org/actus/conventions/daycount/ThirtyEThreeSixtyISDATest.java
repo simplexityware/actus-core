@@ -1,18 +1,15 @@
-package org.actus.conventions.daycount;
-
-import static org.junit.Assert.assertEquals;
-
 /*
  * Copyright (C) 2016 - present by ACTUS Financial Research Foundation
  *
  * Please see distribution for license.
  */
 
+package org.actus.conventions.daycount;
+
 import java.time.LocalDateTime;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /*
  * ThirtyEThreeSixty-ISDA (30E/336)
@@ -21,10 +18,7 @@ import org.junit.rules.ExpectedException;
 public class ThirtyEThreeSixtyISDATest {
 	
     ThirtyEThreeSixtyISDA convention = new ThirtyEThreeSixtyISDA();
-    
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-    
+        
     // define test inputs
     LocalDateTime start1 = LocalDateTime.parse("2006-01-31T00:00:00");
     LocalDateTime start2 = LocalDateTime.parse("2006-01-30T00:00:00");
@@ -77,210 +71,180 @@ public class ThirtyEThreeSixtyISDATest {
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_1() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days1, convention.dayCount(start1,end1),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_2() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days2, convention.dayCount(start2,end2),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_3() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days3, convention.dayCount(start3,end3),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_4() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days4, convention.dayCount(start4,end4),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_5() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days5, convention.dayCount(start5,end5),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_6() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days6, convention.dayCount(start6,end6),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_7() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days7, convention.dayCount(start7,end7),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_8() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days8, convention.dayCount(start8,end8),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_9() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days9, convention.dayCount(start9,end9),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_10() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days10, convention.dayCount(start10,end10),0);
     }
     
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_11() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days11, convention.dayCount(start11,end11),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_12() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days12, convention.dayCount(start12,end12),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_13() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days13, convention.dayCount(start13,end13),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_14() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days14, convention.dayCount(start14,end14),0);
     }
 
     @Test
     public void test_daycount_ThirtyEThreeSixtyISDA_15() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days15, convention.dayCount(start15,end15),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_1() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days1/360, convention.dayCountFraction(start1,end1),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_2() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days2/360, convention.dayCountFraction(start2,end2),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_3() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days3/360, convention.dayCountFraction(start3,end3),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_4() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days4/360, convention.dayCountFraction(start4,end4),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_5() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days5/360, convention.dayCountFraction(start5,end5),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_6() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days6/360, convention.dayCountFraction(start6,end6),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_7() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days7/360, convention.dayCountFraction(start7,end7),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_8() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days8/360, convention.dayCountFraction(start8,end8),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_9() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days9/360, convention.dayCountFraction(start9,end9),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_10() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days10/360, convention.dayCountFraction(start10,end10),0);
     }
     
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_11() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days11/360, convention.dayCountFraction(start11,end11),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_12() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days12/360, convention.dayCountFraction(start12,end12),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_13() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days13/360, convention.dayCountFraction(start13,end13),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_14() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days14/360, convention.dayCountFraction(start14,end14),0);
     }
 
     @Test
     public void test_fraction_ThirtyEThreeSixtyISDA_15() {
-        thrown = ExpectedException.none();
         convention.maturityDate(LocalDateTime.parse("2008-02-29T00:00"));
         assertEquals(days15/360, convention.dayCountFraction(start15,end15),0);
     }

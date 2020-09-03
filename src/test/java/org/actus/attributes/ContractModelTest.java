@@ -11,26 +11,25 @@ import java.util.Map;
 import java.util.HashMap;
 
 import org.actus.types.EndOfMonthConventionEnum;
-import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
+import org.actus.types.ContractTypeEnum;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ContractModelTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void test_AttributeConversionException() {
-        thrown.expect(AttributeConversionException.class);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("contractType", "PAM");
-        ContractModel model = ContractModel.parse(map);
+        assertThrows(AttributeConversionException.class, () -> {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("contractTyp", "PAM"); // should be "contractType"
+            ContractModel model = ContractModel.parse(map);
+        });    
     }
 
     @Test
     public void test_AttributeParser_PAM_MandatoryAttributes() {
-        thrown = ExpectedException.none();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("contractType", "PAM");
         map.put("calendar", "NoHolidayCalendar");
@@ -43,11 +42,11 @@ public class ContractModelTest {
         map.put("maturityDate", "2017-01-01T00:00:00");
         map.put("notionalPrincipal", "1000.0");
         ContractModel model = ContractModel.parse(map);
+        assertTrue(model.getAs("ContractType").equals(ContractTypeEnum.PAM));
     }
 
     @Test
     public void test_AttributeParser_PAM_AllAttributes() {
-        thrown = ExpectedException.none();
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("contractType", "PAM");
         map.put("calendar", "NC");
@@ -91,6 +90,7 @@ public class ContractModelTest {
         map.put("nextResetRate", "0.08");
         map.put("rateMultiplier", "1.1");
         ContractModel model = ContractModel.parse(map);
+        assertTrue(model.getAs("ContractType").equals(ContractTypeEnum.PAM));
     }
 
 }

@@ -5,35 +5,15 @@
  */
 package org.actus.time;
 
-import org.actus.AttributeConversionException;
-
 import java.time.LocalDateTime;
 
-import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PeriodCycleAdjusterTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void test_AttributeConversionException_cycle_1M() {
-        thrown.expect(AttributeConversionException.class);
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1M");
-    }
-    
-    @Test
-    public void test_AttributeConversionException_cycle_1Xshort() {
-        thrown.expect(AttributeConversionException.class);
-        PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1XL1");
-    }
-
     @Test
     public void test_plus_1Ms() {
-        thrown = ExpectedException.none();
         
         // instantiate adjuster
         PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1ML1");
@@ -48,7 +28,6 @@ public class PeriodCycleAdjusterTest {
 
     @Test
     public void test_minus_1Ms() {
-        thrown = ExpectedException.none();
         
         // instantiate adjuster
         PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1ML1");
@@ -63,7 +42,6 @@ public class PeriodCycleAdjusterTest {
 
     @Test
     public void test_plus_1Ws() {
-        thrown = ExpectedException.none();
         
         // instantiate adjuster
         PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1WL1");
@@ -78,7 +56,6 @@ public class PeriodCycleAdjusterTest {
 
     @Test
     public void test_minus_1Ws() {
-        thrown = ExpectedException.none();
         
         // instantiate adjuster
         PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1WL1");
@@ -93,7 +70,6 @@ public class PeriodCycleAdjusterTest {
 
     @Test
     public void test_plus_1Ys() {
-        thrown = ExpectedException.none();
         
         // instantiate adjuster
         PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1YL1");
@@ -108,7 +84,6 @@ public class PeriodCycleAdjusterTest {
 
     @Test
     public void test_minus_1Ys() {
-        thrown = ExpectedException.none();
         
         // instantiate adjuster
         PeriodCycleAdjuster adjuster = new PeriodCycleAdjuster("P1YL1");

@@ -5,29 +5,22 @@
  */
 package org.actus.conventions.businessday;
 
-import org.actus.AttributeConversionException;
 import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.time.calendar.NoHolidaysCalendar;
 import org.actus.time.calendar.MondayToFridayCalendar;
+import org.actus.types.BusinessDayConventionEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.actus.types.BusinessDayConventionEnum;
-import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BusinessDayAdjusterTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void test_SAME_NoHolidaysCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.NOS, new NoHolidaysCalendar());
         
         // list of unadjusted times
@@ -68,7 +61,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_SAME_MondayToFridayCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.NOS, new MondayToFridayCalendar());
         
                // list of unadjusted times
@@ -109,7 +101,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_SCF_NoHolidaysCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.SCF, new NoHolidaysCalendar());
         
         // list of unadjusted times
@@ -150,7 +141,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_SCF_MondayToFridayCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.SCF, new MondayToFridayCalendar());
         
         // list of unadjusted times
@@ -191,7 +181,6 @@ public class BusinessDayAdjusterTest {
     
         @Test
     public void test_CSF_NoHolidaysCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.CSF, new NoHolidaysCalendar());
         
         // list of unadjusted times
@@ -232,7 +221,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_CSF_MondayToFridayCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.CSF, new MondayToFridayCalendar());
         
         // list of unadjusted times
@@ -273,7 +261,6 @@ public class BusinessDayAdjusterTest {
     
         @Test
     public void test_SCMF_NoHolidaysCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.SCMF, new NoHolidaysCalendar());
         
         // list of unadjusted times
@@ -314,7 +301,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_SCMF_MondayToFridayCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.SCMF, new MondayToFridayCalendar());
         
         // list of unadjusted times
@@ -355,7 +341,6 @@ public class BusinessDayAdjusterTest {
     
             @Test
     public void test_CSMF_NoHolidaysCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.CSMF, new NoHolidaysCalendar());
         
         // list of unadjusted times
@@ -396,7 +381,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_CSMF_MondayToFridayCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.CSMF, new MondayToFridayCalendar());
         
         // list of unadjusted times
@@ -437,7 +421,6 @@ public class BusinessDayAdjusterTest {
     
                 @Test
     public void test_SCP_NoHolidaysCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.SCP, new NoHolidaysCalendar());
         
         // list of unadjusted times
@@ -478,7 +461,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_SCP_MondayToFridayCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.SCP, new MondayToFridayCalendar());
         
         // list of unadjusted times
@@ -517,9 +499,8 @@ public class BusinessDayAdjusterTest {
         assertEquals(expectedCalcTimes, shiftedCalcTimes);
     }
     
-                @Test
+    @Test
     public void test_CSP_NoHolidaysCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.CSP, new NoHolidaysCalendar());
         
         // list of unadjusted times
@@ -560,7 +541,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_CSP_MondayToFridayCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.CSP, new MondayToFridayCalendar());
         
         // list of unadjusted times
@@ -599,9 +579,8 @@ public class BusinessDayAdjusterTest {
         assertEquals(expectedCalcTimes, shiftedCalcTimes);
     }
     
-                @Test
+    @Test
     public void test_SCMP_NoHolidaysCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.SCMP, new NoHolidaysCalendar());
         
         // list of unadjusted times
@@ -642,7 +621,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_SCMP_MondayToFridayCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.SCMP, new MondayToFridayCalendar());
         
         // list of unadjusted times
@@ -683,7 +661,6 @@ public class BusinessDayAdjusterTest {
     
                 @Test
     public void test_CSMP_NoHolidaysCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.CSMP, new NoHolidaysCalendar());
         
         // list of unadjusted times
@@ -724,7 +701,6 @@ public class BusinessDayAdjusterTest {
 
     @Test
     public void test_CSMP_MondayToFridayCalendar() {
-        thrown = ExpectedException.none();
         BusinessDayAdjuster adjuster = new BusinessDayAdjuster(BusinessDayConventionEnum.CSMP, new MondayToFridayCalendar());
         
         // list of unadjusted times

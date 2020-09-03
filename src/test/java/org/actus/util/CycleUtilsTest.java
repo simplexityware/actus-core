@@ -10,26 +10,21 @@ import org.actus.AttributeConversionException;
 import java.time.DayOfWeek;
 import java.time.Period;
 
-import org.junit.Test;
-import org.junit.Rule;
-import org.junit.rules.ExpectedException;
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CycleUtilsTest {
 
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test
     public void test_AttributeConversionException_thrown() {
-        thrown.expect(AttributeConversionException.class);
-        Period period = CycleUtils.parsePeriod("XYZ");
+        assertThrows(AttributeConversionException.class, () -> 
+            CycleUtils.parsePeriod("XYZ"));
     }
 
     @Test
     public void test_AttributeConversionException_notthrown() {
-        thrown = ExpectedException.none();
-        Period period = CycleUtils.parsePeriod("P1ML1");
+        assertEquals(CycleUtils.parsePeriod("P1ML1"),Period.ofMonths(1));
     }
 
     @Test
@@ -59,14 +54,14 @@ public class CycleUtilsTest {
 
     @Test
     public void test_parsePeriod_1X_exception() {
-        thrown.expect(AttributeConversionException.class);
-        Period period = CycleUtils.parsePeriod("1XL1");
+        assertThrows(AttributeConversionException.class, () -> 
+            CycleUtils.parsePeriod("P1XL1"));
     }
 
     @Test
     public void test_parsePeriod_0p1M_exception() {
-        thrown.expect(AttributeConversionException.class);
-        Period period = CycleUtils.parsePeriod("0.5ML1");
+        assertThrows(AttributeConversionException.class, () -> 
+            CycleUtils.parsePeriod("P0.5ML1"));
     }
 
     @Test
@@ -80,9 +75,9 @@ public class CycleUtilsTest {
     }
 
     @Test
-    public void test_parsePosition_0p1_exception() {
-        thrown.expect(AttributeConversionException.class);
-        int position = CycleUtils.parsePosition("FriL1");
+    public void test_parsePosition_Fri_exception() {
+        assertThrows(AttributeConversionException.class, () -> 
+            CycleUtils.parsePeriod("FriL1"));
     }
 
     @Test
@@ -142,8 +137,8 @@ public class CycleUtilsTest {
 
     @Test
     public void test_parseStub_exception() {
-        thrown.expect(AttributeConversionException.class);
-        char stub = CycleUtils.parseStub("P1MLx");
+        assertThrows(AttributeConversionException.class, () -> 
+            CycleUtils.parseStub("P1MLx"));
     }
 
 }
