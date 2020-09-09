@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ public class CallMoneyTest {
 
         // go through test-id and perform test
         // Note: skipping tests with currently unsupported features
-        return testIds.stream().filter(testId -> !List.of("clm07","clm08","clm09","clm13","clm14").contains(testId)).map(testId -> {
+        return testIds.stream().filter(testId -> !Arrays.asList("clm07","clm08","clm09","clm13","clm14").contains(testId)).map(testId -> {
             // extract test for test ID
             TestData test = tests.get(testId);
 
