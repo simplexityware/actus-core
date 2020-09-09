@@ -9,6 +9,7 @@ import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
+import org.actus.types.ContractTypeEnum;
 
 import java.util.Set;
 import java.util.Arrays;
@@ -18,10 +19,10 @@ import java.time.LocalDateTime;
  * A utility class for Annuity
  * <p>
  */
-public class AnnuityUtils {
+public class RedemptionUtils {
 
     // this is a pure utility class
-	private AnnuityUtils() {
+	private RedemptionUtils() {
 	}
 
 	/**
@@ -30,13 +31,12 @@ public class AnnuityUtils {
 	 * @param model
 	 *            the model carrying the contract attributes
 	 * @param state
-	 * @return the annuity payment amount
+	 * 			  the current state as per which to calculate the redemption amount
+	 * @return the redemption amount
 	 */
-	public static double annuityPayment(ContractModelProvider model, StateSpace state) {
+	public static double redemptionAmount(ContractModelProvider model, StateSpace state) {
 
-		Double annuityPayment;
-
-
+		Double redemptionAmount;
 		LocalDateTime statusDate = state.statusDate;
 		LocalDateTime maturity = (model.getAs("AmortizationDate")==null)? state.maturityDate : model.getAs("AmortizationDate");
 		double accruedInterest = state.accruedInterest;
@@ -50,19 +50,30 @@ public class AnnuityUtils {
 		Set<LocalDateTime> eventTimes = ScheduleFactory.createSchedule(model.getAs("CycleAnchorDateOfPrincipalRedemption"), maturity, model.getAs("CycleOfPrincipalRedemption"), model.getAs("EndOfMonthConvention"),true);
 		eventTimes.removeIf(d -> d.isBefore(statusDate));
 		eventTimes.remove(statusDate);
-		LocalDateTime[] eventTimesSorted = eventTimes.toArray(new LocalDateTime[eventTimes.size()]);
-		Arrays.sort(eventTimesSorted);
 
-		// compute annuityPayment
-		int lb = 1;
-		int ub = eventTimesSorted.length;
-		double scale = outstandingNotional + accruedInterest + dayCounter.dayCountFraction(state.statusDate, eventTimesSorted[0])*interestRate*outstandingNotional;
-		double sum = sum(lb, ub, eventTimesSorted, interestRate, dayCounter);
-		double frac = product(lb, ub, eventTimesSorted, interestRate, dayCounter) / (1.0 + sum);
-		annuityPayment = scale * frac;
+		// compute redemption amount for different contracts
+		switch(model.<ContractTypeEnum>getAs("ContractType")) {
+			case LAM:
+				redemptionAmount = model.<Double>getAs("NotionalPrincipal") / eventTimes.size();
+				break;
+
+			case ANN:
+			case NAM:
+				LocalDateTime[] eventTimesSorted = eventTimes.toArray(new LocalDateTime[eventTimes.size()]);
+				Arrays.sort(eventTimesSorted);
+				int lb = 1;
+				int ub = eventTimesSorted.length;
+				double scale = outstandingNotional + accruedInterest + dayCounter.dayCountFraction(state.statusDate, eventTimesSorted[0])*interestRate*outstandingNotional;
+				double sum = sum(lb, ub, eventTimesSorted, interestRate, dayCounter);
+				double frac = product(lb, ub, eventTimesSorted, interestRate, dayCounter) / (1.0 + sum);
+				redemptionAmount = scale * frac;
+				break;
+			default:
+				redemptionAmount = 0.0;
+		}
 
 		// finally, return the annuity payment
-		return annuityPayment;
+		return redemptionAmount;
 	}
 
 	// private method

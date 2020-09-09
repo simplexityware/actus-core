@@ -23,6 +23,7 @@ import org.actus.types.EventType;
 import org.actus.types.InterestCalculationBase;
 import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
+import org.actus.util.RedemptionUtils;
 
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -372,7 +373,7 @@ public final class LinearAmortizer {
 
         // init next principal redemption payment amount (can be null!)
         if (CommonUtils.isNull(model.getAs("NextPrincipalRedemptionPayment"))) {
-            LocalDateTime s ;
+            /*LocalDateTime s ;
             LocalDateTime pranx = model.getAs("CycleAnchorDateOfPrincipalRedemption");
             LocalDateTime statusDate = model.getAs("StatusDate");
             Period prcl = CycleUtils.parsePeriod(model.getAs("CycleOfPrincipalRedemption"));
@@ -407,7 +408,8 @@ public final class LinearAmortizer {
                                     / dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(s), timeAdjuster.shiftCalcTime(s.plus(prcl)))
                             )
                     , -1.0)
-            ;
+            ;*/
+            states.nextPrincipalRedemptionPayment = RedemptionUtils.redemptionAmount(model, states);
         } else {
             states.nextPrincipalRedemptionPayment = model.<Double>getAs("NextPrincipalRedemptionPayment");
         }

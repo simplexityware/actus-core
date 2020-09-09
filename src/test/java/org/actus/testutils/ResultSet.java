@@ -91,13 +91,13 @@ public class ResultSet {
     }
 
     public String toString() {
-        return "Date: " + eventDate + ", " +
-            "Type: " + eventType + ", " +
-            "Payoff: " + payoff + ", " +
-            "Currency: " + currency + "," +
-            "Notional: " + notionalPrincipal + ", " +
-            "Rate: " + nominalInterestRate + ", " +
-            "Accrued: " + accruedInterest;
+        return "eventDate: " + eventDate + ", " +
+            "eventType: " + eventType + ", " +
+            "payoff: " + payoff + ", " +
+            "currency: " + currency + "," +
+            "notionalPrincipal: " + notionalPrincipal + ", " +
+            "nominalInterestRate: " + nominalInterestRate + ", " +
+            "accruedInterest: " + accruedInterest;
     }
 
     // for assertEquals in JUnit testing

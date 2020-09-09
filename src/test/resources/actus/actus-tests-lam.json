@@ -8442,6 +8442,854 @@
                 "accruedInterest": 0
             }
         ]
+    },
+    "lam27": {
+        "identifier": "lam27",
+        "terms": {
+            "contractType": "LAM",
+            "contractID": "lam27",
+            "contractRole": "RPA",
+            "statusDate": "2012-12-30T00:00:00",
+            "contractDealDate": "2012-12-28T00:00:00",
+            "initialExchangeDate": "2013-01-01T00:00:00",
+            "maturityDate": "2013-11-01T00:00:00",
+            "notionalPrincipal": " 5000",
+            "cycleAnchorDateOfPrincipalRedemption": "2013-02-01T00:00:00",
+            "dayCountConvention": "A365",
+            "nominalInterestRate": " 0.08",
+            "currency": "USD",
+            "cycleOfPrincipalRedemption": "P1ML0",
+            "cycleAnchorDateOfInterestPayment": "2013-02-01T00:00:00",
+            "cycleOfInterestPayment": "P1ML0",
+            "endOfMonthConvention": "SD",
+            "interestCalculationBase": "NT"
+        },
+        "to": "2013-11-01T00:00:00",
+        "dataObserved": {
+
+        },
+        "eventsObserved": [
+
+        ],
+        "results": [
+            {
+              "eventDate": "2013-01-01T00:00",
+              "eventType": "IED",
+              "payoff": -5000,
+              "currency": "USD",
+              "notionalPrincipal": 5000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-02-01T00:00",
+              "eventType": "PR",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 4500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 33.97260273972603
+            },
+            {
+              "eventDate": "2013-02-01T00:00",
+              "eventType": "IP",
+              "payoff": 33.97260273972603,
+              "currency": "USD",
+              "notionalPrincipal": 4500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-03-01T00:00",
+              "eventType": "PR",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 4000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 27.616438356164384
+            },
+            {
+              "eventDate": "2013-03-01T00:00",
+              "eventType": "IP",
+              "payoff": 27.616438356164384,
+              "currency": "USD",
+              "notionalPrincipal": 4000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-04-01T00:00",
+              "eventType": "PR",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 3500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 27.17808219178082
+            },
+            {
+              "eventDate": "2013-04-01T00:00",
+              "eventType": "IP",
+              "payoff": 27.17808219178082,
+              "currency": "USD",
+              "notionalPrincipal": 3500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-05-01T00:00",
+              "eventType": "PR",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 3000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 23.013698630136986
+            },
+            {
+              "eventDate": "2013-05-01T00:00",
+              "eventType": "IP",
+              "payoff": 23.013698630136986,
+              "currency": "USD",
+              "notionalPrincipal": 3000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-06-01T00:00",
+              "eventType": "PR",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 2500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 20.383561643835616
+            },
+            {
+              "eventDate": "2013-06-01T00:00",
+              "eventType": "IP",
+              "payoff": 20.383561643835616,
+              "currency": "USD",
+              "notionalPrincipal": 2500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-07-01T00:00",
+              "eventType": "PR",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 2000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 16.43835616438356
+            },
+            {
+              "eventDate": "2013-07-01T00:00",
+              "eventType": "IP",
+              "payoff": 16.43835616438356,
+              "currency": "USD",
+              "notionalPrincipal": 2000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-08-01T00:00",
+              "eventType": "PR",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 1500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 13.58904109589041
+            },
+            {
+              "eventDate": "2013-08-01T00:00",
+              "eventType": "IP",
+              "payoff": 13.58904109589041,
+              "currency": "USD",
+              "notionalPrincipal": 1500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-09-01T00:00",
+              "eventType": "PR",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 1000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 10.191780821917808
+            },
+            {
+              "eventDate": "2013-09-01T00:00",
+              "eventType": "IP",
+              "payoff": 10.191780821917808,
+              "currency": "USD",
+              "notionalPrincipal": 1000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-10-01T00:00",
+              "eventType": "PR",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 6.575342465753424
+            },
+            {
+              "eventDate": "2013-10-01T00:00",
+              "eventType": "IP",
+              "payoff": 6.575342465753424,
+              "currency": "USD",
+              "notionalPrincipal": 500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-11-01T00:00",
+              "eventType": "IP",
+              "payoff": 3.397260273972603,
+              "currency": "USD",
+              "notionalPrincipal": 500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-11-01T00:00",
+              "eventType": "MD",
+              "payoff": 500,
+              "currency": "USD",
+              "notionalPrincipal": 0,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            }
+          ]
+    },
+    "lam28": {
+        "identifier": "lam28",
+        "terms": {
+            "contractType": "LAM",
+            "contractID": "lam28",
+            "contractRole": "RPL",
+            "statusDate": "2012-12-30T00:00:00",
+            "contractDealDate": "2012-12-28T00:00:00",
+            "initialExchangeDate": "2013-01-01T00:00:00",
+            "maturityDate": "2013-11-01T00:00:00",
+            "notionalPrincipal": " 5000",
+            "cycleAnchorDateOfPrincipalRedemption": "2013-02-01T00:00:00",
+            "dayCountConvention": "A365",
+            "nominalInterestRate": " 0.08",
+            "currency": "USD",
+            "cycleOfPrincipalRedemption": "P1ML0",
+            "cycleAnchorDateOfInterestPayment": "2013-02-01T00:00:00",
+            "cycleOfInterestPayment": "P1ML0",
+            "endOfMonthConvention": "SD",
+            "interestCalculationBase": "NT"
+        },
+        "to": "2013-11-01T00:00:00",
+        "dataObserved": {
+
+        },
+        "eventsObserved": [
+
+        ],
+        "results": [
+            {
+              "eventDate": "2013-01-01T00:00",
+              "eventType": "IED",
+              "payoff": 5000,
+              "currency": "USD",
+              "notionalPrincipal": -5000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-02-01T00:00",
+              "eventType": "PR",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": -4500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": -33.97260273972603
+            },
+            {
+              "eventDate": "2013-02-01T00:00",
+              "eventType": "IP",
+              "payoff": -33.97260273972603,
+              "currency": "USD",
+              "notionalPrincipal": -4500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-03-01T00:00",
+              "eventType": "PR",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": -4000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": -27.616438356164384
+            },
+            {
+              "eventDate": "2013-03-01T00:00",
+              "eventType": "IP",
+              "payoff": -27.616438356164384,
+              "currency": "USD",
+              "notionalPrincipal": -4000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-04-01T00:00",
+              "eventType": "PR",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": -3500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": -27.17808219178082
+            },
+            {
+              "eventDate": "2013-04-01T00:00",
+              "eventType": "IP",
+              "payoff": -27.17808219178082,
+              "currency": "USD",
+              "notionalPrincipal": -3500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-05-01T00:00",
+              "eventType": "PR",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": -3000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": -23.013698630136986
+            },
+            {
+              "eventDate": "2013-05-01T00:00",
+              "eventType": "IP",
+              "payoff": -23.013698630136986,
+              "currency": "USD",
+              "notionalPrincipal": -3000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-06-01T00:00",
+              "eventType": "PR",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": -2500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": -20.383561643835616
+            },
+            {
+              "eventDate": "2013-06-01T00:00",
+              "eventType": "IP",
+              "payoff": -20.383561643835616,
+              "currency": "USD",
+              "notionalPrincipal": -2500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-07-01T00:00",
+              "eventType": "PR",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": -2000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": -16.43835616438356
+            },
+            {
+              "eventDate": "2013-07-01T00:00",
+              "eventType": "IP",
+              "payoff": -16.43835616438356,
+              "currency": "USD",
+              "notionalPrincipal": -2000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-08-01T00:00",
+              "eventType": "PR",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": -1500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": -13.58904109589041
+            },
+            {
+              "eventDate": "2013-08-01T00:00",
+              "eventType": "IP",
+              "payoff": -13.58904109589041,
+              "currency": "USD",
+              "notionalPrincipal": -1500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-09-01T00:00",
+              "eventType": "PR",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": -1000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": -10.191780821917808
+            },
+            {
+              "eventDate": "2013-09-01T00:00",
+              "eventType": "IP",
+              "payoff": -10.191780821917808,
+              "currency": "USD",
+              "notionalPrincipal": -1000,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-10-01T00:00",
+              "eventType": "PR",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": -500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": -6.575342465753424
+            },
+            {
+              "eventDate": "2013-10-01T00:00",
+              "eventType": "IP",
+              "payoff": -6.575342465753424,
+              "currency": "USD",
+              "notionalPrincipal": -500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-11-01T00:00",
+              "eventType": "IP",
+              "payoff": -3.397260273972603,
+              "currency": "USD",
+              "notionalPrincipal": -500,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2013-11-01T00:00",
+              "eventType": "MD",
+              "payoff": -500,
+              "currency": "USD",
+              "notionalPrincipal": 0,
+              "nominalInterestRate": 0.08,
+              "accruedInterest": 0
+            }
+          ]
+    },
+    "lam29": {
+        "identifier": "lam29",
+        "terms": {
+            "contractType": "LAM",
+            "statusDate": "2019-12-31T00:00:00",
+            "contractRole": "RPA",
+            "contractID": "lam29",
+            "cycleAnchorDateOfInterestPayment": "2021-01-01T00:00:00",
+            "cycleOfInterestPayment": "P1YL1",
+            "nominalInterestRate": 0.05,
+            "dayCountConvention": "30E360",
+            "currency": "CHF",
+            "contractDealDate": "2019-12-31T00:00:00",
+            "initialExchangeDate": "2020-01-01T00:00:00",
+            "premiumDiscountAtIED": 0,
+            "maturityDate": "2025-01-01T00:00:00",
+            "notionalPrincipal": 10000,
+            "cycleAnchorDateOfPrincipalRedemption": "2021-01-01T00:00:00",
+            "cycleOfPrincipalRedemption": "P1YL1",
+            "calendar": "NC"
+        },
+        "to": "2025-01-01T00:00:00",
+        "dataObserved": {
+
+        },
+        "eventsObserved": [
+
+        ],
+        "results": [
+            {
+              "eventDate": "2020-01-01T00:00",
+              "eventType": "IED",
+              "payoff": -10000,
+              "currency": "CHF",
+              "notionalPrincipal": 10000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2021-01-01T00:00",
+              "eventType": "PR",
+              "payoff": 2000,
+              "currency": "CHF",
+              "notionalPrincipal": 8000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 500
+            },
+            {
+              "eventDate": "2021-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 500,
+              "currency": "CHF",
+              "notionalPrincipal": 8000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2022-01-01T00:00",
+              "eventType": "PR",
+              "payoff": 2000,
+              "currency": "CHF",
+              "notionalPrincipal": 6000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 400
+            },
+            {
+              "eventDate": "2022-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 400,
+              "currency": "CHF",
+              "notionalPrincipal": 6000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2023-01-01T00:00",
+              "eventType": "PR",
+              "payoff": 2000,
+              "currency": "CHF",
+              "notionalPrincipal": 4000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 300
+            },
+            {
+              "eventDate": "2023-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 300,
+              "currency": "CHF",
+              "notionalPrincipal": 4000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2024-01-01T00:00",
+              "eventType": "PR",
+              "payoff": 2000,
+              "currency": "CHF",
+              "notionalPrincipal": 2000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 200
+            },
+            {
+              "eventDate": "2024-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 200,
+              "currency": "CHF",
+              "notionalPrincipal": 2000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2025-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 100,
+              "currency": "CHF",
+              "notionalPrincipal": 2000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2025-01-01T00:00",
+              "eventType": "MD",
+              "payoff": 2000,
+              "currency": "CHF",
+              "notionalPrincipal": 0,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            }
+          ]
+    },
+    "lam30": {
+        "identifier": "lam30",
+        "terms": {
+            "contractType": "LAM",
+            "statusDate": "2019-12-31T00:00:00",
+            "contractRole": "RPL",
+            "contractID": "lam30",
+            "cycleAnchorDateOfInterestPayment": "2021-01-01T00:00:00",
+            "cycleOfInterestPayment": "P1YL1",
+            "nominalInterestRate": 0.05,
+            "dayCountConvention": "30E360",
+            "currency": "CHF",
+            "contractDealDate": "2019-12-31T00:00:00",
+            "initialExchangeDate": "2020-01-01T00:00:00",
+            "premiumDiscountAtIED": 0,
+            "maturityDate": "2025-01-01T00:00:00",
+            "notionalPrincipal": 10000,
+            "cycleAnchorDateOfPrincipalRedemption": "2021-01-01T00:00:00",
+            "cycleOfPrincipalRedemption": "P1YL1",
+            "calendar": "NC"
+        },
+        "to": "2025-01-01T00:00:00",
+        "dataObserved": {
+
+        },
+        "eventsObserved": [
+
+        ],
+        "results": [
+            {
+              "eventDate": "2020-01-01T00:00",
+              "eventType": "IED",
+              "payoff": 10000,
+              "currency": "CHF",
+              "notionalPrincipal": -10000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2021-01-01T00:00",
+              "eventType": "PR",
+              "payoff": -2000,
+              "currency": "CHF",
+              "notionalPrincipal": -8000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": -500
+            },
+            {
+              "eventDate": "2021-01-01T00:00",
+              "eventType": "IP",
+              "payoff": -500,
+              "currency": "CHF",
+              "notionalPrincipal": -8000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2022-01-01T00:00",
+              "eventType": "PR",
+              "payoff": -2000,
+              "currency": "CHF",
+              "notionalPrincipal": -6000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": -400
+            },
+            {
+              "eventDate": "2022-01-01T00:00",
+              "eventType": "IP",
+              "payoff": -400,
+              "currency": "CHF",
+              "notionalPrincipal": -6000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2023-01-01T00:00",
+              "eventType": "PR",
+              "payoff": -2000,
+              "currency": "CHF",
+              "notionalPrincipal": -4000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": -300
+            },
+            {
+              "eventDate": "2023-01-01T00:00",
+              "eventType": "IP",
+              "payoff": -300,
+              "currency": "CHF",
+              "notionalPrincipal": -4000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2024-01-01T00:00",
+              "eventType": "PR",
+              "payoff": -2000,
+              "currency": "CHF",
+              "notionalPrincipal": -2000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": -200
+            },
+            {
+              "eventDate": "2024-01-01T00:00",
+              "eventType": "IP",
+              "payoff": -200,
+              "currency": "CHF",
+              "notionalPrincipal": -2000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2025-01-01T00:00",
+              "eventType": "IP",
+              "payoff": -100,
+              "currency": "CHF",
+              "notionalPrincipal": -2000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2025-01-01T00:00",
+              "eventType": "MD",
+              "payoff": -2000,
+              "currency": "CHF",
+              "notionalPrincipal": 0,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            }
+          ]
+    },
+    "lam31": {
+        "identifier": "lam31",
+        "terms": {
+            "contractType": "LAM",
+            "statusDate": "2019-12-31T00:00:00",
+            "contractRole": "RPA",
+            "contractID": "lam31",
+            "cycleAnchorDateOfInterestPayment": "2021-01-01T00:00:00",
+            "cycleOfInterestPayment": "P1YL1",
+            "nominalInterestRate": 0.05,
+            "dayCountConvention": "30E360",
+            "currency": "CHF",
+            "contractDealDate": "2019-12-31T00:00:00",
+            "initialExchangeDate": "2020-01-01T00:00:00",
+            "premiumDiscountAtIED": 0,
+            "maturityDate": "2025-06-01T00:00:00",
+            "notionalPrincipal": 10000,
+            "cycleAnchorDateOfPrincipalRedemption": "2021-01-01T00:00:00",
+            "cycleOfPrincipalRedemption": "P1YL1",
+            "calendar": "NC"
+        },
+        "to": "2025-06-01T00:00:00",
+        "dataObserved": {
+
+        },
+        "eventsObserved": [
+
+        ],
+        "results": [
+            {
+              "eventDate": "2020-01-01T00:00",
+              "eventType": "IED",
+              "payoff": -10000,
+              "currency": "CHF",
+              "notionalPrincipal": 10000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2021-01-01T00:00",
+              "eventType": "PR",
+              "payoff": 1666.6666666666667,
+              "currency": "CHF",
+              "notionalPrincipal": 8333.333333333334,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 500
+            },
+            {
+              "eventDate": "2021-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 500,
+              "currency": "CHF",
+              "notionalPrincipal": 8333.333333333334,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2022-01-01T00:00",
+              "eventType": "PR",
+              "payoff": 1666.6666666666667,
+              "currency": "CHF",
+              "notionalPrincipal": 6666.666666666667,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 416.66666666666674
+            },
+            {
+              "eventDate": "2022-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 416.66666666666674,
+              "currency": "CHF",
+              "notionalPrincipal": 6666.666666666667,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2023-01-01T00:00",
+              "eventType": "PR",
+              "payoff": 1666.6666666666667,
+              "currency": "CHF",
+              "notionalPrincipal": 5000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 333.33333333333337
+            },
+            {
+              "eventDate": "2023-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 333.33333333333337,
+              "currency": "CHF",
+              "notionalPrincipal": 5000,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2024-01-01T00:00",
+              "eventType": "PR",
+              "payoff": 1666.6666666666667,
+              "currency": "CHF",
+              "notionalPrincipal": 3333.333333333333,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 250
+            },
+            {
+              "eventDate": "2024-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 250,
+              "currency": "CHF",
+              "notionalPrincipal": 3333.333333333333,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2025-01-01T00:00",
+              "eventType": "PR",
+              "payoff": 1666.6666666666667,
+              "currency": "CHF",
+              "notionalPrincipal": 1666.6666666666663,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 166.66666666666666
+            },
+            {
+              "eventDate": "2025-01-01T00:00",
+              "eventType": "IP",
+              "payoff": 166.66666666666666,
+              "currency": "CHF",
+              "notionalPrincipal": 1666.6666666666663,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2025-06-01T00:00",
+              "eventType": "IP",
+              "payoff": 34.72222222222222,
+              "currency": "CHF",
+              "notionalPrincipal": 1666.6666666666663,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            },
+            {
+              "eventDate": "2025-06-01T00:00",
+              "eventType": "MD",
+              "payoff": 1666.6666666666663,
+              "currency": "CHF",
+              "notionalPrincipal": 0,
+              "nominalInterestRate": 0.05,
+              "accruedInterest": 0
+            }
+          ]
     }
 }
 

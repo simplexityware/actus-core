@@ -21,7 +21,7 @@ import org.actus.types.EventType;
 import org.actus.types.InterestCalculationBase;
 import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
-import org.actus.util.AnnuityUtils;
+import org.actus.util.RedemptionUtils;
 import org.actus.functions.pam.*;
 import org.actus.functions.lam.*;
 import org.actus.functions.nam.*;
@@ -425,7 +425,7 @@ public final class Annuity {
             if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
                 // fixed at initial PRF event
             }else{
-                states.nextPrincipalRedemptionPayment = AnnuityUtils.annuityPayment(model, states);
+                states.nextPrincipalRedemptionPayment = RedemptionUtils.redemptionAmount(model, states);
             }
 
         }else {
