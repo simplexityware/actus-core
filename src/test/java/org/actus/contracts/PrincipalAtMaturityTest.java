@@ -62,6 +62,7 @@ public class PrincipalAtMaturityTest {
                 results.setNotionalPrincipal(e.states().notionalPrincipal);
                 results.setNominalInterestRate(e.states().nominalInterestRate);
                 results.setAccruedInterest(e.states().accruedInterest);
+                if(testId.equals("pam18-1")) System.out.println(results);
                 return results;
             }).collect(Collectors.toList());
 
