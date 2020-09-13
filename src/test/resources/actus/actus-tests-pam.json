@@ -2686,8 +2686,102 @@
     "pam19": {
         "identifier": "pam19",
         "terms": {
+            "calendar": "MF",
+            "businessDayConvention": "SCF",
             "contractType": "PAM",
+            "statusDate": "2012-12-31T00:00:00",
+            "contractRole": "RPA",
             "contractID": "pam19",
+            "cycleAnchorDateOfInterestPayment": "2013-01-01T00:00:00",
+            "cycleOfInterestPayment": "P6ML1",
+            "nominalInterestRate": 0.05,
+            "dayCountConvention": "30E360",
+            "capitalizationEndDate": "2013-07-01T00:00:00",
+            "currency": "CHF",
+            "contractDealDate": "2012-12-31T00:00:00",
+            "initialExchangeDate": "2013-01-01T00:00:00",
+            "premiumDiscountAtIED": 0,
+            "maturityDate": "2014-12-31T00:00:00",
+            "notionalPrincipal": 1000
+        },
+        "to": "",
+        "dataObserved": {
+
+        },
+        "eventsObserved": [
+
+        ],
+        "results": [
+            {
+                "eventType": "IED",
+                "eventDate": "2013-01-01T00:00",
+                "payoff": -1000.0,
+                "currency": "CHF",
+                "notionalPrincipal": 1000.0,
+                "nominalInterestRate": 0.05,
+                "accruedInterest": 0.0
+            },
+            {
+                "eventType": "IPCI",
+                "eventDate": "2013-01-01T00:00",
+                "payoff": 0.0,
+                "currency": "CHF",
+                "notionalPrincipal": 1000.0,
+                "nominalInterestRate": 0.05,
+                "accruedInterest": 0.0
+            },
+            {
+                "eventType": "IPCI",
+                "eventDate": "2013-07-01T00:00",
+                "payoff": 0.0,
+                "currency": "CHF",
+                "notionalPrincipal": 1025.0,
+                "nominalInterestRate": 0.05,
+                "accruedInterest": 0.0
+            },
+            {
+                "eventType": "IP",
+                "eventDate": "2014-01-01T00:00",
+                "payoff": 25.625,
+                "currency": "CHF",
+                "notionalPrincipal": 1025.0,
+                "nominalInterestRate": 0.05,
+                "accruedInterest": 0.0
+            },
+            {
+                "eventType": "IP",
+                "eventDate": "2014-07-01T00:00",
+                "payoff": 25.625,
+                "currency": "CHF",
+                "notionalPrincipal": 1025.0,
+                "nominalInterestRate": 0.05,
+                "accruedInterest": 0.0
+            },
+            {
+                "eventType": "IP",
+                "eventDate": "2014-12-31T00:00",
+                "payoff": 25.48263888888889,
+                "currency": "CHF",
+                "notionalPrincipal": 1025.0,
+                "nominalInterestRate": 0.05,
+                "accruedInterest": 0.0
+            },
+            {
+                "eventType": "MD",
+                "eventDate": "2014-12-31T00:00",
+                "payoff": 1025.0,
+                "currency": "CHF",
+                "notionalPrincipal": 0.0,
+                "nominalInterestRate": 0.05,
+                "accruedInterest": 0.0
+            }
+        ]
+    },
+    "pam20": {
+        "identifier": "pam20",
+        "terms": {
+            "contractType": "PAM",
+            "contractID": "pam20",
             "statusDate": "2012-12-30T00:00:00",
             "contractDealDate": "2012-01-30T00:00:00",
             "currency": "USD",
@@ -2816,11 +2910,11 @@
             }
         ]
     },
-    "pam20": {
-        "identifier": "pam20",
+    "pam21": {
+        "identifier": "pam21",
         "terms": {
             "contractType": "PAM",
-            "contractID": "pam20",
+            "contractID": "pam21",
             "statusDate": "2012-12-30T00:00:00",
             "contractDealDate": "2012-12-28T00:00:00",
             "currency": "USD",
@@ -3041,11 +3135,11 @@
             }
         ]
     },
-    "pam21": {
-        "identifier": "pam21",
+    "pam22": {
+        "identifier": "pam22",
         "terms": {
             "contractType": "PAM",
-            "contractID": "pam21",
+            "contractID": "pam22",
             "statusDate": "2012-12-30T00:00:00",
             "contractDealDate": "2012-12-28T00:00:00",
             "currency": "USD",
@@ -3266,11 +3360,11 @@
             }
         ]
     },
-    "pam22": {
-        "identifier": "pam22",
+    "pam23": {
+        "identifier": "pam23",
         "terms": {
             "contractType": "PAM",
-            "contractID": "pam22",
+            "contractID": "pam23",
             "statusDate": "2012-12-30T00:00:00",
             "contractDealDate": "2012-12-28T00:00:00",
             "currency": "USD",
@@ -3491,11 +3585,11 @@
             }
         ]
     },
-    "pam23": {
-        "identifier": "pam23",
+    "pam24": {
+        "identifier": "pam24",
         "terms": {
             "contractType": "PAM",
-            "contractID": "pam23",
+            "contractID": "pam24",
             "statusDate": "2012-12-30T00:00:00",
             "contractDealDate": "2012-12-28T00:00:00",
             "currency": "USD",
@@ -3755,11 +3849,11 @@
             }
         ]
     },
-    "pam24": {
-        "identifier": "pam24",
+    "pam25": {
+        "identifier": "pam25",
         "terms": {
             "contractType": "PAM",
-            "contractID": "pam24",
+            "contractID": "pam25",
             "statusDate": "2012-12-30T00:00:00",
             "contractDealDate": "2012-12-28T00:00:00",
             "currency": "USD",

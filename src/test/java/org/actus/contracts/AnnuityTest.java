@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class AnnuityTest {
         // go through test-id and perform test
         // Note: skipping tests with currently unsupported features
         //       ann09: PRANX=IED and PRNXT=null -> cannot add PRF event at PRANX-1D
-        return testIds.stream().filter(testId -> !List.of("ann09").contains(testId)).map(testId -> {
+        return testIds.stream().filter(testId -> !Arrays.asList("ann09").contains(testId)).map(testId -> {
             // extract test for test ID
             TestData test = tests.get(testId);
 
