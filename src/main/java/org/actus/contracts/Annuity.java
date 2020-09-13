@@ -149,35 +149,25 @@ public final class Annuity {
             );
             // adapt if interest capitalization set
             if (!CommonUtils.isNull(model.getAs("CapitalizationEndDate"))) {
+                // remove IP and add capitalization event at IPCED instead
+                ContractEvent capitalizationEnd = EventFactory.createEvent(model.getAs("CapitalizationEndDate"), 
+                                                        EventType.IPCI,
+                                                        model.getAs("Currency"),
+                                                        new POF_IPCI_PAM(), stf_ipci, 
+                                                        model.getAs("BusinessDayConvention"), 
+                                                        model.getAs("ContractID"));
+                interestEvents.removeIf(e -> e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) == 0);
+                interestEvents.add(capitalizationEnd);
+
                 // for all events with time <= IPCED && type == "IP" do
                 // change type to IPCI and payoff/state-trans functions
-                ContractEvent capitalizationEnd = EventFactory.createEvent(
-                        model.getAs("CapitalizationEndDate"),
-                        EventType.IPCI,
-                        model.getAs("Currency"),
-                        new POF_IPCI_PAM(),
-                        stf_ipci,
-                        model.getAs("BusinessDayConvention"),
-                        model.getAs("ContractID")
-                );
                 interestEvents.forEach(e -> {
-                    if (e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) == -1) {
+                    if (e.eventType().equals(EventType.IP) && e.compareTo(capitalizationEnd) != 1) {
                         e.eventType(EventType.IPCI);
                         e.fPayOff(new POF_IPCI_PAM());
                         e.fStateTrans(stf_ipci);
                     }
                 });
-                // also, remove any IP event exactly at IPCED and replace with an IPCI event
-                interestEvents.remove(EventFactory.createEvent(
-                        model.getAs("CapitalizationEndDate"),
-                        EventType.IP,
-                        model.getAs("Currency"),
-                        new POF_AD_PAM(),
-                        new STF_AD_PAM(),
-                        model.getAs("BusinessDayConvention"),
-                        model.getAs("ContractID")
-                ));
-                interestEvents.add(capitalizationEnd);
             }
             events.addAll(interestEvents);
 
