@@ -81,7 +81,7 @@ public class ContractModel implements ContractModelProvider {
      * be mandatory conditional to the value of other attributes. Be referred to the ACTUS data dictionary
      * for details.
      *
-     * @param attributes an external, raw (String) data representation of the set of attributes
+     * @param contractAttributes an external, raw (String) data representation of the set of attributes
      * @return an instance of ContractModel containing the attributes provided with the method argument
      * @throws AttributeConversionException if an attribute cannot be parsed to its data type
      */
