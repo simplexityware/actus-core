@@ -575,7 +575,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("Currency", attributes.get("currency"));
                         map.put("InitialExchangeDate", LocalDateTime.parse(attributes.get("initialExchangeDate")));
                         map.put("PremiumDiscountAtIED", (CommonUtils.isNull(attributes.get("premiumDiscountAtIED"))) ? 0.0 : Double.parseDouble(attributes.get("premiumDiscountAtIED")));
-                        map.put("MaturityDate", LocalDateTime.parse(attributes.get("maturityDate")));
+                        map.put("MaturityDate", (CommonUtils.isNull(attributes.get("maturityDate")) ? null : LocalDateTime.parse(attributes.get("maturityDate"))));
                         map.put("NotionalPrincipal", Double.parseDouble(attributes.get("notionalPrincipal")));
                         map.put("ArrayCycleAnchorDateOfPrincipalRedemption", attributes.get("arrayCycleAnchorDateOfPrincipalRedemption"));
                         map.put("ArrayCycleOfPrincipalRedemption", attributes.get("arrayCycleOfPrincipalRedemption"));
