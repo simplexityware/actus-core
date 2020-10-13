@@ -99,20 +99,22 @@ public final class ExoticLinearAmortizer {
 
 			// parse array-type attributes
 			LocalDateTime[] prAnchor = Arrays
-					.asList(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption").toString().split(",")).stream()
-					.map(d -> LocalDateTime.parse(d)).toArray(LocalDateTime[]::new);
-			String[] prCycle = Arrays.asList(model.getAs("ArrayCycleOfPrincipalRedemption").toString().split(","))
+					.asList(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream()
+					.map(d -> LocalDateTime.parse(d.trim())).toArray(LocalDateTime[]::new);
+			String[] prCycle = {};
+			if (!CommonUtils.isNull(model.getAs("ArrayCycleOfPrincipalRedemption"))) {
+				prCycle = Arrays.asList(model.getAs("ArrayCycleOfPrincipalRedemption").toString().replaceAll("\\[", "").replaceAll("\\]","").split(","))
+					.stream().map(d -> d.trim()).toArray(String[]::new);
+			}
+			String[] prPayment = Arrays.asList(model.getAs("ArrayNextPrincipalRedemptionPayment").toString().replaceAll("\\[", "").replaceAll("\\]","").split(","))
 					.stream().map(d -> d).toArray(String[]::new);
-			String[] prPayment = Arrays.asList(model.getAs("ArrayNextPrincipalRedemptionPayment").toString().split(","))
-					.stream().map(d -> d).toArray(String[]::new);
-			String[] prIncDec = Arrays.asList(model.getAs("ArrayIncreaseDecrease").toString().split(",")).stream()
-					.map(d -> d).toArray(String[]::new);
+			String[] prIncDec = Arrays.asList(model.getAs("ArrayIncreaseDecrease").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream()
+					.map(d -> d.trim()).toArray(String[]::new);
 
 			// create array-type schedule with respective increase/decrease features
 			EventType prType;
 			StateTransitionFunction prStf;
 			PayOffFunction prPof;
-
 			int prLen = prAnchor.length + 1;
 			LocalDateTime prLocalDate[] = new LocalDateTime[prLen];
 			prLocalDate[prLen - 1] = model.getAs("MaturityDate");
@@ -120,6 +122,7 @@ public final class ExoticLinearAmortizer {
 				prLocalDate[i] = prAnchor[i];
 			}
 			for (int i = 0; i < prAnchor.length; i++) {
+				
 				if (prIncDec[i].trim().equalsIgnoreCase("DEC")) {
 					prType = EventType.PR;
 					prStf = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
@@ -137,7 +140,7 @@ public final class ExoticLinearAmortizer {
 						ScheduleFactory.createSchedule(
 								prLocalDate[i],
 								prLocalDate[i + 1],
-								prCycle[i],model.getAs("EndOfMonthConvention"),
+								(prCycle.length>0)? prCycle[i] : null, model.getAs("EndOfMonthConvention"),
 								false
 						),
 						prType,
@@ -149,23 +152,25 @@ public final class ExoticLinearAmortizer {
 				);
 			}
 		}
-
 		// create interest payment schedule
 		if (!CommonUtils.isNull(model.getAs("ArrayCycleAnchorDateOfInterestPayment"))) {
 
 			// parse array-type attributes
 			LocalDateTime[] ipAnchor = Arrays
-					.asList(model.getAs("ArrayCycleAnchorDateOfInterestPayment").toString().split(",")).stream()
-					.map(d -> LocalDateTime.parse(d)).toArray(LocalDateTime[]::new);
-			String[] ipCycle = Arrays.asList(model.getAs("ArrayCycleOfInterestPayment").toString().split(",")).stream()
-					.map(d -> d).toArray(String[]::new);
+					.asList(model.getAs("ArrayCycleAnchorDateOfInterestPayment").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream()
+					.map(d -> LocalDateTime.parse(d.trim())).toArray(LocalDateTime[]::new);
+			String[] ipCycle = {};
+			if (!CommonUtils.isNull(model.getAs("ArrayCycleOfInterestPayment"))) {
+				ipCycle = Arrays.asList(model.getAs("ArrayCycleOfInterestPayment").toString().replaceAll("\\[", "").replaceAll("\\]","").split(","))
+					.stream().map(d -> d.trim()).toArray(String[]::new);
+			}
 
 			// raw interest payment events
 			Set<ContractEvent> interestEvents = EventFactory.createEvents(
 					ScheduleFactory.createArraySchedule(
 							ipAnchor,
 							model.getAs("MaturityDate"),
-							ipCycle,
+							(ipCycle.length>0)? ipCycle : null,
 							model.getAs("EndOfMonthConvention")
 					),
 					EventType.IP,
@@ -228,20 +233,23 @@ public final class ExoticLinearAmortizer {
 						model.getAs("ContractID"))
 				);
 		}
-		
+				
 		// create rate reset schedule
 		if (!CommonUtils.isNull(model.getAs("ArrayCycleAnchorDateOfRateReset"))) {
 			
 			// parse array-type attributes
 			LocalDateTime[] rrAnchor = Arrays
-					.asList(model.getAs("ArrayCycleAnchorDateOfRateReset").toString().split(",")).stream()
-					.map(d -> LocalDateTime.parse(d)).toArray(LocalDateTime[]::new);
-			String[] rrRate = Arrays.asList(model.getAs("ArrayRate").toString().split(",")).stream().map(d -> d)
+					.asList(model.getAs("ArrayCycleAnchorDateOfRateReset").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream()
+					.map(d -> LocalDateTime.parse(d.trim())).toArray(LocalDateTime[]::new);
+			String[] rrCycle = {};
+			if (!CommonUtils.isNull(model.getAs("ArrayCycleOfRateReset"))) {
+				rrCycle = Arrays.asList(model.getAs("ArrayCycleOfRateReset").toString().replaceAll("\\[", "").replaceAll("\\]","").split(","))
+					.stream().map(d -> d.trim()).toArray(String[]::new);
+			}
+			String[] rrRate = Arrays.asList(model.getAs("ArrayRate").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream().map(d -> d.trim())
 					.toArray(String[]::new);
-			String[] rrCycle = Arrays.asList(model.getAs("ArrayCycleOfRateReset").toString().split(",")).stream()
-					.map(d -> d).toArray(String[]::new);
-			String[] rrFidedVar = Arrays.asList(model.getAs("ArrayFixedVariable").toString().split(",")).stream()
-					.map(d -> d).toArray(String[]::new);
+			String[] rrFidedVar = Arrays.asList(model.getAs("ArrayFixedVariable").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream()
+					.map(d -> d.trim()).toArray(String[]::new);
 			
 			// create array-type schedule with fix/var features
 			EventType rrType;
@@ -265,7 +273,7 @@ public final class ExoticLinearAmortizer {
 						ScheduleFactory.createSchedule(
 								rrLocalDate[i],
 								rrLocalDate[i + 1],
-								rrCycle[i],
+								(rrCycle.length>0)? rrCycle[i] : null,
 								model.getAs("EndOfMonthConvention"),
 								false
 						),
@@ -288,7 +296,7 @@ public final class ExoticLinearAmortizer {
 				events.addAll(rateResetEvents);
 			}	
 		}
-		
+				
 		// fee schedule
 		if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
 			events.addAll(EventFactory.createEvents(
@@ -369,7 +377,7 @@ public final class ExoticLinearAmortizer {
 
 		// sort the events in the payoff-list according to their time of occurence
 		Collections.sort(events);
-		
+
 		return events;
 	}
 
