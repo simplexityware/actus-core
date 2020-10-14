@@ -6,13 +6,12 @@
 package org.actus.contracts;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ListIterator;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.actus.AttributeConversionException;
+import org.actus.attributes.ContractModel;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.events.ContractEvent;
@@ -403,12 +402,37 @@ public final class ExoticLinearAmortizer {
 		if(CommonUtils.isNull(maturity)){
 			LocalDateTime calculatedTime;
 			double notionalPrincipal = model.getAs("NotionalPrincipal");
-			LocalDateTime[] prAnchor = Arrays
-					.asList(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption").toString().split(",")).stream()
-					.map(LocalDateTime::parse).toArray(LocalDateTime[]::new);
-			int upperBound;
+			ArrayList<LocalDateTime> prAnchor = Arrays.stream(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption").toString().split(","))
+					.map(LocalDateTime::parse).collect(Collectors.toCollection(ArrayList::new));
+			LocalDateTime t = null;
+			int upperBound = prAnchor.contains(t) && prAnchor.indexOf(t) < prAnchor.size()-1  ? prAnchor.indexOf(t) - 1 : prAnchor.size();
+			Integer[] prIncDec = Arrays.stream(model.getAs("ArrayIncreaseDecrease").toString().split(","))
+					.map(d -> {
+						if(d.equals("INC")){
+							return 1;
+						}else {
+							return -1;
+						}
+					}).toArray(Integer[]::new);
+			Double[] prPayment = Arrays.stream(model.getAs("ArrayNextPrincipalRedemptionPayment").toString().split(",")).map(Double::parseDouble).toArray(Double[]::new);
+			LocalDateTime[] prSchedule = null;
+			if(Objects.isNull(model.getAs("ArrayCycleOfPrincipalRedemption"))){
+				prSchedule = (LocalDateTime[]) prAnchor.toArray();
+			}
 		}
 		return maturity;
+	}
+
+	private static Double maturityCalculationSum(int upperBound, Integer[] prIncDec, Double[] prPayment, LocalDateTime[] prSchedule, ContractModel model){
+		Double sum = 0.0;
+		if(Objects.isNull(prSchedule)){
+
+		} else{
+			for(int i = 0; i <= upperBound; i++){
+				sum += prIncDec[i] * prPayment[i] ;
+			}
+		}
+		return sum;
 	}
 
 	private static StateSpace initStateSpace(ContractModelProvider model, LocalDateTime maturity)
