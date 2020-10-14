@@ -20,17 +20,15 @@ public class STF_RRF_LAX implements StateTransitionFunction {
 	public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model,
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 		// compute new rate
-		double rate = scheduledRate*model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread");
-		double deltaRate = rate - states.nominalInterestRate;
-
-		// apply period cap/floor
-		deltaRate = Math.min(Math.max(deltaRate, (-1) * model.<Double>getAs("PeriodFloor")),
-				model.<Double>getAs("LifeCap"));
-		rate = states.nominalInterestRate + deltaRate;
-
-		// apply life cap/floor
-		rate = Math.min(Math.max(rate, model.getAs("LifeFloor")), model.getAs("LifeCap"));
-
+		double rate = scheduledRate
+			* model.<Double>getAs("RateMultiplier")
+			+ model.<Double>getAs("RateSpread") - states.nominalInterestRate;
+		double deltaRate = Math.min(
+			Math.max(rate, model.<Double>getAs("PeriodFloor"))
+			,model.<Double>getAs("PeriodCap"));
+		rate = Math.min(
+                Math.max(states.nominalInterestRate + deltaRate, model.<Double>getAs("LifeFloor")), model.<Double>getAs("LifeCap"));
+		
 		// update state space
 		double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate),
 				timeAdjuster.shiftCalcTime(time));

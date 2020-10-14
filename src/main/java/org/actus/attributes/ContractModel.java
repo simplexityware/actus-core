@@ -595,6 +595,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf(attributes.get("endOfMonthConvention")));
                         map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("rateMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("rateMultiplier")));
                         map.put("RateSpread", (CommonUtils.isNull(attributes.get("rateSpread"))) ? 0.0 : Double.parseDouble(attributes.get("rateSpread")));
+                        map.put("PeriodCap", (CommonUtils.isNull(attributes.get("periodCap"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("periodCap")));
                         map.put("PeriodFloor", (CommonUtils.isNull(attributes.get("periodFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("periodFloor")));
                         map.put("LifeCap", (CommonUtils.isNull(attributes.get("lifeCap"))) ? Double.POSITIVE_INFINITY : Double.parseDouble(attributes.get("lifeCap")));
                         map.put("LifeFloor", (CommonUtils.isNull(attributes.get("lifeFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("lifeFloor")));
