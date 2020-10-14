@@ -99,6 +99,15 @@ public class ResultSet {
             "nominalInterestRate: " + nominalInterestRate + ", " +
             "accruedInterest: " + accruedInterest;
     }
+    /*public String toString() {
+        return eventDate + ", " +
+            eventType + ", " +
+            payoff + ", " +
+            currency + "," +
+            notionalPrincipal + ", " +
+            nominalInterestRate + ", " +
+            accruedInterest;
+    }*/
 
     // for assertEquals in JUnit testing
     @Override

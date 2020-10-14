@@ -50,6 +50,8 @@ import org.actus.functions.pam.POF_SC_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.pam.STF_IP_PAM;
 import org.actus.functions.pam.STF_TD_PAM;
+import org.actus.functions.lam.STF_MD_LAM;
+import org.actus.functions.pam.POF_MD_PAM;
 
 import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
@@ -152,6 +154,18 @@ public final class ExoticLinearAmortizer {
 				);
 			}
 		}
+
+		// add maturity event
+		events.add(EventFactory.createEvent(
+	        maturity,
+            EventType.MD,
+            model.getAs("Currency"),
+            new POF_MD_PAM(),
+            new STF_MD_LAM(),
+            model.getAs("BusinessDayConvention"),
+            model.getAs("ContractID"))
+        );
+
 		// create interest payment schedule
 		if (!CommonUtils.isNull(model.getAs("ArrayCycleAnchorDateOfInterestPayment"))) {
 
@@ -386,21 +400,27 @@ public final class ExoticLinearAmortizer {
 	public static ArrayList<ContractEvent> apply(ArrayList<ContractEvent> events, ContractModelProvider model,
 			RiskFactorModelProvider observer) throws AttributeConversionException {
 
-		// initialize state space per status date
-		StateSpace states = initStateSpace(model, maturity(model));
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model,maturity(model));
 
-		// sort the events according to their time sequence
-		Collections.sort(events);
+        // sort the events according to their time sequence
+        Collections.sort(events);
 
-		// apply events according to their time sequence to current state
-		LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
+        // apply events according to their time sequence to current state
 		ListIterator<ContractEvent> eventIterator = events.listIterator();
-		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal > 0.0) && eventIterator.hasNext()) {
-			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
-					model.getAs("BusinessDayConvention"));
+        //while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
+        while (eventIterator.hasNext()) {
+                ((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
+                    model.getAs("BusinessDayConvention"));
+        }
+        
+        // remove pre-purchase events if purchase date set
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
 		}
-		// return evaluated events
-		return events;
+		
+        // return evaluated events
+        return events;
 	}
 
 	private static LocalDateTime maturity(ContractModelProvider model) {
@@ -427,23 +447,23 @@ public final class ExoticLinearAmortizer {
 		states.statusDate = model.getAs("StatusDate");
 		states.notionalScalingMultiplier = 1;
 		states.interestScalingMultiplier = 1;
-
 		
-		if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
+		if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
+            states.notionalPrincipal = 0.0;
+            states.nominalInterestRate = 0.0;
+            states.interestCalculationBaseAmount = 0.0;
+        }else{
 			states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 					* model.<Double>getAs("NotionalPrincipal");
 			states.nominalInterestRate = model.getAs("NominalInterestRate");
 			states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 					* model.<Double>getAs("AccruedInterest");
 			states.feeAccrued = model.getAs("FeeAccrued");
-			if (CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-					|| model.getAs("InterestCalculationBase").equals("NT")) {
-				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
-						* model.<Double>getAs("NotionalPrincipal");
-			} else {
-				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
-						* model.<Double>getAs("InterestCalculationBaseAmount");
-			}
+			if(InterestCalculationBase.NT.equals(model.getAs("InterestCalculationBase"))){
+                states.interestCalculationBaseAmount = states.notionalPrincipal; // contractRole applied at notionalPrincipal init
+            }else{
+                states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("InterestCalculationBaseAmount");
+            }
 		}
 		return states;
 	}

@@ -94,6 +94,8 @@ public final class ScheduleFactory {
 		    // add or not additional time at endTime
 			if(addEndTime) {
 				timesSet.add(endTime);
+			} else {
+				if(endTime.equals(startTime)) timesSet.remove(startTime);
 			}
 			return timesSet;
 		}
@@ -124,6 +126,8 @@ public final class ScheduleFactory {
 		// add (or not) additional time at endTime
 		if(addEndTime) {
 			timesSet.add(endTime);
+		} else {
+			if(endTime.equals(startTime)) timesSet.remove(startTime);
 		}
 
         // now adjust for the last stub
