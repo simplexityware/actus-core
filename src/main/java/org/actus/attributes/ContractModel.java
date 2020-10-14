@@ -81,7 +81,7 @@ public class ContractModel implements ContractModelProvider {
      * be mandatory conditional to the value of other attributes. Be referred to the ACTUS data dictionary
      * for details.
      *
-     * @param attributes an external, raw (String) data representation of the set of attributes
+     * @param contractAttributes an external, raw (String) data representation of the set of attributes
      * @return an instance of ContractModel containing the attributes provided with the method argument
      * @throws AttributeConversionException if an attribute cannot be parsed to its data type
      */
@@ -554,11 +554,11 @@ public class ContractModel implements ContractModelProvider {
                         map.put("TerminationDate", (CommonUtils.isNull(attributes.get("terminationDate"))) ? null : LocalDateTime.parse(attributes.get("terminationDate")));
                         map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("priceAtTerminationDate"))) ? 0.0 : Double.parseDouble(attributes.get("priceAtTerminationDate")));
                         map.put("CycleAnchorDateOfRateReset", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfRateReset"))) ? ((CommonUtils.isNull(attributes.get("cycleOfRateReset"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfRateReset")));
-                        map.put("CycleOfRateReset", attributes.get("cycleOfRateReset"));
+                        map.put("CycleOfRateReset", (CommonUtils.isNull(attributes.get("cycleOfRateReset"))) ? null : attributes.get("cycleOfRateReset"));
                         map.put("RateSpread", (CommonUtils.isNull(attributes.get("rateSpread"))) ? 0.0 : Double.parseDouble(attributes.get("rateSpread")));
-                        map.put("MarketObjectCodeOfRateReset", attributes.get("marketObjectCodeOfRateReset"));
+                        map.put("MarketObjectCodeOfRateReset", (CommonUtils.isNull(attributes.get("marketObjectCodeOfRateReset"))) ? null :attributes.get("marketObjectCodeOfRateReset"));
                         map.put("CyclePointOfRateReset", CommonUtils.isNull(attributes.get("cyclePointOfRateReset")) ? null : map.get("CyclePointOfInterestPayment") == CyclePointOfInterestPayment.B ? CyclePointOfRateReset.E : CyclePointOfRateReset.valueOf(attributes.get("cyclePointOfRateReset")));
-                        map.put("FixingPeriod", attributes.get("fixingPeriod"));
+                        map.put("FixingPeriod", (CommonUtils.isNull(attributes.get("fixingPeriod"))) ? null : attributes.get("fixingPeriod"));
                         map.put("NextResetRate", (CommonUtils.isNull(attributes.get("nextResetRate"))) ? null : Double.parseDouble(attributes.get("nextResetRate")));
                         map.put("RateMultiplier", (CommonUtils.isNull(attributes.get("rateMultiplier"))) ? 1.0 : Double.parseDouble(attributes.get("rateMultiplier")));
                         map.put("DeliverySettlement", CommonUtils.isNull(attributes.get("deliverySettlement")) ? null : DeliverySettlement.valueOf(attributes.get("deliverySettlement")));
@@ -575,7 +575,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("Currency", attributes.get("currency"));
                         map.put("InitialExchangeDate", LocalDateTime.parse(attributes.get("initialExchangeDate")));
                         map.put("PremiumDiscountAtIED", (CommonUtils.isNull(attributes.get("premiumDiscountAtIED"))) ? 0.0 : Double.parseDouble(attributes.get("premiumDiscountAtIED")));
-                        map.put("MaturityDate", LocalDateTime.parse(attributes.get("maturityDate")));
+                        map.put("MaturityDate", (CommonUtils.isNull(attributes.get("maturityDate")) ? null : LocalDateTime.parse(attributes.get("maturityDate"))));
                         map.put("NotionalPrincipal", Double.parseDouble(attributes.get("notionalPrincipal")));
                         map.put("ArrayCycleAnchorDateOfPrincipalRedemption", attributes.get("arrayCycleAnchorDateOfPrincipalRedemption"));
                         map.put("ArrayCycleOfPrincipalRedemption", attributes.get("arrayCycleOfPrincipalRedemption"));
