@@ -278,8 +278,7 @@ public final class LinearAmortizer {
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
-		ListIterator eventIterator = events.listIterator();
+		ListIterator<ContractEvent> eventIterator = events.listIterator();
         //while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
         while (eventIterator.hasNext()) {
                 ((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),

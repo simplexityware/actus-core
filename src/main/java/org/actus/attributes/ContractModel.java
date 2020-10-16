@@ -601,7 +601,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("LifeFloor", (CommonUtils.isNull(attributes.get("lifeFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble(attributes.get("lifeFloor")));
                         map.put("CycleAnchorDateOfInterestCalculationBase", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfInterestCalculationBase"))) ? ((CommonUtils.isNull(attributes.get("cycleOfInterestCalculationBase"))) ? null : LocalDateTime.parse(attributes.get("initialExchangeDate"))) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfInterestCalculationBase")));
                         map.put("CycleOfInterestCalculationBase", attributes.get("cycleOfInterestCalculationBase"));
-                        map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("interestCalculationBase")) ? null : InterestCalculationBase.valueOf(attributes.get("interestCalculationBase")));
+                        map.put("InterestCalculationBase", CommonUtils.isNull(attributes.get("interestCalculationBase")) ? InterestCalculationBase.NT : InterestCalculationBase.valueOf(attributes.get("interestCalculationBase")));
                         map.put("InterestCalculationBaseAmount", (CommonUtils.isNull(attributes.get("interestCalculationBaseAmount"))) ? 0.0 : Double.parseDouble(attributes.get("interestCalculationBaseAmount")));
                         map.put("CycleAnchorDateOfPrincipalRedemption", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfPrincipalRedemption"))) ? LocalDateTime.parse(attributes.get("initialExchangeDate")) : LocalDateTime.parse(attributes.get("cycleAnchorDateOfPrincipalRedemption")));
                         break;
