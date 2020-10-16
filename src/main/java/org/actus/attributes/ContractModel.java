@@ -87,15 +87,10 @@ public class ContractModel implements ContractModelProvider {
      */
     public static ContractModel parse(Map<String, Object> contractAttributes) {
         HashMap<String, Object> map = new HashMap<>();
-        ContractTypeEnum contractType;
-        try{
-            contractType  = ContractTypeEnum.valueOf((String)contractAttributes.get("contractType"));
-        } catch (Exception e) {
-        throw new AttributeConversionException();
-        }
 
-        if(ContractTypeEnum.SWAPS.equals(contractType)){
+        if(contractAttributes.get("contractStructure")!=null){
             Map<String, Object> attributes = contractAttributes;
+            List<ContractReference> contractStructure = new ArrayList<>();
             // parse all attributes known to the respective contract type
             try {
                 switch (ContractTypeEnum.valueOf((String)attributes.get("contractType"))) {
@@ -114,7 +109,27 @@ public class ContractModel implements ContractModelProvider {
                         map.put("DeliverySettlement", DeliverySettlement.valueOf((String)attributes.get("deliverySettlement")));
                         map.put("ContractType", ContractTypeEnum.valueOf((String)attributes.get("contractType")));
                         // parse child attributes
-                        List<ContractReference> contractStructure = new ArrayList<>();
+                        ((List<Map<String,Object>>)attributes.get("contractStructure")).forEach(e->contractStructure.add(new ContractReference((Map<String,Object>)e, (ContractRole)map.get("ContractRole"))));
+                        map.put("ContractStructure", contractStructure);
+
+                        break;
+
+                    case CAPFL:
+                        // parse attributes (CapFloor) attributes
+                        map.put("ContractType", ContractTypeEnum.CAPFL);
+                        map.put("StatusDate", LocalDateTime.parse((String)attributes.get("statusDate")));
+                        map.put("ContractRole", ContractRole.valueOf((String)attributes.get("contractRole")));
+                        map.put("ContractID", attributes.get("contractID"));
+                        map.put("CounterpartyID", attributes.get("counterpartyID"));
+                        map.put("Currency", attributes.get("currency"));
+                        map.put("PurchaseDate", (CommonUtils.isNull(attributes.get("purchaseDate"))) ? null : LocalDateTime.parse((String)attributes.get("purchaseDate")));
+                        map.put("PriceAtPurchaseDate", (CommonUtils.isNull(attributes.get("priceAtPurchaseDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("priceAtPurchaseDate")));
+                        map.put("TerminationDate", (CommonUtils.isNull(attributes.get("terminationDate"))) ? null : LocalDateTime.parse((String)attributes.get("terminationDate")));
+                        map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("priceAtTerminationDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("priceAtTerminationDate")));
+                        map.put("LifeCap", (CommonUtils.isNull(attributes.get("lifeCap"))) ? Double.POSITIVE_INFINITY : Double.parseDouble((String)attributes.get("lifeCap")));
+                        map.put("LifeFloor", (CommonUtils.isNull(attributes.get("lifeFloor"))) ? Double.NEGATIVE_INFINITY : Double.parseDouble((String)attributes.get("lifeFloor")));
+
+                        // parse underlying attributes
                         ((List<Map<String,Object>>)attributes.get("contractStructure")).forEach(e->contractStructure.add(new ContractReference((Map<String,Object>)e, (ContractRole)map.get("ContractRole"))));
                         map.put("ContractStructure", contractStructure);
 
