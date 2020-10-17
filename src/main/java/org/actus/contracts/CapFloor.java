@@ -92,12 +92,13 @@ public final class CapFloor {
         // evaluate events of underlying without cap/floor applied
         ContractModel underlyingModel = (ContractModel) model.<List<ContractReference>>getAs("ContractStructure").stream().filter(c-> ReferenceRole.UDL.equals(c.referenceRole)).collect(Collectors.toList()).get(0).getObject();
         ArrayList<ContractEvent> underlyingEvents = ContractType.apply(events, underlyingModel, observer).stream().filter(e -> EventType.IP.equals(e.eventType())).collect(Collectors.toCollection(ArrayList::new));
-
+        
         // evaluate events of underlying with cap/floor applied
         underlyingModel.addAttribute("LifeCap", model.<Double>getAs("LifeCap"));
         underlyingModel.addAttribute("LifeFloor", model.<Double>getAs("LifeFloor"));
-        ArrayList<ContractEvent> underlyingWithCapFloorEvents = ContractType.apply(events, underlyingModel, observer).stream().filter(e -> EventType.IP.equals(e.eventType())).collect(Collectors.toCollection(ArrayList::new));
-
+        ArrayList<ContractEvent> underlyingWithCapFloorEvents = events.stream().map(e->e.copy()).collect(Collectors.toCollection(ArrayList::new));
+        underlyingWithCapFloorEvents = ContractType.apply(underlyingWithCapFloorEvents, underlyingModel, observer).stream().filter(e -> EventType.IP.equals(e.eventType())).collect(Collectors.toCollection(ArrayList::new));
+        
         // net schedules of underlying with and without cap/floor applied
         Map<String, ContractEvent> mergedEvents = Stream.concat(underlyingEvents.stream(), underlyingWithCapFloorEvents.stream())
                     .collect(Collectors.toMap(

@@ -62,7 +62,6 @@ public class CapFloorTest {
                 results.setNotionalPrincipal(e.states().notionalPrincipal);
                 results.setNominalInterestRate(e.states().nominalInterestRate);
                 results.setAccruedInterest(e.states().accruedInterest);
-                System.out.println(results);
                 return results;
             }).collect(Collectors.toList());
 
