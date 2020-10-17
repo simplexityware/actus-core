@@ -94,6 +94,8 @@ public final class ScheduleFactory {
 		    // add or not additional time at endTime
 			if(addEndTime) {
 				timesSet.add(endTime);
+			} else {
+				if(endTime.equals(startTime)) timesSet.remove(startTime);
 			}
 			return timesSet;
 		}
@@ -124,6 +126,8 @@ public final class ScheduleFactory {
 		// add (or not) additional time at endTime
 		if(addEndTime) {
 			timesSet.add(endTime);
+		} else {
+			if(endTime.equals(startTime)) timesSet.remove(startTime);
 		}
 
         // now adjust for the last stub
@@ -159,13 +163,13 @@ public final class ScheduleFactory {
         // add schedules 1 to N-1
 		for (int i = 0; i < startTimes.length - 1; i++) {
 		    timesSet.addAll(
-					createSchedule(startTimes[i], startTimes[i + 1], cycles[i], endOfMonthConvention));
+					createSchedule(startTimes[i], startTimes[i + 1], (cycles==null)? null : cycles[i], endOfMonthConvention));
 		}
 		
 		// add last schedule
 		timesSet.addAll(
 				createSchedule(startTimes[startTimes.length - 1], endTime,
-						cycles[startTimes.length - 1], endOfMonthConvention));
+						(cycles==null)? null : cycles[startTimes.length - 1], endOfMonthConvention));
 		
 		// return schedule
 		return timesSet;

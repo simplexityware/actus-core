@@ -21,18 +21,17 @@ public final class STF_RR_LAX implements StateTransitionFunction {
 			RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
 
 		// compute new rate
-		double rate = riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
-				* model.<Double>getAs("RateMultiplier") + model.<Double>getAs("RateSpread") + scheduledRate;
-		double deltaRate = rate - states.nominalInterestRate;
-
-		// apply period cap/floor
-		deltaRate = Math.min(Math.max(deltaRate, (-1) * model.<Double>getAs("PeriodFloor")),
-				model.<Double>getAs("LifeCap"));
-		rate = states.nominalInterestRate + deltaRate;
-
-		// apply life cap/floor
-		rate = Math.min(Math.max(rate, model.getAs("LifeFloor")), model.getAs("LifeCap"));
-
+		double rate = (riskFactorModel.stateAt(model.getAs("MarketObjectCodeOfRateReset"), time, states, model)
+                * model.<Double>getAs("RateMultiplier"))
+				+ model.<Double>getAs("RateSpread")
+				+ scheduledRate - states.nominalInterestRate;
+        double deltaRate = Math.min(
+                Math.max(rate, model.<Double>getAs("PeriodFloor"))
+				,model.<Double>getAs("PeriodCap"));
+		rate = Math.min(
+			Math.max(states.nominalInterestRate + deltaRate, model.<Double>getAs("LifeFloor"))
+			,model.<Double>getAs("LifeCap"));
+		
 		// update state space
 		double timeFromLastEvent = dayCounter.dayCountFraction(timeAdjuster.shiftCalcTime(states.statusDate),
 				timeAdjuster.shiftCalcTime(time));

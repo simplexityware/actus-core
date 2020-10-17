@@ -25,14 +25,13 @@ public final class STF_RR_LAM implements StateTransitionFunction {
                 + model.<Double>getAs("RateSpread") - states.nominalInterestRate;
         double deltaRate = Math.min(
                 Math.max(rate, model.<Double>getAs("PeriodFloor"))
-                ,model.<Double>getAs("PeriodCap")
-        );
+                ,model.<Double>getAs("PeriodCap"));
+        rate = Math.min(
+                Math.max(states.nominalInterestRate + deltaRate, model.<Double>getAs("LifeFloor"))
+                ,model.<Double>getAs("LifeCap"));
         states.accruedInterest += states.nominalInterestRate * states.interestCalculationBaseAmount * timeFromLastEvent;
         states.feeAccrued += model.<Double>getAs("FeeRate") * states.notionalPrincipal * timeFromLastEvent;
-        states.nominalInterestRate = Math.min(
-                Math.max(states.nominalInterestRate + deltaRate, model.<Double>getAs("LifeFloor"))
-                ,model.<Double>getAs("LifeCap")
-        );
+        states.nominalInterestRate = rate;
         states.statusDate = time;
         // return post-event-states
         return StateSpace.copyStateSpace(states);

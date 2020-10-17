@@ -190,6 +190,16 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         this.states = fStateTrans.eval(scheduleTime, states, model, riskFactorModel, dayCounter, timeAdjuster);
     }
 
+/**
+     * Creates a copy of an event
+     * <p>
+     *
+     * @return a ContractEvent that represents a copy of the original event
+     */
+    public ContractEvent copy() {
+        return new ContractEvent(this.scheduleTime, this.eventTime, this.eventType, this.currency, this.fPayOff, this.fStateTrans, this.contractID);
+    }
+
     /**
      * Returns a String-representation of all analytical elements
      * <p>

@@ -13,21 +13,22 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org. actus.events.ContractEvent;
 
-import java.time.LocalDateTime;
-
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.DynamicTest;
 
-
-public class AnnuityTest {
+public class CapFloorTest {
     @TestFactory
     public Stream<DynamicTest> test() {
-        String testFile = "./src/test/resources/actus/actus-tests-ann.json";
+        String testFile = "./src/test/resources/actus/actus-tests-capfl.json";
 
         // read tests from file
         Map<String, TestData> tests = ContractTestUtils.readTests(testFile);
@@ -36,9 +37,7 @@ public class AnnuityTest {
         Set<String> testIds = tests.keySet();
 
         // go through test-id and perform test
-        // Note: skipping tests with currently unsupported features
-        //       ann09: PRANX=IED and PRNXT=null -> cannot add PRF event at PRANX-1D
-        return testIds.stream().filter(testId -> !Arrays.asList("ann09").contains(testId)).map(testId -> {
+        return testIds.stream().map(testId -> {
             // extract test for test ID
             TestData test = tests.get(testId);
 
@@ -49,11 +48,9 @@ public class AnnuityTest {
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
-
             // compute and evaluate schedule
-            LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
-            ArrayList<ContractEvent> schedule = Annuity.schedule(to, terms);
-            schedule = Annuity.apply(schedule, terms, observer);
+            ArrayList<ContractEvent> schedule = CapFloor.schedule(LocalDateTime.parse(test.getto()), terms);
+            schedule = CapFloor.apply(schedule, terms, observer);
         
             // transform schedule to event list and return
             List<ResultSet> computedResults = schedule.stream().map(e -> { 

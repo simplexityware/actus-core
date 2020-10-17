@@ -6,15 +6,17 @@
 package org.actus.contracts;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.ListIterator;
-import java.util.Set;
+import java.time.Period;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.actus.AttributeConversionException;
+import org.actus.attributes.ContractModel;
 import org.actus.attributes.ContractModelProvider;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.conventions.contractrole.ContractRoleConvention;
+import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.events.ContractEvent;
 import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
@@ -50,12 +52,15 @@ import org.actus.functions.pam.POF_SC_PAM;
 import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.functions.pam.STF_IP_PAM;
 import org.actus.functions.pam.STF_TD_PAM;
+import org.actus.functions.lam.STF_MD_LAM;
+import org.actus.functions.pam.POF_MD_PAM;
 
 import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
 import org.actus.types.EventType;
 import org.actus.types.InterestCalculationBase;
 import org.actus.util.CommonUtils;
+import org.actus.util.CycleUtils;
 
 /**
  * Represents the Exotic Linear Amortizer payoff algorithm
@@ -70,7 +75,7 @@ public final class ExoticLinearAmortizer {
 		ArrayList<ContractEvent> events = new ArrayList<ContractEvent>();
 
 		// determine maturity of the contract
-		LocalDateTime maturity = maturity(model);
+		LocalDateTime maturity = Objects.isNull(to) ? maturity(model) : to;
 
 		// initial exchange
 		events.add(EventFactory.createEvent(
@@ -98,28 +103,28 @@ public final class ExoticLinearAmortizer {
 		if (!CommonUtils.isNull(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption"))) {
 
 			// parse array-type attributes
-			LocalDateTime[] prAnchor = Arrays
-					.asList(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption").toString().split(",")).stream()
-					.map(d -> LocalDateTime.parse(d)).toArray(LocalDateTime[]::new);
-			String[] prCycle = Arrays.asList(model.getAs("ArrayCycleOfPrincipalRedemption").toString().split(","))
-					.stream().map(d -> d).toArray(String[]::new);
-			String[] prPayment = Arrays.asList(model.getAs("ArrayNextPrincipalRedemptionPayment").toString().split(","))
-					.stream().map(d -> d).toArray(String[]::new);
-			String[] prIncDec = Arrays.asList(model.getAs("ArrayIncreaseDecrease").toString().split(",")).stream()
-					.map(d -> d).toArray(String[]::new);
+			LocalDateTime[] prAnchor = Arrays.stream(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption").toString().replaceAll("\\[", "").replaceAll("]","").split(","))
+					.map(d -> LocalDateTime.parse(d.trim())).toArray(LocalDateTime[]::new);
+			String[] prCycle = {};
+			if (!CommonUtils.isNull(model.getAs("ArrayCycleOfPrincipalRedemption"))) {
+				prCycle = Arrays.stream(model.getAs("ArrayCycleOfPrincipalRedemption").toString().replaceAll("\\[", "").replaceAll("]","").split(",")).map(String::trim).toArray(String[]::new);
+			}
+			String[] prPayment = Arrays.stream(model.getAs("ArrayNextPrincipalRedemptionPayment").toString().replaceAll("\\[", "").replaceAll("]","").split(",")).map(d -> d).toArray(String[]::new);
+			String[] prIncDec = Arrays.stream(model.getAs("ArrayIncreaseDecrease").toString().replaceAll("\\[", "").replaceAll("]","").split(","))
+					.map(String::trim).toArray(String[]::new);
 
 			// create array-type schedule with respective increase/decrease features
 			EventType prType;
 			StateTransitionFunction prStf;
 			PayOffFunction prPof;
-
 			int prLen = prAnchor.length + 1;
-			LocalDateTime prLocalDate[] = new LocalDateTime[prLen];
-			prLocalDate[prLen - 1] = model.getAs("MaturityDate");
+			LocalDateTime[] prLocalDate = new LocalDateTime[prLen];
+			prLocalDate[prLen - 1] = maturity;
 			for (int i = 0; i < prAnchor.length; i++) {
 				prLocalDate[i] = prAnchor[i];
 			}
 			for (int i = 0; i < prAnchor.length; i++) {
+				
 				if (prIncDec[i].trim().equalsIgnoreCase("DEC")) {
 					prType = EventType.PR;
 					prStf = (!CommonUtils.isNull(model.getAs("InterestCalculationBase"))
@@ -137,7 +142,7 @@ public final class ExoticLinearAmortizer {
 						ScheduleFactory.createSchedule(
 								prLocalDate[i],
 								prLocalDate[i + 1],
-								prCycle[i],model.getAs("EndOfMonthConvention"),
+								(prCycle.length>0)? prCycle[i] : null, model.getAs("EndOfMonthConvention"),
 								false
 						),
 						prType,
@@ -150,22 +155,36 @@ public final class ExoticLinearAmortizer {
 			}
 		}
 
+		// add maturity event
+		events.add(EventFactory.createEvent(
+	        maturity,
+            EventType.MD,
+            model.getAs("Currency"),
+            new POF_MD_PAM(),
+            new STF_MD_LAM(),
+            model.getAs("BusinessDayConvention"),
+            model.getAs("ContractID"))
+        );
+
 		// create interest payment schedule
 		if (!CommonUtils.isNull(model.getAs("ArrayCycleAnchorDateOfInterestPayment"))) {
 
 			// parse array-type attributes
 			LocalDateTime[] ipAnchor = Arrays
-					.asList(model.getAs("ArrayCycleAnchorDateOfInterestPayment").toString().split(",")).stream()
-					.map(d -> LocalDateTime.parse(d)).toArray(LocalDateTime[]::new);
-			String[] ipCycle = Arrays.asList(model.getAs("ArrayCycleOfInterestPayment").toString().split(",")).stream()
-					.map(d -> d).toArray(String[]::new);
+					.asList(model.getAs("ArrayCycleAnchorDateOfInterestPayment").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream()
+					.map(d -> LocalDateTime.parse(d.trim())).toArray(LocalDateTime[]::new);
+			String[] ipCycle = {};
+			if (!CommonUtils.isNull(model.getAs("ArrayCycleOfInterestPayment"))) {
+				ipCycle = Arrays.asList(model.getAs("ArrayCycleOfInterestPayment").toString().replaceAll("\\[", "").replaceAll("\\]","").split(","))
+					.stream().map(d -> d.trim()).toArray(String[]::new);
+			}
 
 			// raw interest payment events
 			Set<ContractEvent> interestEvents = EventFactory.createEvents(
 					ScheduleFactory.createArraySchedule(
 							ipAnchor,
-							model.getAs("MaturityDate"),
-							ipCycle,
+							maturity,
+							(ipCycle.length>0)? ipCycle : null,
 							model.getAs("EndOfMonthConvention")
 					),
 					EventType.IP,
@@ -228,20 +247,23 @@ public final class ExoticLinearAmortizer {
 						model.getAs("ContractID"))
 				);
 		}
-		
+				
 		// create rate reset schedule
 		if (!CommonUtils.isNull(model.getAs("ArrayCycleAnchorDateOfRateReset"))) {
 			
 			// parse array-type attributes
 			LocalDateTime[] rrAnchor = Arrays
-					.asList(model.getAs("ArrayCycleAnchorDateOfRateReset").toString().split(",")).stream()
-					.map(d -> LocalDateTime.parse(d)).toArray(LocalDateTime[]::new);
-			String[] rrRate = Arrays.asList(model.getAs("ArrayRate").toString().split(",")).stream().map(d -> d)
+					.asList(model.getAs("ArrayCycleAnchorDateOfRateReset").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream()
+					.map(d -> LocalDateTime.parse(d.trim())).toArray(LocalDateTime[]::new);
+			String[] rrCycle = {};
+			if (!CommonUtils.isNull(model.getAs("ArrayCycleOfRateReset"))) {
+				rrCycle = Arrays.asList(model.getAs("ArrayCycleOfRateReset").toString().replaceAll("\\[", "").replaceAll("\\]","").split(","))
+					.stream().map(d -> d.trim()).toArray(String[]::new);
+			}
+			String[] rrRate = Arrays.asList(model.getAs("ArrayRate").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream().map(d -> d.trim())
 					.toArray(String[]::new);
-			String[] rrCycle = Arrays.asList(model.getAs("ArrayCycleOfRateReset").toString().split(",")).stream()
-					.map(d -> d).toArray(String[]::new);
-			String[] rrFidedVar = Arrays.asList(model.getAs("ArrayFixedVariable").toString().split(",")).stream()
-					.map(d -> d).toArray(String[]::new);
+			String[] rrFidedVar = Arrays.asList(model.getAs("ArrayFixedVariable").toString().replaceAll("\\[", "").replaceAll("\\]","").split(",")).stream()
+					.map(d -> d.trim()).toArray(String[]::new);
 			
 			// create array-type schedule with fix/var features
 			EventType rrType;
@@ -249,7 +271,7 @@ public final class ExoticLinearAmortizer {
 			Set<ContractEvent> rateResetEvents = null;
 			int rrLen = rrAnchor.length + 1;
 			LocalDateTime rrLocalDate[] = new LocalDateTime[rrLen];
-			rrLocalDate[rrLen - 1] = model.getAs("MaturityDate");
+			rrLocalDate[rrLen - 1] = maturity;
 			for (int i = 0; i < rrAnchor.length; i++) {
 				rrLocalDate[i] = rrAnchor[i];
 			}
@@ -265,7 +287,7 @@ public final class ExoticLinearAmortizer {
 						ScheduleFactory.createSchedule(
 								rrLocalDate[i],
 								rrLocalDate[i + 1],
-								rrCycle[i],
+								(rrCycle.length>0)? rrCycle[i] : null,
 								model.getAs("EndOfMonthConvention"),
 								false
 						),
@@ -288,7 +310,7 @@ public final class ExoticLinearAmortizer {
 				events.addAll(rateResetEvents);
 			}	
 		}
-		
+				
 		// fee schedule
 		if (!CommonUtils.isNull(model.getAs("CycleOfFee"))) {
 			events.addAll(EventFactory.createEvents(
@@ -365,11 +387,11 @@ public final class ExoticLinearAmortizer {
 		events.removeIf(e -> e.compareTo(EventFactory.createEvent(model.getAs("StatusDate"), EventType.AD,model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
 
 		// remove all post to-date events
-        events.removeIf(e -> e.compareTo(EventFactory.createEvent(to, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1);
+        events.removeIf(e -> e.compareTo(EventFactory.createEvent(maturity, EventType.AD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == 1);
 
 		// sort the events in the payoff-list according to their time of occurence
 		Collections.sort(events);
-		
+
 		return events;
 	}
 
@@ -378,21 +400,27 @@ public final class ExoticLinearAmortizer {
 	public static ArrayList<ContractEvent> apply(ArrayList<ContractEvent> events, ContractModelProvider model,
 			RiskFactorModelProvider observer) throws AttributeConversionException {
 
-		// initialize state space per status date
-		StateSpace states = initStateSpace(model, maturity(model));
+        // initialize state space per status date
+        StateSpace states = initStateSpace(model,maturity(model));
 
-		// sort the events according to their time sequence
-		Collections.sort(events);
+        // sort the events according to their time sequence
+        Collections.sort(events);
 
-		// apply events according to their time sequence to current state
-		LocalDateTime initialExchangeDate = model.getAs("InitialExchangeDate");
+        // apply events according to their time sequence to current state
 		ListIterator<ContractEvent> eventIterator = events.listIterator();
-		while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal > 0.0) && eventIterator.hasNext()) {
-			((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
-					model.getAs("BusinessDayConvention"));
+        //while (( states.statusDate.isBefore(initialExchangeDate) || states.notionalPrincipal != 0.0) && eventIterator.hasNext()) {
+        while (eventIterator.hasNext()) {
+                ((ContractEvent) eventIterator.next()).eval(states, model, observer, model.getAs("DayCountConvention"),
+                    model.getAs("BusinessDayConvention"));
+        }
+        
+        // remove pre-purchase events if purchase date set
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
 		}
-		// return evaluated events
-		return events;
+		
+        // return evaluated events
+        return events;
 	}
 
 	private static LocalDateTime maturity(ContractModelProvider model) {
@@ -400,13 +428,67 @@ public final class ExoticLinearAmortizer {
 		// determine maturity of the contract
 		LocalDateTime maturity = model.getAs("MaturityDate");
 
-		if(CommonUtils.isNull(maturity)){
-			LocalDateTime calculatedTime;
+		if(CommonUtils.isNull(maturity)) {
+			DayCountCalculator dayCounter = model.getAs("DayCountConvention");
+			BusinessDayAdjuster timeAdjuster = model.getAs("BusinessDayConvention");
 			double notionalPrincipal = model.getAs("NotionalPrincipal");
-			LocalDateTime[] prAnchor = Arrays
-					.asList(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption").toString().split(",")).stream()
-					.map(LocalDateTime::parse).toArray(LocalDateTime[]::new);
-			int upperBound;
+			ArrayList<LocalDateTime> prAnchor = Arrays.stream(model.getAs("ArrayCycleAnchorDateOfPrincipalRedemption").toString().replaceAll("\\[", "").replaceAll("]", "").split(","))
+					.map(s -> {
+						s = s.trim();
+						return LocalDateTime.parse(s);
+					}).collect(Collectors.toCollection(ArrayList::new));
+			Integer[] prIncDec = Arrays.stream(model.getAs("ArrayIncreaseDecrease").toString().replaceAll("\\[", "").replaceAll("]", "").trim().split(","))
+					.map(d -> {
+						if (d.equals("INC")) {
+							return 1;
+						} else {
+							return -1;
+						}
+					}).toArray(Integer[]::new);
+			Double[] prPayment = Arrays.stream(model.getAs("ArrayNextPrincipalRedemptionPayment").toString().replaceAll("\\[", "").replaceAll("]", "").trim().split(",")).map(Double::parseDouble).toArray(Double[]::new);
+			if (Objects.isNull(model.getAs("ArrayCycleOfPrincipalRedemption"))) {
+				maturity = prAnchor.get(prAnchor.size()-1);
+			} else {
+				String[] prCycle = Arrays.stream(model.getAs("ArrayCycleOfPrincipalRedemption").toString().replaceAll("\\[", "").replaceAll("]", "").split(",")).map(String::trim).toArray(String[]::new);
+				LocalDateTime t = model.getAs("StatusDate");
+				if (prCycle.length > 1) {
+					double sum = 0;
+					int index = 0;
+					int noOfPrEvents = 0;
+					Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(prAnchor.get(index), prAnchor.get(index + 1), prCycle[index].toString(), model.getAs("EndOfMonthConvention"), false);
+					do {
+						if (prIncDec[index] == -1) {
+							noOfPrEvents = (prSchedule.size() * prPayment[index] * prIncDec[index]) + notionalPrincipal + sum <= 0 ? (int) ((notionalPrincipal + sum) / prPayment[index]) : prSchedule.size();
+						} else {
+							noOfPrEvents = (prSchedule.size() * prPayment[index] * prIncDec[index]) + notionalPrincipal >= 0 ? (int) ((notionalPrincipal + sum) / prPayment[index]) : prSchedule.size();
+						}
+						sum += noOfPrEvents * prIncDec[index] * prPayment[index];
+						//ARPRCL, ARPRANX and ARINDEC must be the same size
+						if (prAnchor.size()-2 == index) {
+							noOfPrEvents = Math.abs((int) Math.ceil((sum + notionalPrincipal) / prPayment[index+1]));
+							t = prAnchor.get(index+1);
+							for (int i = 0; i < noOfPrEvents-1; i++) {
+								t = t.plus(CycleUtils.parsePeriod(prCycle[index+1]));
+							}
+							sum += noOfPrEvents * prIncDec[index+1] * prPayment[index+1];
+						} else {
+							index++;
+							prSchedule = ScheduleFactory.createSchedule(prAnchor.get(index), prAnchor.get(index + 1), prCycle[index], model.getAs("EndOfMonthConvention"), false);
+							for (int i = 0; i < noOfPrEvents; i++) {
+								t = t.plus(CycleUtils.parsePeriod(prCycle[index - 1]));
+							}
+						}
+					} while (Math.abs(sum) != notionalPrincipal);
+					maturity = timeAdjuster.shiftEventTime(t);
+				} else {
+					int noOfPrEvents = (int) Math.ceil(notionalPrincipal / prPayment[0]);
+					t = prAnchor.get(0);
+					for (int i = 0; i < noOfPrEvents-1; i++) {
+						t = t.plus(CycleUtils.parsePeriod(prCycle[0]));
+					}
+					maturity = timeAdjuster.shiftEventTime(t);
+				}
+			}
 		}
 		return maturity;
 	}
@@ -419,23 +501,23 @@ public final class ExoticLinearAmortizer {
 		states.statusDate = model.getAs("StatusDate");
 		states.notionalScalingMultiplier = 1;
 		states.interestScalingMultiplier = 1;
-
 		
-		if (!model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))) {
+		if(model.<LocalDateTime>getAs("InitialExchangeDate").isAfter(model.getAs("StatusDate"))){
+            states.notionalPrincipal = 0.0;
+            states.nominalInterestRate = 0.0;
+            states.interestCalculationBaseAmount = 0.0;
+        }else{
 			states.notionalPrincipal = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 					* model.<Double>getAs("NotionalPrincipal");
 			states.nominalInterestRate = model.getAs("NominalInterestRate");
 			states.accruedInterest = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
 					* model.<Double>getAs("AccruedInterest");
 			states.feeAccrued = model.getAs("FeeAccrued");
-			if (CommonUtils.isNull(model.getAs("InterestCalculationBase"))
-					|| model.getAs("InterestCalculationBase").equals("NT")) {
-				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
-						* model.<Double>getAs("NotionalPrincipal");
-			} else {
-				states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole"))
-						* model.<Double>getAs("InterestCalculationBaseAmount");
-			}
+			if(InterestCalculationBase.NT.equals(model.getAs("InterestCalculationBase"))){
+                states.interestCalculationBaseAmount = states.notionalPrincipal; // contractRole applied at notionalPrincipal init
+            }else{
+                states.interestCalculationBaseAmount = ContractRoleConvention.roleSign(model.getAs("ContractRole")) * model.<Double>getAs("InterestCalculationBaseAmount");
+            }
 		}
 		return states;
 	}
