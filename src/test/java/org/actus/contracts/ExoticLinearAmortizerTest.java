@@ -50,7 +50,8 @@ public class ExoticLinearAmortizerTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(LocalDateTime.parse(test.getto()), terms);
+            LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
+            ArrayList<ContractEvent> schedule = ExoticLinearAmortizer.schedule(to, terms);
             schedule = ExoticLinearAmortizer.apply(schedule, terms, observer);
 
             // transform schedule to event list and return
