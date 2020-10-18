@@ -69,6 +69,8 @@ public final class ContractType {
                 return NegativeAmortizer.schedule(to,model);
             case ANN:
                 return Annuity.schedule(to,model);
+            case LAX:
+                return ExoticLinearAmortizer.schedule(to, model);
             case CLM:
                 return CallMoney.schedule(to,model);
             case UMP:
@@ -85,8 +87,8 @@ public final class ContractType {
                 return PlainVanillaInterestRateSwap.schedule(to,model);
             case SWAPS:
                 return Swap.schedule(to,model);
-            case LAX:
-            	return ExoticLinearAmortizer.schedule(to, model);
+            case CAPFL:
+                return CapFloor.schedule(to, model);
             default:
                 throw new ContractTypeUnknownException();
         }
@@ -129,6 +131,8 @@ public final class ContractType {
                 return NegativeAmortizer.apply(events,model,observer);
             case ANN:
                 return Annuity.apply(events,model,observer);
+            case LAX:
+                return ExoticLinearAmortizer.apply(events, model, observer);
             case CLM:
                 return CallMoney.apply(events,model,observer);
             case UMP:
@@ -145,8 +149,8 @@ public final class ContractType {
                 return PlainVanillaInterestRateSwap.apply(events,model,observer);
             case SWAPS:
                 return Swap.apply(events,model,observer);
-            case LAX:
-            	return ExoticLinearAmortizer.apply(events, model, observer);
+            case CAPFL:
+            	return CapFloor.apply(events, model, observer);
             default:
                 throw new ContractTypeUnknownException();
         }
