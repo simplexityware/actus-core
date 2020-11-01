@@ -34,26 +34,28 @@ public class ContractReference {
                 break;
             case CID:
             case MOC:
+                this.object = ((Map<String,String>)attributes.get("object")).get("marketObjectCode");
             case EID:
                 this.object = attributes.get("object");
                 break;
             case CST:
                 break;
-                default:
-                    break;
+            default:
+                break;
 
         }
     }
 
-    public ReferenceRole getReferenceRole() {
-        return referenceRole;
-    }
-
-    public ReferenceType getReferenceType() {
-        return referenceType;
-    }
-
     public Object getObject() {
         return object;
+    }
+    public String getMarketObjectCode(){
+        if(ReferenceType.MOC.equals(this.referenceType)){
+            return (String)this.object;
+        }else if(ReferenceType.CNT.equals(this.referenceType)){
+            return ((ContractModel)this.object).getAs("MarketObjectCode");
+        }else{
+            return null;
+        }
     }
 }
