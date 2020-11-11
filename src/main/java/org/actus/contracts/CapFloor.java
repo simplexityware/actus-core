@@ -109,6 +109,12 @@ public final class CapFloor {
                     );
         events = new ArrayList<>(mergedEvents.values());
         Collections.sort(events);
+
+        // remove pre-purchase events if purchase date set
+        if(!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
+            events.removeIf(e -> !e.eventType().equals(EventType.AD) && e.compareTo(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), null, null, model.getAs("ContractID"))) == -1);
+        }
+
         return events;
     }
 

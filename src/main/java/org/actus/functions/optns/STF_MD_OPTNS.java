@@ -17,7 +17,7 @@ public class STF_MD_OPTNS implements StateTransitionFunction {
     public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         if(CommonUtils.isNull(states.exerciseDate)){
             double x = 0.0;
-            double st = riskFactorModel.stateAt(model.<ContractReference>getAs("ContractStructure").getMarketObjectCode(), time, states, model);
+            double st = riskFactorModel.stateAt(model.<ContractReference>getAs("ContractStructure").getContractAttribute("MarketObjectCode"), time, states, model);
             OptionType option = model.getAs("OptionType");
             if(option.equals(OptionType.C)){
                 x = Math.max(st - model.<Double>getAs("OptionStrike1"), 0.0);

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class STF_MD_FUTUR implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double st = riskFactorModel.stateAt(model.<ContractReference>getAs("ContractStructure").getMarketObjectCode(), time, states, model);
+        double st = riskFactorModel.stateAt(model.<ContractReference>getAs("ContractStructure").getContractAttribute("MarketObjectCode"), time, states, model);
         double x = st - model.<Double>getAs("FuturesPrice");
         if(x == 0.0){
             states.exerciseDate = null;
