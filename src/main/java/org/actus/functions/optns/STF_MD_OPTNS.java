@@ -11,13 +11,14 @@ import org.actus.types.OptionType;
 import org.actus.util.CommonUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class STF_MD_OPTNS implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         if(CommonUtils.isNull(states.exerciseDate)){
             double x = 0.0;
-            double st = riskFactorModel.stateAt(model.<ContractReference>getAs("ContractStructure").getContractAttribute("MarketObjectCode"), time, states, model);
+            double st = riskFactorModel.stateAt(model.<ArrayList<ContractReference>>getAs("ContractStructure").get(0).getContractAttribute("MarketObjectCode"), time, states, model);
             OptionType option = model.getAs("OptionType");
             if(option.equals(OptionType.C)){
                 x = Math.max(st - model.<Double>getAs("OptionStrike1"), 0.0);

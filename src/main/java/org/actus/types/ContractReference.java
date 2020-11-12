@@ -40,6 +40,7 @@ public class ContractReference {
             case CID:
             case MOC:
                 this.object = ((Map<String,String>)attributes.get("object")).get("marketObjectCode");
+                break;
             case EID:
                 this.object = attributes.get("object");
                 break;

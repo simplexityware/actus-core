@@ -23,6 +23,7 @@ import org.actus.functions.stk.STF_TD_STK;
 import org.actus.states.StateSpace;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
+import org.actus.util.CycleUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public class Future {
         //exercise & settlement
         if(!CommonUtils.isNull(model.getAs("ExerciseDate"))){
             events.add(EventFactory.createEvent(model.getAs("ExerciseDate"), EventType.XD,model.getAs("Currency"), new POF_XD_FUTUR(), new STF_XD_FUTUR(), model.getAs("ContractID")));
-            events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("ExerciseDate").plus(model.getAs("SettlementPeriod")), EventType.STD, model.getAs("Currency"), new POF_STD_OPTNS(), new STF_STD_OPTNS(),model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("ExerciseDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_OPTNS(), new STF_STD_OPTNS(),model.getAs("ContractID")));
         }
 
         //maturity

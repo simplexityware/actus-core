@@ -1,5 +1,6 @@
 package org.actus.testutils;
 
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 
 import org.actus.types.EventType;
@@ -10,11 +11,21 @@ import java.math.RoundingMode;
 public class ResultSet {
     LocalDateTime eventDate;
     EventType eventType;
-    Double payoff;
+    double payoff;
     String currency;
-    Double notionalPrincipal;
-    Double nominalInterestRate;
-    Double accruedInterest;
+    double notionalPrincipal;
+    double nominalInterestRate;
+    double accruedInterest;
+    double exerciseAmount;
+    LocalDateTime exerciseDate;
+
+    public LocalDateTime getExerciseDate() {return exerciseDate;}
+
+    public void setExerciseDate(String exerciseDate) {this.exerciseDate = LocalDateTime.parse(exerciseDate); }
+
+    public Double getExerciseAmount() {return exerciseAmount; }
+
+    public void setExerciseAmount(Double exerciseAmount) {this.exerciseAmount = exerciseAmount;}
 
     public String getEventDate() {
         return eventDate.toString();
@@ -74,6 +85,7 @@ public class ResultSet {
 
     public void roundTo(int decimals) {
         // round payoff
+
         BigDecimal bd = new BigDecimal(Double.toString(this.payoff));
         this.payoff = bd.setScale(decimals, RoundingMode.FLOOR).doubleValue();
 
@@ -92,22 +104,15 @@ public class ResultSet {
 
     public String toString() {
         return "eventDate: " + eventDate + ", " +
-            "eventType: " + eventType + ", " +
-            "payoff: " + payoff + ", " +
-            "currency: " + currency + "," +
-            "notionalPrincipal: " + notionalPrincipal + ", " +
-            "nominalInterestRate: " + nominalInterestRate + ", " +
-            "accruedInterest: " + accruedInterest;
+                "eventType: " + eventType + ", " +
+                "payoff: " + payoff + ", " +
+                "currency: " + currency + "," +
+                "notionalPrincipal: " + notionalPrincipal + ", " +
+                "nominalInterestRate: " + nominalInterestRate + ", " +
+                "accruedInterest: " + accruedInterest+ ", " +
+                "exerciseDate" + exerciseDate + ", " +
+                "exerciseAmount" + exerciseAmount;
     }
-    /*public String toString() {
-        return eventDate + ", " +
-            eventType + ", " +
-            payoff + ", " +
-            currency + "," +
-            notionalPrincipal + ", " +
-            nominalInterestRate + ", " +
-            accruedInterest;
-    }*/
 
     // for assertEquals in JUnit testing
     @Override
@@ -117,11 +122,11 @@ public class ResultSet {
         ResultSet resultsToCompare = (ResultSet) o;
         return eventDate.equals(resultsToCompare.eventDate) &&
                 eventType.equals(resultsToCompare.eventType) &&
-                payoff.equals(resultsToCompare.payoff) &&
+                payoff == resultsToCompare.payoff &&
                 currency.equals(resultsToCompare.currency) &&
-                notionalPrincipal.equals(resultsToCompare.notionalPrincipal) &&
-                nominalInterestRate.equals(resultsToCompare.nominalInterestRate) &&
-                accruedInterest.equals(resultsToCompare.accruedInterest);
+                notionalPrincipal == resultsToCompare.notionalPrincipal &&
+                nominalInterestRate == resultsToCompare.nominalInterestRate &&
+                accruedInterest == resultsToCompare.accruedInterest;
     }
 
 }

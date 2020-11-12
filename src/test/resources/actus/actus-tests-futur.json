@@ -22,8 +22,9 @@
             "priceAtPurchaseDate": "10",
             "maturityDate": "2020-03-30T00:00:00",
             "futuresPrice": " 80",
-            "settlementPeriod": "0D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P0DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-06-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
