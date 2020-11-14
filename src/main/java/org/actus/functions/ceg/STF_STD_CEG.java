@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 public class STF_STD_CEG implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return null;
+        states.notionalPrincipal = 0.0;
+        states.feeAccrued = 0.0;
+        states.statusDate = time;
+        return StateSpace.copyStateSpace(states);
     }
 }

@@ -12,6 +12,6 @@ import java.time.LocalDateTime;
 public class POF_MD_CEG implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        return 0;
+        return 0.0;
     }
 }

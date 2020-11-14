@@ -96,7 +96,7 @@ public class CreditEnhancementGuarantee {
         events.addAll(observer.events(model));
 
         // initialize state space per status date
-        StateSpace states = initStateSpace(model);
+        StateSpace states = initStateSpace(model, observer);
 
         // sort the events according to their time sequence
         Collections.sort(events);
@@ -125,10 +125,11 @@ public class CreditEnhancementGuarantee {
         return maturityDate;
     }
 
-    private static StateSpace initStateSpace(ContractModelProvider model) throws AttributeConversionException {
+    public static StateSpace initStateSpace(ContractModelProvider model, RiskFactorModelProvider observer) throws AttributeConversionException {
         StateSpace states = new StateSpace();
         states.maturityDate = maturity(model);
         states.statusDate = model.getAs("StatusDate");
+
         if(states.statusDate.isAfter(states.maturityDate)){
             states.notionalPrincipal = 0.0;
         }else if(model.<Double>getAs("NotionalPrincipal") >= 0.0){
@@ -136,20 +137,44 @@ public class CreditEnhancementGuarantee {
                     * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                     * model.<Double>getAs("NotionalPrincipal");
         } else{
-            List<ContractReference> contractStructure = model.getAs("ContractStructure");
-            List<StateSpace> stateAtT0 = new ArrayList<>();
-            if(GuaranteedExposure.NO.equals(model.getAs("GuaranteedExposure"))){
-                stateAtT0 = contractStructure.stream().map(c -> c.getStateSpaceAtTimepoint(states.statusDate,null)).collect(Collectors.toList());
-                states.notionalPrincipal = model.<Double>getAs("CoverageOfCreditEnhancement")
-                        * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
-                        * stateAtT0.stream().map(s -> s.notionalPrincipal).reduce(0.0, Double::sum);
-            }else if(GuaranteedExposure.NI.equals(model.getAs("GuaranteedExposure"))){
-
-            }else{
-
-            }
+            states.notionalPrincipal = CreditEnhancementGuarantee.calculateNotionalPrincipal(states,model,observer,states.statusDate);
         }
+        if(CommonUtils.isNull(model.getAs("FeeRate"))){
+            states.feeAccrued = 0.0;
+        } else if(!CommonUtils.isNull(model.getAs("FeeAccrued"))){
+            states.feeAccrued = model.getAs("FeeAccrued");
+        }//TODO: implement last two possible initialization
+
+        states.exerciseAmount = model.getAs("ExerciseAmount");
+        states.exerciseDate = model.getAs("ExerciseDate");
+        states.contractPerformance = model.getAs("ContractPerformance");
         // return the initialized state space
         return states;
+    }
+
+    public static Double calculateNotionalPrincipal(StateSpace states, ContractModelProvider model, RiskFactorModelProvider observer, LocalDateTime time){
+        List<ContractReference> contractStructure = model.getAs("ContractStructure");
+        List<StateSpace> statesAtTimePoint;
+        statesAtTimePoint = contractStructure.stream().map(c -> c.getStateSpaceAtTimepoint(time,observer)).collect(Collectors.toList());
+        if(GuaranteedExposure.NO.equals(model.getAs("GuaranteedExposure"))){
+            states.notionalPrincipal =
+                    model.<Double>getAs("CoverageOfCreditEnhancement")
+                            * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+                            * statesAtTimePoint.stream().map(s -> s.notionalPrincipal).reduce(0.0, Double::sum);
+        }else if(GuaranteedExposure.NI.equals(model.getAs("GuaranteedExposure"))){
+            states.notionalPrincipal =
+                    model.<Double>getAs("CoverageOfCreditEnhancement")
+                            * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+                            * (statesAtTimePoint.stream().map(s -> s.notionalPrincipal).reduce(0.0, Double::sum)
+                            + statesAtTimePoint.stream().map(s -> s.accruedInterest).reduce(0.0, Double::sum))
+            ;
+        }else{
+            List<String> marketObjectCodesOfUnderlying = contractStructure.stream().map(c -> c.getContractAttribute("MarketObjectCode")).collect(Collectors.toList());
+            states.notionalPrincipal =
+                    model.<Double>getAs("CoverageOfCreditEnhancement")
+                            * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
+                            * marketObjectCodesOfUnderlying.stream().map(s -> observer.stateAt(s,time,states,model)).reduce(0.0, Double::sum);
+        }
+        return states.notionalPrincipal;
     }
 }
