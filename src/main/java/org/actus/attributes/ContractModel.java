@@ -175,6 +175,8 @@ public class ContractModel implements ContractModelProvider {
                         map.put("PriceAtPurchaseDate", (CommonUtils.isNull(attributes.get("priceAtPurchaseDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("priceAtPurchaseDate")));
                         map.put("OptionType", OptionType.valueOf((String)attributes.get("optionType")));
                         map.put("OptionStrike1", Double.parseDouble((String)attributes.get("optionStrike1")));
+                        map.put("Currency", attributes.get("currency"));
+
                         // parse underlying attributes
                         ((List<Map<String,Object>>)attributes.get("contractStructure")).forEach(e->contractStructure.add(new ContractReference(e, (ContractRole)map.get("ContractRole"))));
                         map.put("ContractStructure", contractStructure);
@@ -222,6 +224,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("SettlementPeriod", (CommonUtils.isNull(attributes.get("settlementPeriod"))) ? "P0D" : attributes.get("settlementPeriod"));
                         map.put("ExerciseDate", (CommonUtils.isNull(attributes.get("exerciseDate")) ? null : LocalDateTime.parse((String)attributes.get("exerciseDate"))));
                         map.put("PriceAtPurchaseDate", (CommonUtils.isNull(attributes.get("priceAtPurchaseDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("priceAtPurchaseDate")));
+                        map.put("Currency", attributes.get("currency"));
 
                         // parse underlying attributes
                         ((List<Map<String,Object>>)attributes.get("contractStructure")).forEach(e->contractStructure.add(new ContractReference(e, (ContractRole)map.get("ContractRole"))));
@@ -757,6 +760,7 @@ public class ContractModel implements ContractModelProvider {
                         map.put("SettlementPeriod", (CommonUtils.isNull(attributes.get("settlementPeriod"))) ? "P0D" : attributes.get("settlementPeriod"));
                         map.put("ExerciseDate", (CommonUtils.isNull(attributes.get("exerciseDate")) ? null : LocalDateTime.parse(attributes.get("exerciseDate"))));
                         map.put("PriceAtPurchaseDate", (CommonUtils.isNull(attributes.get("priceAtPurchaseDate"))) ? 0.0 : Double.parseDouble(attributes.get("priceAtPurchaseDate")));
+                        map.put("Currency", attributes.get("currency"));
                         break;
                     default:
                         throw new ContractTypeUnknownException();
