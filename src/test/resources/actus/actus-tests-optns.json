@@ -24,7 +24,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": " 80",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -111,8 +111,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": " 80",
-            "settlementPeriod": "0D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P0DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-06-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -161,6 +162,7 @@
                 "payoff": -10,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-06-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -217,8 +219,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": " 80",
-            "settlementPeriod": "0D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P0DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-09-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -267,6 +270,7 @@
                 "payoff": -10,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-09-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -323,8 +327,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": " 80",
-            "settlementPeriod": "0D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P0DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-09-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -373,6 +378,7 @@
                 "payoff": 10,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-09-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -429,8 +435,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": " 80",
-            "settlementPeriod": "3D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P3DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-09-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -479,6 +486,7 @@
                 "payoff": 10,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-09-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -536,8 +544,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": " 80",
-            "settlementPeriod": "3D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P3DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-09-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -586,6 +595,7 @@
                 "payoff": 10,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-09-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -643,8 +653,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": " 80",
-            "settlementPeriod": "3D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P3DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-09-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -693,6 +704,7 @@
                 "payoff": 10,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-09-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -749,8 +761,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "160",
-            "settlementPeriod": "0D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P0DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-03-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -799,6 +812,7 @@
                 "payoff": -20,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-03-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -855,8 +869,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "160",
-            "settlementPeriod": "0D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P0DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-06-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -905,6 +920,7 @@
                 "payoff": -20,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-06-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -961,8 +977,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "160",
-            "settlementPeriod": "0D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P0DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-09-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -1011,6 +1028,7 @@
                 "payoff": -20,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-09-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -1067,8 +1085,9 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "200",
-            "settlementPeriod": "0D",
-            "deliverySettlement": "S"
+            "settlementPeriod": "P0DL0",
+            "deliverySettlement": "S",
+            "exerciseDate": "2020-09-30T00:00:00"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -1117,6 +1136,7 @@
                 "payoff": -20,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-09-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -1173,7 +1193,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "250",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -1260,7 +1280,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "200",
-            "settlementPeriod": "5D",
+            "settlementPeriod": "P5DL0",
             "deliverySettlement": "S",
             "exerciseDate": "2020-09-30T00:00:00",
             "exerciseAmount": "10.33"
@@ -1342,7 +1362,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "200",
-            "settlementPeriod": "5D",
+            "settlementPeriod": "P5DL0",
             "deliverySettlement": "S",
             "exerciseDate": "2020-10-03T00:00:00",
             "exerciseAmount": "10.33"
@@ -1424,7 +1444,7 @@
             "optionExerciseType": "E",
             "optionType": "P",
             "optionStrike1": " 80",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -1474,6 +1494,7 @@
                 "payoff": -10,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-03-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -1530,7 +1551,7 @@
             "optionExerciseType": "E",
             "optionType": "P",
             "optionStrike1": " 80",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -1617,7 +1638,7 @@
             "optionExerciseType": "E",
             "optionType": "P",
             "optionStrike1": " 80",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -1704,7 +1725,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "160",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -1791,7 +1812,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "160",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -1878,7 +1899,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "160",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -1965,7 +1986,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "200",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -2052,7 +2073,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "250",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -2102,6 +2123,7 @@
                 "payoff": -20,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-09-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
@@ -2158,7 +2180,7 @@
             "optionExerciseType": "E",
             "optionType": "C",
             "optionStrike1": "250",
-            "settlementPeriod": "0D",
+            "settlementPeriod": "P0DL0",
             "deliverySettlement": "S"
         },
         "to": "2020-12-31T00:00:00",
@@ -2208,6 +2230,7 @@
                 "payoff": 20,
                 "currency": "USD",
                 "notionalPrincipal": 0,
+                "exerciseDate": "2020-09-30T00:00:00",
                 "exerciseAmount": 0
             },
             {
