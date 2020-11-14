@@ -53,23 +53,20 @@ public class NegativeAmortizerTest {
             LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
             ArrayList<ContractEvent> schedule = NegativeAmortizer.schedule(to, terms);
             schedule = NegativeAmortizer.apply(schedule, terms, observer);
-        
-            // transform schedule to event list and return
-            List<ResultSet> computedResults = schedule.stream().map(e -> { 
-                ResultSet results = new ResultSet();
-                results.setEventDate(e.eventTime().toString());
-                results.setEventType(e.eventType());
-                results.setPayoff(e.payoff());
-                results.setCurrency(e.currency());
-                results.setNotionalPrincipal(e.states().notionalPrincipal);
-                results.setNominalInterestRate(e.states().nominalInterestRate);
-                results.setAccruedInterest(e.states().accruedInterest);
-                return results;
-            }).collect(Collectors.toList());
 
             // extract test results
             List<ResultSet> expectedResults = test.getResults();
-            
+            expectedResults.forEach(ResultSet::setValues);
+
+            // transform schedule to event list and return
+            List<ResultSet> computedResults = new ArrayList<>();
+            ResultSet sampleFields = expectedResults.get(0);
+            for(ContractEvent event : schedule){
+                ResultSet result = new ResultSet();
+                result.setRequiredValues(sampleFields.getValues(), event.getAllStates());
+                computedResults.add(result);
+            }
+
             // round results to available precision
             computedResults.forEach(result -> result.roundTo(10));
             expectedResults.forEach(result -> result.roundTo(10));
