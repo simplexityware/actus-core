@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class STF_XD_FUTUR implements StateTransitionFunction {
     @Override
     public StateSpace eval(LocalDateTime time, StateSpace states, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
-        double st = riskFactorModel.stateAt(model.<ArrayList<ContractReference>>getAs("ContractStructure").get(0).getContractAttribute("MarketObjectCode"), states.statusDate, states, model);
+        double st = riskFactorModel.stateAt(model.<ArrayList<ContractReference>>getAs("ContractStructure").get(0).getContractAttribute("MarketObjectCode"), time, states, model);
         states.exerciseAmount = st - model.<Double>getAs("FuturesPrice");
 
         states.statusDate = time;

@@ -23,7 +23,7 @@
             "maturityDate": "2020-12-31T00:00:00",
             "notionalPrincipal": "1000000",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -75,7 +75,7 @@
             "maturityDate": "2020-12-31T00:00:00",
             "notionalPrincipal": "1000000",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -145,7 +145,7 @@
             "maturityDate": "2020-12-31T00:00:00",
             "notionalPrincipal": "1000000",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -205,7 +205,7 @@
             "maturityDate": "2020-06-30T00:00:00",
             "notionalPrincipal": "1000000",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -265,7 +265,7 @@
             "maturityDate": "2020-12-31T00:00:00",
             "notionalPrincipal": "1000000",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -326,7 +326,7 @@
             "notionalPrincipal": "1000000",
             "coverageOfCreditEnhancement": "0.7",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -397,7 +397,7 @@
             "notionalPrincipal": "1000000",
             "coverageOfCreditEnhancement": "0.7",
             "creditEventTypeCovered": "DQ",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -458,7 +458,7 @@
             "notionalPrincipal": "1000000",
             "coverageOfCreditEnhancement": "0.7",
             "creditEventTypeCovered": "DQ",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2020-12-31T00:00:00",
         "dataObserved": {
@@ -564,7 +564,7 @@
             "guaranteedExposure": "NO",
             "coverageOfCreditEnhancement": "1.0",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2021-01-02T00:00:00",
         "dataObserved": {
@@ -670,7 +670,7 @@
             "guaranteedExposure": "NI",
             "coverageOfCreditEnhancement": "1.0",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2021-01-02T00:00:00",
         "dataObserved": {
@@ -776,7 +776,7 @@
             "guaranteedExposure": "NI",
             "coverageOfCreditEnhancement": "1.0",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2021-01-02T00:00:00",
         "dataObserved": {
@@ -882,7 +882,7 @@
             "guaranteedExposure": "NI",
             "coverageOfCreditEnhancement": "1.0",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2021-01-02T00:00:00",
         "dataObserved": {
@@ -980,7 +980,7 @@
             "guaranteedExposure": "NO",
             "coverageOfCreditEnhancement": "0.5",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "0D"
+            "settlementPeriod": "P0DL0"
         },
         "to": "2021-01-02T00:00:00",
         "dataObserved": {
@@ -1086,7 +1086,7 @@
             "guaranteedExposure": "NO",
             "coverageOfCreditEnhancement": "0.5",
             "creditEventTypeCovered": "DF",
-            "settlementPeriod": "5D",
+            "settlementPeriod": "P5DL0",
             "cycleAnchorDateOfFee": "2020-01-02T00:00:00",
             "cycleOfFee": "P3ML0",
             "feeBasis": "A",

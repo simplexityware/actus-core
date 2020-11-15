@@ -1,9 +1,21 @@
 package org.actus.testutils;
 
+import org.actus.states.StateSpace;
+
 public class ObservedEvent {
     String time;
     String type;
     double value;
+    String contractId;
+    StateSpace states;
+
+    public String getContractId() { return contractId; }
+
+    public void setContractId(String contractId) { this.contractId = contractId; }
+
+    public StateSpace getStates() { return states; }
+
+    public void setStates(StateSpace states) { this.states = states; }
 
     public String getTime() {
         return time;

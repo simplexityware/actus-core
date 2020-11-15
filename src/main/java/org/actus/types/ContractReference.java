@@ -38,6 +38,8 @@ public class ContractReference {
                 this.object = ContractModel.parse(childModel);
                 break;
             case CID:
+                this.object = ((Map<String,String>)attributes.get("object")).get("contractIdentifier");
+                break;
             case MOC:
                 this.object = ((Map<String,String>)attributes.get("object")).get("marketObjectCode");
                 break;

@@ -28,7 +28,7 @@ import org.junit.jupiter.api.DynamicTest;
 public class CreditEnhancementGuaranteeTest {
     @TestFactory
     public Stream<DynamicTest> test() {
-        String testFile = "./src/test/resources/actus/actus-tests-capfl.json";
+        String testFile = "./src/test/resources/actus/actus-tests-ceg.json";
 
         // read tests from file
         Map<String, TestData> tests = ContractTestUtils.readTests(testFile);
@@ -49,8 +49,9 @@ public class CreditEnhancementGuaranteeTest {
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
 
             // compute and evaluate schedule
-            ArrayList<ContractEvent> schedule = CapFloor.schedule(LocalDateTime.parse(test.getto()), terms);
-            schedule = CapFloor.apply(schedule, terms, observer);
+            LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
+            ArrayList<ContractEvent> schedule = CreditEnhancementGuarantee.schedule(to, terms);
+            schedule = CreditEnhancementGuarantee.apply(schedule, terms, observer);
 
             // extract test results
             List<ResultSet> expectedResults = test.getResults();
