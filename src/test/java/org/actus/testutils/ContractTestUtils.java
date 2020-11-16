@@ -12,10 +12,7 @@ import org.actus.types.EventType;
 import org.actus.functions.pam.POF_AD_PAM;
 import org.actus.functions.csh.STF_AD_CSH;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
@@ -75,6 +72,15 @@ public class ContractTestUtils {
 
         return observer;
     }
+    public static DataObserver createObserver(List<ObservedDataSet> data, List<ContractEvent> observedEvents) {
+        DataObserver observer = createObserver(data);
+        HashMap<String, List<ContractEvent>> sortedEvents = new HashMap<>();
+        Set<String> creatorIdentifikations = observedEvents.stream().map(ContractEvent::getContractID).collect(Collectors.toSet());
+        creatorIdentifikations.forEach(s -> {
+            observer.eventsObserved.put(s, observedEvents.stream().filter(c -> c.getContractID().equals(s)).collect(Collectors.toList()));
+        });
+        return observer;
+    }
 
     public static Map<String, TestData> readTests(String file) {
         ObjectMapper mapper = new ObjectMapper();
@@ -85,7 +91,7 @@ public class ContractTestUtils {
             tests = mapper.readValue(Paths.get(file).toFile(), new TypeReference<Map<String, TestData>>() {
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("IndexOutOfBounds");
         }
 
         return tests;
@@ -98,7 +104,7 @@ public class ContractTestUtils {
             terms.getAs("Currency"),
             new POF_AD_PAM(),
             new STF_AD_CSH(),
-            terms.getAs("ContractID"))
+            e.contractId)
         ).collect(Collectors.toList());
         return observedEvents;
     }

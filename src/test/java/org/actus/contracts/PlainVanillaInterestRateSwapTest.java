@@ -58,8 +58,15 @@ public class PlainVanillaInterestRateSwapTest {
 
             // transform schedule to event list and return
             List<ResultSet> computedResults = new ArrayList<>();
-            ResultSet sampleFields = expectedResults.get(0);
+            ResultSet sampleFields;
+            int i = 0;
             for(ContractEvent event : schedule){
+                try{
+                    sampleFields = expectedResults.get(i);
+                    i++;
+                }catch (IndexOutOfBoundsException e) {
+                    sampleFields = expectedResults.get(i-1);
+                }
                 ResultSet result = new ResultSet();
                 result.setRequiredValues(sampleFields.getValues(), event.getAllStates());
                 computedResults.add(result);

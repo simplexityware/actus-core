@@ -13,6 +13,7 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org. actus.events.ContractEvent;
 
+import java.awt.*;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
@@ -50,7 +51,9 @@ public class OptionTest {
 
             // compute and evaluate schedule
             ArrayList<ContractEvent> schedule = Option.schedule(LocalDateTime.parse(test.getto()), terms);
-            schedule = Option.apply(schedule, terms, observer);
+            try{
+                schedule = Option.apply(schedule, terms, observer);
+            }catch(Exception e){ }
 
             // extract test results
             List<ResultSet> expectedResults = test.getResults();
@@ -58,8 +61,15 @@ public class OptionTest {
 
             // transform schedule to event list and return
             List<ResultSet> computedResults = new ArrayList<>();
-            ResultSet sampleFields = expectedResults.get(0);
+            ResultSet sampleFields;
+            int i = 0;
             for(ContractEvent event : schedule){
+                try{
+                    sampleFields = expectedResults.get(i);
+                    i++;
+                }catch (IndexOutOfBoundsException e) {
+                    sampleFields = expectedResults.get(i-1);
+                }
                 ResultSet result = new ResultSet();
                 result.setRequiredValues(sampleFields.getValues(), event.getAllStates());
                 computedResults.add(result);

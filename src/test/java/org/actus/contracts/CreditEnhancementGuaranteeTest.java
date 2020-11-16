@@ -5,11 +5,7 @@
  */
 package org.actus.contracts;
 
-import org.actus.testutils.ContractTestUtils;
-import org.actus.testutils.TestData;
-import org.actus.testutils.ObservedDataSet;
-import org.actus.testutils.ResultSet;
-import org.actus.testutils.DataObserver;
+import org.actus.testutils.*;
 import org.actus.attributes.ContractModel;
 import org. actus.events.ContractEvent;
 
@@ -41,12 +37,15 @@ public class CreditEnhancementGuaranteeTest {
             // extract test for test ID
             TestData test = tests.get(testId);
 
-            // create market model from data
-            List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
-            DataObserver observer = ContractTestUtils.createObserver(dataObserved);
-
             // create contract model from data
             ContractModel terms = ContractTestUtils.createModel(tests.get(testId).getTerms());
+
+            // create market model from data
+            List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
+            List<ObservedEvent> eventsObserved = new ArrayList<>(test.getEventsObserved());
+            DataObserver observer = ContractTestUtils.createObserver(dataObserved, ContractTestUtils.readObservedEvents(eventsObserved,terms));
+
+
 
             // compute and evaluate schedule
             LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
@@ -59,8 +58,15 @@ public class CreditEnhancementGuaranteeTest {
 
             // transform schedule to event list and return
             List<ResultSet> computedResults = new ArrayList<>();
-            ResultSet sampleFields = expectedResults.get(0);
+            ResultSet sampleFields;
+            int i = 0;
             for(ContractEvent event : schedule){
+                try{
+                    sampleFields = expectedResults.get(i);
+                    i++;
+                }catch (IndexOutOfBoundsException e) {
+                    sampleFields = expectedResults.get(i-1);
+                }
                 ResultSet result = new ResultSet();
                 result.setRequiredValues(sampleFields.getValues(), event.getAllStates());
                 computedResults.add(result);

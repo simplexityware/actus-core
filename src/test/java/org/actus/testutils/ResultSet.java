@@ -214,7 +214,7 @@ public class ResultSet {
                     setFields.put(f.getName(), value.toString());
                 }
             }catch(Exception e){
-                e.printStackTrace();
+                System.err.println("IndexOutOfBounds");
             }
         }
         this.values = setFields;
