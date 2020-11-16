@@ -8,6 +8,7 @@ package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.events.ContractEvent;
 import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
@@ -42,9 +43,11 @@ public final class Option {
         //exercise & settlement
         if(!CommonUtils.isNull(model.getAs("ExerciseDate"))){
             events.add(EventFactory.createEvent(model.getAs("ExerciseDate"), EventType.XD,model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_OPTNS(), model.getAs("ContractID")));
-            events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("ExerciseDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_OPTNS(), new STF_STD_OPTNS(),model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.<BusinessDayAdjuster>getAs("BusinessDayConvention").shiftEventTime(model.<LocalDateTime>getAs("ExerciseDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod")))), EventType.STD, model.getAs("Currency"), new POF_STD_OPTNS(), new STF_STD_OPTNS(),model.getAs("ContractID")));
+        } else{
+            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.XD,model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_OPTNS(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.<BusinessDayAdjuster>getAs("BusinessDayConvention").shiftEventTime(model.<LocalDateTime>getAs("MaturityDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod")))), EventType.STD, model.getAs("Currency"), new POF_STD_OPTNS(), new STF_STD_OPTNS(),model.getAs("ContractID")));
         }
-
         events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_OPTNS(), new STF_MD_OPTNS(), model.getAs("ContractID")));
 
         // termination

@@ -6,7 +6,6 @@
 package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
-import org.actus.attributes.ContractModel;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.events.ContractEvent;
@@ -15,14 +14,13 @@ import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.ceg.*;
 import org.actus.functions.optns.*;
 import org.actus.functions.stk.POF_PRD_STK;
-import org.actus.functions.stk.STF_TD_STK;
 import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
 import org.actus.types.ContractReference;
 import org.actus.types.EventType;
 import org.actus.types.GuaranteedExposure;
-import org.actus.types.ReferenceType;
 import org.actus.util.CommonUtils;
+import org.actus.util.CycleUtils;
 
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -77,13 +75,13 @@ public class CreditEnhancementGuarantee {
 
         // maturity
         if(CommonUtils.isNull(model.getAs("ExerciseDate"))){
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_CEG(), new STF_MD_CEG(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(to, EventType.MD, model.getAs("Currency"), new POF_MD_CEG(), new STF_MD_CEG(), model.getAs("ContractID")));
         }
 
         //exercise
         if(!CommonUtils.isNull(model.getAs("ExerciseDate"))){
             events.add(EventFactory.createEvent(model.getAs("ExerciseDate"), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
-            events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("ExerciseDate").plus(model.getAs("SettlementPeriod")), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("ExerciseDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
         }
         return events;
     }
@@ -92,9 +90,8 @@ public class CreditEnhancementGuarantee {
     public static ArrayList<ContractEvent> apply(ArrayList<ContractEvent> events,
                                                  ContractModelProvider model,
                                                  RiskFactorModelProvider observer) throws AttributeConversionException {
-        //Add external XD-event
-        events.addAll(observer.events(model));
 
+        events = addExternalXDEvent(model, events, observer);
         // initialize state space per status date
         StateSpace states = initStateSpace(model, observer);
 
@@ -176,5 +173,19 @@ public class CreditEnhancementGuarantee {
                             * marketObjectCodesOfUnderlying.stream().map(s -> observer.stateAt(s,time,states,model)).reduce(0.0, Double::sum);
         }
         return states.notionalPrincipal;
+    }
+
+    private static ArrayList<ContractEvent> addExternalXDEvent(ContractModelProvider model, ArrayList<ContractEvent> events, RiskFactorModelProvider observer){
+        String contractIdentifier = model.<List<ContractReference>>getAs("ContractStructure").get(0).getContractAttribute("");
+        List<ContractEvent> ceEvents = observer.events(model).stream().filter(e -> e.getContractID().equals(contractIdentifier)).collect(Collectors.toList());
+        if(ceEvents.size() > 0){
+            ContractEvent ceEvent = ceEvents.get(0);
+            if(!CommonUtils.isNull(ceEvent)){
+                events = events.stream().filter(e -> e.eventType() != EventType.MD).collect(Collectors.toCollection(ArrayList::new));
+                events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+                events.add(EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            }
+        }
+        return events;
     }
 }

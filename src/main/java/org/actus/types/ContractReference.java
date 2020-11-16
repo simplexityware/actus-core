@@ -9,6 +9,7 @@ import org.actus.states.StateSpace;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -64,17 +65,19 @@ public class ContractReference {
             if (ReferenceType.MOC.equals(this.referenceType)) {
                 attributeVal = (String) this.object;
             }
-        }else if((ReferenceType.CNT.equals(this.referenceType))) {
+        }else if(ReferenceType.CNT.equals(this.referenceType)) {
             attributeVal = (((ContractModel) this.object).getAs(contractAttribute)).toString();
+        }else if(ReferenceType.CID.equals(this.referenceType)){
+            attributeVal = this.object.toString();
         }
         return attributeVal;
     }
 
     public StateSpace getStateSpaceAtTimepoint(LocalDateTime time, RiskFactorModelProvider observer){
-        ArrayList<ContractEvent> events = new ArrayList<>();
+        List<ContractEvent> events;
         if(ReferenceType.CNT.equals(this.referenceType)){
             events = ContractType.apply(ContractType.schedule(null,(ContractModel)this.object),(ContractModel)this.object,observer);
-            events = (ArrayList<ContractEvent>) events.stream().filter(e -> e.eventTime().equals(time)).collect(Collectors.toList());
+            events = events.stream().filter(e -> e.eventTime().equals(time)).collect(Collectors.toList());
             Collections.sort(events);
             return events.get(events.size()-1).states();
         }
@@ -82,10 +85,10 @@ public class ContractReference {
     }
 
     public ContractEvent getEvent(EventType eventType, LocalDateTime time, RiskFactorModelProvider observer){
-        ArrayList<ContractEvent> events = new ArrayList<>();
+        List<ContractEvent> events = new ArrayList<>();
         if(ReferenceType.CNT.equals(this.referenceType)){
             events = ContractType.apply(ContractType.schedule(null,(ContractModel)this.object),(ContractModel)this.object,observer);
-            events = (ArrayList<ContractEvent>) events.stream().filter(e -> eventType.equals(e.eventType())).collect(Collectors.toList());
+            events = events.stream().filter(e -> eventType.equals(e.eventType())).collect(Collectors.toList());
         }
         return events.get(0);
     }
