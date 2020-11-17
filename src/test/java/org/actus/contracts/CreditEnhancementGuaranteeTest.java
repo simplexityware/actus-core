@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Stream;
-import java.util.stream.Collectors;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +33,7 @@ public class CreditEnhancementGuaranteeTest {
 
         // go through test-id and perform test
         return testIds.stream().map(testId -> {
+
             // extract test for test ID
             TestData test = tests.get(testId);
 
@@ -44,13 +44,11 @@ public class CreditEnhancementGuaranteeTest {
             List<ObservedDataSet> dataObserved = new ArrayList<ObservedDataSet>(test.getDataObserved().values());
             List<ObservedEvent> eventsObserved = new ArrayList<>(test.getEventsObserved());
             DataObserver observer = ContractTestUtils.createObserver(dataObserved, ContractTestUtils.readObservedEvents(eventsObserved,terms));
-
-
-
+            
             // compute and evaluate schedule
             LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
-            ArrayList<ContractEvent> schedule = CreditEnhancementGuarantee.schedule(to, terms);
-            schedule = CreditEnhancementGuarantee.apply(schedule, terms, observer);
+            ArrayList<ContractEvent> schedule = CreditEnhancementGuarantee.schedule(to, terms);            
+            schedule = CreditEnhancementGuarantee.apply(schedule, terms, observer);            
 
             // extract test results
             List<ResultSet> expectedResults = test.getResults();
