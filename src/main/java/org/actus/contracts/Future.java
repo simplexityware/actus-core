@@ -3,7 +3,6 @@
  *
  * Please see distribution for license.
  */
-
 package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
@@ -12,7 +11,14 @@ import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.events.ContractEvent;
 import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
-import org.actus.functions.optns.*;
+import org.actus.functions.futur.POF_MD_FUTUR;
+import org.actus.functions.futur.POF_XD_FUTUR;
+import org.actus.functions.futur.STF_MD_FUTUR;
+import org.actus.functions.futur.STF_XD_FUTUR;
+import org.actus.functions.optns.POF_PRD_OPTNS;
+import org.actus.functions.optns.POF_STD_OPTNS;
+import org.actus.functions.optns.POF_TD_OPTNS;
+import org.actus.functions.optns.STF_STD_OPTNS;
 import org.actus.functions.stk.STF_PRD_STK;
 import org.actus.functions.stk.STF_TD_STK;
 import org.actus.states.StateSpace;
@@ -24,17 +30,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Represents the Option contract algorithm
- *
- * @see <a https://www.actusfrf.org"></a>
- */
+public class Future {
 
-public final class Option {
     // forward projection of the entire lifecycle of the contract
     public static ArrayList<ContractEvent> schedule(LocalDateTime to,
                                                     ContractModelProvider model) throws AttributeConversionException {
         ArrayList<ContractEvent> events = new ArrayList<>();
+
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
             events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_OPTNS(), new STF_PRD_STK(), model.getAs("ContractID")));
@@ -42,13 +44,15 @@ public final class Option {
 
         //exercise & settlement
         if(!CommonUtils.isNull(model.getAs("ExerciseDate"))){
-            events.add(EventFactory.createEvent(model.getAs("ExerciseDate"), EventType.XD,model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_OPTNS(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.getAs("ExerciseDate"), EventType.XD,model.getAs("Currency"), new POF_XD_FUTUR(), new STF_XD_FUTUR(), model.getAs("ContractID")));
             events.add(EventFactory.createEvent(model.<BusinessDayAdjuster>getAs("BusinessDayConvention").shiftEventTime(model.<LocalDateTime>getAs("ExerciseDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod")))), EventType.STD, model.getAs("Currency"), new POF_STD_OPTNS(), new STF_STD_OPTNS(),model.getAs("ContractID")));
         } else{
-            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.XD,model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_OPTNS(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.XD,model.getAs("Currency"), new POF_XD_FUTUR(), new STF_XD_FUTUR(), model.getAs("ContractID")));
             events.add(EventFactory.createEvent(model.<BusinessDayAdjuster>getAs("BusinessDayConvention").shiftEventTime(model.<LocalDateTime>getAs("MaturityDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod")))), EventType.STD, model.getAs("Currency"), new POF_STD_OPTNS(), new STF_STD_OPTNS(),model.getAs("ContractID")));
         }
-        events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_OPTNS(), new STF_MD_OPTNS(), model.getAs("ContractID")));
+
+        //maturity
+        events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD_FUTUR(), new STF_MD_FUTUR(), model.getAs("ContractID")));
 
         // termination
         if (!CommonUtils.isNull(model.getAs("TerminationDate"))) {
@@ -104,4 +108,3 @@ public final class Option {
         return states;
     }
 }
-

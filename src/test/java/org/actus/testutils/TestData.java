@@ -51,11 +51,7 @@ public class TestData {
         this.eventsObserved = eventsObserved;
     }
 
-    public List<ResultSet> getResults() {
-        return results;
-    }
+    public List<ResultSet> getResults() { return results; }
 
-    public void setResults(List<ResultSet> results) {
-        this.results = results;
-    }
+    public void setResults(List<ResultSet> results) { this.results = results; }
 }

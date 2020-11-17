@@ -98,7 +98,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-03-30T00:00:00",
-                "exerciseAmount": -16.3
+                "exerciseAmount": 0
             }
         ]
     },
@@ -202,7 +202,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-06-30T00:00:00",
-                "exerciseAmount": 11.2
+                "exerciseAmount": 0
             }
         ]
     },
@@ -306,7 +306,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-30T00:00:00",
-                "exerciseAmount": 35.81
+                "exerciseAmount": 0
             }
         ]
     },
@@ -410,7 +410,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-30T00:00:00",
-                "exerciseAmount": 35.81
+                "exerciseAmount": 0
             }
         ]
     },
@@ -514,7 +514,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-30T00:00:00",
-                "exerciseAmount": 35.81
+                "exerciseAmount": 0
             }
         ]
     },
@@ -619,7 +619,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-30T00:00:00",
-                "exerciseAmount": 35.81
+                "exerciseAmount": 0
             }
         ]
     },
@@ -718,13 +718,13 @@
                 "exerciseAmount": 35.81
             },
             {
-                "eventDate": "2020-09-30T00:00:00",
+                "eventDate": "2020-10-02T00:00:00",
                 "eventType": "STD",
                 "payoff": -35.81,
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-30T00:00:00",
-                "exerciseAmount": 35.81
+                "exerciseAmount": 0
             }
         ]
     },
@@ -828,7 +828,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-03-30T00:00:00",
-                "exerciseAmount": 0.23
+                "exerciseAmount": 0
             }
         ]
     },
@@ -932,7 +932,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-06-30T00:00:00",
-                "exerciseAmount": 43.5
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1036,7 +1036,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-30T00:00:00",
-                "exerciseAmount": 50.33
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1140,7 +1140,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-30T00:00:00",
-                "exerciseAmount": 10.33
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1243,7 +1243,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-30T00:00:00",
-                "exerciseAmount": -39.67
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1323,7 +1323,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-30T00:00:00",
-                "exerciseAmount": 10.33
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1403,7 +1403,7 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-10-03T00:00:00",
-                "exerciseAmount": 10.33
+                "exerciseAmount": 0
             }
         ]
     }

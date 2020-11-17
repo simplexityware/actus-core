@@ -13,10 +13,7 @@ import org.actus.testutils.DataObserver;
 import org.actus.attributes.ContractModel;
 import org.actus.events.ContractEvent;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import java.time.LocalDateTime;
@@ -51,26 +48,30 @@ public class CommodityTest {
             // compute and evaluate schedule
             ArrayList<ContractEvent> schedule = Commodity.schedule(LocalDateTime.parse(tests.get(testId).getto()), terms);
             schedule = Commodity.apply(schedule, terms, observer);
-          
-            // transform schedule to event list and return
-            List<ResultSet> computedResults = schedule.stream().map(e -> { 
-                ResultSet results = new ResultSet();
-                results.setEventDate(e.eventTime().toString());
-                results.setEventType(e.eventType());
-                results.setPayoff(e.payoff());
-                results.setCurrency(e.currency());
-                results.setNotionalPrincipal(e.states().notionalPrincipal);
-                results.setNominalInterestRate(e.states().nominalInterestRate);
-                results.setAccruedInterest(e.states().accruedInterest);
-                return results;
-            }).collect(Collectors.toList());
 
             // extract test results
             List<ResultSet> expectedResults = test.getResults();
-            
+            expectedResults.forEach(ResultSet::setValues);
+
+            // transform schedule to event list and return
+            List<ResultSet> computedResults = new ArrayList<>();
+            ResultSet sampleFields;
+            int i = 0;
+            for(ContractEvent event : schedule){
+                try{
+                    sampleFields = expectedResults.get(i);
+                    i++;
+                }catch (IndexOutOfBoundsException e) {
+                    sampleFields = expectedResults.get(i-1);
+                }
+                ResultSet result = new ResultSet();
+                result.setRequiredValues(sampleFields.getValues(), event.getAllStates());
+                computedResults.add(result);
+            }
+
             // round results to available precision
-            computedResults.forEach(result -> result.roundTo(12));
-            expectedResults.forEach(result -> result.roundTo(12));
+            computedResults.forEach(result -> result.roundTo(10));
+            expectedResults.forEach(result -> result.roundTo(10));
 
             // create dynamic test
             return DynamicTest.dynamicTest("Test: " + testId,

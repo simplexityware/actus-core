@@ -7,6 +7,7 @@ package org.actus.contracts;
 
 import org.actus.AttributeConversionException;
 import org.actus.attributes.ContractModelProvider;
+import org.actus.conventions.businessday.BusinessDayAdjuster;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.events.ContractEvent;
 import org.actus.functions.fxout.*;
@@ -17,6 +18,7 @@ import org.actus.conventions.daycount.DayCountCalculator;
 import org.actus.types.DeliverySettlement;
 import org.actus.types.EventType;
 import org.actus.util.CommonUtils;
+import org.actus.util.CycleUtils;
 
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -48,7 +50,7 @@ public final class ForeignExchangeOutright {
                 events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency"), new POF_MD1_FXOUT(), new STF_MD1_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
                 events.add(EventFactory.createEvent(model.getAs("MaturityDate"), EventType.MD, model.getAs("Currency2"), new POF_MD2_FXOUT(), new STF_MD2_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
             } else {
-                events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("MaturityDate").plus(Period.parse(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_FXOUT(), new STF_STD_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+                events.add(EventFactory.createEvent(model.<BusinessDayAdjuster>getAs("BusinessDayConvention").shiftEventTime(model.<LocalDateTime>getAs("MaturityDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod")))), EventType.STD, model.getAs("Currency"), new POF_STD_FXOUT(), new STF_STD_FXOUT(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
             }
         }
 

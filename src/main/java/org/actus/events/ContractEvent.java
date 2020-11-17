@@ -17,6 +17,7 @@ import org.actus.types.EventType;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
 import java.util.StringJoiner;
 
 /**
@@ -224,5 +225,28 @@ public final class ContractEvent implements Comparable<ContractEvent> {
         ;
 
         return joiner.toString();
+    }
+    public HashMap<String,String> getAllStates(){
+        HashMap<String, String> attributes = new HashMap<>();
+        attributes.put("payoff", String.valueOf(payoff));
+        attributes.put("currency", String.valueOf(currency));
+        attributes.put("eventDate", eventTime.toString());
+        attributes.put("eventType", eventType.toString());
+        attributes.put("accruedInterest",String.valueOf((Object)states.accruedInterest));
+        attributes.put("accruedInterest2",String.valueOf((Object)states.accruedInterest2));
+        attributes.put("exerciseAmount",String.valueOf((Object)states.exerciseAmount));
+        attributes.put("exerciseDate",String.valueOf(states.exerciseDate));
+        attributes.put("feeAccrued",String.valueOf((Object)states.feeAccrued));
+        attributes.put("interestCalculationBaseAmount",String.valueOf((Object)states.interestCalculationBaseAmount));
+        attributes.put("interestScalingMultiplier",String.valueOf((Object)states.interestScalingMultiplier));
+        attributes.put("nextPrincipalRedemptionPayment",String.valueOf((Object)states.nextPrincipalRedemptionPayment));
+        attributes.put("nominalInterestRate",String.valueOf((Object)states.nominalInterestRate));
+        attributes.put("nominalInterestRate2",String.valueOf((Object)states.nominalInterestRate2));
+        attributes.put("nonPerformingDate",String.valueOf(states.nonPerformingDate));
+        attributes.put("notionalPrincipal",String.valueOf((Object)states.notionalPrincipal));
+        attributes.put("notionalPrincipal2",String.valueOf((Object)states.notionalPrincipal2));
+        attributes.put("notionalScalingMultiplier",String.valueOf((Object)states.notionalScalingMultiplier));
+        attributes.put("lastInterestPeriod",String.valueOf((Object)states.lastInterestPeriod));
+        return attributes;
     }
 }
