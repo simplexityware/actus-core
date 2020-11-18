@@ -90,16 +90,14 @@
                 "payoff": 0,
                 "currency": "USD",
                 "notionalPrincipal": 0,
-                "exerciseDate": "2020-03-30T00:00:00",
-                "exerciseAmount": -16.3
+                "exerciseAmount": 0
             },
             {
                 "eventDate": "2020-03-30T00:00:00",
                 "eventType": "STD",
-                "payoff": -16.3,
+                "payoff": 0,
                 "currency": "USD",
                 "notionalPrincipal": 0,
-                "exerciseDate": "2020-03-30T00:00:00",
                 "exerciseAmount": 0
             }
         ]
@@ -1250,6 +1248,22 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-09-30T00:00:00",
+                "eventType": "XD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-09-30T00:00:00",
+                "eventType": "STD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1271,7 +1285,7 @@
             "currency": "USD",
             "calendar": "NC",
             "contractDealDate": "2020-01-01T00:00:00",
-            "statusDate": "2020-01-01T00:00:00",
+            "statusDate": "2020-09-30T00:00:00",
             "purchaseDate": "2020-01-02T00:00:00",
             "priceAtPurchaseDate": "20",
             "maturityDate": "2020-09-30T00:00:00",
@@ -1353,7 +1367,7 @@
             "currency": "USD",
             "calendar": "NC",
             "contractDealDate": "2020-01-01T00:00:00",
-            "statusDate": "2020-01-01T00:00:00",
+            "statusDate": "2020-10-03T00:00:00",
             "purchaseDate": "2020-01-02T00:00:00",
             "priceAtPurchaseDate": "20",
             "maturityDate": "2020-10-03T00:00:00",
@@ -1607,6 +1621,22 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-06-30T00:00:00",
+                "eventType": "XD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-06-30T00:00:00",
+                "eventType": "STD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1694,6 +1724,22 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-09-30T00:00:00",
+                "eventType": "XD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-09-30T00:00:00",
+                "eventType": "STD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1720,7 +1766,7 @@
             "priceAtPurchaseDate": "20",
             "maturityDate": "2020-03-30T00:00:00",
             "optionExerciseType": "E",
-            "optionType": "C",
+            "optionType": "P",
             "optionStrike1": "160",
             "settlementPeriod": "P0D",
             "deliverySettlement": "S"
@@ -1781,6 +1827,22 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-03-30T00:00:00",
+                "eventType": "XD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-03-30T00:00:00",
+                "eventType": "STD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1807,7 +1869,7 @@
             "priceAtPurchaseDate": "20",
             "maturityDate": "2020-06-30T00:00:00",
             "optionExerciseType": "E",
-            "optionType": "C",
+            "optionType": "P",
             "optionStrike1": "160",
             "settlementPeriod": "P0D",
             "deliverySettlement": "S"
@@ -1868,6 +1930,22 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-06-30T00:00:00",
+                "eventType": "XD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-06-30T00:00:00",
+                "eventType": "STD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1894,7 +1972,7 @@
             "priceAtPurchaseDate": "20",
             "maturityDate": "2020-09-30T00:00:00",
             "optionExerciseType": "E",
-            "optionType": "C",
+            "optionType": "P",
             "optionStrike1": "160",
             "settlementPeriod": "P0D",
             "deliverySettlement": "S"
@@ -1955,6 +2033,22 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-09-30T00:00:00",
+                "eventType": "XD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-09-30T00:00:00",
+                "eventType": "STD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
             }
         ]
     },
@@ -1981,7 +2075,7 @@
             "priceAtPurchaseDate": "20",
             "maturityDate": "2020-09-30T00:00:00",
             "optionExerciseType": "E",
-            "optionType": "C",
+            "optionType": "P",
             "optionStrike1": "200",
             "settlementPeriod": "P0D",
             "deliverySettlement": "S"
@@ -2042,6 +2136,22 @@
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-09-30T00:00:00",
+                "eventType": "XD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
+            },
+            {
+                "eventDate": "2020-09-30T00:00:00",
+                "eventType": "STD",
+                "payoff": 0,
+                "currency": "USD",
+                "notionalPrincipal": 0,
+                "exerciseAmount": 0
             }
         ]
     },
@@ -2068,7 +2178,7 @@
             "priceAtPurchaseDate": "20",
             "maturityDate": "2020-09-30T00:00:00",
             "optionExerciseType": "E",
-            "optionType": "C",
+            "optionType": "P",
             "optionStrike1": "250",
             "settlementPeriod": "P0D",
             "deliverySettlement": "S"
@@ -2174,7 +2284,7 @@
             "priceAtPurchaseDate": "20",
             "maturityDate": "2020-09-30T00:00:00",
             "optionExerciseType": "E",
-            "optionType": "C",
+            "optionType": "P",
             "optionStrike1": "250",
             "settlementPeriod": "P0D",
             "deliverySettlement": "S"

@@ -92,6 +92,7 @@ public class CreditEnhancementGuarantee {
                                                  RiskFactorModelProvider observer) throws AttributeConversionException {
 
         events = addExternalXDEvent(model, events, observer);
+
         // initialize state space per status date
         StateSpace states = initStateSpace(model, observer);
 
