@@ -13,7 +13,6 @@ import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.functions.ceg.*;
 import org.actus.functions.optns.*;
-import org.actus.functions.stk.POF_PRD_STK;
 import org.actus.states.StateSpace;
 import org.actus.time.ScheduleFactory;
 import org.actus.types.ContractReference;
@@ -37,9 +36,13 @@ public class CreditEnhancementGuarantee {
     public static ArrayList<ContractEvent> schedule(LocalDateTime to,
                                                     ContractModelProvider model) throws AttributeConversionException {
         ArrayList<ContractEvent> events = new ArrayList<>();
+
+        // determine maturity date
+        LocalDateTime maturity = maturity(model);
+        
         // purchase
         if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_STK(), new STF_PRD_CEG(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_OPTNS(), new STF_PRD_CEG(), model.getAs("ContractID")));
         }
 
         // fees (if specified)
@@ -54,7 +57,7 @@ public class CreditEnhancementGuarantee {
                 startDate = model.getAs("CycleAnchorDateOfFee");
             }
             if(CommonUtils.isNull(model.getAs("ExerciseDate"))){
-                endDate = model.getAs("MaturityDate");
+                endDate = maturity;
             }else {
                 endDate = model.getAs("ExerciseDate");
             }
@@ -75,7 +78,7 @@ public class CreditEnhancementGuarantee {
 
         // maturity
         if(CommonUtils.isNull(model.getAs("ExerciseDate"))){
-            events.add(EventFactory.createEvent(to, EventType.MD, model.getAs("Currency"), new POF_MD_CEG(), new STF_MD_CEG(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_CEG(), new STF_MD_CEG(), model.getAs("ContractID")));
         }
 
         //exercise
@@ -90,17 +93,21 @@ public class CreditEnhancementGuarantee {
     public static ArrayList<ContractEvent> apply(ArrayList<ContractEvent> events,
                                                  ContractModelProvider model,
                                                  RiskFactorModelProvider observer) throws AttributeConversionException {
-
-        events = addExternalXDEvent(model, events, observer);
-
+        // determine maturity date
+        LocalDateTime maturity = maturity(model);
+        events = addExternalXDEvent(model, events, observer, maturity);
+        System.out.println(events);
         // initialize state space per status date
-        StateSpace states = initStateSpace(model, observer);
-
+        StateSpace states = initStateSpace(model, observer, maturity);
+        System.out.println(states);
         // sort the events according to their time sequence
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
-        events.forEach(e -> e.eval(states, model, observer, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention")));
+        events.forEach(e -> {
+            e.eval(states, model, observer, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
+            System.out.println(e);
+        });
 
         // return post events states
         return events;
@@ -123,20 +130,21 @@ public class CreditEnhancementGuarantee {
         return maturityDate;
     }
 
-    public static StateSpace initStateSpace(ContractModelProvider model, RiskFactorModelProvider observer) throws AttributeConversionException {
+    public static StateSpace initStateSpace(ContractModelProvider model, RiskFactorModelProvider observer, LocalDateTime maturity) throws AttributeConversionException {
         StateSpace states = new StateSpace();
-        states.maturityDate = maturity(model);
+        states.maturityDate = maturity;
         states.statusDate = model.getAs("StatusDate");
 
         if(states.statusDate.isAfter(states.maturityDate)){
             states.notionalPrincipal = 0.0;
-        }else if(model.<Double>getAs("NotionalPrincipal") >= 0.0){
+        }else if(!CommonUtils.isNull(model.<Double>getAs("NotionalPrincipal"))){
             states.notionalPrincipal = model.<Double>getAs("CoverageOfCreditEnhancement")
                     * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                     * model.<Double>getAs("NotionalPrincipal");
         } else{
             states.notionalPrincipal = CreditEnhancementGuarantee.calculateNotionalPrincipal(states,model,observer,states.statusDate);
         }
+
         if(CommonUtils.isNull(model.getAs("FeeRate"))){
             states.feeAccrued = 0.0;
         } else if(!CommonUtils.isNull(model.getAs("FeeAccrued"))){
@@ -145,15 +153,14 @@ public class CreditEnhancementGuarantee {
 
         states.exerciseAmount = model.getAs("ExerciseAmount");
         states.exerciseDate = model.getAs("ExerciseDate");
-        states.contractPerformance = model.getAs("ContractPerformance");
         // return the initialized state space
         return states;
     }
 
     public static Double calculateNotionalPrincipal(StateSpace states, ContractModelProvider model, RiskFactorModelProvider observer, LocalDateTime time){
         List<ContractReference> contractStructure = model.getAs("ContractStructure");
-        List<StateSpace> statesAtTimePoint;
-        statesAtTimePoint = contractStructure.stream().map(c -> c.getStateSpaceAtTimepoint(time,observer)).collect(Collectors.toList());
+        List<StateSpace> statesAtTimePoint = contractStructure.stream().map(c -> c.getStateSpaceAtTimepoint(time,observer)).collect(Collectors.toList());
+
         if(GuaranteedExposure.NO.equals(model.getAs("GuaranteedExposure"))){
             states.notionalPrincipal =
                     model.<Double>getAs("CoverageOfCreditEnhancement")
@@ -176,15 +183,18 @@ public class CreditEnhancementGuarantee {
         return states.notionalPrincipal;
     }
 
-    private static ArrayList<ContractEvent> addExternalXDEvent(ContractModelProvider model, ArrayList<ContractEvent> events, RiskFactorModelProvider observer){
-        String contractIdentifier = model.<List<ContractReference>>getAs("ContractStructure").get(0).getContractAttribute("");
-        List<ContractEvent> ceEvents = observer.events(model).stream().filter(e -> e.getContractID().equals(contractIdentifier)).collect(Collectors.toList());
+    private static ArrayList<ContractEvent> addExternalXDEvent(ContractModelProvider model, ArrayList<ContractEvent> events, RiskFactorModelProvider observer, LocalDateTime maturity){
+        List<String> contractIdentifiers = model.<List<ContractReference>>getAs("ContractStructure").stream().map(c -> c.getContractAttribute("ContractID")).collect(Collectors.toList());
+        Set<ContractEvent> observedEvents = observer.events(model);
+        List<ContractEvent> ceEvents = observedEvents.stream().filter(e -> contractIdentifiers.contains(e.getContractID()) && 
+                                                                            !maturity.isBefore(e.eventTime())).collect(Collectors.toList());
         if(ceEvents.size() > 0){
             ContractEvent ceEvent = ceEvents.get(0);
             if(!CommonUtils.isNull(ceEvent)){
                 events = events.stream().filter(e -> e.eventType() != EventType.MD).collect(Collectors.toCollection(ArrayList::new));
                 events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
-                events.add(EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+                ContractEvent std = EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
+                events.add(std);
             }
         }
         return events;

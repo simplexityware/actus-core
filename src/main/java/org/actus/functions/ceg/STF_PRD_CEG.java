@@ -17,8 +17,8 @@ public class STF_PRD_CEG implements StateTransitionFunction {
         if(CommonUtils.isNull(model.getAs("NotionalPrincipal"))){
             states.notionalPrincipal = CreditEnhancementGuarantee.calculateNotionalPrincipal(states, model, riskFactorModel, time);
         }
-        if(CommonUtils.isNull(model.getAs("FeeRate"))){
-            states.feeAccrued = 0.0;
+        if(!CommonUtils.isNull(model.getAs("FeeRate"))){
+            states.feeAccrued = model.getAs("FeeRate");
         } else if(!CommonUtils.isNull(model.getAs("FeeAccrued"))){
             states.feeAccrued = model.getAs("FeeAccrued");
         }//TODO: implement last two possible initialization
