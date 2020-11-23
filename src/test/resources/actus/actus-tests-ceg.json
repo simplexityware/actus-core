@@ -515,14 +515,14 @@
                     "object": {
                         "contractType": "PAM",
                         "contractID": "loan01",
-                        "statusDate": "2019-01-01T00:00:00",
-                        "contractDealDate": "2019-01-01T00:00:00",
+                        "statusDate": "2020-01-01T00:00:00",
+                        "contractDealDate": "2020-01-01T00:00:00",
                         "currency": "USD",
                         "notionalPrincipal": "5000000",
-                        "initialExchangeDate": "2019-01-02T00:00:00",
+                        "initialExchangeDate": "2020-01-02T00:00:00",
                         "maturityDate": "2021-01-01T00:00:00",
                         "nominalInterestRate": "0.03",
-                        "cycleAnchorDateOfInterestPayment": "2019-02-01T00:00:00",
+                        "cycleAnchorDateOfInterestPayment": "2020-02-01T00:00:00",
                         "cycleOfInterestPayment": "P1ML0",
                         "dayCountConvention": "A365",
                         "endOfMonthConvention": "SD",
@@ -535,21 +535,21 @@
                     "object": {
                         "contractType": "LAM",
                         "contractID": "loan02",
-                        "statusDate": "2019-01-01T00:00:00",
-                        "contractDealDate": "2019-01-01T00:00:00",
+                        "statusDate": "2020-01-01T00:00:00",
+                        "contractDealDate": "2020-01-01T00:00:00",
                         "currency": "USD",
                         "notionalPrincipal": "6000000",
-                        "initialExchangeDate": "2019-01-02T00:00:00",
+                        "initialExchangeDate": "2020-01-02T00:00:00",
                         "maturityDate": "2021-01-01T00:00:00",
-                        "nominalInterestRate": "0.24",
-                        "cycleAnchorDateOfInterestPayment": "2019-02-01T00:00:00",
+                        "nominalInterestRate": "0.024",
+                        "cycleAnchorDateOfInterestPayment": "2020-02-01T00:00:00",
                         "cycleOfInterestPayment": "P1ML0",
                         "dayCountConvention": "A365",
                         "endOfMonthConvention": "SD",
                         "contractRole": "RPA",
-                        "cycleAnchorDateOfPrincipalRedemption": "2019-02-01T00:00:00",
+                        "cycleAnchorDateOfPrincipalRedemption": "2020-02-01T00:00:00",
                         "cycleOfPrincipalRedemption": "P1ML0",
-                        "nextPrincipalRedemptionPayment": "25000"
+                        "nextPrincipalRedemptionPayment": "500000"
                     },
                     "referenceType": "CNT",
                     "referenceRole": "COVE"
@@ -647,7 +647,7 @@
                         "notionalPrincipal": "6000000",
                         "initialExchangeDate": "2020-01-02T00:00:00",
                         "maturityDate": "2021-01-01T00:00:00",
-                        "nominalInterestRate": "0.24",
+                        "nominalInterestRate": "0.024",
                         "cycleAnchorDateOfInterestPayment": "2020-02-01T00:00:00",
                         "cycleOfInterestPayment": "P1ML0",
                         "dayCountConvention": "A365",
@@ -701,18 +701,18 @@
                 "eventType": "XD",
                 "payoff": 0,
                 "currency": "USD",
-                "notionalPrincipal": -7010849.3150685,
+                "notionalPrincipal": -7010306.849315069,
                 "exerciseDate": "2020-09-20T00:00:00",
-                "exerciseAmount": -7010849.3150685
+                "exerciseAmount": -7010306.849315069
             },
             {
                 "eventDate": "2020-09-20T00:00:00",
                 "eventType": "STD",
-                "payoff": -7010849.3150685,
+                "payoff": -7010306.849315069,
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-20T00:00:00",
-                "exerciseAmount": -7010849.3150685
+                "exerciseAmount": -7010306.849315069
             }
         ]
     },
@@ -753,7 +753,7 @@
                         "notionalPrincipal": "6000000",
                         "initialExchangeDate": "2020-01-02T00:00:00",
                         "maturityDate": "2021-01-01T00:00:00",
-                        "nominalInterestRate": "0.24",
+                        "nominalInterestRate": "0.024",
                         "cycleAnchorDateOfInterestPayment": "2020-02-01T00:00:00",
                         "cycleOfInterestPayment": "P1ML0",
                         "dayCountConvention": "A365",
@@ -807,18 +807,18 @@
                 "eventType": "XD",
                 "payoff": 0,
                 "currency": "USD",
-                "notionalPrincipal": -7010849.3150685,
+                "notionalPrincipal": -7010306.849315069,
                 "exerciseDate": "2020-09-20T00:00:00",
-                "exerciseAmount": -7010849.3150685
+                "exerciseAmount": -7010306.849315069
             },
             {
                 "eventDate": "2020-09-20T00:00:00",
                 "eventType": "STD",
-                "payoff": -7010849.3150685,
+                "payoff": -7010306.849315069,
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-20T00:00:00",
-                "exerciseAmount": -7010849.3150685
+                "exerciseAmount": -7010306.849315069
             }
         ]
     },
@@ -1007,7 +1007,7 @@
                 "exerciseAmount": 0
             },
             {
-                "eventDate": "2020-09-21T00:00:00",
+                "eventDate": "2020-09-20T00:00:00",
                 "eventType": "XD",
                 "payoff": 0,
                 "currency": "USD",
@@ -1145,7 +1145,7 @@
             {
                 "eventDate": "2020-09-25T00:00:00",
                 "eventType": "STD",
-                "payoff": 3500000,
+                "payoff": 3508695,
                 "currency": "USD",
                 "notionalPrincipal": 0,
                 "exerciseDate": "2020-09-20T00:00:00",

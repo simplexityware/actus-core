@@ -48,7 +48,7 @@ public class CreditEnhancementGuaranteeTest {
             // compute and evaluate schedule
             LocalDateTime to = "".equals(test.getto()) ? terms.getAs("MaturityDate") : LocalDateTime.parse(test.getto());
             ArrayList<ContractEvent> schedule = CreditEnhancementGuarantee.schedule(to, terms);            
-            schedule = CreditEnhancementGuarantee.apply(schedule, terms, observer);            
+            schedule = CreditEnhancementGuarantee.apply(schedule, terms, observer);
 
             // extract test results
             List<ResultSet> expectedResults = test.getResults();

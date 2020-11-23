@@ -66,7 +66,8 @@ public class CreditEnhancementGuarantee {
                             startDate,
                             endDate,
                             model.getAs("CycleOfFee"),
-                            model.getAs("EndOfMonthConvention")),
+                            model.getAs("EndOfMonthConvention"),
+                            false),
                     EventType.FP,
                     model.getAs("Currency"),
                     new POF_FP_CEG(),
@@ -83,7 +84,7 @@ public class CreditEnhancementGuarantee {
 
         //exercise
         if(!CommonUtils.isNull(model.getAs("ExerciseDate"))){
-            events.add(EventFactory.createEvent(model.getAs("ExerciseDate"), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.getAs("ExerciseDate"), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("ContractID")));
             events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("ExerciseDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
         }
         return events;
@@ -96,17 +97,14 @@ public class CreditEnhancementGuarantee {
         // determine maturity date
         LocalDateTime maturity = maturity(model);
         events = addExternalXDEvent(model, events, observer, maturity);
-        System.out.println(events);
         // initialize state space per status date
         StateSpace states = initStateSpace(model, observer, maturity);
-        System.out.println(states);
         // sort the events according to their time sequence
         Collections.sort(events);
 
         // apply events according to their time sequence to current state
         events.forEach(e -> {
             e.eval(states, model, observer, model.getAs("DayCountConvention"), model.getAs("BusinessDayConvention"));
-            System.out.println(e);
         });
 
         // return post events states
@@ -123,7 +121,7 @@ public class CreditEnhancementGuarantee {
             List<LocalDateTime> maturityDates = new ArrayList<>();
             contractStructure.forEach(c -> {
                 maturityDates.add(LocalDateTime.parse(c.getContractAttribute("MaturityDate")));
-            }) ;
+            }) ;CreditEventTypeCovered"
             Collections.sort(maturityDates);
             maturityDate = maturityDates.get(maturityDates.size()-1);
         }

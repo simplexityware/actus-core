@@ -14,8 +14,6 @@ public class POF_STD_CEG implements PayOffFunction {
     @Override
     public double eval(LocalDateTime time, StateSpace states, ContractModelProvider model, RiskFactorModelProvider riskFactorModel, DayCountCalculator dayCounter, BusinessDayAdjuster timeAdjuster) {
         return CommonUtils.settlementCurrencyFxRate(riskFactorModel,model,time,states)
-                *(states.exerciseAmount
-                    + states.feeAccrued)
-                ;
+                *(states.exerciseAmount + states.feeAccrued);
     }
 }
