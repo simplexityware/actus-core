@@ -3,7 +3,10 @@ package org.actus.types;
 import org.actus.attributes.ContractModel;
 import org.actus.contracts.ContractType;
 import org.actus.events.ContractEvent;
+import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
+import org.actus.functions.pam.POF_AD_PAM;
+import org.actus.functions.pam.STF_AD_PAM;
 import org.actus.states.StateSpace;
 
 import java.time.LocalDateTime;
@@ -73,13 +76,21 @@ public class ContractReference {
         return attributeVal;
     }
 
-    public StateSpace getStateSpaceAtTimepoint(LocalDateTime time, RiskFactorModelProvider observer){
-        List<ContractEvent> events;
+    public StateSpace getStateSpaceAtTimepoint(LocalDateTime time, RiskFactorModelProvider observer) {
+        ContractModel model = (ContractModel) this.object;
         if(ReferenceType.CNT.equals(this.referenceType)){
-            events = ContractType.apply(ContractType.schedule(null,(ContractModel)this.object),(ContractModel)this.object,observer);
-            events = events.stream().filter(e -> e.eventTime().equals(time)).collect(Collectors.toList());
+            ArrayList<ContractEvent> events = ContractType.schedule(time.plusDays(1),(ContractModel)this.object);
+            ContractEvent analysisEvent = EventFactory.createEvent(time, 
+                                                EventType.AD, 
+                                                model.getAs("Currency"), 
+                                                new POF_AD_PAM(), 
+                                                new STF_AD_PAM(),
+                                                model.getAs("ContractID"));
+            events.add(analysisEvent);
             Collections.sort(events);
-            return events.get(events.size()-1).states();
+            events = ContractType.apply(events,model,observer);
+
+            return analysisEvent.states();
         }
         return new StateSpace();
     }

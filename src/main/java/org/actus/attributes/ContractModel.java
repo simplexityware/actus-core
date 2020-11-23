@@ -231,7 +231,6 @@ public class ContractModel implements ContractModelProvider {
                         map.put("ContractStructure", contractStructure);
                         break;
                     case CEG:
-                        map.put("MaturityDate", (CommonUtils.isNull(attributes.get("maturityDate")) ? null : LocalDateTime.parse((String)attributes.get("maturityDate"))));
                         map.put("Calendar", (!CommonUtils.isNull(attributes.get("calendar")) && attributes.get("calendar").equals("MF")) ? new MondayToFridayCalendar() : new NoHolidaysCalendar());
                         map.put("BusinessDayConvention", new BusinessDayAdjuster(CommonUtils.isNull(attributes.get("businessDayConvention")) ? null : BusinessDayConventionEnum.valueOf((String)attributes.get("businessDayConvention")), (BusinessDayCalendarProvider) map.get("Calendar")));
                         map.put("EndOfMonthConvention", (CommonUtils.isNull(attributes.get("endOfMonthConvention"))) ? EndOfMonthConventionEnum.SD : EndOfMonthConventionEnum.valueOf((String)attributes.get("endOfMonthConvention")));
@@ -240,41 +239,32 @@ public class ContractModel implements ContractModelProvider {
                         map.put("ContractRole", ContractRole.valueOf((String)attributes.get("contractRole")));
                         map.put("CreatorID", attributes.get("creatorID"));
                         map.put("ContractID", attributes.get("contractID"));
-                        map.put("MarketObjectCode", attributes.get("marketObjectCode"));
                         map.put("CounterpartyID", attributes.get("counterpartyID"));
                         map.put("ContractPerformance", (CommonUtils.isNull(attributes.get("contractPerformance")) ? ContractPerformance.PF : ContractPerformance.valueOf((String)attributes.get("contractPerformance"))));
-                        map.put("Seniority", !CommonUtils.isNull(attributes.get("seniority")) ? Seniority.valueOf((String)attributes.get("seniority")): null);
                         map.put("NonPerformingDate", !CommonUtils.isNull(attributes.get("nonPerformingDates")) ? LocalDateTime.parse((String)attributes.get("nonPerformingDates")): null);
-                        map.put("PrepaymentPeriod", attributes.get("prepaymentPeriod"));
                         map.put("GracePeriod", attributes.get("gracePeriod"));
                         map.put("DelinquencyPeriod", attributes.get("delinquencyPeriod"));
                         map.put("DelinquencyRate", !CommonUtils.isNull(attributes.get("delinquencyRate")) ? Double.parseDouble((String)attributes.get("delinquencyRate")) : 0.0);
                         map.put("GuaranteedExposure", (CommonUtils.isNull(attributes.get("guaranteedExposure")) ? null : GuaranteedExposure.valueOf((String)attributes.get("guaranteedExposure"))));
                         map.put("CoverageOfCreditEnhancement", (CommonUtils.isNull(attributes.get("coverageOfCreditEnhancement")) ? 1.0 : Double.parseDouble((String)attributes.get("coverageOfCreditEnhancement"))));
                         map.put("CreditEventTypeCovered", (CommonUtils.isNull(attributes.get("creditEventTypeCovered")) ? new ArrayList<CreditEventTypeCovered>().add(CreditEventTypeCovered.DF) : Arrays.stream(((String)attributes.get("creditEventTypeCovered")).replaceAll("\\[", "").replaceAll("]", "").trim().split(",")).map(CreditEventTypeCovered::valueOf).toArray(CreditEventTypeCovered[]::new)));
-                        map.put("CycleAnchorDateOfDividend", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfDividend")) ? null : LocalDateTime.parse((String)attributes.get("cycleAnchorDateOfDividend"))));
-                        map.put("CycleOfDividend", attributes.get("cycleOfDividend"));
-                        map.put("NextDividendPaymentAmount", !CommonUtils.isNull(attributes.get("nextDividendPaymentAmount")) ? Double.parseDouble((String)attributes.get("nextDividendPaymentAmount")) : 0.0);
-                        map.put("ExDividendDate", (CommonUtils.isNull(attributes.get("exDividendDate")) ? null : LocalDateTime.parse((String)attributes.get("exDividendDate"))));
                         map.put("CycleAnchorDateOfFee", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfFee")) ? null : LocalDateTime.parse((String)attributes.get("cycleAnchorDateOfFee"))));
                         map.put("CycleOfFee", attributes.get("cycleOfFee"));
                         map.put("FeeBasis", (CommonUtils.isNull(attributes.get("feeBasis"))) ? null : FeeBasis.valueOf((String)attributes.get("feeBasis")));
                         map.put("FeeRate", (CommonUtils.isNull(attributes.get("feeRate"))) ? 0.0 : Double.parseDouble((String)attributes.get("feeRate")));
                         map.put("FeeAccrued", (CommonUtils.isNull(attributes.get("feeAccrued"))) ? 0.0 : Double.parseDouble((String)attributes.get("feeAccrued")));
-                        map.put("CycleAnchorDateOfInterestPayment", (CommonUtils.isNull(attributes.get("cycleAnchorDateOfInterestPayment"))) ? ((CommonUtils.isNull(attributes.get("cycleOfInterestPayment"))) ? null : LocalDateTime.parse((String)attributes.get("initialExchangeDate"))) : LocalDateTime.parse((String)attributes.get("cycleAnchorDateOfInterestPayment")));
-                        map.put("ArrayCycleAnchorDateOfInterestPayment", attributes.get("arrayCycleAnchorDateOfInterestPayment"));
-                        map.put("CycleOfInterestPayment", attributes.get("cycleOfInterestPayment"));
-                        map.put("ArrayCycleOfInterestPayment", attributes.get("arrayCycleOfInterestPayment"));
-                        map.put("NominalInterestRate", (CommonUtils.isNull(attributes.get("nominalInterestRate"))) ? 0.0 : Double.parseDouble((String)attributes.get("nominalInterestRate")));
+                        map.put("DayCountConvention", (CommonUtils.isNull(attributes.get("dayCountConvention"))) ? null : new DayCountCalculator(attributes.get("dayCountConvention").toString(), (BusinessDayCalendarProvider) map.get("Calendar")));
                         map.put("Currency", attributes.get("currency"));
-                        map.put("ExerciseAmount", !(CommonUtils.isNull(attributes.get("exerciseAmount"))) ? Double.parseDouble((String)attributes.get("exerciseAmount")): 0.0);
-                        map.put("PurchaseDate", (CommonUtils.isNull(attributes.get("purchaseDate"))) ? null : LocalDateTime.parse((String)attributes.get("purchaseDate")));
-                        map.put("SettlementPeriod", (CommonUtils.isNull(attributes.get("settlementPeriod"))) ? "P0D" : attributes.get("settlementPeriod"));
-                        map.put("ExerciseDate", (CommonUtils.isNull(attributes.get("exerciseDate")) ? null : LocalDateTime.parse((String)attributes.get("exerciseDate"))));
-                        map.put("PriceAtPurchaseDate", (CommonUtils.isNull(attributes.get("priceAtPurchaseDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("priceAtPurchaseDate")));
+                        map.put("MaturityDate", (CommonUtils.isNull(attributes.get("maturityDate")) ? null : LocalDateTime.parse((String)attributes.get("maturityDate"))));
                         map.put("NotionalPrincipal", CommonUtils.isNull(attributes.get("notionalPrincipal")) ? null : Double.parseDouble((String)attributes.get("notionalPrincipal")));
-                        map.put("Quantity", (CommonUtils.isNull(attributes.get("quantity"))) ? 1 : Integer.parseInt((String)attributes.get("quantity")));
-
+                        map.put("PurchaseDate", (CommonUtils.isNull(attributes.get("purchaseDate"))) ? null : LocalDateTime.parse((String)attributes.get("purchaseDate")));
+                        map.put("PriceAtPurchaseDate", (CommonUtils.isNull(attributes.get("priceAtPurchaseDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("priceAtPurchaseDate")));
+                        map.put("TerminationDate", (CommonUtils.isNull(attributes.get("terminationDate"))) ? null : LocalDateTime.parse((String)attributes.get("terminationDate")));
+                        map.put("PriceAtTerminationDate", (CommonUtils.isNull(attributes.get("priceAtTerminationDate"))) ? 0.0 : Double.parseDouble((String)attributes.get("priceAtTerminationDate")));
+                        map.put("ExerciseDate", (CommonUtils.isNull(attributes.get("exerciseDate")) ? null : LocalDateTime.parse((String)attributes.get("exerciseDate"))));
+                        map.put("ExerciseAmount", !(CommonUtils.isNull(attributes.get("exerciseAmount"))) ? Double.parseDouble((String)attributes.get("exerciseAmount")): 0.0);
+                        map.put("SettlementPeriod", (CommonUtils.isNull(attributes.get("settlementPeriod"))) ? "P0D" : attributes.get("settlementPeriod"));
+                         
                         // parse underlying attributes
                         ((List<Map<String,Object>>)attributes.get("contractStructure")).forEach(e->contractStructure.add(new ContractReference(e, (ContractRole)map.get("ContractRole"))));
                         map.put("ContractStructure", contractStructure);

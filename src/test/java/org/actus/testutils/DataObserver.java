@@ -4,15 +4,13 @@ import org.actus.events.ContractEvent;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.states.StateSpace;
-import org.actus.types.ContractReference;
-import org.actus.util.CommonUtils;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.HashMap;
-import java.time.LocalDateTime;
 import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 
 public class DataObserver implements RiskFactorModelProvider {
@@ -37,13 +35,6 @@ public class DataObserver implements RiskFactorModelProvider {
     }
 
     public Set<ContractEvent> events(ContractModelProvider model){
-        List<String> contractIdentifiers = model.<List<ContractReference>>getAs("ContractStructure").stream().map(c -> c.getContractAttribute("")).collect(Collectors.toList());
-        HashSet<ContractEvent> events = new HashSet<>();
-        contractIdentifiers.forEach(s -> {
-            if(!CommonUtils.isNull(this.eventsObserved.get(s))){
-                events.addAll(this.eventsObserved.get(s));
-            }
-        });
-        return events;
+        return eventsObserved.values().stream().flatMap(list->list.stream()).collect(Collectors.toSet());
     }
 }
