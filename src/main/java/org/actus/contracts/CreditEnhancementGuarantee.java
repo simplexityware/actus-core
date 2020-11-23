@@ -188,7 +188,7 @@ public class CreditEnhancementGuarantee {
         Set<ContractEvent> observedEvents = observer.events(model);
         List<ContractEvent> ceEvents = observedEvents.stream().filter(e -> contractIdentifiers.contains(e.getContractID()) && 
                                                                             !maturity.isBefore(e.eventTime())).collect(Collectors.toList());
-        if(ceEvents.size() > 0){
+        if(ceEvents.size() > 0 && ceEvents.get(0).states().contractPerformance.equals(model.getAs("CreditEventTypeCovered"))){
             ContractEvent ceEvent = ceEvents.get(0);
             if(!CommonUtils.isNull(ceEvent)){
                 events.removeIf(e -> e.eventType().equals(EventType.MD));
