@@ -418,7 +418,7 @@
             {
                 "eventDate": "2020-01-02T00:00:00",
                 "eventType": "PRD",
-                "payoff": 10,
+                "payoff": -10,
                 "currency": "USD",
                 "notionalPrincipal": 700000,
                 "exerciseAmount": 0
@@ -457,7 +457,7 @@
             "maturityDate": "2020-12-31T00:00:00",
             "notionalPrincipal": "1000000",
             "coverageOfCreditEnhancement": "0.7",
-            "creditEventTypeCovered": "DQ",
+            "creditEventTypeCovered": "DF",
             "settlementPeriod": "P0D"
         },
         "to": "2020-12-31T00:00:00",
