@@ -128,6 +128,8 @@ public final class ContractEvent implements Comparable<ContractEvent> {
     public StateSpace states() {
         return states;    
     }
+
+    public void setStates(StateSpace states) { this.states = states; }
        
     /**
      * Change the payoff function of this event

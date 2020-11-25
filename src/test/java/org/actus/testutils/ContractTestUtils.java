@@ -98,13 +98,18 @@ public class ContractTestUtils {
     }
 
     public static List<ContractEvent> readObservedEvents(List<ObservedEvent> eventsObserved, ContractModel terms) {
-        List<ContractEvent> observedEvents = eventsObserved.stream().map(e -> EventFactory.createEvent(
-            LocalDateTime.parse(e.getTime()),
-            EventType.valueOf(e.getType()),
-            terms.getAs("Currency"),
-            new POF_AD_PAM(),
-            new STF_AD_CSH(),
-            e.contractId)
+        List<ContractEvent> observedEvents = eventsObserved.stream().map(e -> {
+            ContractEvent event = EventFactory.createEvent(
+                    LocalDateTime.parse(e.getTime()),
+                    EventType.valueOf(e.getType()),
+                    terms.getAs("Currency"),
+                    new POF_AD_PAM(),
+                    new STF_AD_CSH(),
+                    e.contractId
+            );
+            event.setStates(e.states);
+            return event;
+        }
         ).collect(Collectors.toList());
         return observedEvents;
     }
