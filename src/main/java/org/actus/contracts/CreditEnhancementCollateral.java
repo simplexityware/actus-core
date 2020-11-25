@@ -19,6 +19,7 @@ import org.actus.types.ContractReference;
 import org.actus.types.EventType;
 import org.actus.types.GuaranteedExposure;
 import org.actus.types.ReferenceRole;
+import org.actus.types.CreditEventTypeCovered;
 import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 
@@ -139,6 +140,28 @@ public class CreditEnhancementCollateral {
 
     private static ArrayList<ContractEvent> addExternalXDEvent(ContractModelProvider model, ArrayList<ContractEvent> events, RiskFactorModelProvider observer, LocalDateTime maturity){
         List<String> contractIdentifiers = model.<List<ContractReference>>getAs("ContractStructure").stream().map(c -> c.getContractAttribute("ContractID")).collect(Collectors.toList());
+        CreditEventTypeCovered creditEventTypeCovered = model.<CreditEventTypeCovered[]>getAs("CreditEventTypeCovered")[0];
+        // fetch observed events from external data observer
+        Set<ContractEvent> observedEvents = observer.events(model);
+        // filter relevant credit events:
+        // - emitted by any of the covered contracts
+        // - emitted before maturity of the guarantee
+        // - credit event type that is actually covered under the guarantee
+        List<ContractEvent> ceEvents = observedEvents.stream().filter(e -> contractIdentifiers.contains(e.getContractID()) && 
+                                                                            !maturity.isBefore(e.eventTime()) &&
+                                                                            e.states().contractPerformance.toString().equals(creditEventTypeCovered.toString())).collect(Collectors.toList());
+        if(ceEvents.size() > 0 ){
+            ContractEvent ceEvent = ceEvents.get(0);
+            events = events.stream().filter(e -> e.eventType() != EventType.MD).collect(Collectors.toCollection(ArrayList::new));
+            events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEC(), model.getAs("ContractID")));
+            ContractEvent std = EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEC(), new STF_STD_CEC(), model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
+            events.add(std);
+        }
+        return events;
+    }
+
+    /*private static ArrayList<ContractEvent> addExternalXDEvent(ContractModelProvider model, ArrayList<ContractEvent> events, RiskFactorModelProvider observer, LocalDateTime maturity){
+        List<String> contractIdentifiers = model.<List<ContractReference>>getAs("ContractStructure").stream().map(c -> c.getContractAttribute("ContractID")).collect(Collectors.toList());
         Set<ContractEvent> observedEvents = observer.events(model);
         List<ContractEvent> ceEvents = observedEvents.stream().filter(e -> contractIdentifiers.contains(e.getContractID()) && 
                                                                             !maturity.isBefore(e.eventTime())).collect(Collectors.toList());
@@ -151,5 +174,5 @@ public class CreditEnhancementCollateral {
             }
         }
         return events;
-    }
+    }*/
 }

@@ -657,7 +657,7 @@
             "contractDealDate": "2020-01-01T00:00:00",
             "statusDate": "2020-01-01T00:00:00",
             "coverageOfCreditEnhancement": "0.7",
-            "creditEventTypeCovered": "DQ",
+            "creditEventTypeCovered": "DF",
             "settlementPeriod": "P0D"
         },
         "to": "2020-12-31T00:00:00",

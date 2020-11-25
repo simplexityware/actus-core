@@ -185,18 +185,22 @@ public class CreditEnhancementGuarantee {
 
     private static ArrayList<ContractEvent> addExternalXDEvent(ContractModelProvider model, ArrayList<ContractEvent> events, RiskFactorModelProvider observer, LocalDateTime maturity){
         List<String> contractIdentifiers = model.<List<ContractReference>>getAs("ContractStructure").stream().map(c -> c.getContractAttribute("ContractID")).collect(Collectors.toList());
+        CreditEventTypeCovered creditEventTypeCovered = model.<CreditEventTypeCovered[]>getAs("CreditEventTypeCovered")[0];
+        // fetch observed events from external data observer
         Set<ContractEvent> observedEvents = observer.events(model);
+        // filter relevant credit events:
+        // - emitted by any of the covered contracts
+        // - emitted before maturity of the guarantee
+        // - credit event type that is actually covered under the guarantee
         List<ContractEvent> ceEvents = observedEvents.stream().filter(e -> contractIdentifiers.contains(e.getContractID()) && 
-                                                                            !maturity.isBefore(e.eventTime())).collect(Collectors.toList());
+                                                                            !maturity.isBefore(e.eventTime()) &&
+                                                                            e.states().contractPerformance.toString().equals(creditEventTypeCovered.toString())).collect(Collectors.toList());
         if(ceEvents.size() > 0 ){
             ContractEvent ceEvent = ceEvents.get(0);
-            CreditEventTypeCovered creditEventTypeCovered = model.<CreditEventTypeCovered[]>getAs("CreditEventTypeCovered")[0];
-            if(!CommonUtils.isNull(ceEvent) && ceEvent.states().contractPerformance.toString().equals(creditEventTypeCovered.toString())){
-                events = events.stream().filter(e -> e.eventType() != EventType.MD).collect(Collectors.toCollection(ArrayList::new));
-                events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("ContractID")));
-                ContractEvent std = EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
-                events.add(std);
-            }
+            events = events.stream().filter(e -> e.eventType() != EventType.MD).collect(Collectors.toCollection(ArrayList::new));
+            events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("ContractID")));
+            ContractEvent std = EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
+            events.add(std);
         }
         return events;
     }
