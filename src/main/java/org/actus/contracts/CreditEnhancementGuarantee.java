@@ -122,7 +122,7 @@ public class CreditEnhancementGuarantee {
             List<LocalDateTime> maturityDates = new ArrayList<>();
             coveredContractRefs.forEach(c -> {
                 maturityDates.add(LocalDateTime.parse(c.getContractAttribute("MaturityDate")));
-            }) ;CreditEventTypeCovered"
+            });
             Collections.sort(maturityDates);
             maturityDate = maturityDates.get(maturityDates.size()-1);
         }
