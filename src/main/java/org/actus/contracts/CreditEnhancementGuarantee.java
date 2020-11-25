@@ -122,7 +122,7 @@ public class CreditEnhancementGuarantee {
             List<LocalDateTime> maturityDates = new ArrayList<>();
             coveredContractRefs.forEach(c -> {
                 maturityDates.add(LocalDateTime.parse(c.getContractAttribute("MaturityDate")));
-            }) ;
+            }) ;CreditEventTypeCovered"
             Collections.sort(maturityDates);
             maturityDate = maturityDates.get(maturityDates.size()-1);
         }
@@ -190,8 +190,9 @@ public class CreditEnhancementGuarantee {
         if(ceEvents.size() > 0){
             ContractEvent ceEvent = ceEvents.get(0);
             if(!CommonUtils.isNull(ceEvent)){
-                events = events.stream().filter(e -> e.eventType() != EventType.MD).collect(Collectors.toCollection(ArrayList::new));
-                events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("ContractID")));
+                events.removeIf(e -> e.eventType().equals(EventType.MD));
+                events.removeIf(e -> e.eventType().equals(EventType.FP) && e.eventTime().isAfter(ceEvent.eventTime()));
+                events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
                 ContractEvent std = EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
                 events.add(std);
             }
