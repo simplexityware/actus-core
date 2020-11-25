@@ -15,10 +15,7 @@ import org.actus.functions.cec.*;
 import org.actus.functions.ceg.*;
 import org.actus.functions.optns.*;
 import org.actus.states.StateSpace;
-import org.actus.types.ContractReference;
-import org.actus.types.EventType;
-import org.actus.types.GuaranteedExposure;
-import org.actus.types.ReferenceRole;
+import org.actus.types.*;
 import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 
@@ -142,9 +139,11 @@ public class CreditEnhancementCollateral {
         Set<ContractEvent> observedEvents = observer.events(model);
         List<ContractEvent> ceEvents = observedEvents.stream().filter(e -> contractIdentifiers.contains(e.getContractID()) && 
                                                                             !maturity.isBefore(e.eventTime())).collect(Collectors.toList());
-        if(ceEvents.size() > 0) {
+
+        if(ceEvents.size() > 0 ){
             ContractEvent ceEvent = ceEvents.get(0);
-            if(!CommonUtils.isNull(ceEvent)){
+            CreditEventTypeCovered creditEventTypeCovered = model.<CreditEventTypeCovered[]>getAs("CreditEventTypeCovered")[0];
+            if(!CommonUtils.isNull(ceEvent) && ceEvent.states().contractPerformance.toString().equals(creditEventTypeCovered.toString())){
                 events = events.stream().filter(e -> e.eventType() != EventType.MD).collect(Collectors.toCollection(ArrayList::new));
                 events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEC(), model.getAs("ContractID")));
                 events.add(EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEC(), new STF_STD_CEC(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
