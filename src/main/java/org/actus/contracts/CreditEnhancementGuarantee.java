@@ -192,7 +192,7 @@ public class CreditEnhancementGuarantee {
             if(!CommonUtils.isNull(ceEvent)){
                 events.removeIf(e -> e.eventType().equals(EventType.MD));
                 events.removeIf(e -> e.eventType().equals(EventType.FP) && e.eventTime().isAfter(ceEvent.eventTime()));
-                events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+                events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("ContractID")));
                 ContractEvent std = EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
                 events.add(std);
             }
