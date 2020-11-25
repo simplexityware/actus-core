@@ -89,6 +89,14 @@ public final class ContractType {
                 return Swap.schedule(to,model);
             case CAPFL:
                 return CapFloor.schedule(to, model);
+            case OPTNS:
+                return Option.schedule(to, model);
+            case FUTUR:
+                return Future.schedule(to, model);
+            case CEG:
+                return CreditEnhancementGuarantee.schedule(to, model);
+            case CEC:
+                return CreditEnhancementCollateral.schedule(to, model);
             default:
                 throw new ContractTypeUnknownException();
         }
@@ -150,7 +158,15 @@ public final class ContractType {
             case SWAPS:
                 return Swap.apply(events,model,observer);
             case CAPFL:
-            	return CapFloor.apply(events, model, observer);
+                return CapFloor.apply(events, model, observer);
+            case OPTNS:
+                return Option.apply(events, model, observer);
+            case FUTUR:
+                return Future.apply(events, model, observer);
+            case CEG:
+                return CreditEnhancementGuarantee.apply(events, model, observer);
+            case CEC:
+                return CreditEnhancementCollateral.apply(events, model, observer);
             default:
                 throw new ContractTypeUnknownException();
         }
