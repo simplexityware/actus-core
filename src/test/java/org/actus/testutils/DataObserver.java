@@ -4,6 +4,7 @@ import org.actus.events.ContractEvent;
 import org.actus.externals.RiskFactorModelProvider;
 import org.actus.attributes.ContractModelProvider;
 import org.actus.states.StateSpace;
+import org.actus.util.CommonUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -24,8 +25,7 @@ public class DataObserver implements RiskFactorModelProvider {
         multiSeries.put(symbol,series);
     }
 
-    public double stateAt(String id, LocalDateTime time, StateSpace contractStates,
-            ContractModelProvider contractAttributes) {
+    public double stateAt(String id, LocalDateTime time, StateSpace contractStates, ContractModelProvider contractAttributes) {
         return multiSeries.get(id).get(time);
     }
 
