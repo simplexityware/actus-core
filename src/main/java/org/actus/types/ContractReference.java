@@ -67,6 +67,8 @@ public class ContractReference {
         if("MarketObjectCode".equals(contractAttribute)) {
             if (ReferenceType.MOC.equals(this.referenceType)) {
                 attributeVal = (String) this.object;
+            } else {
+                attributeVal = (((ContractModel) this.object).getAs(contractAttribute)).toString();
             }
         }else if(ReferenceType.CNT.equals(this.referenceType)) {
             attributeVal = (((ContractModel) this.object).getAs(contractAttribute)).toString();

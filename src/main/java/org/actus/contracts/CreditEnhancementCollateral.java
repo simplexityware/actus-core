@@ -11,12 +11,11 @@ import org.actus.conventions.contractrole.ContractRoleConvention;
 import org.actus.events.ContractEvent;
 import org.actus.events.EventFactory;
 import org.actus.externals.RiskFactorModelProvider;
+import org.actus.functions.cec.*;
 import org.actus.functions.ceg.*;
 import org.actus.functions.optns.*;
 import org.actus.states.StateSpace;
-import org.actus.time.ScheduleFactory;
 import org.actus.types.ContractReference;
-import org.actus.types.CreditEventTypeCovered;
 import org.actus.types.EventType;
 import org.actus.types.GuaranteedExposure;
 import org.actus.types.ReferenceRole;
@@ -24,7 +23,6 @@ import org.actus.util.CommonUtils;
 import org.actus.util.CycleUtils;
 
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,61 +31,21 @@ import java.util.stream.Collectors;
  *
  * @see <a https://www.actusfrf.org"></a>
  */
-public class CreditEnhancementGuarantee {
+public class CreditEnhancementCollateral {
     // forward projection of the entire lifecycle of the contract
     public static ArrayList<ContractEvent> schedule(LocalDateTime to,
                                                     ContractModelProvider model) throws AttributeConversionException {
         ArrayList<ContractEvent> events = new ArrayList<>();
-
         // determine maturity date
         LocalDateTime maturity = maturity(model);
-        
-        // purchase
-        if (!CommonUtils.isNull(model.getAs("PurchaseDate"))) {
-            events.add(EventFactory.createEvent(model.getAs("PurchaseDate"), EventType.PRD, model.getAs("Currency"), new POF_PRD_OPTNS(), new STF_PRD_CEG(), model.getAs("ContractID")));
-        }
-
-        // fees (if specified)
-        if(!(CommonUtils.isNull(model.getAs("FeeRate")) || model.<Double>getAs("FeeRate") == 0.0)){
-            LocalDateTime startDate;
-            LocalDateTime endDate;
-            if(CommonUtils.isNull(model.getAs("CycleAnchorDateOfFee")) && CommonUtils.isNull(model.getAs("CycleOfFee"))){
-                startDate = null;
-            }else if(CommonUtils.isNull(model.getAs("CycleAnchorDateOfFee"))){
-                startDate = model.<LocalDateTime>getAs("PurchaseDate").plus(Period.parse(model.getAs("CycleOfFee")));
-            }else{
-                startDate = model.getAs("CycleAnchorDateOfFee");
-            }
-            if(CommonUtils.isNull(model.getAs("ExerciseDate"))){
-                endDate = maturity;
-            }else {
-                endDate = model.getAs("ExerciseDate");
-            }
-            events.addAll(EventFactory.createEvents(
-                    ScheduleFactory.createSchedule(
-                            startDate,
-                            endDate,
-                            model.getAs("CycleOfFee"),
-                            model.getAs("EndOfMonthConvention"),
-                            false),
-                    EventType.FP,
-                    model.getAs("Currency"),
-                    new POF_FP_CEG(),
-                    new STF_FP_CEG(),
-                    model.getAs("BusinessDayConvention"),
-                    model.getAs("ContractID"))
-            );
-        }
-
         // maturity
         if(CommonUtils.isNull(model.getAs("ExerciseDate"))){
             events.add(EventFactory.createEvent(maturity, EventType.MD, model.getAs("Currency"), new POF_MD_CEG(), new STF_MD_CEG(), model.getAs("ContractID")));
         }
-
         //exercise
         if(!CommonUtils.isNull(model.getAs("ExerciseDate"))){
-            events.add(EventFactory.createEvent(model.getAs("ExerciseDate"), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("ContractID")));
-            events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("ExerciseDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.getAs("ExerciseDate"), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEC(), model.getAs("ContractID")));
+            events.add(EventFactory.createEvent(model.<LocalDateTime>getAs("ExerciseDate").plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEC(), new STF_STD_CEC(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
         }
         return events;
     }
@@ -99,8 +57,10 @@ public class CreditEnhancementGuarantee {
         // determine maturity date
         LocalDateTime maturity = maturity(model);
         events = addExternalXDEvent(model, events, observer, maturity);
+
         // initialize state space per status date
         StateSpace states = initStateSpace(model, observer, maturity);
+
         // sort the events according to their time sequence
         Collections.sort(events);
 
@@ -115,18 +75,14 @@ public class CreditEnhancementGuarantee {
 
     // determine maturity of the contract
     private static LocalDateTime maturity(ContractModelProvider model) {
-        LocalDateTime maturityDate = null;
-        if(!CommonUtils.isNull(model.getAs("MaturityDate"))){
-            maturityDate = model.getAs("MaturityDate");
-        } else{
-            List<ContractReference> coveredContractRefs = model.<List<ContractReference>>getAs("ContractStructure").stream().filter(ref -> ref.referenceRole.equals(ReferenceRole.COVE)).collect(Collectors.toList());
-            List<LocalDateTime> maturityDates = new ArrayList<>();
-            coveredContractRefs.forEach(c -> {
-                maturityDates.add(LocalDateTime.parse(c.getContractAttribute("MaturityDate")));
-            });
-            Collections.sort(maturityDates);
-            maturityDate = maturityDates.get(maturityDates.size()-1);
-        }
+        List<ContractReference> coveredContractRefs = model.<List<ContractReference>>getAs("ContractStructure").stream().filter(ref -> ref.referenceRole.equals(ReferenceRole.COVE)).collect(Collectors.toList());
+        List<LocalDateTime> maturityDates = new ArrayList<>();
+        coveredContractRefs.forEach(c -> {
+            maturityDates.add(LocalDateTime.parse(c.getContractAttribute("MaturityDate")));
+        }) ;
+        Collections.sort(maturityDates);
+        LocalDateTime maturityDate = maturityDates.get(maturityDates.size()-1);
+
         return maturityDate;
     }
 
@@ -137,50 +93,48 @@ public class CreditEnhancementGuarantee {
 
         if(states.statusDate.isAfter(states.maturityDate)){
             states.notionalPrincipal = 0.0;
-        }else if(!CommonUtils.isNull(model.<Double>getAs("NotionalPrincipal"))){
-            states.notionalPrincipal = model.<Double>getAs("CoverageOfCreditEnhancement")
-                    * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
-                    * model.<Double>getAs("NotionalPrincipal");
-        } else{
-            states.notionalPrincipal = CreditEnhancementGuarantee.calculateNotionalPrincipal(states,model,observer,states.statusDate);
+        } else {
+            states.notionalPrincipal = calculateNotionalPrincipal(model,observer,states.statusDate);
         }
-
-        if(CommonUtils.isNull(model.getAs("FeeRate"))){
-            states.feeAccrued = 0.0;
-        } else if(!CommonUtils.isNull(model.getAs("FeeAccrued"))){
-            states.feeAccrued = model.getAs("FeeAccrued");
-        }//TODO: implement last two possible initialization
-
+        
         states.exerciseAmount = model.getAs("ExerciseAmount");
         states.exerciseDate = model.getAs("ExerciseDate");
         // return the initialized state space
         return states;
     }
 
-    public static Double calculateNotionalPrincipal(StateSpace states, ContractModelProvider model, RiskFactorModelProvider observer, LocalDateTime time){
+    public static Double calculateNotionalPrincipal(ContractModelProvider model, RiskFactorModelProvider observer, LocalDateTime time){
         List<ContractReference> coveredContractRefs = model.<List<ContractReference>>getAs("ContractStructure").stream().filter(ref -> ref.referenceRole.equals(ReferenceRole.COVE)).collect(Collectors.toList());
         List<StateSpace> statesAtTimePoint = coveredContractRefs.stream().map(c -> c.getStateSpaceAtTimepoint(time,observer)).collect(Collectors.toList());
+        Double notionalPrincipal;
 
         if(GuaranteedExposure.NO.equals(model.getAs("GuaranteedExposure"))){
-            states.notionalPrincipal =
+            notionalPrincipal =
                     model.<Double>getAs("CoverageOfCreditEnhancement")
                             * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                             * statesAtTimePoint.stream().map(s -> s.notionalPrincipal).reduce(0.0, Double::sum);
-        }else if(GuaranteedExposure.NI.equals(model.getAs("GuaranteedExposure"))){
-            states.notionalPrincipal =
+        } else if(GuaranteedExposure.NI.equals(model.getAs("GuaranteedExposure"))){
+            notionalPrincipal =
                     model.<Double>getAs("CoverageOfCreditEnhancement")
                             * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
                             * (statesAtTimePoint.stream().map(s -> s.notionalPrincipal).reduce(0.0, Double::sum)
                             + statesAtTimePoint.stream().map(s -> s.accruedInterest).reduce(0.0, Double::sum))
             ;
-        }else{
+        } else {
             List<String> marketObjectCodesOfUnderlying = coveredContractRefs.stream().map(c -> c.getContractAttribute("MarketObjectCode")).collect(Collectors.toList());
-            states.notionalPrincipal =
+            notionalPrincipal =
                     model.<Double>getAs("CoverageOfCreditEnhancement")
                             * ContractRoleConvention.roleSign(model.getAs("ContractRole"))
-                            * marketObjectCodesOfUnderlying.stream().map(s -> observer.stateAt(s,time,states,model)).reduce(0.0, Double::sum);
+                            * marketObjectCodesOfUnderlying.stream().map(s -> observer.stateAt(s,time,new StateSpace(),model)).reduce(0.0, Double::sum);
         }
-        return states.notionalPrincipal;
+        return notionalPrincipal;
+    }
+
+    public static double calculateMarketValueCoveringContracts(ContractModelProvider model, RiskFactorModelProvider observer, LocalDateTime time) {
+        List<ContractReference> coveringContractRefs = model.<List<ContractReference>>getAs("ContractStructure").stream().filter(ref -> ref.referenceRole.equals(ReferenceRole.COVI)).collect(Collectors.toList());
+        List<String> marketObjectCodesOfUnderlying = coveringContractRefs.stream().map(ref -> ref.getContractAttribute("MarketObjectCode")).collect(Collectors.toList());
+        Double marketValueCoveringContracts = marketObjectCodesOfUnderlying.stream().map(code -> observer.stateAt(code,time,new StateSpace(),model)).reduce(0.0, Double::sum);
+        return marketValueCoveringContracts;
     }
 
     private static ArrayList<ContractEvent> addExternalXDEvent(ContractModelProvider model, ArrayList<ContractEvent> events, RiskFactorModelProvider observer, LocalDateTime maturity){
@@ -188,14 +142,12 @@ public class CreditEnhancementGuarantee {
         Set<ContractEvent> observedEvents = observer.events(model);
         List<ContractEvent> ceEvents = observedEvents.stream().filter(e -> contractIdentifiers.contains(e.getContractID()) && 
                                                                             !maturity.isBefore(e.eventTime())).collect(Collectors.toList());
-        if(ceEvents.size() > 0 ){
+        if(ceEvents.size() > 0) {
             ContractEvent ceEvent = ceEvents.get(0);
-            CreditEventTypeCovered creditEventTypeCovered = model.<CreditEventTypeCovered[]>getAs("CreditEventTypeCovered")[0];
-            if(!CommonUtils.isNull(ceEvent) && ceEvent.states().contractPerformance.toString().equals(creditEventTypeCovered.toString())){
+            if(!CommonUtils.isNull(ceEvent)){
                 events = events.stream().filter(e -> e.eventType() != EventType.MD).collect(Collectors.toCollection(ArrayList::new));
-                events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEG(), model.getAs("ContractID")));
-                ContractEvent std = EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEG(), new STF_STD_CEG(), model.getAs("BusinessDayConvention"), model.getAs("ContractID"));
-                events.add(std);
+                events.add(EventFactory.createEvent(ceEvent.eventTime(), EventType.XD, model.getAs("Currency"), new POF_XD_OPTNS(), new STF_XD_CEC(), model.getAs("ContractID")));
+                events.add(EventFactory.createEvent(ceEvent.eventTime().plus(CycleUtils.parsePeriod(model.getAs("SettlementPeriod"))), EventType.STD, model.getAs("Currency"), new POF_STD_CEC(), new STF_STD_CEC(), model.getAs("BusinessDayConvention"), model.getAs("ContractID")));
             }
         }
         return events;
