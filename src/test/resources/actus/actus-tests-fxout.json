@@ -103,7 +103,7 @@
             "statusDate": "2013-12-30T00:00:00",
             "contractDealDate": "2013-12-20T00:00:00",
             "deliverySettlement": "S",
-            "settlementPeriod": "P1D"
+            "settlementPeriod": "P1DL0"
         },
         "to": "2014-11-30T00:00:00",
         "dataObserved": {
@@ -148,7 +148,7 @@
             "statusDate": "2013-12-30T00:00:00",
             "contractDealDate": "2013-12-20T00:00:00",
             "deliverySettlement": "S",
-            "settlementPeriod": "P1D"
+            "settlementPeriod": "P1DL0"
         },
         "to": "2014-11-30T00:00:00",
         "dataObserved": {
@@ -193,7 +193,7 @@
             "statusDate": "2013-12-30T00:00:00",
             "contractDealDate": "2013-12-20T00:00:00",
             "deliverySettlement": "S",
-            "settlementPeriod": "P1D"
+            "settlementPeriod": "P1DL0"
         },
         "to": "2015-01-03T00:00:00",
         "dataObserved": {
@@ -380,7 +380,7 @@
             "purchaseDate": "2014-04-01T00:00:00",
             "priceAtPurchaseDate": "50",
             "deliverySettlement": "S",
-            "settlementPeriod": "P1D"
+            "settlementPeriod": "P1DL0"
         },
         "to": "2015-01-02T00:00:00",
         "dataObserved": {
@@ -484,7 +484,7 @@
             "purchaseDate": "2014-04-01T00:00:00",
             "priceAtPurchaseDate": "-50",
             "deliverySettlement": "S",
-            "settlementPeriod": "P5D"
+            "settlementPeriod": "P5DL0"
         },
         "to": "2015-01-16T00:00:00",
         "dataObserved": {
@@ -541,7 +541,7 @@
             "priceAtPurchaseDate": "0",
             "priceAtTerminationDate": "0",
             "deliverySettlement": "S",
-            "settlementPeriod": "P1D"
+            "settlementPeriod": "P1DL0"
         },
         "to": "2015-01-02T00:00:00",
         "dataObserved": {

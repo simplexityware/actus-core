@@ -90,11 +90,14 @@ switch (eventType) {
       case TD:
         offset = 140;
         break;
-      case STD:
+      case MD:
         offset = 150;
         break;
-      case MD:
+    case XD:
         offset = 160;
+        break;
+    case STD:
+        offset = 170;
         break;
     case AD:
         offset = 950;

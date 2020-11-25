@@ -437,6 +437,7 @@ public final class ExoticLinearAmortizer {
 						s = s.trim();
 						return LocalDateTime.parse(s);
 					}).collect(Collectors.toCollection(ArrayList::new));
+
 			Integer[] prIncDec = Arrays.stream(model.getAs("ArrayIncreaseDecrease").toString().replaceAll("\\[", "").replaceAll("]", "").trim().split(","))
 					.map(d -> {
 						if (d.equals("INC")) {
@@ -445,23 +446,22 @@ public final class ExoticLinearAmortizer {
 							return -1;
 						}
 					}).toArray(Integer[]::new);
+
 			Double[] prPayment = Arrays.stream(model.getAs("ArrayNextPrincipalRedemptionPayment").toString().replaceAll("\\[", "").replaceAll("]", "").trim().split(",")).map(Double::parseDouble).toArray(Double[]::new);
+
 			if (Objects.isNull(model.getAs("ArrayCycleOfPrincipalRedemption"))) {
 				maturity = prAnchor.get(prAnchor.size()-1);
 			} else {
 				String[] prCycle = Arrays.stream(model.getAs("ArrayCycleOfPrincipalRedemption").toString().replaceAll("\\[", "").replaceAll("]", "").split(",")).map(String::trim).toArray(String[]::new);
 				LocalDateTime t = model.getAs("StatusDate");
 				if (prCycle.length > 1) {
-					double sum = 0;
+					double sum = 0.0;
 					int index = 0;
 					int noOfPrEvents = 0;
-					Set<LocalDateTime> prSchedule = ScheduleFactory.createSchedule(prAnchor.get(index), prAnchor.get(index + 1), prCycle[index].toString(), model.getAs("EndOfMonthConvention"), false);
+					Set<LocalDateTime> prSchedule;
 					do {
-						if (prIncDec[index] == -1) {
-							noOfPrEvents = (prSchedule.size() * prPayment[index] * prIncDec[index]) + notionalPrincipal + sum <= 0 ? (int) ((notionalPrincipal + sum) / prPayment[index]) : prSchedule.size();
-						} else {
-							noOfPrEvents = (prSchedule.size() * prPayment[index] * prIncDec[index]) + notionalPrincipal >= 0 ? (int) ((notionalPrincipal + sum) / prPayment[index]) : prSchedule.size();
-						}
+						prSchedule = ScheduleFactory.createSchedule(prAnchor.get(index), prAnchor.get(index + 1), prCycle[index], model.getAs("EndOfMonthConvention"), false);
+						noOfPrEvents = (prSchedule.size() * prPayment[index] * prIncDec[index]) + notionalPrincipal + sum >= 0 ? prSchedule.size() : (int) ((notionalPrincipal + sum) / prPayment[index]);
 						sum += noOfPrEvents * prIncDec[index] * prPayment[index];
 						//ARPRCL, ARPRANX and ARINDEC must be the same size
 						if (prAnchor.size()-2 == index) {
@@ -473,21 +473,19 @@ public final class ExoticLinearAmortizer {
 							sum += noOfPrEvents * prIncDec[index+1] * prPayment[index+1];
 						} else {
 							index++;
-							prSchedule = ScheduleFactory.createSchedule(prAnchor.get(index), prAnchor.get(index + 1), prCycle[index], model.getAs("EndOfMonthConvention"), false);
 							for (int i = 0; i < noOfPrEvents; i++) {
 								t = t.plus(CycleUtils.parsePeriod(prCycle[index - 1]));
 							}
 						}
-					} while (Math.abs(sum) != notionalPrincipal);
-					maturity = timeAdjuster.shiftEventTime(t);
+					} while ((sum + notionalPrincipal) > 0);
 				} else {
 					int noOfPrEvents = (int) Math.ceil(notionalPrincipal / prPayment[0]);
 					t = prAnchor.get(0);
 					for (int i = 0; i < noOfPrEvents-1; i++) {
 						t = t.plus(CycleUtils.parsePeriod(prCycle[0]));
 					}
-					maturity = timeAdjuster.shiftEventTime(t);
 				}
+				maturity = timeAdjuster.shiftEventTime(t);
 			}
 		}
 		return maturity;
